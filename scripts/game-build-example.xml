@@ -1,0 +1,118 @@
+<!--
+  The Slick2D Build file. It has the following capabilities:
+  
+  dist - Build the complete distribution
+  build-key-store - Build a valid key store for distributing your game
+  sign-a-jar - Sign a JAR file for distribution using a key store generated here
+  
+  javadoc - generate the javadoc for Slick
+-->
+<project name="kitipong" default="build-game" basedir=".">
+	
+<!--
+ Initialise the build script
+-->
+<target name="init">
+	<property name="username" value="kevin"/>
+	<property name="host" value="bob.newdawnsoftware.com"/>
+	<property name="dir" value="/home/kevin/public_html/slick/demos"/>
+	<property name="webstartURL" value="http://slick.cokeandcode.com/demos"/>
+	<property name="homepage" value="http://slick.cokeandcode.com"/>
+	<property name="vendor" value="Slick 2D"/>
+	
+	<property name="build.dir" value="target"/>	
+	
+	<property name="game.name" value="kitipong"/>
+	<property name="game.title" value="Kitipong"/>
+	<property name="game.mainclass" value="puzzle.Puzzle"/>
+	
+	<property name="slick.install" value="../Slick"/>
+	
+	<delete dir="${build.dir}"/>
+	<mkdir dir="${build.dir}/classes"/>
+	<delete dir="webstart"/>
+	<mkdir dir="webstart"/>
+</target>
+	
+<!--
+ Build the java source to the Slick Demo RPG
+-->
+<target name="build-game" depends="init">
+	<delete dir="lib/${game.name}.jar"/>
+	<javac debug="true" srcdir="src" destdir="${build.dir}/classes" target="1.4" source="1.4">
+	    <classpath>
+		  <pathelement path="${slick.install}/lib/slick.jar"/>
+	      <pathelement path="${slick.install}/lib/lwjgl.jar"/>
+	      <pathelement path="${slick.install}/lib/ibxm.jar"/>
+	      <pathelement path="${slick.install}/lib/jogg-0.0.7.jar"/>
+	      <pathelement path="${slick.install}/lib/jorbis-0.0.15.jar"/>
+	    </classpath>
+	</javac>
+	<jar destfile="lib/kitipong.jar" 
+		 basedir="${build.dir}/classes"/>
+	<jar update="true" destfile="lib/kitipong.jar" 
+		 basedir="." includes="res/**"/>
+</target>
+	
+<target name="build-game-webstart" depends="build-game">
+	<copy file="lib/${game.name}.jar" toDir="webstart"/>
+	<createdemojnlp name="${game.name}" title="${game.title}" mainclass="${game.mainclass}"
+				    template="slickwithextension.jnlp" projectjar="${game.name}.jar"/>
+</target>
+
+<!--
+ Upload the Game demo to the Slick website
+-->
+<target name="upload-game-webstart" depends="build-game-webstart">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}" 
+		 file="webstart/${game.name}.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${dir}" 
+		 trust="true"
+		 port="122"
+		 verbose="true">
+		 <fileset dir="webstart">
+      		<include name="${game.name}.jnlp"/>
+    	</fileset>
+	</scp>
+</target>
+
+<!--
+ A macro to copy and preprocess the JNLP template for all webstart demos
+-->
+<macrodef name="createdemojnlp">
+   <attribute name="name" default="NOT SET"/>
+   <attribute name="title" default="NOT SET"/>
+   <attribute name="mainclass" default="NOT SET"/>
+   <attribute name="template" default="slickdemo.jnlp"/>
+   <attribute name="datajar" default="testdata.jar"/>
+   <attribute name="projectjar" default=""/>
+   <sequential>
+   		<delete file="webstart/@{name}.jnlp"/>
+		<copy file="${slick.install}/scripts/@{template}" toFile="webstart/@{name}.jnlp">
+			<filterchain>
+	           <replacetokens>
+		      		<token key="title" value="@{title}"/>
+		      		<token key="mainclass" value="@{mainclass}"/>
+		      		<token key="jnlpname" value="@{name}.jnlp"/>
+		      		<token key="homepage" value="${homepage}"/>
+		      		<token key="datajar" value="@{datajar}"/>
+		      		<token key="projectjar" value="@{projectjar}"/>
+		      		<token key="vendor" value="${vendor}"/>
+		      		<token key="codebase" value="${webstartURL}"/>
+	            </replacetokens>
+	        </filterchain>
+    	</copy>
+    	
+		<echo file="webstart/demos.txt" append="true">
+			&lt;a href="${webstartURL}/@{name}.jnlp"&gt; @{title} &lt;/a&gt;
+			&lt;br/&gt;
+		</echo>	 
+   </sequential>
+</macrodef>
+
+</project>

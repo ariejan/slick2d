@@ -1,0 +1,22 @@
+<items>
+	<item name="small-hp" description="Health Potion" tilex="0" tiley="3" type="stock"/>
+	<item name="large-hp" description="Health Potion" tilex="1" tiley="3" type="stock"/>
+	<item name="sbow" description="Short Bow" tilex="2" tiley="0" type="weapon">
+		<weapon melee="false" />
+	</item>
+	<item name="lbow" description="Long Bow" tilex="3" tiley="0" type="weapon">
+		<weapon melee="false" />
+	</item>
+	<item name="arrow" description="Arrows" tilex="4" tiley="0" type="shield">
+		<weapon melee="false" />
+	</item>
+	<item name="ssword" description="Short Sword" tilex="0" tiley="0" type="weapon">
+		<weapon melee="true" />
+	</item>
+	<item name="lsword" description="Long Sword" tilex="1" tiley="0" type="weapon">
+		<weapon melee="true" />
+	</item>
+	<item name="wshield" description="Wooden Shield" tilex="3" tiley="1" type="shield">
+		<weapon melee="false" />
+	</item>
+</items>
