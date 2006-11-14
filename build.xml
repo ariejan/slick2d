@@ -207,6 +207,10 @@
 	<createdemojnlp name="graphicstest" title="Slick2D Graphics Test" mainclass="org.newdawn.slick.tests.GraphicsTest"/>
 	<createdemojnlp name="geomtest" title="Slick2D Geom Test" mainclass="org.newdawn.slick.tests.GeomTest"/>
 	<createdemojnlp name="tilemaptest" title="Slick2D TileMap Test" mainclass="org.newdawn.slick.tests.TileMapTest"/>
+	
+	<createdemojnlp name="particletest" title="Slick2D Particle Test" mainclass="org.newdawn.slick.tests.ParticleTest"/>
+	<createdemojnlp name="transformtest" title="Slick2D Transform Test" mainclass="org.newdawn.slick.tests.TransformTest"/>	
+	<createdemojnlp name="statebasedtest" title="Slick2D StateBasedGame Test" mainclass="org.newdawn.slick.tests.StateBasedTest"/>
 
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
