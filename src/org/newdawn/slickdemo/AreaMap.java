@@ -53,10 +53,24 @@ public class AreaMap extends TiledMap {
 		}
 	}
 
+	/**
+	 * Check if a pixel location is on a blocked tile
+	 * 
+	 * @param x The x coordinate (pixel level) to check
+	 * @param y The y coordinate (pixel level) to check
+	 * @return True if the location is on a blocked tile
+	 */
 	public boolean blockedAt(int x, int y) {
 		return blocked[x/48][y/48];
 	}
 	
+	/**
+	 * Check if an actor at a specified location would be in a blocked area
+	 * 
+	 * @param x The x position of the actor
+	 * @param y The y position of the actor
+	 * @return True if an actor at the specified position would be intersecting a blocked area
+	 */
 	public boolean isBlockedForActorAt(float x, float y) {
 		int xp = (int) (x+16);
 		int yp = (int) (y+44);
@@ -70,15 +84,32 @@ public class AreaMap extends TiledMap {
 		return blocked;
 	}
 	
+	/**
+	 * Add an actor to this map
+	 * 
+	 * @param actor The actor to add to the map
+	 */
 	public void addActor(Actor actor) {
 		actors.add(actor);
 		actor.setAreaMap(this);
 	}
 	
+	/**
+	 * Remove an actor from this map
+	 * 
+	 * @param actor The actor to remove from the map
+	 */
 	public void removeActor(Actor actor) {
 		actors.remove(actor);
 	}
 	
+	/**
+	 * Render this map to the screen. Only the section around the player will
+	 * be rendered
+	 * 
+	 * @param g The graphics context to render the map to
+	 * @param player The player we're rendering around
+	 */
 	public void render(Graphics g, Actor player) {
 		tx = player.getX() - 400;
 		ty = player.getY() - 320;
@@ -94,7 +125,19 @@ public class AreaMap extends TiledMap {
 		render(g, -(tx%48),-(ty%48),tx/48,ty/48,18,15,true);
 	}
 
-	public void render(Graphics g, int x,int y,int sx,int sy,int width,int height, boolean lineByLine) {
+	/**
+	 * Render a section of the map
+	 * 
+	 * @param g The graphics context to render the map to
+	 * @param x The x coordinate we're rendering at
+	 * @param y The y coordinate we're rendering at
+	 * @param sx The x coordinate of the top left corner of the section to render
+	 * @param sy The y coorindate of the top left corner of the section to render
+	 * @param width The width of the section to render
+	 * @param height The height of the section to render
+	 * @param lineByLine True if we're rendering line by line and inserting actors 
+	 */
+	private void render(Graphics g, int x,int y,int sx,int sy,int width,int height, boolean lineByLine) {
 		Layer layer0 = (Layer) layers.get(0);
 		Layer layer1 = (Layer) layers.get(1);
 		Layer layer2 = (Layer) layers.get(2);
@@ -110,6 +153,7 @@ public class AreaMap extends TiledMap {
 			layer1.render(x,y,sx,sy,width,ty,lineByLine);
 		}
 
+		// DEBUG BLOCK
 //		g.setColor(new Color(1,0,0,0.5f));
 //		for (int ty=0;ty<height;ty++) {
 //			for (int tx=0;tx<width;tx++) {
@@ -126,6 +170,11 @@ public class AreaMap extends TiledMap {
 //		}
 	}
 	
+	/**
+	 * Update the map and all the actor therin
+	 * 
+	 * @param delta The amount of time since the last update (in milliseconds)
+	 */
 	public void update(int delta) {
 		for (int i=0;i<actors.size();i++) {
 			Actor actor = (Actor) actors.get(i);
@@ -133,6 +182,9 @@ public class AreaMap extends TiledMap {
 		}
 	}
 	
+	/**
+	 * @see org.newdawn.slick.tiled.TiledMap#renderedLine(int, int, int)
+	 */
 	protected void renderedLine(int visualY, int mapY, int layer) {
 		if (layer == 1) {
 			int thisOne = (mapY * 48) + 48;
