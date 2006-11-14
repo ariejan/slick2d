@@ -33,6 +33,18 @@ public class Color {
 	public float a;
 	
 	/**
+	 * Copy constructor
+	 * 
+	 * @param color The color to copy into the new instance
+	 */
+	public Color(Color color) {
+		r = color.r;
+		g = color.g;
+		b = color.b;
+		a = color.a;
+	}
+	
+	/**
 	 * Create a 3 component colour
 	 * 
 	 * @param r The red component of the colour (0.0 -> 1.0)
