@@ -240,6 +240,11 @@
 		 port="122"
 		 verbose="true"/>
 	<scp todir="${username}:${password}@${host}:${dir}/demos" 
+		 file="webstart/testdata.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${dir}/demos" 
 		 trust="true"
 		 port="122"
 		 verbose="true">
