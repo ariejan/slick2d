@@ -18,7 +18,9 @@ import org.newdawn.slick.particles.effects.FireEmitter;
 public class ParticleTest extends BasicGame {
 	/** The particle system running everything */
 	private ParticleSystem system;
-
+	/** The particle blending mode */
+	private int mode = ParticleSystem.BLEND_COMBINE;
+	
 	/**
 	 * Create a new test of graphics context rendering
 	 */
@@ -43,6 +45,8 @@ public class ParticleTest extends BasicGame {
 	 */
 	public void render(Graphics g) {
 		system.render();
+		
+		g.drawString("Press space to toggle blending mode", 200, 500);
 	}
 
 	/**
@@ -58,6 +62,10 @@ public class ParticleTest extends BasicGame {
 	public void keyPressed(int key, char c) {
 		if (key == Input.KEY_ESCAPE) {
 			System.exit(0);
+		}
+		if (key == Input.KEY_SPACE) {
+			mode = ParticleSystem.BLEND_ADDITIVE == mode ? ParticleSystem.BLEND_COMBINE : ParticleSystem.BLEND_ADDITIVE;
+			system.setBlendingMode(mode);
 		}
 	}
 	

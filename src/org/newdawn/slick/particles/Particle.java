@@ -61,7 +61,8 @@ public class Particle {
 	 * @param sprite The sprite to render this particle with
 	 */
 	public void render(Image sprite) {
-		sprite.draw((int) (x-(size/2)),(int) (y-(size/2)),(int) size,(int) size, color);
+		color.bind();
+		sprite.drawEmbedded((int) (x-(size/2)),(int) (y-(size/2)),(int) size,(int) size);
 	}
 	
 	/**

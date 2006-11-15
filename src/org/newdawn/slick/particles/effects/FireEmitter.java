@@ -60,7 +60,7 @@ public class FireEmitter implements ParticleEmitter {
 		if (timer <= 0) {
 			timer = interval;
 			Particle p = system.getNewParticle(this, 1000);
-			p.setColor(1, 1, 1, 1f);
+			p.setColor(1, 1, 1, 0.5f);
 			p.setPosition(x, y);
 			p.setSize(size);
 			float vx = (float) (-0.02f + (Math.random() * 0.04f));
@@ -79,6 +79,6 @@ public class FireEmitter implements ParticleEmitter {
 			particle.adjustSize(-0.04f * delta * (size / 40.0f));
 		}
 		float c = 0.002f * delta;
-		particle.adjustColor(0,-c/2,-c*2,-c/2);
+		particle.adjustColor(0,-c/2,-c*2,-c/4);
 	}
 }

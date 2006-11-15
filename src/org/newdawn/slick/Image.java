@@ -15,6 +15,8 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author kevin
  */
 public class Image {
+	/** The sprite sheet currently in use */
+	protected static Image inUse;
 	/** Use Linear Filtering */
 	public static final int FILTER_LINEAR = 1;
 	/** Use Nearest Filtering */
@@ -192,7 +194,7 @@ public class Image {
 	 * @param width The width to render the image at
 	 * @param height The height to render the image at
 	 */
-	protected void drawEmbedded(int x,int y,int width,int height) {
+	public void drawEmbedded(int x,int y,int width,int height) {
 	    GL11.glTexCoord2f(textureOffsetX, textureOffsetY);
 		GL11.glVertex3f(x, y, 0);
 		GL11.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
@@ -333,6 +335,37 @@ public class Image {
 		}
 		
 		return image;
+	}
+
+	/**
+	 * End the use of this sprite sheet and release the lock. 
+	 * 
+	 * @see #startUse
+	 */
+	public void endUse() {
+		if (inUse != this) {
+			throw new RuntimeException("The sprite sheet is not currently in use");
+		}
+		
+		inUse = null;
+		GL11.glEnd();
+	}
+	
+	/**
+	 * Start using this sheet. This method can be used for optimal rendering of a collection 
+	 * of sprites from a single sprite sheet. First, startUse(). Then render each sprite by
+	 * calling renderInUse(). Finally, endUse(). Between start and end there can be no rendering
+	 * of other sprites since the rendering is locked for this sprite sheet.
+	 */
+	public void startUse() {
+		if (inUse != null) {
+			throw new RuntimeException("Attempt to start use of a sprite sheet before ending use with another - see endUse()");
+		}
+		inUse = this;
+		
+		Color.white.bind();
+		texture.bind();
+		GL11.glBegin(GL11.GL_QUADS);
 	}
 	
 	/**

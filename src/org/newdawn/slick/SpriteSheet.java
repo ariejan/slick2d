@@ -10,9 +10,6 @@ import org.lwjgl.opengl.GL11;
  * @author Kevin Glass
  */
 public class SpriteSheet extends Image {
-	/** The sprite sheet currently in use */
-	private static SpriteSheet inUse;
-	
 	/** The width of a single element in pixels */
 	private int tw;
 	/** The height of a single element in pixels  */
@@ -70,26 +67,10 @@ public class SpriteSheet extends Image {
 	}
 	
 	/**
-	 * Start using this sheet. This method can be used for optimal rendering of a collection 
-	 * of sprites from a single sprite sheet. First, startUse(). Then render each sprite by
-	 * calling renderInUse(). Finally, endUse(). Between start and end there can be no rendering
-	 * of other sprites since the rendering is locked for this sprite sheet.
-	 */
-	public void startUse() {
-		if (inUse != null) {
-			throw new RuntimeException("Attempt to start use of a sprite sheet before ending use with another - see endUse()");
-		}
-		inUse = this;
-		
-		Color.white.bind();
-		texture.bind();
-		GL11.glBegin(GL11.GL_QUADS);
-	}
-	
-	/**
 	 * Render a sprite when this sprite sheet is in use. 
 	 * 
-	 * @see #startUse
+	 * @see #startUse()
+	 * @see #endUse()
 	 * 
 	 * @param x The x position to render the sprite at
 	 * @param y The y position to render the sprite at 
@@ -102,19 +83,5 @@ public class SpriteSheet extends Image {
 		}
 		
 		subImages[sx][sy].drawEmbedded(x, y, tw, th);
-	}
-	
-	/**
-	 * End the use of this sprite sheet and release the lock. 
-	 * 
-	 * @see #startUse
-	 */
-	public void endUse() {
-		if (inUse != this) {
-			throw new RuntimeException("The sprite sheet is not currently in use");
-		}
-		
-		inUse = null;
-		GL11.glEnd();
 	}
 }

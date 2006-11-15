@@ -2,8 +2,8 @@ package org.newdawn.slick.particles;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -14,6 +14,11 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class ParticleSystem {
+	/** The blending mode for the glowy style */
+	public static final int BLEND_ADDITIVE = 1;
+	/** The blending mode for the normal style */
+	public static final int BLEND_COMBINE = 2;
+	
 	/** The default number of particles in the system */
 	private static final int DEFAULT_PARTICLES = 100;
 	
@@ -27,6 +32,8 @@ public class ParticleSystem {
 	private ArrayList available = new ArrayList();
 	/** The dummy particle to return should no more particles be available */
 	private Particle dummy = new Particle(this);
+	/** The blending mode */
+	private int blendingMode = BLEND_COMBINE;
 	
 	/**
 	 * Create a new particle system
@@ -54,6 +61,15 @@ public class ParticleSystem {
 	}
 	
 	/**
+	 * Set the blending mode for the particles
+	 * 
+	 * @param mode The mode for blending particles together
+	 */
+	public void setBlendingMode(int mode) {
+		this.blendingMode = mode;
+	}
+	
+	/**
 	 * Add a particle emitter to be used on this system
 	 * 
 	 * @param emitter The emitter to be added
@@ -75,10 +91,20 @@ public class ParticleSystem {
 	 * Render the particles in the system
 	 */
 	public void render() {
+		if (blendingMode == BLEND_ADDITIVE) {
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+		}
+		
+		sprite.startUse();
 		for (int i=0;i<particles.length;i++) {
 			if (particles[i].inUse()) {
 				particles[i].render(sprite);
 			}
+		}
+		sprite.endUse();
+		
+		if (blendingMode == BLEND_ADDITIVE) {
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
 	}
 	
