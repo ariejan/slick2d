@@ -296,6 +296,38 @@ public class Input {
 	
 	/** The control states from the controllers */
 	private boolean[][] controls = new boolean[10][8];
+	/** True if the event has been consumed */
+	private boolean consumed = false;
+	/** A list of listeners to be notified of input events */
+	private ArrayList listeners = new ArrayList();
+	
+	/**
+	 * Add a listener to be notified of input events
+	 * 
+	 * @param listener The listener to be notified
+	 */
+	public void addListener(InputListener listener) {
+		listeners.add(listener);
+	}
+
+	/**
+	 * Add a listener to be notified of input events. This listener
+	 * will get events before others that are currently registered
+	 * 
+	 * @param listener The listener to be notified
+	 */
+	public void addPrimaryListener(InputListener listener) {
+		listeners.add(0, listener);
+	}
+	
+	/**
+	 * Remove a listener that will no longer be notified
+	 * 
+	 * @param listener The listen to be removed
+	 */
+	public void removeListener(InputListener listener) {
+		listeners.remove(listener);
+	}
 	
 	/**
 	 * Initialise the input system
@@ -480,6 +512,13 @@ public class Input {
 	}
 	
 	/**
+	 * Notification from an event handle that an event has been consumed
+	 */
+	public void consumeEvent() {
+		consumed = true;
+	}
+	
+	/**
 	 * A null stream to clear out those horrid errors
 	 *
 	 * @author kevin
@@ -497,38 +536,93 @@ public class Input {
 	/**
 	 * Poll the state of the input
 	 * 
-	 * @param listener The game to notify of events
 	 * @param width The width of the game view
 	 * @param height The height of the game view
 	 */
-	void poll(InputListener listener,int width, int height) {
+	void poll(int width, int height) {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				keys[Keyboard.getEventKey()] = Keyboard.getEventCharacter();
-				listener.keyPressed(Keyboard.getEventKey(), Keyboard.getEventCharacter());
+				
+				consumed = false;
+				for (int i=0;i<listeners.size();i++) {
+					InputListener listener = (InputListener) listeners.get(i);
+					
+					if (listener.isAcceptingInput()) {
+						listener.keyPressed(Keyboard.getEventKey(), Keyboard.getEventCharacter());
+						if (consumed) {
+							break;
+						}
+					}
+				}
 			} else {
-				listener.keyReleased(Keyboard.getEventKey(), keys[Keyboard.getEventKey()]);
+				consumed = false;
+				for (int i=0;i<listeners.size();i++) {
+					InputListener listener = (InputListener) listeners.get(i);
+					if (listener.isAcceptingInput()) {
+						listener.keyReleased(Keyboard.getEventKey(), keys[Keyboard.getEventKey()]);
+						if (consumed) {
+							break;
+						}
+					}
+				}
 			}
 		}
 		
 		while (Mouse.next()) {
 			if (Mouse.getEventButton() >= 0) {
 				if (Mouse.getEventButtonState()) {
-					listener.mousePressed(Mouse.getEventButton(), Mouse.getEventX(), height-Mouse.getEventY());
+					consumed = false;
+					for (int i=0;i<listeners.size();i++) {
+						InputListener listener = (InputListener) listeners.get(i);
+						if (listener.isAcceptingInput()) {
+							listener.mousePressed(Mouse.getEventButton(), Mouse.getEventX(), height-Mouse.getEventY());
+							if (consumed) {
+								break;
+							}
+						}
+					}
 				} else {
-					listener.mouseReleased(Mouse.getEventButton(), Mouse.getEventX(), height-Mouse.getEventY());
+					consumed = false;
+					for (int i=0;i<listeners.size();i++) {
+						InputListener listener = (InputListener) listeners.get(i);
+						if (listener.isAcceptingInput()) {
+							listener.mouseReleased(Mouse.getEventButton(), Mouse.getEventX(), height-Mouse.getEventY());
+							if (consumed) {
+								break;
+							}
+						}
+					}
 				}
 			} else {
 				if (Mouse.isGrabbed()) {
 					if ((Mouse.getEventDX() != 0) || (Mouse.getEventDY() != 0)) {
-						listener.mouseMoved(0, 0, Mouse.getEventDX(), Mouse.getEventDY());
+						consumed = false;
+						for (int i=0;i<listeners.size();i++) {
+							InputListener listener = (InputListener) listeners.get(i);
+							if (listener.isAcceptingInput()) {
+								listener.mouseMoved(0, 0, Mouse.getEventDX(), Mouse.getEventDY());
+								if (consumed) {
+									break;
+								}
+							}
+						}
 					}
 				}
 			}
 		}
 		
 		if ((lastMouseX != getMouseX()) || (lastMouseY != getMouseY())) {
-			listener.mouseMoved(lastMouseX,  height-lastMouseY, getMouseX(), height-getMouseY());
+			consumed = false;
+			for (int i=0;i<listeners.size();i++) {
+				InputListener listener = (InputListener) listeners.get(i);
+				if (listener.isAcceptingInput()) {
+					listener.mouseMoved(lastMouseX,  height-lastMouseY, getMouseX(), height-getMouseY());
+					if (consumed) {
+						break;
+					}
+				}
+			}
 			lastMouseX = getMouseX();
 			lastMouseY = getMouseY();
 		}
@@ -538,10 +632,10 @@ public class Input {
 				for (int c=0;c<=BUTTON3;c++) {
 					if (controls[i][c] && !isControlPressed(c, i)) {
 						controls[i][c] = false;
-						fireControlRelease(listener, c, i);
+						fireControlRelease(c, i);
 					} else if (!controls[i][c] && isControlPressed(c, i)) {
 						controls[i][c] = true;
-						fireControlPress(listener, c, i);
+						fireControlPress(c, i);
 					}
 				}
 			}
@@ -551,71 +645,87 @@ public class Input {
 	/**
 	 * Fire an event indicating that a control has been pressed
 	 * 
-	 * @param listener The game to fire the event to
 	 * @param index The index of the control pressed
 	 * @param controllerIndex The index of the controller on which the control was pressed
 	 */
-	private void fireControlPress(InputListener listener, int index, int controllerIndex) {
-		switch (index) {
-		case LEFT:
-			listener.controllerLeftPressed(controllerIndex);
-			return;
-		case RIGHT:
-			listener.controllerRightPressed(controllerIndex);
-			return;
-		case UP:
-			listener.controllerUpPressed(controllerIndex);
-			return;
-		case DOWN:
-			listener.controllerDownPressed(controllerIndex);
-			return;
-		case BUTTON1:
-			listener.controllerButtonPressed(controllerIndex, 1);
-			return;
-		case BUTTON2:
-			listener.controllerButtonPressed(controllerIndex, 2);
-			return;
-		case BUTTON3:
-			listener.controllerButtonPressed(controllerIndex, 3);
-			return;
+	private void fireControlPress(int index, int controllerIndex) {
+		consumed = false;
+		for (int i=0;i<listeners.size();i++) {
+			InputListener listener = (InputListener) listeners.get(i);
+			if (listener.isAcceptingInput()) {
+				switch (index) {
+				case LEFT:
+					listener.controllerLeftPressed(controllerIndex);
+					break;
+				case RIGHT:
+					listener.controllerRightPressed(controllerIndex);
+					break;
+				case UP:
+					listener.controllerUpPressed(controllerIndex);
+					break;
+				case DOWN:
+					listener.controllerDownPressed(controllerIndex);
+					break;
+				case BUTTON1:
+					listener.controllerButtonPressed(controllerIndex, 1);
+					break;
+				case BUTTON2:
+					listener.controllerButtonPressed(controllerIndex, 2);
+					break;
+				case BUTTON3:
+					listener.controllerButtonPressed(controllerIndex, 3);
+					break;
+				default:
+					throw new RuntimeException("Unknown control index");
+				}
+				if (consumed) {
+					break;
+				}
+			}
 		}
-		
-		throw new RuntimeException("Unknown control index");
 	}
 
 	/**
 	 * Fire an event indicating that a control has been released
 	 * 
-	 * @param listener The game to fire the event to
 	 * @param index The index of the control released
 	 * @param controllerIndex The index of the controller on which the control was released
 	 */
-	private void fireControlRelease(InputListener listener, int index, int controllerIndex) {
-		switch (index) {
-		case LEFT:
-			listener.controllerLeftReleased(controllerIndex);
-			return;
-		case RIGHT:
-			listener.controllerRightReleased(controllerIndex);
-			return;
-		case UP:
-			listener.controllerUpReleased(controllerIndex);
-			return;
-		case DOWN:
-			listener.controllerDownReleased(controllerIndex);
-			return;
-		case BUTTON1:
-			listener.controllerButtonReleased(controllerIndex, 1);
-			return;
-		case BUTTON2:
-			listener.controllerButtonReleased(controllerIndex, 2);
-			return;
-		case BUTTON3:
-			listener.controllerButtonReleased(controllerIndex, 3);
-			return;
+	private void fireControlRelease(int index, int controllerIndex) {
+		consumed = false;
+		for (int i=0;i<listeners.size();i++) {
+			InputListener listener = (InputListener) listeners.get(i);
+			if (listener.isAcceptingInput()) {
+				switch (index) {
+				case LEFT:
+					listener.controllerLeftReleased(controllerIndex);
+					break;
+				case RIGHT:
+					listener.controllerRightReleased(controllerIndex);
+					break;
+				case UP:
+					listener.controllerUpReleased(controllerIndex);
+					break;
+				case DOWN:
+					listener.controllerDownReleased(controllerIndex);
+					break;
+				case BUTTON1:
+					listener.controllerButtonReleased(controllerIndex, 1);
+					break;
+				case BUTTON2:
+					listener.controllerButtonReleased(controllerIndex, 2);
+					break;
+				case BUTTON3:
+					listener.controllerButtonReleased(controllerIndex, 3);
+					break;
+				default:
+					throw new RuntimeException("Unknown control index");
+				}
+				if (consumed) {
+					break;
+				}
+			}
 		}
-		
-		throw new RuntimeException("Unknown control index");
 	}
 	
 	/**

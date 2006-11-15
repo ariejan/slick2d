@@ -1,41 +1,69 @@
-package org.newdawn.slick.state;
+package org.newdawn.slick.gui;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.InputListener;
 
 /**
- * A simple state used an adapter so we don't have to implement all the event methods
- * every time.
+ * The utility class to handle all the input related gubbins
+ * for basic GUI components
  *
  * @author kevin
  */
-public abstract class BasicGameState implements GameState {
+public abstract class BasicComponent implements InputListener {
+	/** The input sending the events this component handles */
+	protected Input input;
+	/** True if the component is current acceptingInput */
+	private boolean acceptingInput;
+	/** The game container */
+	protected GameContainer container;
+	
+	/**
+	 * Create a new component
+	 * 
+	 * @param container The container displaying this component
+	 */
+	public BasicComponent(GameContainer container) {
+		this.container = container;
+		
+		input = container.getInput();
+		input.addPrimaryListener(this);
+	}
 
 	/**
 	 * @see org.newdawn.slick.InputListener#isAcceptingInput()
 	 */
 	public boolean isAcceptingInput() {
-		return true;
+		return acceptingInput;
 	}
 	
 	/**
-	 * @see org.newdawn.slick.InputListener#setInput(org.newdawn.slick.Input)
+	 * Render this component to the screen
+	 *
+	 * @param container The container displaying this component
+	 * @param g The graphics context used to render to the display
 	 */
-	public void setInput(Input input) {
+	public final void render(GameContainer container, Graphics g) {
+		acceptingInput = true;
+		renderImpl(container, g);
 	}
-	
-	/**
-	 * @see org.newdawn.slick.InputListener#inputEnded()
-	 */
-	public void inputEnded() {
-	}
-	
-	/**
-	 * @see org.newdawn.slick.state.GameState#getID()
-	 */
-	public abstract int getID();
 
+	/**
+	 * Render this component to the screen
+	 *
+	 * @param container The container displaying this component
+	 * @param g The graphics context used to render to the display
+	 */
+	public abstract void renderImpl(GameContainer container, Graphics g);
+	
+	/**
+	 * Indicate that this component has consumed the last reported event
+	 */
+	protected void consumeEvent() {
+		input.consumeEvent();
+	}
+	
 	/**
 	 * @see org.newdawn.slick.InputListener#controllerButtonPressed(int, int)
 	 */
@@ -64,7 +92,6 @@ public abstract class BasicGameState implements GameState {
 	 * @see org.newdawn.slick.InputListener#controllerLeftPressed(int)
 	 */
 	public void controllerLeftPressed(int controller) {
-		
 	}
 
 	/**
@@ -128,15 +155,16 @@ public abstract class BasicGameState implements GameState {
 	}
 
 	/**
-	 * @see org.newdawn.slick.state.GameState#enter(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
+	 * @see org.newdawn.slick.InputListener#setInput(org.newdawn.slick.Input)
 	 */
-	public void enter(GameContainer container, StateBasedGame game) {
+	public void setInput(Input input) {
+		this.input = input;
 	}
-
+	
 	/**
-	 * @see org.newdawn.slick.state.GameState#leave(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
+	 * @see org.newdawn.slick.InputListener#inputEnded()
 	 */
-	public void leave(GameContainer container, StateBasedGame game) {
+	public void inputEnded() {
+		acceptingInput = false;
 	}
-
 }

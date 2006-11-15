@@ -212,6 +212,8 @@
 	<createdemojnlp name="transformtest" title="Slick2D Transform Test" mainclass="org.newdawn.slick.tests.TransformTest"/>	
 	<createdemojnlp name="statebasedtest" title="Slick2D StateBasedGame Test" mainclass="org.newdawn.slick.tests.StateBasedTest"/>
 
+	<createdemojnlp name="guitest" title="Slick2D GUI Test" mainclass="org.newdawn.slick.tests.GUITest"/>
+
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
 

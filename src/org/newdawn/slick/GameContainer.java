@@ -57,6 +57,8 @@ public abstract class GameContainer {
 	protected GameContainer(Game game) {
 		this.game = game;
 		lastFrame = getTime();
+		
+		input.addListener(game);
 	}
 	
 	/**
@@ -231,7 +233,7 @@ public abstract class GameContainer {
 	 * @throws SlickException Indicates an internal fault to the game.
 	 */
 	protected void updateAndRender(int delta) throws SlickException {
-		input.poll(game, width, height);
+		input.poll(width, height);
 		
 		SoundStore.get().poll(delta);
 		if (delta != 0) {
@@ -301,8 +303,6 @@ public abstract class GameContainer {
             }
         });
 		
-//		defaultFont = new AngelCodeFont("org/newdawn/slick/data/default.fnt",
-//							   			"org/newdawn/slick/data/default_00.tga");
 		graphics = new Graphics(defaultFont, width, height);
 		
 		input.init();

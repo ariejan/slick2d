@@ -29,6 +29,12 @@ public abstract class BasicGame implements Game {
 	public BasicGame(String title) {
 		this.title = title;
 	}
+
+	/**
+	 * @see org.newdawn.slick.InputListener#setInput(org.newdawn.slick.Input)
+	 */
+	public void setInput(Input input) {	
+	}
 	
 	/**
 	 * @see org.newdawn.slick.Game#closeRequested()
@@ -133,4 +139,17 @@ public abstract class BasicGame implements Game {
 	 */
 	public abstract void update(GameContainer container, int delta) throws SlickException;
 
+	/**
+	 * @see org.newdawn.slick.InputListener#isAcceptingInput()
+	 */
+	public boolean isAcceptingInput() {
+		return true;
+	}
+	
+	/**
+	 * @see org.newdawn.slick.InputListener#inputEnded()
+	 */
+	public void inputEnded() {
+		
+	}
 }

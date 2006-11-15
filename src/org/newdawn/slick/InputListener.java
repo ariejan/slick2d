@@ -6,7 +6,24 @@ package org.newdawn.slick;
  * @author kevin
  */
 public interface InputListener {
-
+	/**
+	 * Set the input that events are being sent from
+	 * 
+	 * @param input The input instance sending events
+	 */
+	public void setInput(Input input);
+	
+	/**
+	 * Check if this input listener is accepting input
+	 * 
+	 * @return True if the input listener should recieve events
+	 */
+	public boolean isAcceptingInput();
+	
+	/**
+	 * Notification that all input events have been sent for this frame
+	 */
+	public void inputEnded();
 	
 	/**
 	 * Notification that a key was pressed

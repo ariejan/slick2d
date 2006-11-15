@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.Transition;
@@ -52,6 +53,12 @@ public abstract class StateBasedGame implements Game {
 			public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
 			}
 		};
+	}
+
+	/**
+	 * @see org.newdawn.slick.InputListener#setInput(org.newdawn.slick.Input)
+	 */
+	public void setInput(Input input) {
 	}
 	
 	/**
@@ -357,4 +364,16 @@ public abstract class StateBasedGame implements Game {
 		currentState.mouseReleased(button, x, y);
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#isAcceptingInput()
+	 */
+	public boolean isAcceptingInput() {
+		return true;
+	}
+	
+	/**
+	 * @see org.newdawn.slick.InputListener#inputEnded()
+	 */
+	public void inputEnded() {
+	}
 }

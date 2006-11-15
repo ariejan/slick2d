@@ -44,6 +44,15 @@ public class Graphics {
 	}
 	
 	/**
+	 * Get the current font
+	 * 
+	 * @return The current font
+	 */
+	public Font getFont() {
+		return font;
+	}
+	
+	/**
 	 * Set the background colour of the graphics context
 	 * 
 	 * @param color The background color of the graphics context
