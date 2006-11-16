@@ -148,6 +148,15 @@ public class Graphics {
 	}
 	
 	/**
+	 * Get the color in use by this graphics context
+	 * 
+	 * @return The color in use by this graphics context
+	 */
+	public Color getColor() {
+		return new Color(currentColor);
+	}
+	
+	/**
 	 * Draw a line on the canvas in the current colour
 	 * 
 	 * @param x1 The x coordinate of the start point

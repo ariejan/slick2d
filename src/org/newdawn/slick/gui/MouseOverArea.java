@@ -4,14 +4,22 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
 
 /**
- * TODO: Document this class
+ * A mouse over area that can be used for menus or buttons
  *
  * @author kevin
  */
 public class MouseOverArea extends BasicComponent {
+	/** The default state */
+	private static final int NORMAL = 1;
+	/** The mouse down state */
+	private static final int MOUSE_DOWN = 2;
+	/** The mouse over state */
+	private static final int MOUSE_OVER = 3;
+	
 	/** The normalImage being displayed in normal state */
 	private Image normalImage;
 	/** The normalImage being displayed in mouseOver state */
@@ -26,6 +34,11 @@ public class MouseOverArea extends BasicComponent {
 	/** The colour used in mouseDown state */
 	private Color mouseDownColor = Color.white;
 	
+	/** The sound for mouse over */
+	private Sound mouseOverSound;
+	/** The sound for mouse down */
+	private Sound mouseDownSound;
+	
 	/** True if the mouse is down */
 	private boolean mouseDown;
 
@@ -39,6 +52,9 @@ public class MouseOverArea extends BasicComponent {
 	private ComponentListener listener;
 	/** True if the mouse is over the area */
 	private boolean over;
+	
+	/** The state of the area */
+	private int state = NORMAL;
 	
 	/**
 	 * Create a new mouse over area
@@ -177,15 +193,46 @@ public class MouseOverArea extends BasicComponent {
 		if (!over) {
 			currentImage = normalImage;
 			currentColor = normalColor;
+			state = NORMAL;
 		} else {
 			if (mouseDown) {
-				currentImage = mouseDownImage;
-				currentColor = mouseDownColor;
+				if (state != MOUSE_DOWN) {
+					if (mouseDownSound != null) {
+						mouseDownSound.play();
+					}
+					currentImage = mouseDownImage;
+					currentColor = mouseDownColor;
+					state = MOUSE_DOWN;
+				}
 			} else {
-				currentImage = mouseOverImage;
-				currentColor = mouseOverColor;
+				if (state != MOUSE_OVER) {
+					if (mouseOverSound != null) {
+						mouseDownSound.play();
+					}
+					currentImage = mouseOverImage;
+					currentColor = mouseOverColor;
+					state = MOUSE_OVER;
+				}
 			}
 		}
+	}
+	
+	/**
+	 * Set the mouse over sound effect
+	 * 
+	 * @param sound The mouse over sound effect
+	 */
+	public void setMouseOverSound(Sound sound) {
+		mouseOverSound = sound;
+	}
+
+	/**
+	 * Set the mouse down sound effect
+	 * 
+	 * @param sound The mouse down sound effect
+	 */
+	public void setMouseDownSound(Sound sound) {
+		mouseDownSound = sound;
 	}
 	
 	/**

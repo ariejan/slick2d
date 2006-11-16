@@ -110,6 +110,25 @@ public class Color {
 	}
 	
 	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return ((int) (r+g+b+a)*255);
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object other) {
+		if (other instanceof Color) {
+			Color o = (Color) other;
+			return ((o.r == r) && (o.g == g) && (o.b == b) && (o.a == a));
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {

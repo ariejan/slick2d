@@ -34,8 +34,10 @@ public class FadeInTransition implements Transition {
 	 * @see org.newdawn.slick.state.transition.Transition#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) {
+		Color old = g.getColor();
 		g.setColor(color);
 		g.fillRect(0, 0, container.getWidth(), container.getHeight());
+		g.setColor(old);
 	}
 	
 	/**
