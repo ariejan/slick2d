@@ -10,19 +10,21 @@ import org.newdawn.slick.Image;
  */
 public class Particle {
 	/** The x coordinate of the particle */
-	private float x;
+	protected float x;
 	/** The y coordinate of the particle */
-	private float y;
+	protected float y;
 	/** The x component of the velocity of the particle */
-	private float vx;
+	protected float vx;
 	/** The y component of the velocity of the particle */
-	private float vy;
+	protected float vy;
 	/** The current size in pixels of the particle */
-	private float size = 10;
+	protected float size = 10;
 	/** The colour of the particle */
-	private Color color = new Color(1f,1f,1f,1f);
+	protected Color color = new Color(1f,1f,1f,1f);
 	/** The life left in the particle */
-	private float life;
+	protected float life;
+	/** The original life of this particle */
+	protected float originalLife;
 	/** The engine this particle belongs to */
 	private ParticleSystem engine;
 	/** The emitter controllng this particle */
@@ -95,7 +97,7 @@ public class Particle {
 		vx = 0;
 		vy = 0;
 		size = 10;
-		this.life = life;
+		this.originalLife = this.life = life;
 	}
 	
 	/**
@@ -180,7 +182,7 @@ public class Particle {
 	}
 	
 	/**
-	 * Adjust the position of this particle
+	 * Adjust (add) the position of this particle
 	 * 
 	 * @param dx The amount to adjust the x component by
 	 * @param dy The amount to adjust the y component by 
@@ -191,7 +193,7 @@ public class Particle {
 	}
 	
 	/**
-	 * Adjust the color of the particle
+	 * Adjust (add) the color of the particle
 	 * 
 	 * @param r The amount to adjust the red component by
 	 * @param g The amount to adjust the green component by
@@ -206,7 +208,7 @@ public class Particle {
 	}
 
 	/**
-	 * Adjust the color of the particle
+	 * Adjust (add) the color of the particle
 	 * 
 	 * @param r The amount to adjust the red component by
 	 * @param g The amount to adjust the green component by
@@ -221,7 +223,7 @@ public class Particle {
 	}
 
 	/**
-	 * Adjust the vecloity of this particle
+	 * Adjust (add) the vecloity of this particle
 	 * 
 	 * @param dx The amount to adjust the x component by
 	 * @param dy The amount to adjust the y component by 

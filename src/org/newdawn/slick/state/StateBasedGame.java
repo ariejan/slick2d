@@ -131,8 +131,9 @@ public abstract class StateBasedGame implements Game {
 	 * Initialise the list of states making up this game
 	 * 
 	 * @param container The container holding the game
+	 * @throws SlickException Indicates a failure to initialise the state based game resources
 	 */
-	public abstract void initStatesList(GameContainer container);
+	public abstract void initStatesList(GameContainer container) throws SlickException;
 	
 	/**
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)

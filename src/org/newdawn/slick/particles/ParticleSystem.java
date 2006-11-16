@@ -25,13 +25,13 @@ public class ParticleSystem {
 	/** The image for the particle */
 	private Image sprite;
 	/** The particles being rendered and maintained */
-	private Particle[] particles;
+	protected Particle[] particles;
 	/** The list of emittered producing and controlling particles */
-	private ArrayList emitters = new ArrayList();
+	protected ArrayList emitters = new ArrayList();
 	/** The list of particles left to be used, if this size() == 0 then the particle engine was too small for the effect */
-	private ArrayList available = new ArrayList();
+	protected ArrayList available = new ArrayList();
 	/** The dummy particle to return should no more particles be available */
-	private Particle dummy = new Particle(this);
+	protected Particle dummy;
 	/** The blending mode */
 	private int blendingMode = BLEND_COMBINE;
 	
@@ -54,10 +54,22 @@ public class ParticleSystem {
 		this.sprite = image;
 		particles = new Particle[maxParticles];
 	
+		dummy = createParticle(this);
 		for (int i=0;i<particles.length;i++) {
-			particles[i] = new Particle(this);
+			particles[i] = createParticle(this);
 			available.add(particles[i]);
 		}
+	}
+	
+	/**
+	 * Create a particle specific to this system, override for your own implementations. 
+	 * These particles will be cached and reused within this system.
+	 * 
+	 * @param system The system owning this particle
+	 * @return The newly created particle.
+	 */
+	protected Particle createParticle(ParticleSystem system) {
+		return new Particle(system);
 	}
 	
 	/**
