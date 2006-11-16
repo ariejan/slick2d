@@ -139,10 +139,14 @@ public class AppGameContainer extends GameContainer {
 	 * @throws SlickException Indicates we failed to change the display mode
 	 */
 	public void setFullscreen(boolean fullscreen) throws SlickException {
-		try {
-			Display.setFullscreen(fullscreen);
-		} catch (LWJGLException e) {
-			throw new SlickException("Unable to set fullscreen="+fullscreen, e);
+		if (!fullscreen) {
+			try {
+				Display.setFullscreen(fullscreen);
+			} catch (LWJGLException e) {
+				throw new SlickException("Unable to set fullscreen="+fullscreen, e);
+			}
+		} else {
+			setDisplayMode(width, height, fullscreen);
 		}
 	}
 	
