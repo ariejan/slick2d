@@ -29,6 +29,8 @@ public class Particle {
 	private ParticleSystem engine;
 	/** The emitter controllng this particle */
 	private ParticleEmitter emitter;
+	/** The image for this particle */
+	protected Image image;
 	
 	/**
 	 * Create a new particle belonging to given engine
@@ -37,6 +39,15 @@ public class Particle {
 	 */
 	public Particle(ParticleSystem engine) {
 		this.engine = engine;
+	}
+	
+	/**
+	 * Set the image used to render this particle
+	 * 
+	 * @param image The image used to render this particle
+	 */
+	public void setImage(Image image) {
+		this.image = image;
 	}
 	
 	/**
@@ -59,12 +70,9 @@ public class Particle {
 	
 	/**
 	 * Render this particle 
-	 * 
-	 * @param sprite The sprite to render this particle with
 	 */
-	public void render(Image sprite) {
-		color.bind();
-		sprite.drawEmbedded((int) (x-(size/2)),(int) (y-(size/2)),(int) size,(int) size);
+	public void render() {
+		image.draw((int) (x-(size/2)),(int) (y-(size/2)),(int) size,(int) size,color);
 	}
 	
 	/**

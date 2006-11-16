@@ -22,7 +22,7 @@ public class ParticleSystem {
 	/** The default number of particles in the system */
 	private static final int DEFAULT_PARTICLES = 100;
 	
-	/** The image for the particle */
+	/** The default image for the particles */
 	private Image sprite;
 	/** The particles being rendered and maintained */
 	protected Particle[] particles;
@@ -38,20 +38,20 @@ public class ParticleSystem {
 	/**
 	 * Create a new particle system
 	 * 
-	 * @param sprite The sprite to render for each particle
+	 * @param defaultSprite The sprite to render for each particle
 	 */
-	public ParticleSystem(Image sprite) {
-		this(sprite, DEFAULT_PARTICLES);
+	public ParticleSystem(Image defaultSprite) {
+		this(defaultSprite, DEFAULT_PARTICLES);
 	}
 	
 	/**
 	 * Create a new particle system
 	 * 
-	 * @param image The sprite to render for each particle
+	 * @param defaultSprite The sprite to render for each particle
 	 * @param maxParticles The number of particles available in the system
 	 */
-	public ParticleSystem(Image image, int maxParticles) {
-		this.sprite = image;
+	public ParticleSystem(Image defaultSprite, int maxParticles) {
+		this.sprite = defaultSprite;
 		particles = new Particle[maxParticles];
 	
 		dummy = createParticle(this);
@@ -107,13 +107,11 @@ public class ParticleSystem {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		}
 		
-		sprite.startUse();
 		for (int i=0;i<particles.length;i++) {
 			if (particles[i].inUse()) {
-				particles[i].render(sprite);
+				particles[i].render();
 			}
 		}
-		sprite.endUse();
 		
 		if (blendingMode == BLEND_ADDITIVE) {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -150,6 +148,8 @@ public class ParticleSystem {
 		if (available.size() > 0) {
 			Particle p = (Particle) available.remove(0);
 			p.init(emitter, life);
+			p.setImage(sprite);
+			
 			return p;
 		}
 		
