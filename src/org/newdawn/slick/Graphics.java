@@ -2,6 +2,7 @@ package org.newdawn.slick;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.FastTrig;
@@ -165,11 +166,52 @@ public class Graphics {
 	 * @param y2 The y coordinate of the end point
 	 */
 	public void drawLine(int x1, int y1, int x2, int y2) {
+		currentColor.bind();
 		Texture.bindNone();
 		
 		GL11.glBegin(GL11.GL_LINES);
 			GL11.glVertex2f(x1,y1);
 			GL11.glVertex2f(x2,y2);
+		GL11.glEnd();
+	}
+	
+	/**
+	 * Fill a polygon to the graphics context
+	 * 
+	 * @param poly The polygon to fill
+	 */
+	public void fill(Polygon poly) {
+		if (poly.getPointCount() < 3) {
+			return;
+		}
+
+		currentColor.bind();
+		Texture.bindNone();
+		poly.fill(this);
+	}
+
+	/**
+	 * Draw a polygon to the graphics context
+	 * 
+	 * @param poly The polygon to draw
+	 */
+	public void draw(Polygon poly) {
+		if (poly.getPointCount() < 3) {
+			return;
+		}
+
+		currentColor.bind();
+		Texture.bindNone();
+		GL11.glBegin(GL11.GL_LINE_STRIP);
+		
+		for (int i=0;i<poly.getPointCount();i++) {
+			float[] pt = poly.getPoint(i);
+			GL11.glVertex2f(pt[0],pt[1]);
+		}
+		
+		float[] pt = poly.getPoint(0);
+		GL11.glVertex2f(pt[0],pt[1]);
+		
 		GL11.glEnd();
 	}
 	
@@ -221,6 +263,7 @@ public class Graphics {
 	 */
 	public void drawRect(int x1,int y1,int width,int height) {
 		Texture.bindNone();
+		currentColor.bind();
 		
 		GL11.glBegin(GL11.GL_LINE_STRIP);
 			GL11.glVertex2f(x1,y1);
@@ -262,6 +305,7 @@ public class Graphics {
 	 */
 	public void fillRect(int x1,int y1,int width,int height) {
 		Texture.bindNone();
+		currentColor.bind();
 		
 		GL11.glBegin(GL11.GL_QUADS);
 			GL11.glVertex2f(x1,y1);
@@ -294,6 +338,7 @@ public class Graphics {
 	 */
 	public void drawOval(int x1, int y1, int width, int height,int segments) {
 		Texture.bindNone();
+		currentColor.bind();
 		
 		float cx = x1 + (width/2.0f);
 		float cy = y1 + (height/2.0f);
@@ -333,6 +378,7 @@ public class Graphics {
 	 */
 	public void fillOval(int x1, int y1, int width, int height,int segments) {
 		Texture.bindNone();
+		currentColor.bind();
 		
 		float cx = x1 + (width/2.0f);
 		float cy = y1 + (height/2.0f);

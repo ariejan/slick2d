@@ -8,6 +8,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.util.FastTrig;
 
 /**
  * A simple graphics test for the context allowing vector based graphics
@@ -21,7 +23,9 @@ public class GraphicsTest extends BasicGame {
 	private float ang;
 	/** The image being rendered */
 	private Image image;
-
+	/** A polygon to be rendered */
+	private Polygon poly;
+	
 	/**
 	 * Create a new test of graphics context rendering
 	 */
@@ -37,6 +41,19 @@ public class GraphicsTest extends BasicGame {
 		container.setMouseCursor("testdata/cursor.tga", 0, 0);
 		
 		container.setTargetFrameRate(100);
+		
+		poly = new Polygon();
+		float len = 100;
+		
+		for (int x=0;x<360;x+=30) {
+			if (len == 100) {
+				len = 50; 
+			} else {
+				len = 100;
+			}
+			poly.addPoint((float) FastTrig.cos(Math.toRadians(x)) * len, 
+						  (float) FastTrig.sin(Math.toRadians(x)) * len);
+		}
 	}
 
 	/**
@@ -63,6 +80,17 @@ public class GraphicsTest extends BasicGame {
 			g.drawRect(100,260,400,100);
 			g.setClip(100,260,400,100);
 		}
+
+		g.setColor(Color.yellow);
+		g.translate(100, 120);
+		g.fill(poly);
+		g.setColor(Color.blue);
+		g.setLineWidth(3);
+		g.draw(poly);
+		g.setLineWidth(1);
+		g.translate(0, 230);
+		g.draw(poly);
+		g.resetTransform();
 		
 		g.rotate(400, 300, ang);
 		g.setColor(Color.green);
