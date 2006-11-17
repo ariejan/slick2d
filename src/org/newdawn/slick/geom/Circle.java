@@ -129,8 +129,6 @@ public strictfp class Circle {
 		lines[3] = new Line(x1,y2,x1,y1);
 		
 		float r2 = circle.getRadius() * circle.getRadius();
-		int closest = -1;
-		float closestDistance = Float.MAX_VALUE;
 		
 		Vector2f pos = new Vector2f(circle.getX(), circle.getY());
 		

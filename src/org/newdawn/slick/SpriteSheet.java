@@ -2,8 +2,6 @@ package org.newdawn.slick;
 
 import java.io.InputStream;
 
-import org.lwjgl.opengl.GL11;
-
 /**
  * A sheet of sprites that can be drawn individually
  * 

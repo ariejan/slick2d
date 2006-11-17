@@ -232,7 +232,7 @@ public class OggDecoder {
 								while ((samples = vd.synthesis_pcmout(_pcm,
 										_index)) > 0) {
 									float[][] pcm = _pcm[0];
-									boolean clipflag = false;
+									//boolean clipflag = false;
 									int bout = (samples < convsize ? samples
 											: convsize);
 
@@ -249,11 +249,11 @@ public class OggDecoder {
 											// might as well guard against clipping
 											if (val > 32767) {
 												val = 32767;
-												clipflag = true;
+												//clipflag = true;
 											}
 											if (val < -32768) {
 												val = -32768;
-												clipflag = true;
+												//clipflag = true;
 											}
 											if (val < 0)
 												val = val | 0x8000;

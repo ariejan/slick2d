@@ -2,7 +2,6 @@ package org.newdawn.slick;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -42,10 +41,6 @@ public class AppGameContainer extends GameContainer {
 	/** The display mode we're going to try and use */
 	private DisplayMode targetDisplayMode;
 	
-	/** True if we're running in fullscreen mode */
-	private boolean fullscreen;
-	/** The dummy stream used to override output for LWJGL */
-	private PrintStream dummyStream;
 	
 	/**
 	 * Create a new container wrapping a game
@@ -55,8 +50,6 @@ public class AppGameContainer extends GameContainer {
 	 */
 	public AppGameContainer(Game game) throws SlickException {
 		this(game,640,480,false);
-		
-		dummyStream = new PrintStream(new NullOutputStream());
 	}
 
 	/**
@@ -108,7 +101,6 @@ public class AppGameContainer extends GameContainer {
 			
 			this.width = width;
 			this.height = height;
-			this.fullscreen = fullscreen;
 
 			Display.setDisplayMode(targetDisplayMode);
 			Display.setFullscreen(fullscreen);

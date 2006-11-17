@@ -2,7 +2,6 @@ package org.newdawn.slickdemo;
 
 import java.util.ArrayList;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
@@ -16,8 +15,6 @@ public class AreaMap extends TiledMap {
 
 	/** The actors in the area */
 	private ArrayList actors = new ArrayList();
-	/** The central player */
-	private Actor player;
 	/** The graphics context */
 	private Graphics g;
 	/** A map of blocked areas */
@@ -119,7 +116,6 @@ public class AreaMap extends TiledMap {
 		tx = Math.min(tx, (width * 48) - 800);
 		ty = Math.min(ty, (height * 48) - 640 + 40);
 		
-		this.player = player;
 		this.g = g;
 		
 		render(g, -(tx%48),-(ty%48),tx/48,ty/48,18,15,true);

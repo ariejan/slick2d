@@ -139,9 +139,9 @@ public class TGAImageData implements ImageData {
 					red = dis.readByte();
 					
 					int ofs = ((j + (i * texWidth)) * 3);
-					rawData[ofs] = (byte) red;
-					rawData[ofs + 1] = (byte) green;
-					rawData[ofs + 2] = (byte) blue;
+					rawData[ofs] = red;
+					rawData[ofs + 1] = green;
+					rawData[ofs + 2] = blue;
 				}
 			}
 		} else if (pixelDepth == 32) {
@@ -155,10 +155,10 @@ public class TGAImageData implements ImageData {
 						
 						int ofs = ((j + (i * texWidth)) * 4);
 						
-						rawData[ofs] = (byte) red;
-						rawData[ofs + 1] = (byte) green;
-						rawData[ofs + 2] = (byte) blue;
-						rawData[ofs + 3] = (byte) alpha;
+						rawData[ofs] = red;
+						rawData[ofs + 1] = green;
+						rawData[ofs + 2] = blue;
+						rawData[ofs + 3] = alpha;
 						
 						if (alpha == 0) {
 							rawData[ofs + 2] = (byte) 0;
@@ -178,25 +178,21 @@ public class TGAImageData implements ImageData {
 						int ofs = ((j + (i * texWidth)) * 4);
 						
 						if (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN) {
-							rawData[ofs] = (byte) red;
-							rawData[ofs + 1] = (byte) green;
-							rawData[ofs + 2] = (byte) blue;
-							rawData[ofs + 3] = (byte) alpha;
-//							rawData[ofs + 2] = (byte) red;
-//							rawData[ofs + 1] = (byte) green;
-//							rawData[ofs] = (byte) blue;
-//							rawData[ofs + 3] = (byte) alpha;
+							rawData[ofs] = red;
+							rawData[ofs + 1] = green;
+							rawData[ofs + 2] = blue;
+							rawData[ofs + 3] = alpha;
 						} else {
-							rawData[ofs] = (byte) red;
-							rawData[ofs + 1] = (byte) green;
-							rawData[ofs + 2] = (byte) blue;
-							rawData[ofs + 3] = (byte) alpha;
+							rawData[ofs] = red;
+							rawData[ofs + 1] = green;
+							rawData[ofs + 2] = blue;
+							rawData[ofs + 3] = alpha;
 						}
 						
 						if (alpha == 0) {
-							rawData[ofs + 2] = (byte) 0;
-							rawData[ofs + 1] = (byte) 0;
-							rawData[ofs] = (byte) 0;
+							rawData[ofs + 2] = 0;
+							rawData[ofs + 1] = 0;
+							rawData[ofs] = 0;
 						}
 					}
 				}

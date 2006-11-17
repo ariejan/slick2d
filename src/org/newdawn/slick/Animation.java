@@ -1,6 +1,5 @@
 package org.newdawn.slick;
 
-import java.awt.Frame;
 import java.util.ArrayList;
 
 import org.lwjgl.Sys;

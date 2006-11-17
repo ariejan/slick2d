@@ -2,7 +2,6 @@ package org.newdawn.slick;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;

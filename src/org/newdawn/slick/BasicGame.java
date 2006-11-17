@@ -1,6 +1,5 @@
 package org.newdawn.slick;
 
-import org.newdawn.slick.util.Log;
 
 /**
  * A basic implementation of a game to take out the boring bits

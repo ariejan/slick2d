@@ -159,8 +159,8 @@ public class PackedSpriteSheet {
 			height = Integer.parseInt(reader.readLine().trim());
 			tilesx = Integer.parseInt(reader.readLine().trim());
 			tilesy = Integer.parseInt(reader.readLine().trim());
-			int borderType = Integer.parseInt(reader.readLine().trim());
-			int borderOffset = Integer.parseInt(reader.readLine().trim());
+			reader.readLine().trim();
+			reader.readLine().trim();
 			
 			tilesx = Math.max(1,tilesx);
 			tilesy = Math.max(1,tilesy);
