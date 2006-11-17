@@ -132,6 +132,10 @@ public class TiledMap {
 	 * @return The value assigned to the property on the tile (or the default value if none is supplied)
 	 */
 	public String getTileProperty(int tileID, String propertyName, String def) {
+		if (tileID == 0) {
+			return def;
+		}
+		
 		TileSet set = findTileSet(tileID);
 		
 		Properties props = set.getProperties(tileID);
