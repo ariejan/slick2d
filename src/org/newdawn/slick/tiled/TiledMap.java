@@ -11,6 +11,7 @@ import java.util.zip.GZIPInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.util.Log;
@@ -71,14 +72,15 @@ public class TiledMap {
 	 * @throws SlickException Indicates a failure to load the tilemap
 	 */
 	public TiledMap(String ref) throws SlickException {
-		load(ResourceLoader.getResourceAsStream(ref), "");
+		ref = ref.replace('\\','/');
+		load(ResourceLoader.getResourceAsStream(ref), ref.substring(0,ref.lastIndexOf("/")));
 	}
 
 	/**
 	 * Create a new tile map based on a given TMX file
 	 * 
 	 * @param ref The location of the tile map to load
-	 * @param tileSetsLocation The location where we can find the tileset images
+	 * @param tileSetsLocation The location where we can find the tileset images and other resources
 	 * @throws SlickException Indicates a failure to load the tilemap
 	 */
 	public TiledMap(String ref, String tileSetsLocation) throws SlickException {
@@ -297,6 +299,20 @@ public class TiledMap {
 		public TileSet(Element element) throws SlickException {
 			name = element.getAttribute("name");
 			firstGID = Integer.parseInt(element.getAttribute("firstgid"));
+			String source = element.getAttribute("source");
+			
+			if (source != null) {
+				try {
+					InputStream in = ResourceLoader.getResourceAsStream(tilesLocation + "/" + source);
+					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+					Document doc = builder.parse(in);
+					Element docElement = doc.getDocumentElement();
+					element = docElement; //(Element) docElement.getElementsByTagName("tileset").item(0);
+				} catch (Exception e) {
+					Log.error(e);
+					throw new SlickException("Unable to load or parse sourced tileset: "+tilesLocation+"/"+source);
+				}
+			}
 			tileWidth = Integer.parseInt(element.getAttribute("tilewidth"));
 			tileHeight = Integer.parseInt(element.getAttribute("tileheight"));
 			
@@ -304,7 +320,8 @@ public class TiledMap {
 			Element imageNode = (Element) list.item(0);
 			String ref = imageNode.getAttribute("source");
 			
-			tiles = new SpriteSheet(tilesLocation+"/"+ref, tileWidth, tileHeight);
+			Image image = new Image(tilesLocation+"/"+ref,true,Image.FILTER_NEAREST);
+			tiles = new SpriteSheet(image , tileWidth, tileHeight);
 			tilesAcross = tiles.getWidth() / tileWidth;
 			tilesDown = tiles.getHeight() / tileHeight;
 			
