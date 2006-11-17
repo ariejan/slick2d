@@ -40,6 +40,22 @@ public class Image {
 	private String ref;
 	
 	/**
+	 * Create a texture as a copy of another
+	 * 
+	 * @param other The other texture to copy
+	 */
+	protected Image(Image other) {
+		this.texture = other.texture;
+		this.width = other.width;
+		this.height = other.height;
+		this.textureWidth = other.textureWidth;
+		this.textureHeight = other.textureHeight;
+		this.ref = other.ref;
+		this.textureOffsetX = other.textureOffsetX;
+		this.textureOffsetY = other.textureOffsetY;
+	}
+	
+	/**
 	 * Cloning constructor - only used internally.
 	 */
 	private Image() {

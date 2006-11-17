@@ -17,6 +17,12 @@
 	<property name="host" value="bob.newdawnsoftware.com"/>
 	<property name="dir" value="/home/kevin/public_html/slick"/>
 	
+	<!-- Need to add versioning stuff here! -->
+	
+	<property name="mode" value="demos"/>
+	<property name="demos" value="/home/kevin/public_html/slick/${mode}"/>
+	<property name="demoscodebase" value="http://slick.cokeandcode.com/${mode}"/>
+	
 	<property name="build.dir" value="target"/>	
 	<property name="dist" value="dist"/>	
 	
@@ -213,6 +219,7 @@
 	<createdemojnlp name="statebasedtest" title="Slick2D StateBasedGame Test" mainclass="org.newdawn.slick.tests.StateBasedTest"/>
 
 	<createdemojnlp name="guitest" title="Slick2D GUI Test" mainclass="org.newdawn.slick.tests.GUITest"/>
+	<createdemojnlp name="packedtest" title="Slick2D Packed Sprite Sheet Test" mainclass="org.newdawn.slick.tests.PackedSheetTest"/>
 
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
@@ -236,17 +243,17 @@
 <target name="upload-test-webstarts" depends="dist">
 	<input message="Upload password:" addproperty="password"/>
 	
-	<scp todir="${username}:${password}@${host}:${dir}/demos" 
+	<scp todir="${username}:${password}@${host}:${demos}" 
 		 file="webstart/slick.jar"
 		 trust="true"
 		 port="122"
 		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${dir}/demos" 
+	<scp todir="${username}:${password}@${host}:${demos}" 
 		 file="webstart/testdata.jar"
 		 trust="true"
 		 port="122"
 		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${dir}/demos" 
+	<scp todir="${username}:${password}@${host}:${demos}" 
 		 trust="true"
 		 port="122"
 		 verbose="true">
@@ -353,7 +360,7 @@
 		      		<token key="datajar" value="@{datajar}"/>
 		      		<token key="projectjar" value="@{projectjar}"/>
 		      		<token key="vendor" value="Slick 2D"/>
-		      		<token key="codebase" value="http://slick.cokeandcode.com/demos"/>
+		      		<token key="codebase" value="${demoscodebase}"/>
 	            </replacetokens>
 	        </filterchain>
     	</copy>

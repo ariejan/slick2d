@@ -20,6 +20,27 @@ public class SpriteSheet extends Image {
 	/**
 	 * Create a new sprite sheet based on a image location
 	 * 
+	 * @param image The image to based the sheet of
+	 * @param tw The width of the tiles on the sheet 
+	 * @param th The height of the tiles on the sheet 
+	 */
+	public SpriteSheet(Image image,int tw,int th) {
+		super(image);
+		
+		this.tw = tw;
+		this.th = th;
+
+		subImages = new Image[width/tw][height/th];
+		for (int x=0;x<width/tw;x++) {
+			for (int y=0;y<height/th;y++) {
+				subImages[x][y] = getSprite(x,y);
+			}
+		}
+	}
+	
+	/**
+	 * Create a new sprite sheet based on a image location
+	 * 
 	 * @param ref The location of the sprite sheet to load
 	 * @param tw The width of the tiles on the sheet 
 	 * @param th The height of the tiles on the sheet 
@@ -53,6 +74,13 @@ public class SpriteSheet extends Image {
 		
 		this.tw = tw;
 		this.th = th;
+		
+		subImages = new Image[width/tw][height/th];
+		for (int x=0;x<width/tw;x++) {
+			for (int y=0;y<height/th;y++) {
+				subImages[x][y] = getSprite(x,y);
+			}
+		}
 	}
 
 	/**
@@ -64,6 +92,24 @@ public class SpriteSheet extends Image {
 	 */
 	public Image getSprite(int x, int y) {
 		return getSubImage(x*tw,y*th,tw,th);
+	}
+	
+	/**
+	 * Get the number of sprites across the sheet
+	 * 
+	 * @return The number of sprites across the sheet
+	 */
+	public int getHorizontalCount() {
+		return subImages.length;
+	}
+	
+	/**
+	 * Get the number of sprites down the sheet
+	 * 
+	 * @return The number of sprite down the sheet
+	 */
+	public int getVerticalCount() {
+		return subImages[0].length;
 	}
 	
 	/**
