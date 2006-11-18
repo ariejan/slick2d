@@ -24,7 +24,7 @@ public class PackedSpriteSheet {
 	/** The section definitions */
 	private HashMap sections = new HashMap();
 	/** The filter used when loading the image */
-	private int filter = Image.FILTER_LINEAR;
+	private int filter = Image.FILTER_NEAREST;
 	
 	/**
 	 * Create a new packed sprite sheet based on a ImagePacker definition file

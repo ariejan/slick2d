@@ -45,7 +45,7 @@ public class SpriteSheet extends Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public SpriteSheet(String ref,int tw,int th) throws SlickException {
-		super(ref);
+		super(ref, true, FILTER_NEAREST);
 		
 		this.tw = tw;
 		this.th = th;
