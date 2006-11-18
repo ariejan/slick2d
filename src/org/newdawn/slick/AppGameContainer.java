@@ -106,12 +106,14 @@ public class AppGameContainer extends GameContainer {
 			Display.setFullscreen(fullscreen);
 			
 			if (Display.isCreated()) {
-				initSystem();
+				initGL();
 				enterOrtho();
 			}
 		} catch (LWJGLException e) {
 			throw new SlickException("Unable to setup mode "+width+"x"+height+" fullscreen="+fullscreen, e);
 		}
+		
+		getDelta();
 	}
 	
 	/**
@@ -140,6 +142,7 @@ public class AppGameContainer extends GameContainer {
 		} else {
 			setDisplayMode(width, height, fullscreen);
 		}
+		getDelta();
 	}
 	
 	/**

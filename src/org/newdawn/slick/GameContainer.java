@@ -286,11 +286,9 @@ public abstract class GameContainer {
 	}
 	
 	/**
-	 * Initialise the system components, OpenGL and OpenAL.
-	 * 
-	 * @throws SlickException Indicates a failure to create a native handler
+	 * Initialise the GL context
 	 */
-	protected void initSystem() throws SlickException {
+	protected void initGL() {
 		Log.info("Starting display "+width+"x"+height);
 		String extensions = GL11.glGetString(GL11.GL_EXTENSIONS);
 		
@@ -307,6 +305,15 @@ public abstract class GameContainer {
         
         GL11.glViewport(0,0,width,height);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		
+	}
+	/**
+	 * Initialise the system components, OpenGL and OpenAL.
+	 * 
+	 * @throws SlickException Indicates a failure to create a native handler
+	 */
+	protected void initSystem() throws SlickException {
+		initGL();
 		
 		AccessController.doPrivileged(new PrivilegedAction() {
             public Object run() {
