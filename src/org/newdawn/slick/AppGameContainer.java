@@ -162,7 +162,7 @@ public class AppGameContainer extends GameContainer {
 
 		Display.setTitle(game.getTitle());
 
-		System.out.println("LWJGL Version: "+Sys.getVersion());
+		Log.info("LWJGL Version: "+Sys.getVersion());
 		
 		AccessController.doPrivileged(new PrivilegedAction() {
             public Object run() {
@@ -183,6 +183,7 @@ public class AppGameContainer extends GameContainer {
 		enterOrtho();
 		
 		game.init(this);
+		getDelta();
 		while (running()) {
 			int delta = getDelta();
 			

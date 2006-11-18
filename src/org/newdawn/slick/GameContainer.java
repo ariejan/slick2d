@@ -48,6 +48,10 @@ public abstract class GameContainer {
 	private int targetFPS = -1;
 	/** True if we should show the fps */
 	private boolean showFPS = true;
+	/** The minimum logic update interval */
+	private long minimumLogicInterval = 1;
+	/** The stored delta */
+	private long storedDelta;
 	
 	/**
 	 * Create a new game container wrapping a given game
@@ -227,18 +231,31 @@ public abstract class GameContainer {
 	}
 	
 	/**
+	 * Set the minimum amount of time in milliseonds that has to 
+	 * pass before update() is called on the container game. This gives
+	 * a way to limit logic updates compared to renders.
+	 * 
+	 * @param interval The minimum interval between logic updates
+	 */
+	public void setMinimumLogicUpdateInterval(int interval) {
+		minimumLogicInterval = interval;
+	}
+	
+	/**
 	 * Update and render the game
 	 * 
 	 * @param delta The change in time since last update and render
 	 * @throws SlickException Indicates an internal fault to the game.
 	 */
 	protected void updateAndRender(int delta) throws SlickException {
+		storedDelta += delta;
 		input.poll(width, height);
 		
 		SoundStore.get().poll(delta);
-		if (delta != 0) {
+		if (storedDelta >= minimumLogicInterval) {
 			try {
-				game.update(this, delta);
+				game.update(this, (int) storedDelta);
+				storedDelta = 0;
 			} catch (Throwable e) {
 				Log.error(e);
 				throw new SlickException("Game.update() failure - check the game code.");
