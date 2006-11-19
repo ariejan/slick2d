@@ -7,6 +7,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.AWTInputAdapter;
 import org.lwjgl.util.applet.LWJGLInstaller;
@@ -39,6 +40,7 @@ public class AppletGameContainer extends Applet {
 		AWTInputAdapter.destroy();
 		Mouse.destroy();
 		Keyboard.destroy();
+		AL.destroy();
 	}
 
 	/**

@@ -22,7 +22,7 @@ import org.newdawn.slick.util.ResourceLoader;
  */
 public class SoundStore {
 	/** The single instance of this class */
-	private static final SoundStore store = new SoundStore();
+	private static SoundStore store = new SoundStore();
 	
 	/** True if sound effects are turned on */
 	private boolean sounds;
@@ -65,7 +65,7 @@ public class SoundStore {
 	 * Clear out the sound store contents
 	 */
 	public void clear() {
-		loaded.clear();
+		store = new SoundStore();
 	}
 	
 	/**
