@@ -8,9 +8,11 @@ import java.security.PrivilegedAction;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.opengl.CursorLoader;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.ImageIOImageData;
 import org.newdawn.slick.opengl.TGAImageData;
@@ -143,6 +145,18 @@ public class AppGameContainer extends GameContainer {
 			setDisplayMode(width, height, fullscreen);
 		}
 		getDelta();
+	}
+
+	/**
+	 * @see org.newdawn.slick.GameContainer#setMouseCursor(java.lang.String, int, int)
+	 */
+	public void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException {
+		try {
+			Cursor cursor = CursorLoader.get().getCursor(ref, hotSpotX, hotSpotY);
+			Mouse.setNativeCursor(cursor);
+		} catch (Exception e) {
+			Log.error("Failed to load and apply cursor.", e);
+		}
 	}
 	
 	/**

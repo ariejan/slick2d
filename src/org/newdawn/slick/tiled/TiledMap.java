@@ -305,7 +305,7 @@ public class TiledMap {
 			firstGID = Integer.parseInt(element.getAttribute("firstgid"));
 			String source = element.getAttribute("source");
 			
-			if (source != null) {
+			if ((source != null) && (!source.equals(""))) {
 				try {
 					InputStream in = ResourceLoader.getResourceAsStream(tilesLocation + "/" + source);
 					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();

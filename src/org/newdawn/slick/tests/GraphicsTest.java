@@ -26,7 +26,7 @@ public class GraphicsTest extends BasicGame {
 	/** A polygon to be rendered */
 	private Polygon poly;
 	/** The container holding this test */
-	private AppGameContainer container;
+	private GameContainer container;
 	
 	/**
 	 * Create a new test of graphics context rendering
@@ -39,7 +39,7 @@ public class GraphicsTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
-		this.container = (AppGameContainer) container;
+		this.container = container;
 		
 		image = new Image("testdata/logo.tga", true);
 		container.setMouseCursor("testdata/cursor.tga", 0, 0);
@@ -136,13 +136,6 @@ public class GraphicsTest extends BasicGame {
 		}
 		if (key == Input.KEY_SPACE) {
 			clip = !clip;
-		}
-		if (key == Input.KEY_F) {
-			try {
-				container.setFullscreen(!container.isFullscreen());
-			} catch (SlickException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	

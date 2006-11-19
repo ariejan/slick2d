@@ -4,12 +4,9 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.lwjgl.Sys;
-import org.lwjgl.input.Cursor;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.openal.SoundStore;
-import org.newdawn.slick.opengl.CursorLoader;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -172,14 +169,7 @@ public abstract class GameContainer {
 	 * @param hotSpotY The y coordinate of the hotspot within the cursor image
 	 * @throws SlickException Indicates a failure to load the cursor image or create the hardware cursor
 	 */
-	public void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException {
-		try {
-			Cursor cursor = CursorLoader.get().getCursor(ref, hotSpotX, hotSpotY);
-			Mouse.setNativeCursor(cursor);
-		} catch (Exception e) {
-			Log.error("Failed to load and apply cursor.", e);
-		}
-	}
+	public abstract void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException;
 	
 	/**
 	 * Get the input system
