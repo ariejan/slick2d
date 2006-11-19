@@ -11,6 +11,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.OpenALException;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -466,7 +467,13 @@ public class SoundStore {
 		
 		if (music) {
 			if (mod != null) {
-				mod.poll();
+				try {
+					mod.poll();
+				} catch (OpenALException e) {
+					Log.error("Error with OpenGL MOD Player on this this platform");
+					Log.error(e);
+					mod = null;
+				}
 			}
 		}
 	}
