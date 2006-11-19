@@ -44,9 +44,9 @@ public interface InputListener {
 	/**
 	 * Notification that the mouse wheel position was updated
 	 * 
-	 * @param newValue The new value from the mouse wheel
+	 * @param change The amount of the wheel has moved
 	 */
-	public void mouseWheelMoved(int newValue);
+	public void mouseWheelMoved(int change);
 	
 	/**
 	 * Notification that a mouse button was pressed

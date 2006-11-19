@@ -126,14 +126,16 @@ public class InputTest extends BasicGame {
 		message = "Mouse released "+button+" "+x+","+y;
 	}
 
-
-	public void mouseWheelMoved(int newValue) {
-		message = "Mouse wheel moved: "+newValue;
+	/**
+	 * @see org.newdawn.slick.BasicGame#mouseWheelMoved(int)
+	 */
+	public void mouseWheelMoved(int change) {
+		message = "Mouse wheel moved: "+change;
 		
-		if (newValue < 0) {
+		if (change < 0) {
 			ypos -= 10;
 		} 
-		if (newValue > 0) {
+		if (change > 0) {
 			ypos += 10;
 		} 
 	}

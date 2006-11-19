@@ -141,7 +141,7 @@ public abstract class BasicGame implements Game {
 	/**
 	 * @see org.newdawn.slick.InputListener#mouseWheelMoved(int)
 	 */
-	public void mouseWheelMoved(int newValue) {
+	public void mouseWheelMoved(int change) {
 	}
 
 	/**
