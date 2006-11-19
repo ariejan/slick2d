@@ -139,6 +139,12 @@ public abstract class BasicGame implements Game {
 	public abstract void update(GameContainer container, int delta) throws SlickException;
 
 	/**
+	 * @see org.newdawn.slick.InputListener#mouseWheelMoved(int)
+	 */
+	public void mouseWheelMoved(int newValue) {
+	}
+
+	/**
 	 * @see org.newdawn.slick.InputListener#isAcceptingInput()
 	 */
 	public boolean isAcceptingInput() {

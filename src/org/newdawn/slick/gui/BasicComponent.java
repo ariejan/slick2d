@@ -167,4 +167,11 @@ public abstract class BasicComponent implements InputListener {
 	public void inputEnded() {
 		acceptingInput = false;
 	}
+	
+	/**
+	 * @see org.newdawn.slick.InputListener#mouseWheelMoved(int)
+	 */
+	public void mouseWheelMoved(int newValue) {
+	}
+
 }

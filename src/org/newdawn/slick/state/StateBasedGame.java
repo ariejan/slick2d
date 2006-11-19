@@ -377,4 +377,11 @@ public abstract class StateBasedGame implements Game {
 	 */
 	public void inputEnded() {
 	}
+	
+	/**
+	 * @see org.newdawn.slick.InputListener#mouseWheelMoved(int)
+	 */
+	public void mouseWheelMoved(int newValue) {
+	}
+
 }

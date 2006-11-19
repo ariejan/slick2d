@@ -42,6 +42,13 @@ public interface InputListener {
 	public void keyReleased(int key, char c);
 	
 	/**
+	 * Notification that the mouse wheel position was updated
+	 * 
+	 * @param newValue The new value from the mouse wheel
+	 */
+	public void mouseWheelMoved(int newValue);
+	
+	/**
 	 * Notification that a mouse button was pressed
 	 * 
 	 * @param button The index of the button (starting at 0)

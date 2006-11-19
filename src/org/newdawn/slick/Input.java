@@ -299,6 +299,8 @@ public class Input {
 	private boolean consumed = false;
 	/** A list of listeners to be notified of input events */
 	private ArrayList listeners = new ArrayList();
+	/** The current value of the wheel */
+	private int wheel;
 	
 	/**
 	 * Add a listener to be notified of input events
@@ -604,6 +606,21 @@ public class Input {
 								if (consumed) {
 									break;
 								}
+							}
+						}
+					}
+				}
+				
+				int dwheel = Mouse.getEventDWheel();
+				wheel += dwheel;
+				if (dwheel != 0) {
+					consumed = false;
+					for (int i=0;i<listeners.size();i++) {
+						InputListener listener = (InputListener) listeners.get(i);
+						if (listener.isAcceptingInput()) {
+							listener.mouseWheelMoved(dwheel);
+							if (consumed) {
+								break;
 							}
 						}
 					}

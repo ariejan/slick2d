@@ -256,5 +256,4 @@ public class TextField extends BasicComponent {
 			setFocus(false);
 		}
 	}
-
 }

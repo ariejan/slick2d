@@ -101,6 +101,7 @@ public class AppletGameContainer extends Applet {
 	 * @author kevin
 	 */
 	public class ContainerPanel extends AWTGLCanvas {
+		/** The container being displayed on this canvas */
 		private Container container;
 		
 		/**

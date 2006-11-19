@@ -30,6 +30,10 @@ public class InputTest extends BasicGame {
 	private Color[] cols = new Color[] {Color.red, Color.green, Color.blue};
 	/** The current color index */
 	private int index;
+	/** The input syste being polled */
+	private Input input;
+	/** The scroll box */
+	private int ypos;
 	
 	/**
 	 * Create a new input test
@@ -42,6 +46,7 @@ public class InputTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
+		input = container.getInput();
 		x = 300;
 		y = 300;
 	}
@@ -61,6 +66,8 @@ public class InputTest extends BasicGame {
 		
 		g.setColor(cols[index]);
 		g.fillOval((int) x, (int) y, 50, 50);
+		g.setColor(Color.yellow);
+		g.fillRect(50,200+ypos,40,40);
 	}
 
 	/**
@@ -119,6 +126,18 @@ public class InputTest extends BasicGame {
 		message = "Mouse released "+button+" "+x+","+y;
 	}
 
+
+	public void mouseWheelMoved(int newValue) {
+		message = "Mouse wheel moved: "+newValue;
+		
+		if (newValue < 0) {
+			ypos -= 10;
+		} 
+		if (newValue > 0) {
+			ypos += 10;
+		} 
+	}
+	
 	/**
 	 * @see org.newdawn.slick.BasicGame#mouseMoved(int, int, int, int)
 	 */

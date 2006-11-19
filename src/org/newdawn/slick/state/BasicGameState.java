@@ -10,7 +10,6 @@ import org.newdawn.slick.Input;
  * @author kevin
  */
 public abstract class BasicGameState implements GameState {
-
 	/**
 	 * @see org.newdawn.slick.InputListener#isAcceptingInput()
 	 */
@@ -136,6 +135,12 @@ public abstract class BasicGameState implements GameState {
 	 * @see org.newdawn.slick.state.GameState#leave(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
 	 */
 	public void leave(GameContainer container, StateBasedGame game) {
+	}
+
+	/**
+	 * @see org.newdawn.slick.InputListener#mouseWheelMoved(int)
+	 */
+	public void mouseWheelMoved(int newValue) {
 	}
 
 }
