@@ -42,6 +42,7 @@
 	<javac includes="org/newdawn/slick/**" debug="true" srcdir="src" destdir="${build.dir}/classes" target="1.4" source="1.4">
 	    <classpath>
 	      <pathelement path="lib/lwjgl.jar"/>
+	      <pathelement path="applet/lwjgl_util_applet.jar"/>
 	      <pathelement path="lib/ibxm.jar"/>
 	      <pathelement path="lib/jogg-0.0.7.jar"/>
 	      <pathelement path="lib/jorbis-0.0.15.jar"/>
@@ -51,6 +52,7 @@
 		 basedir="${build.dir}/classes" includes="org/newdawn/slick/**"/>
 	<jar update="true" destfile="lib/slick.jar" 
 		 basedir="src" includes="org/newdawn/slick/data/*"/>
+	<copy file="lib/slick.jar" toDir="applet"/>
 </target>
 	
 <!--
@@ -108,6 +110,12 @@
 -->
 <target name="dist" depends="build-slick, build-slick-demo, javadoc, build-test-webstarts">
 	<zip destfile="${dist}/slick.zip">
+	    <fileset dir="." includes="applet/applet.html"/>
+	    <fileset dir="." includes="applet/jinput.jar"/>
+	    <fileset dir="." includes="applet/lwjgl.jar"/>
+	    <fileset dir="." includes="applet/lwjgl_applet.jar"/>
+	    <fileset dir="." includes="applet/lwjgl_util_applet.jar"/>
+	    <fileset dir="." includes="applet/natives.jar"/>
 	    <fileset dir="." includes="javadoc/**"/>
 	    <fileset dir="." includes="src/org/newdawn/slick/**"/>
 	    <fileset dir="." includes="lib/**"/>
@@ -201,6 +209,7 @@
 	
 	<jar destfile="webstart/testdata.jar" 
 		 basedir="." includes="testdata/*"/>
+	<copy file="webstart/testdata.jar" toDir="applet"/>
 	<signjar jar="webstart/testdata.jar" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/> 
 	
 	<echo file="webstart/demos.txt">VERSION|0.4.8|SUBJECT|Webstart Demos|CONTENT|[html]</echo>	 
