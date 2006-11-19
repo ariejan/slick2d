@@ -10,6 +10,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.AWTInputAdapter;
 import org.lwjgl.util.applet.LWJGLInstaller;
+import org.newdawn.slick.openal.SoundStore;
+import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -21,6 +23,8 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class AppletGameContainer extends Applet {
+	/** The GL Canvas used for this container */
+	private ContainerPanel canvas;
 	/** The actual container implementation */
 	private Container container;
 	
@@ -29,6 +33,12 @@ public class AppletGameContainer extends Applet {
 	 */
 	public void destroy() {
 		super.destroy();
+		container.stopApplet();
+		
+		Log.info("Clear up");
+		AWTInputAdapter.destroy();
+		Mouse.destroy();
+		Keyboard.destroy();
 	}
 
 	/**
@@ -43,9 +53,6 @@ public class AppletGameContainer extends Applet {
 	 */
 	public void stop() {
 		super.stop();
-		
-		container.stopApplet();
-		AWTInputAdapter.destroy();
 	}
 	
 	/**
@@ -65,13 +72,12 @@ public class AppletGameContainer extends Applet {
 			Game game = (Game) Class.forName(getParameter("game")).newInstance();
 
 			container = new Container(game);
-			ContainerPanel canvas = new ContainerPanel(container);
+			canvas = new ContainerPanel(container);
 			canvas.setSize(getWidth(), getHeight());
+			
 			add(canvas);
-
-			AWTInputAdapter.create(canvas);
-			setFocusable(true);
-			requestFocus();
+			canvas.setFocusable(true);
+			canvas.requestFocus();
 		} catch (Exception e) {
 			Log.error(e);
 			throw new RuntimeException("Unable to create game container");
@@ -93,22 +99,38 @@ public class AppletGameContainer extends Applet {
 	 * @author kevin
 	 */
 	public class ContainerPanel extends AWTGLCanvas {
-
+		private Container container;
+		
 		/**
 		 * Create a new panel
 		 * 
-		 * @param container The container displayed in this panel
+		 * @param container The container proxied by this canvas
 		 * @throws LWJGLException
 		 */
 		public ContainerPanel(Container container) throws LWJGLException {
 			super();
+			
+			this.container = container;
 		}
-
+		
+		/**
+		 * Set the container held by this canvas
+		 * 
+		 * @param container The container rendered on this canvas
+		 */
+		public void setContainer(Container container) {
+			this.container = container;
+		}
+		
 		/**
 		 * @see org.lwjgl.opengl.AWTGLCanvas#initGL()
 		 */
 		protected void initGL() {
 			try {
+				TextureLoader.get().clear();
+				SoundStore.get().clear();
+				
+				AWTInputAdapter.create(this);
 				container.initApplet();
 			} catch (Exception e) {
 				Log.error(e);
@@ -120,8 +142,8 @@ public class AppletGameContainer extends Applet {
 		 * @see org.lwjgl.opengl.AWTGLCanvas#paintGL()
 		 */
 		protected void paintGL() {
-			Keyboard.poll();
 			Mouse.poll();
+			Keyboard.poll();
 			Controllers.poll();
 			
 			try {

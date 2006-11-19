@@ -62,6 +62,13 @@ public class SoundStore {
 	}
 	
 	/**
+	 * Clear out the sound store contents
+	 */
+	public void clear() {
+		loaded.clear();
+	}
+	
+	/**
 	 * Inidicate whether music should be playing
 	 * 
 	 * @param music True if music should be played

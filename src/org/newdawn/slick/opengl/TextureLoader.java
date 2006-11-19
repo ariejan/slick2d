@@ -49,6 +49,14 @@ public class TextureLoader {
     }
     
     /**
+     * Clear out the cached textures
+     */
+    public void clear() {
+    	texturesLinear.clear();
+    	texturesNearest.clear();
+    }
+    
+    /**
      * Tell the loader to produce 16 bit textures
      */
     public void set16BitMode() {
