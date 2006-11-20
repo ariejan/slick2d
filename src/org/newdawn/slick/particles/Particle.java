@@ -31,6 +31,8 @@ public class Particle {
 	private ParticleEmitter emitter;
 	/** The image for this particle */
 	protected Image image;
+	/** The type identifier of this particle */
+	protected int type;
 	
 	/**
 	 * Create a new particle belonging to given engine
@@ -105,7 +107,26 @@ public class Particle {
 		vx = 0;
 		vy = 0;
 		size = 10;
+		type = 0;
 		this.originalLife = this.life = life;
+	}
+	
+	/**
+	 * Set the type of this particle
+	 * 
+	 * @param type The type of this particle
+	 */
+	public void setType(int type) {
+		this.type = type;
+	}
+	
+	/**
+	 * Get the type of this particle
+	 * 
+	 * @return The type of this particle
+	 */
+	public int getType() {
+		return type;
 	}
 	
 	/**

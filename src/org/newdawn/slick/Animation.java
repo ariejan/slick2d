@@ -150,6 +150,23 @@ public class Animation {
 	}
 
 	/**
+	 * Update the animation cycle without draw the image, useful
+	 * for keeping two animations in sync
+	 */
+	public void updateNoDraw() {
+		nextFrame();
+	}
+	
+	/**
+	 * Get the index of the current frame
+	 * 
+	 * @return The index of the current frame
+	 */
+	public int getFrame() {
+		return currentFrame;
+	}
+	
+	/**
 	 * Check if we need to move to the next frame
 	 */
 	private void nextFrame() {
