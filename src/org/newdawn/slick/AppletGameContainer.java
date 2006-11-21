@@ -3,6 +3,8 @@ package org.newdawn.slick;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 
+import javax.swing.SwingUtilities;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
@@ -42,19 +44,17 @@ public class AppletGameContainer extends Applet {
 		Keyboard.destroy();
 		AL.destroy();
 	}
-
+	
 	/**
 	 * @see java.applet.Applet#start()
 	 */
 	public void start() {
-		super.start();
 	}
 
 	/**
 	 * @see java.applet.Applet#stop()
 	 */
 	public void stop() {
-		super.stop();
 	}
 	
 	/**
@@ -132,7 +132,8 @@ public class AppletGameContainer extends Applet {
 			try {
 				TextureLoader.get().clear();
 				SoundStore.get().clear();
-				
+
+				setVSyncEnabled(true);
 				AWTInputAdapter.create(this);
 				container.initApplet();
 			} catch (Exception e) {
