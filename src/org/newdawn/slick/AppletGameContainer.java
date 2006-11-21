@@ -3,8 +3,6 @@ package org.newdawn.slick;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 
-import javax.swing.SwingUtilities;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
