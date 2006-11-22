@@ -49,6 +49,8 @@ public abstract class GameContainer {
 	private long minimumLogicInterval = 1;
 	/** The stored delta */
 	private long storedDelta;
+	/** The maximum logic update interval */
+	private long maximumLogicInterval = 0;
 	
 	/**
 	 * Create a new game container wrapping a given game
@@ -230,6 +232,17 @@ public abstract class GameContainer {
 	public void setMinimumLogicUpdateInterval(int interval) {
 		minimumLogicInterval = interval;
 	}
+
+	/**
+	 * Set the maximum amount of time in milliseconds that can passed
+	 * into the update method. Useful for collision detection without
+	 * sweeping.
+	 * 
+	 * @param interval The maximum interval between logic updates
+	 */
+	public void setMaximumLogicUpdateInterval(int interval) {
+		maximumLogicInterval = interval;
+	}
 	
 	/**
 	 * Update and render the game
@@ -244,7 +257,16 @@ public abstract class GameContainer {
 		SoundStore.get().poll(delta);
 		if (storedDelta >= minimumLogicInterval) {
 			try {
-				game.update(this, (int) storedDelta);
+				if (maximumLogicInterval != 0) {
+					long cycles = storedDelta / maximumLogicInterval;
+					for (int i=0;i<cycles;i++) {
+						game.update(this, (int) maximumLogicInterval);
+					}
+					game.update(this, (int) (delta % maximumLogicInterval));
+				} else {
+					game.update(this, (int) storedDelta);
+				}
+				
 				storedDelta = 0;
 			} catch (Throwable e) {
 				Log.error(e);
