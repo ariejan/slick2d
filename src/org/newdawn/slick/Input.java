@@ -398,7 +398,9 @@ public class Input {
 	 * @return True if the controller is pressed to the left
 	 */
 	public boolean isControllerLeft(int controller) {
-		getControllerCount();
+		if (controller >= getControllerCount()) {
+			return false;
+		}
 		
 		return ((Controller) controllers.get(controller)).getXAxisValue() < -0.5f;
 	}
@@ -410,7 +412,9 @@ public class Input {
 	 * @return True if the controller is pressed to the right
 	 */
 	public boolean isControllerRight(int controller) {
-		getControllerCount();
+		if (controller >= getControllerCount()) {
+			return false;
+		}
 		
 		return ((Controller) controllers.get(controller)).getXAxisValue() > 0.5f;
 	}
@@ -422,7 +426,9 @@ public class Input {
 	 * @return True if the controller is pressed to the up
 	 */
 	public boolean isControllerUp(int controller) {
-		getControllerCount();
+		if (controller >= getControllerCount()) {
+			return false;
+		}
 		
 		return ((Controller) controllers.get(controller)).getYAxisValue() < -0.5f;
 	}
@@ -434,7 +440,9 @@ public class Input {
 	 * @return True if the controller is pressed to the down
 	 */
 	public boolean isControllerDown(int controller) {
-		getControllerCount();
+		if (controller >= getControllerCount()) {
+			return false;
+		}
 		
 		return ((Controller) controllers.get(controller)).getYAxisValue() > 0.5f;
 	}
@@ -446,7 +454,9 @@ public class Input {
 	 * @return True if the button is pressed
 	 */
 	public boolean isButton1Pressed(int controller) {
-		getControllerCount();
+		if (controller >= getControllerCount()) {
+			return false;
+		}
 		
 		return ((Controller) controllers.get(controller)).isButtonPressed(0);
 	}
@@ -458,7 +468,9 @@ public class Input {
 	 * @return True if the button is pressed
 	 */
 	public boolean isButton2Pressed(int controller) {
-		getControllerCount();
+		if (controller >= getControllerCount()) {
+			return false;
+		}
 		
 		return ((Controller) controllers.get(controller)).isButtonPressed(1);
 	}
@@ -470,7 +482,9 @@ public class Input {
 	 * @return True if the button is pressed
 	 */
 	public boolean isButton3Pressed(int controller) {
-		getControllerCount();
+		if (controller >= getControllerCount()) {
+			return false;
+		}
 		
 		return ((Controller) controllers.get(controller)).isButtonPressed(2);
 	}
