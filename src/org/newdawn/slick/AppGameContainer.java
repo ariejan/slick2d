@@ -10,6 +10,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.opengl.CursorLoader;
@@ -221,6 +222,7 @@ public class AppGameContainer extends GameContainer {
 			}
 		}
 	
+		AL.destroy();
 		Display.destroy();
 		System.exit(0);
 	}
