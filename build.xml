@@ -44,6 +44,7 @@
 	      <pathelement path="lib/lwjgl.jar"/>
 	      <pathelement path="applet/lwjgl_util_applet.jar"/>
 	      <pathelement path="lib/ibxm.jar"/>
+	      <pathelement path="lib/jnlp.jar"/>
 	      <pathelement path="lib/jogg-0.0.7.jar"/>
 	      <pathelement path="lib/jorbis-0.0.15.jar"/>
 	    </classpath>
@@ -65,6 +66,7 @@
 		  <pathelement path="lib/slick.jar"/>
 	      <pathelement path="lib/lwjgl.jar"/>
 	      <pathelement path="lib/ibxm.jar"/>
+	      <pathelement path="lib/jnlp.jar"/>
 	      <pathelement path="lib/jogg-0.0.7.jar"/>
 	      <pathelement path="lib/jorbis-0.0.15.jar"/>
 	    </classpath>
@@ -230,6 +232,8 @@
 
 	<createdemojnlp name="guitest" title="Slick2D GUI Test" mainclass="org.newdawn.slick.tests.GUITest"/>
 	<createdemojnlp name="packedtest" title="Slick2D Packed Sprite Sheet Test" mainclass="org.newdawn.slick.tests.PackedSheetTest"/>
+
+	<createdemojnlp name="storedstatetest" title="Slick2D Stored State Test" mainclass="org.newdawn.slick.tests.SavedStateTest"/>
 
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
