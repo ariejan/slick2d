@@ -12,7 +12,8 @@ import org.newdawn.slick.util.Log;
 
 /**
  * A utility to allow game setup/state to be stored locally. This utility will adapt to the
- * current enviornment (webstart or file based)
+ * current enviornment (webstart or file based). Note that this will not currently
+ * work in an applet.
  * 
  * @author kappaOne
  */
