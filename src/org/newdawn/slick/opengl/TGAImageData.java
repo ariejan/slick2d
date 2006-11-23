@@ -126,10 +126,13 @@ public class TGAImageData implements ImageData {
 		}
 		
 		byte[] rawData = null;
-		if (pixelDepth == 32)
+		if (pixelDepth == 32) {
 			rawData = new byte[texWidth * texHeight * 4];
-		else
+		} else if (pixelDepth == 24) {
 			rawData = new byte[texWidth * texHeight * 3];
+		} else {
+			throw new RuntimeException("Only 24 and 32 bit TGAs are supported");
+		}
 		
 		if (pixelDepth == 24) {
 			for (int i = height-1; i >= 0; i--) {
