@@ -53,14 +53,18 @@ public interface GameState extends InputListener {
 	 * 
 	 * @param container The container holding the game
 	 * @param game The game holding this state
+	 * @throws SlickException Indicates an internal error that will be reported through the
+	 * standard framework mechanism
 	 */
-	public void enter(GameContainer container, StateBasedGame game);
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException;
 
 	/**
 	 * Notification that we're leaving this game state
 	 * 
 	 * @param container The container holding the game
 	 * @param game The game holding this state
+	 * @throws SlickException Indicates an internal error that will be reported through the
+	 * standard framework mechanism
 	 */
-	public void leave(GameContainer container, StateBasedGame game);
+	public void leave(GameContainer container, StateBasedGame game) throws SlickException;
 }

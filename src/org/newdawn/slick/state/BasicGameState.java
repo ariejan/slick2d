@@ -2,6 +2,7 @@ package org.newdawn.slick.state;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 
 /**
  * A simple state used an adapter so we don't have to implement all the event methods
@@ -128,13 +129,13 @@ public abstract class BasicGameState implements GameState {
 	/**
 	 * @see org.newdawn.slick.state.GameState#enter(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
 	 */
-	public void enter(GameContainer container, StateBasedGame game) {
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
 	}
 
 	/**
 	 * @see org.newdawn.slick.state.GameState#leave(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame)
 	 */
-	public void leave(GameContainer container, StateBasedGame game) {
+	public void leave(GameContainer container, StateBasedGame game) throws SlickException {
 	}
 
 	/**
