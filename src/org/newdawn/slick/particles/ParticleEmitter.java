@@ -24,4 +24,18 @@ public interface ParticleEmitter {
 	 * @param delta The amount of time in millisecond since last particle update
 	 */
 	public void updateParticle(Particle particle, int delta);
+	
+	/**
+	 * Check if the emitter is enabled 
+	 * 
+	 * @return True if the emitter is enabled
+	 */
+	public boolean isEnabled();
+	
+	/**
+	 * Indicate whether the emitter should be enabled
+	 * 
+	 * @param enabled True if the emitter should be enabled
+	 */
+	public void setEnabled(boolean enabled);
 }

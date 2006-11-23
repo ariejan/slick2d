@@ -101,6 +101,13 @@ public class ImageIOImageData implements ImageData {
 	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean)
 	 */
 	public ByteBuffer loadImage(InputStream fis, boolean flipped) throws IOException {
+		return loadImage(fis, flipped, false);
+	}
+
+	/**
+	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean)
+	 */
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha) throws IOException {
 		BufferedImage bufferedImage = ImageIO.read(fis);
 	    ByteBuffer imageBuffer = null; 
         WritableRaster raster;
@@ -128,7 +135,7 @@ public class ImageIOImageData implements ImageData {
 
         // for a texture
 
-        if (bufferedImage.getColorModel().hasAlpha()) {
+        if (bufferedImage.getColorModel().hasAlpha() || forceAlpha) {
         	depth = 32;
             raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,texWidth,texHeight,4,null);
             texImage = new BufferedImage(glAlphaColorModel,raster,false,new Hashtable());

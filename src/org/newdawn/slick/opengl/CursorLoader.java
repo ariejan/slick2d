@@ -7,6 +7,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
+import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
@@ -74,6 +75,7 @@ public class CursorLoader {
 			}
 			return new Cursor(imageData.getWidth(), imageData.getHeight(), x, yspot, 1, buf.asIntBuffer(), null);
 		} catch (Throwable e) {
+			Log.info("Chances are you cursor is too small for this platform");
 			throw new LWJGLException(e);
 		}
 	}

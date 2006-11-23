@@ -170,5 +170,12 @@ public class ImageBuffer implements ImageData {
         }
         return ret;
     }
+
+	/**
+	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean)
+	 */
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha) throws IOException {
+		throw new IOException("WriteableImageSource doesn't support loading");
+	}
 	
 }

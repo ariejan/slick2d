@@ -94,6 +94,13 @@ public class TGAImageData implements ImageData {
 	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean)
 	 */
 	public ByteBuffer loadImage(InputStream fis, boolean flipped) throws IOException {
+		return loadImage(fis, flipped, false);
+	}
+	
+	/**
+	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean)
+	 */
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha) throws IOException {
 		byte red = 0;
 		byte green = 0;
 		byte blue = 0;
@@ -126,7 +133,8 @@ public class TGAImageData implements ImageData {
 		}
 		
 		byte[] rawData = null;
-		if (pixelDepth == 32) {
+		if ((pixelDepth == 32) || (forceAlpha)) {
+			pixelDepth = 32;
 			rawData = new byte[texWidth * texHeight * 4];
 		} else if (pixelDepth == 24) {
 			rawData = new byte[texWidth * texHeight * 3];
@@ -154,7 +162,11 @@ public class TGAImageData implements ImageData {
 						blue = dis.readByte();
 						green = dis.readByte();
 						red = dis.readByte();
-						alpha = dis.readByte();
+						if (forceAlpha) {
+							alpha = (byte) 255;
+						} else {
+							alpha = dis.readByte();
+						}
 						
 						int ofs = ((j + (i * texWidth)) * 4);
 						
@@ -176,7 +188,11 @@ public class TGAImageData implements ImageData {
 						blue = dis.readByte();
 						green = dis.readByte();
 						red = dis.readByte();
-						alpha = dis.readByte();
+						if (forceAlpha) {
+							alpha = (byte) 255;
+						} else {
+							alpha = dis.readByte();
+						}
 						
 						int ofs = ((j + (i * texWidth)) * 4);
 						

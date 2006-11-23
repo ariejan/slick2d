@@ -68,6 +68,18 @@ public interface ImageData {
 			throws IOException;
 	
 	/**
+	 * Load a TGA image from the specified stream
+	 * 
+	 * @param fis The stream from which we'll load the TGA
+	 * @param flipped True if we loading in flipped mode (used for cursors)
+	 * @param forceAlpha Force the output to have an alpha channel
+	 * @return The byte buffer containing texture data
+	 * @throws IOException Indicates a failure to read the TGA
+	 */
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha)
+			throws IOException;
+	
+	/**
 	 * Get the store image
 	 * 
 	 * @return The stored image

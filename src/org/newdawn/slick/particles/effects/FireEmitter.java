@@ -81,4 +81,17 @@ public class FireEmitter implements ParticleEmitter {
 		float c = 0.002f * delta;
 		particle.adjustColor(0,-c/2,-c*2,-c/4);
 	}
+
+	/**
+	 * @see org.newdawn.slick.particles.ParticleEmitter#isEnabled()
+	 */
+	public boolean isEnabled() {
+		return true;
+	}
+
+	/**
+	 * @see org.newdawn.slick.particles.ParticleEmitter#setEnabled(boolean)
+	 */
+	public void setEnabled(boolean enabled) {
+	}
 }

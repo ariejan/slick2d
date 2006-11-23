@@ -126,7 +126,9 @@ public class ParticleSystem {
 	public void update(int delta) {
 		for (int i=0;i<emitters.size();i++) {
 			ParticleEmitter emitter = (ParticleEmitter) emitters.get(i);
-			emitter.update(this, delta);
+			if (emitter.isEnabled()) {
+				emitter.update(this, delta);
+			}
 		}
 		
 		for (int i=0;i<particles.length;i++) {

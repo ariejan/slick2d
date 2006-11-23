@@ -28,8 +28,6 @@ public class ResourceLoader {
 			try {
 				if (System.getProperty("jnlp.slick.webstart", "false").equals("false")) {
 					in = new FileInputStream(file);
-					Log.info("Resorting to direct file access for: "+ref);
-					
 					return new BufferedInputStream(in);
 				} else {
 					Log.error("Resource not found: "+ref);

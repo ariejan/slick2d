@@ -242,7 +242,7 @@ public class AppGameContainer extends GameContainer {
 		}
 		
 		try {
-			ByteBuffer buf = data.loadImage(ResourceLoader.getResourceAsStream(ref), flip);
+			ByteBuffer buf = data.loadImage(ResourceLoader.getResourceAsStream(ref), flip, true);
 			Display.setIcon(new ByteBuffer[] {buf});
 		} catch (Exception e) {
 			Log.error(e);

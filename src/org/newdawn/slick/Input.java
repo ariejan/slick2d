@@ -17,6 +17,9 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class Input {
+	/** The controller index to pass to check all controllers */
+	public static final int ANY_CONTROLLER = -1;
+	
 	/** */
 	public static final int KEY_ESCAPE          = 0x01;
 	/** */
@@ -402,6 +405,16 @@ public class Input {
 			return false;
 		}
 		
+		if (controller == ANY_CONTROLLER) {
+			for (int i=0;i<controllers.size();i++) {
+				if (isControllerLeft(i)) {
+					return true;
+				}
+				
+				return false;
+			}
+		}
+		
 		return ((Controller) controllers.get(controller)).getXAxisValue() < -0.5f;
 	}
 
@@ -414,6 +427,16 @@ public class Input {
 	public boolean isControllerRight(int controller) {
 		if (controller >= getControllerCount()) {
 			return false;
+		}
+
+		if (controller == ANY_CONTROLLER) {
+			for (int i=0;i<controllers.size();i++) {
+				if (isControllerRight(i)) {
+					return true;
+				}
+				
+				return false;
+			}
 		}
 		
 		return ((Controller) controllers.get(controller)).getXAxisValue() > 0.5f;
@@ -429,7 +452,16 @@ public class Input {
 		if (controller >= getControllerCount()) {
 			return false;
 		}
-		
+
+		if (controller == ANY_CONTROLLER) {
+			for (int i=0;i<controllers.size();i++) {
+				if (isControllerUp(i)) {
+					return true;
+				}
+				
+				return false;
+			}
+		}
 		return ((Controller) controllers.get(controller)).getYAxisValue() < -0.5f;
 	}
 
@@ -442,6 +474,16 @@ public class Input {
 	public boolean isControllerDown(int controller) {
 		if (controller >= getControllerCount()) {
 			return false;
+		}
+
+		if (controller == ANY_CONTROLLER) {
+			for (int i=0;i<controllers.size();i++) {
+				if (isControllerDown(i)) {
+					return true;
+				}
+				
+				return false;
+			}
 		}
 		
 		return ((Controller) controllers.get(controller)).getYAxisValue() > 0.5f;
@@ -457,6 +499,16 @@ public class Input {
 		if (controller >= getControllerCount()) {
 			return false;
 		}
+
+		if (controller == ANY_CONTROLLER) {
+			for (int i=0;i<controllers.size();i++) {
+				if (isButton1Pressed(i)) {
+					return true;
+				}
+				
+				return false;
+			}
+		}
 		
 		return ((Controller) controllers.get(controller)).isButtonPressed(0);
 	}
@@ -471,6 +523,16 @@ public class Input {
 		if (controller >= getControllerCount()) {
 			return false;
 		}
+
+		if (controller == ANY_CONTROLLER) {
+			for (int i=0;i<controllers.size();i++) {
+				if (isButton2Pressed(i)) {
+					return true;
+				}
+				
+				return false;
+			}
+		}
 		
 		return ((Controller) controllers.get(controller)).isButtonPressed(1);
 	}
@@ -484,6 +546,16 @@ public class Input {
 	public boolean isButton3Pressed(int controller) {
 		if (controller >= getControllerCount()) {
 			return false;
+		}
+
+		if (controller == ANY_CONTROLLER) {
+			for (int i=0;i<controllers.size();i++) {
+				if (isButton3Pressed(i)) {
+					return true;
+				}
+				
+				return false;
+			}
 		}
 		
 		return ((Controller) controllers.get(controller)).isButtonPressed(2);
