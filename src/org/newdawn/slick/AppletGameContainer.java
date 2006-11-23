@@ -29,6 +29,8 @@ public class AppletGameContainer extends Applet {
 	/** The actual container implementation */
 	private Container container;
 	
+	private boolean running = true;
+	
 	/**
 	 * @see java.applet.Applet#destroy()
 	 */
@@ -53,6 +55,7 @@ public class AppletGameContainer extends Applet {
 	 * @see java.applet.Applet#stop()
 	 */
 	public void stop() {
+		running = false;
 	}
 	
 	/**
@@ -82,6 +85,13 @@ public class AppletGameContainer extends Applet {
 			Log.error(e);
 			throw new RuntimeException("Unable to create game container");
 		}
+	}
+	
+	/**
+	 * @see java.awt.Container#paint(java.awt.Graphics)
+	 */
+	public void paint(java.awt.Graphics g) {
+		canvas.update(g);
 	}
 	
 	/**

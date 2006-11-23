@@ -185,6 +185,9 @@ public class TextField extends BasicComponent {
 	 */
 	public void setText(String value) {
 		this.value = value;
+		if (cursorPos > value.length()) {
+			cursorPos = value.length();
+		}
 	}
 	
 	/**
