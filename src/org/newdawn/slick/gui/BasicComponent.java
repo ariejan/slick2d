@@ -15,7 +15,7 @@ public abstract class BasicComponent implements InputListener {
 	/** The input sending the events this component handles */
 	protected Input input;
 	/** True if the component is current acceptingInput */
-	private boolean acceptingInput;
+	protected boolean acceptingInput;
 	/** The game container */
 	protected GameContainer container;
 	

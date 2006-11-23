@@ -670,6 +670,11 @@ public class Input {
 				}
 			}
 		}
+		
+		for (int i=0;i<listeners.size();i++) {
+			InputListener listener = (InputListener) listeners.get(i);
+			listener.inputEnded();
+		}
 	}
 	
 	/**

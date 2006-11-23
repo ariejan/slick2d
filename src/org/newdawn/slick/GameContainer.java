@@ -65,6 +65,15 @@ public abstract class GameContainer {
 	}
 	
 	/**
+	 * Get the default system font
+	 * 
+	 * @return The default system font
+	 */
+	public Font getDefaultFont() {
+		return defaultFont;
+	}
+	
+	/**
 	 * Check if sound effects are enabled
 	 * 
 	 * @return True if sound effects are enabled

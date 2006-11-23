@@ -132,38 +132,40 @@ public class TextField extends BasicComponent {
 			g.drawString("_", (int) (area.x+1)+cpos+2, (int) (area.y+1));
 		}
 		
-		g.translate(-tx, 0);
+		g.translate(-tx-2, 0);
 		
 		g.clearClip();
 		
-		
-		// key repeat handling
-		if (input.isKeyDown(Input.KEY_LEFT)) {
-			if (container.getTime() - repeatLeft > REPEAT_TIMER) {
-				repeatLeft = container.getTime();
-				if (cursorPos > 0) {
-					cursorPos--;
-				}
-			}
-		}
-		if (input.isKeyDown(Input.KEY_RIGHT)) {
-			if (container.getTime() - repeatRight > REPEAT_TIMER) {
-				repeatRight = container.getTime();
-				if (cursorPos < value.length()) {
-					cursorPos++;
-				}
-			}
-		}
-		if (input.isKeyDown(Input.KEY_BACK)) {
-			if (container.getTime() - repeatBack > REPEAT_TIMER) {
-				if ((cursorPos > 0) && (value.length() > 0)) {
-					if (cursorPos < value.length()) {
-						value = value.substring(0, cursorPos-1) + value.substring(cursorPos);
-					} else {
-						value = value.substring(0, cursorPos-1);
+
+		if (focus) {
+			// key repeat handling
+			if (input.isKeyDown(Input.KEY_LEFT)) {
+				if (container.getTime() - repeatLeft > REPEAT_TIMER) {
+					repeatLeft = container.getTime();
+					if (cursorPos > 0) {
+						cursorPos--;
 					}
-					cursorPos--;
-					repeatBack = container.getTime();
+				}
+			}
+			if (input.isKeyDown(Input.KEY_RIGHT)) {
+				if (container.getTime() - repeatRight > REPEAT_TIMER) {
+					repeatRight = container.getTime();
+					if (cursorPos < value.length()) {
+						cursorPos++;
+					}
+				}
+			}
+			if (input.isKeyDown(Input.KEY_BACK)) {
+				if (container.getTime() - repeatBack > REPEAT_TIMER) {
+					if ((cursorPos > 0) && (value.length() > 0)) {
+						if (cursorPos < value.length()) {
+							value = value.substring(0, cursorPos-1) + value.substring(cursorPos);
+						} else {
+							value = value.substring(0, cursorPos-1);
+						}
+						cursorPos--;
+						repeatBack = container.getTime();
+					}
 				}
 			}
 		}
