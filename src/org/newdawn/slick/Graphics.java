@@ -448,8 +448,7 @@ public class Graphics {
 	 * @param col The color to apply to the image as a filter
 	 */
 	public void drawImage(Image image, int x, int y, Color col) {
-		col.bind();
-		image.draw(x,y);
+		image.draw(x,y,col);
 	}
 
 	/**
