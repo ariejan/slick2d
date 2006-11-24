@@ -449,6 +449,7 @@ public class Graphics {
 	 */
 	public void drawImage(Image image, int x, int y, Color col) {
 		image.draw(x,y,col);
+		currentColor.bind();
 	}
 
 	/**
