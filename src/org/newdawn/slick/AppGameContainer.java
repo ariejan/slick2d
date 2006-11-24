@@ -199,8 +199,14 @@ public class AppGameContainer extends GameContainer {
 		
 		initSystem();
 		enterOrtho();
+
+		try {
+			game.init(this);
+		} catch (SlickException e) {
+			Log.error(e);
+			running = false;
+		}
 		
-		game.init(this);
 		getDelta();
 		while (running()) {
 			int delta = getDelta();
@@ -208,7 +214,13 @@ public class AppGameContainer extends GameContainer {
 			if (!Display.isVisible()) {
 				try { Thread.sleep(100); } catch (Exception e) {}
 			} else {
-				updateAndRender(delta);
+				try {
+					updateAndRender(delta);
+				} catch (SlickException e) {
+					Log.error(e);
+					running = false;
+					break;
+				}
 			}
 			
 			updateFPS();
