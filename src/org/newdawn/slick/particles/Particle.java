@@ -53,6 +53,15 @@ public class Particle {
 	}
 	
 	/**
+	 * Get the original life of this particle
+	 * 
+	 * @return The original life of this particle
+	 */
+	public float getOriginalLife() {
+		return originalLife;
+	}
+	
+	/**
 	 * Get the life remaining in the particle in milliseconds
 	 * 
 	 * @return The life remaining in the particle

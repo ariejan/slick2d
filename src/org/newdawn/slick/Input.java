@@ -415,9 +415,9 @@ public class Input {
 				if (isControllerLeft(i)) {
 					return true;
 				}
-				
-				return false;
 			}
+			
+			return false;
 		}
 		
 		return ((Controller) controllers.get(controller)).getXAxisValue() < -0.5f;
@@ -439,9 +439,9 @@ public class Input {
 				if (isControllerRight(i)) {
 					return true;
 				}
-				
-				return false;
 			}
+			
+			return false;
 		}
 		
 		return ((Controller) controllers.get(controller)).getXAxisValue() > 0.5f;
@@ -463,9 +463,9 @@ public class Input {
 				if (isControllerUp(i)) {
 					return true;
 				}
-				
-				return false;
 			}
+			
+			return false;
 		}
 		return ((Controller) controllers.get(controller)).getYAxisValue() < -0.5f;
 	}
@@ -486,9 +486,9 @@ public class Input {
 				if (isControllerDown(i)) {
 					return true;
 				}
-				
-				return false;
 			}
+			
+			return false;
 		}
 		
 		return ((Controller) controllers.get(controller)).getYAxisValue() > 0.5f;
@@ -510,9 +510,9 @@ public class Input {
 				if (isButton1Pressed(i)) {
 					return true;
 				}
-				
-				return false;
 			}
+			
+			return false;
 		}
 		
 		return ((Controller) controllers.get(controller)).isButtonPressed(0);
@@ -534,9 +534,9 @@ public class Input {
 				if (isButton2Pressed(i)) {
 					return true;
 				}
-				
-				return false;
 			}
+			
+			return false;
 		}
 		
 		return ((Controller) controllers.get(controller)).isButtonPressed(1);
@@ -558,9 +558,9 @@ public class Input {
 				if (isButton3Pressed(i)) {
 					return true;
 				}
-				
-				return false;
 			}
+			
+			return false;
 		}
 		
 		return ((Controller) controllers.get(controller)).isButtonPressed(2);
