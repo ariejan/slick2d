@@ -66,7 +66,6 @@
 		  <pathelement path="lib/slick.jar"/>
 	      <pathelement path="lib/lwjgl.jar"/>
 	      <pathelement path="lib/ibxm.jar"/>
-	      <pathelement path="lib/jnlp.jar"/>
 	      <pathelement path="lib/jogg-0.0.7.jar"/>
 	      <pathelement path="lib/jorbis-0.0.15.jar"/>
 	    </classpath>
@@ -98,6 +97,7 @@
 		<classpath>
 		  <pathelement path="lib/slick.jar"/>
 	      <pathelement path="lib/lwjgl.jar"/>
+	      <pathelement path="lib/jnlp.jar"/>
 	      <pathelement path="applet/lwjgl_util_applet.jar"/>
 	      <pathelement path="lib/ibxm.jar"/>
 	      <pathelement path="lib/jogg-0.0.7.jar"/>

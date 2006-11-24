@@ -326,8 +326,10 @@ public abstract class GameContainer {
         
         GL11.glViewport(0,0,width,height);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		
+
+		input.init(height);
 	}
+	
 	/**
 	 * Initialise the system components, OpenGL and OpenAL.
 	 * 
@@ -349,8 +351,6 @@ public abstract class GameContainer {
         });
 		
 		graphics = new Graphics(defaultFont, width, height);
-		
-		input.init();
 	}
 	
 	/**

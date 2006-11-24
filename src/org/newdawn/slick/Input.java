@@ -304,6 +304,8 @@ public class Input {
 	private ArrayList listeners = new ArrayList();
 	/** The current value of the wheel */
 	private int wheel;
+	/** The height of the display */
+	private int height;
 	
 	/**
 	 * Add a listener to be notified of input events
@@ -335,8 +337,11 @@ public class Input {
 	
 	/**
 	 * Initialise the input system
+	 * 
+	 * @param height The height of the window
 	 */
-	void init() {
+	void init(int height) {
+		this.height = height;
 		lastMouseX = getMouseX();
 		lastMouseY = getMouseY();
 	}
@@ -366,7 +371,7 @@ public class Input {
 	 * @return The y position of the mouse cursor
 	 */
 	public int getMouseY() {
-		return Mouse.getY();
+		return height-Mouse.getY();
 	}
 	
 	/**

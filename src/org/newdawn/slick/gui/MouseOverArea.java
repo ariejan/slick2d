@@ -176,6 +176,9 @@ public class MouseOverArea extends BasicComponent {
 	 * @see org.newdawn.slick.gui.BasicComponent#renderImpl(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void renderImpl(GameContainer container, Graphics g) {
+		mouseDown = input.isMouseButtonDown(0);
+		updateImage(rect.contains(input.getMouseX(), input.getMouseY()));
+		
 		int xp = (int) (rect.x +((rect.width - currentImage.getWidth()) / 2));
 		int yp = (int) (rect.y +((rect.height - currentImage.getHeight()) / 2));
 		
@@ -203,11 +206,12 @@ public class MouseOverArea extends BasicComponent {
 					currentImage = mouseDownImage;
 					currentColor = mouseDownColor;
 					state = MOUSE_DOWN;
+					listener.componentActivated(this);
 				}
 			} else {
 				if (state != MOUSE_OVER) {
 					if (mouseOverSound != null) {
-						mouseDownSound.play();
+						mouseOverSound.play();
 					}
 					currentImage = mouseOverImage;
 					currentColor = mouseOverColor;
@@ -233,33 +237,5 @@ public class MouseOverArea extends BasicComponent {
 	 */
 	public void setMouseDownSound(Sound sound) {
 		mouseDownSound = sound;
-	}
-	
-	/**
-	 * @see org.newdawn.slick.gui.BasicComponent#mouseMoved(int, int, int, int)
-	 */
-	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-		updateImage(rect.contains(newx,newy));
-	}
-
-	/**
-	 * @see org.newdawn.slick.gui.BasicComponent#mousePressed(int, int, int)
-	 */
-	public void mousePressed(int button, int x, int y) {
-		mouseDown = true;
-		updateImage(rect.contains(x,y));
-		
-		if (rect.contains(x,y)) {
-			listener.componentActivated(this);
-			consumeEvent();
-		}
-	}
-
-	/**
-	 * @see org.newdawn.slick.gui.BasicComponent#mouseReleased(int, int, int)
-	 */
-	public void mouseReleased(int button, int x, int y) {
-		mouseDown = false;
-		updateImage(rect.contains(x,y));
 	}
 }
