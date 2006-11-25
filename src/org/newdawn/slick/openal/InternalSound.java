@@ -10,6 +10,8 @@ public class InternalSound {
 	private SoundStore store;
 	/** The buffer containing the sound */
 	private int buffer;
+	/** The index of the source being used to play this sound */
+	private int index = -1;
 	
 	/**
 	 * Create a new sound
@@ -30,13 +32,36 @@ public class InternalSound {
 	}
 	
 	/**
+	 * Stop the sound effect
+	 */
+	public void stop() {
+		if (index != -1) {
+			store.stopSource(index);
+		}
+	}
+	
+	/**
+	 * Check if the sound is playing as sound fx
+	 * 
+	 * @return True if the sound is playing
+	 */
+	public boolean isPlaying() {
+		if (index != -1) {
+			return store.isPlaying(index);
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Play this sound as a sound effect
 	 * 
 	 * @param pitch The pitch of the play back
 	 * @param gain The gain of the play back
+	 * @param loop True if we should loop
 	 */
-	public void playAsSoundEffect(float pitch, float gain) {
-		store.playAsSound(buffer, pitch, gain);
+	public void playAsSoundEffect(float pitch, float gain, boolean loop) {
+		index = store.playAsSound(buffer, pitch, gain, loop);
 	}
 
 	/**

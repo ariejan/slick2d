@@ -52,6 +52,39 @@ public class Sound {
 	 * @param volume The volumen to play the sound effect at
 	 */
 	public void play(float pitch, float volume) {
-		sound.playAsSoundEffect(pitch, volume);
+		sound.playAsSoundEffect(pitch, volume, false);
+	}
+
+	/**
+	 * Loop this sound effect at default volume and pitch
+	 */
+	public void loop() {
+		loop(1.0f,1.0f);
+	}
+	
+	/**
+	 * Loop this sound effect at a given volume and pitch
+	 * 
+	 * @param pitch The pitch to play the sound effect at
+	 * @param volume The volumen to play the sound effect at
+	 */
+	public void loop(float pitch, float volume) {
+		sound.playAsSoundEffect(pitch, volume, true);
+	}
+	
+	/**
+	 * Check if the sound is currently playing
+	 * 
+	 * @return True if the sound is playing
+	 */
+	public boolean playing() {
+		return sound.isPlaying();
+	}
+	
+	/**
+	 * Stop the sound being played
+	 */
+	public void stop() {
+		sound.stop();
 	}
 }

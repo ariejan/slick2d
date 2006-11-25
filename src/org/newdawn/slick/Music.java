@@ -97,6 +97,13 @@ public class Music {
 	}
 	
 	/**
+	 * Stop the music playing
+	 */
+	public void stop() {
+		pause();
+	}
+	
+	/**
 	 * Resume the music playback
 	 */
 	public void resume() {

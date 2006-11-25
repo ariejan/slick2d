@@ -21,6 +21,8 @@ public class SoundTest extends BasicGame {
 	private Sound charlie;
 	/** The music to be played */
 	private Music music;
+	/** The sound to be played */
+	private Sound engine;
 	
 	/**
 	 * Create a new test for sounds
@@ -35,6 +37,7 @@ public class SoundTest extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		sound = new Sound("testdata/restart.ogg");
 		charlie = new Sound("testdata/cbrown01.wav");
+		engine = new Sound("testdata/engine.wav");
 		music = new Music("testdata/SMB-X.XM");
 		music.loop(1.0f,0.5f);
 	}
@@ -45,6 +48,7 @@ public class SoundTest extends BasicGame {
 	public void render(Graphics g) {
 		g.drawString("Press space for sound effect (OGG)",100,100);
 		g.drawString("Press P to pause/resume music (XM)",100,130);
+		g.drawString("Press E to pause/resume engine sound (WAV)",100,190);
 		g.drawString("Press enter for charlie (WAV)",100,160);
 	}
 
@@ -72,6 +76,13 @@ public class SoundTest extends BasicGame {
 				music.pause();
 			} else {
 				music.play();
+			}
+		}
+		if (key == Input.KEY_E) {
+			if (engine.playing()) {
+				engine.stop();
+			} else {
+				engine.loop();
 			}
 		}
 	}

@@ -237,33 +237,79 @@ public class SoundStore {
 	}
 
 	/**
+	 * Stop a particular sound source
+	 * 
+	 * @param index The index of the source to stop
+	 */
+	void stopSource(int index) {
+		AL10.alSourceStop(sources.get(index));
+	}
+	
+	/**
 	 * Play the specified buffer as a sound effect with the specified
 	 * pitch and gain.
 	 * 
 	 * @param buffer The ID of the buffer to play
 	 * @param pitch The pitch to play at
 	 * @param gain The gain to play at
+	 * @param loop True if the sound should loop
+	 * @return source The source that will be used
 	 */
-	void playAsSound(int buffer,float pitch,float gain) {
+	int playAsSound(int buffer,float pitch,float gain,boolean loop) {
 		gain *= soundVolume;
 		if (gain == 0) {
 			gain = 0.001f;
 		}
 		if (soundWorks) {
 			if (sounds) {
-				nextSource++;
-				if (nextSource > sourceCount-1) {
-					nextSource = 1;
+				int nextSource = findFreeSource();
+				if (nextSource == -1) {
+					return -1;
 				}
+				
 				AL10.alSourceStop(sources.get(nextSource));
 				
 				AL10.alSourcei(sources.get(nextSource), AL10.AL_BUFFER, buffer);
 				AL10.alSourcef(sources.get(nextSource), AL10.AL_PITCH, pitch);
 				AL10.alSourcef(sources.get(nextSource), AL10.AL_GAIN, gain); 
-				
+			    AL10.alSourcei(sources.get(nextSource), AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
+			    
 				AL10.alSourcePlay(sources.get(nextSource)); 
+				
+				return nextSource;
 			}
 		}
+		
+		return -1;
+	}
+	
+	/**
+	 * Check if a particular source is playing
+	 * 
+	 * @param index The index of the source to check
+	 * @return True if the source is playing
+	 */
+	boolean isPlaying(int index) {
+		int state = AL10.alGetSourcei(sources.get(index), AL10.AL_SOURCE_STATE);
+		
+		return (state == AL10.AL_PLAYING);
+	}
+	
+	/**
+	 * Find a free sound source
+	 * 
+	 * @return The index of the free sound source
+	 */
+	private int findFreeSource() {
+		for (int i=1;i<sourceCount-1;i++) {
+			int state = AL10.alGetSourcei(sources.get(i), AL10.AL_SOURCE_STATE);
+			
+			if (state != AL10.AL_PLAYING) {
+				return i;
+			}
+		}
+		
+		return -1;
 	}
 	
 	/**
