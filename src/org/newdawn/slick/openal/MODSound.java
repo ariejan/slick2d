@@ -55,8 +55,8 @@ public class MODSound extends InternalSound {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#playAsSoundEffect(float, float)
+	 * @see org.newdawn.slick.openal.InternalSound#playAsSoundEffect(float, float, boolean)
 	 */
-	public void playAsSoundEffect(float pitch, float gain) {
+	public void playAsSoundEffect(float pitch, float gain, boolean loop) {
 	}
 }
