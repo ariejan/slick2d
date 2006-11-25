@@ -5,7 +5,8 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.Log;
 
 /**
- * A piece of music loaded and playable within the game
+ * A piece of music loaded and playable within the game. Only one piece of music can
+ * play at any given time and a channel is reserved so music will always play. 
  *
  * @author kevin
  */

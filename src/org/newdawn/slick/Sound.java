@@ -5,7 +5,8 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.Log;
 
 /**
- * A single sound effect loaded from either OGG or XM/MOD file
+ * A single sound effect loaded from either OGG or XM/MOD file. Sounds are allocated to 
+ * channels dynamically - if not channel is available the sound will not play. 
  *
  * @author kevin
  */
