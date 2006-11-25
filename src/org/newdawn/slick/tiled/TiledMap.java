@@ -485,6 +485,27 @@ public class TiledMap {
 		}
 		
 		/**
+		 * Set the global tile ID at a specified location
+		 * 
+		 * @param x The x location to set
+		 * @param y The y location to set
+		 * @param tile The tile value to set
+		 */
+		public void setTileID(int x, int y, int tile) {
+            if (tile == 0) {
+                data[x][y][0] = -1;
+                data[x][y][1] = 0;
+                data[x][y][2] = 0;
+            } else {
+	            TileSet set = findTileSet(tile);
+	
+	            data[x][y][0] = set.index;
+	            data[x][y][1] = tile - set.firstGID;
+	            data[x][y][2] = tile;
+            }
+		}
+		
+		/**
 		 * Render a section of this layer
 		 * 
 		 * @param x
