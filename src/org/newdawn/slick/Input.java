@@ -420,7 +420,8 @@ public class Input {
 			return false;
 		}
 		
-		return ((Controller) controllers.get(controller)).getXAxisValue() < -0.5f;
+		return ((Controller) controllers.get(controller)).getXAxisValue() < -0.5f
+				|| ((Controller) controllers.get(controller)).getPovX() < -0.5f;
 	}
 
 	/**
@@ -444,7 +445,8 @@ public class Input {
 			return false;
 		}
 		
-		return ((Controller) controllers.get(controller)).getXAxisValue() > 0.5f;
+		return ((Controller) controllers.get(controller)).getXAxisValue() > 0.5f
+   				|| ((Controller) controllers.get(controller)).getPovX() > 0.5f;
 	}
 
 	/**
@@ -467,7 +469,8 @@ public class Input {
 			
 			return false;
 		}
-		return ((Controller) controllers.get(controller)).getYAxisValue() < -0.5f;
+		return ((Controller) controllers.get(controller)).getYAxisValue() < -0.5f
+		   		|| ((Controller) controllers.get(controller)).getPovY() < -0.5f;
 	}
 
 	/**
@@ -491,7 +494,9 @@ public class Input {
 			return false;
 		}
 		
-		return ((Controller) controllers.get(controller)).getYAxisValue() > 0.5f;
+		return ((Controller) controllers.get(controller)).getYAxisValue() > 0.5f
+			   || ((Controller) controllers.get(controller)).getPovY() > 0.5f;
+	       
 	}
 
 	/**
