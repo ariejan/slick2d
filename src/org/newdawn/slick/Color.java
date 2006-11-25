@@ -103,6 +103,27 @@ public class Color {
 	}
 	
 	/**
+	 * Create a colour from an evil integer packed 0xAARRGGBB
+	 * 
+	 * @param value The value to interpret for the colour
+	 */
+	public Color(int value) {
+		int r = (value & 0x00FF0000) >> 16;
+		int g = (value & 0x0000FF00) >> 8;
+		int b =	(value & 0x000000FF);
+		int a = (value & 0xFF000000) >> 24;
+				
+		if (a == 0) {
+			a = 255;
+		}
+		
+		this.r = r / 255.0f;
+		this.g = g / 255.0f;
+		this.b = b / 255.0f;
+		this.a = a / 255.0f;
+	}
+	
+	/**
 	 * Bind this colour to the GL context
 	 */
 	public void bind() {
