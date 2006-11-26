@@ -38,7 +38,7 @@ public class Graphics {
 	 * @param width The width of the screen for this context
 	 * @param height The height of the screen for this context
 	 */
-	Graphics(Font font, int width, int height) {		
+	public Graphics(Font font, int width, int height) {		
 		defaultFont = this.font = font;
 		screenWidth = width;
 		screenHeight = height;
