@@ -32,9 +32,9 @@ public class TileMapTest extends BasicGame {
 	}
 
 	/**
-	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(Graphics g) {
+	public void render(GameContainer container, Graphics g) {
 		map.render(10, 10, 4,4,15,15);
 		
 		g.scale(0.35f,0.35f);

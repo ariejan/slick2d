@@ -50,9 +50,9 @@ public class SavedStateTest extends BasicGame implements ComponentListener {
 	}
 
 	/**
-	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(Graphics g) {
+	public void render(GameContainer container, Graphics g) {
 		name.render(container, g);
 		age.render(container, g);
 		

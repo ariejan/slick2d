@@ -57,9 +57,9 @@ public class PackedSheetTest extends BasicGame {
 	}
 
 	/**
-	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(Graphics g) {
+	public void render(GameContainer container, Graphics g) {
 		rocket.draw((int) r,100);
 		runner.draw(250,250);
 		g.scale(1.2f,1.2f);

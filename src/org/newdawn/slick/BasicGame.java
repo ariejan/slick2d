@@ -140,6 +140,7 @@ public abstract class BasicGame implements Game {
 	 * 
 	 * @param g The graphics context to draw against
 	 * @throws SlickException Indicates a failure to render the contents
+	 * @deprecated
 	 */
 	public void render(Graphics g) throws SlickException {
 		

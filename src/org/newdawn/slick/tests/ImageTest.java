@@ -49,9 +49,9 @@ public class ImageTest extends BasicGame {
 	}
 
 	/**
-	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(Graphics g) {
+	public void render(GameContainer container, Graphics g) {
 		image.draw(0,0);
 		image.draw(500,0,200,100);
 		scaleMe.draw(500,100,200,100);

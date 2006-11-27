@@ -41,9 +41,9 @@ public class ParticleTest extends BasicGame {
 	}
 
 	/**
-	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(Graphics g) {
+	public void render(GameContainer container, Graphics g) {
 		system.render();
 		
 		g.drawString("Press space to toggle blending mode", 200, 500);

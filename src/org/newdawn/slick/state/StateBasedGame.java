@@ -139,7 +139,7 @@ public abstract class StateBasedGame implements Game {
 	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public final void render(GameContainer container, Graphics g) throws SlickException {
-		currentState.render(this, g);
+		currentState.render(container, this, g);
 		
 		if (leaveTransition != null) {
 			leaveTransition.render(container, g);

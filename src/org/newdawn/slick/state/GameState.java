@@ -31,11 +31,12 @@ public interface GameState extends InputListener {
 	/**
 	 * Render this state to the game's graphics context
 	 * 
+	 * @param container The container holding the game
 	 * @param game The game holding this state
 	 * @param g The graphics context to render to
 	 * @throws SlickException Indicates a failure to render an artifact
 	 */
-	public void render(StateBasedGame game, Graphics g) throws SlickException ;
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException;
 	
 	/**
 	 * Update the state's logic based on the amount of time thats passed

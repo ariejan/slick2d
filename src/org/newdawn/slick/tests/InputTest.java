@@ -52,9 +52,9 @@ public class InputTest extends BasicGame {
 	}
 
 	/**
-	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(Graphics g) {
+	public void render(GameContainer container, Graphics g) {
 		g.setColor(Color.white);
 		g.drawString(message, 10, 50);
 		g.drawString("Use the primary gamepad to control the blob, and hit a gamepad button to change the color", 10, 90);

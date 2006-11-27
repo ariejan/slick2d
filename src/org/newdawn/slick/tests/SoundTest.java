@@ -43,9 +43,9 @@ public class SoundTest extends BasicGame {
 	}
 
 	/**
-	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(Graphics g) {
+	public void render(GameContainer container, Graphics g) {
 		g.drawString("Press space for sound effect (OGG)",100,100);
 		g.drawString("Press P to pause/resume music (XM)",100,130);
 		g.drawString("Press E to pause/resume engine sound (WAV)",100,190);

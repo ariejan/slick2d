@@ -47,9 +47,9 @@ public class TestState2 extends BasicGameState {
 	}
 
 	/**
-	 * @see org.newdawn.slick.state.BasicGameState#render(org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.state.BasicGameState#render(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.Graphics)
 	 */
-	public void render(StateBasedGame game, Graphics g) {
+	public void render(GameContainer container, StateBasedGame game, Graphics g) {
 		g.setFont(font);
 		g.setColor(Color.green);
 		g.drawString("This is State 2", 200, 50);
