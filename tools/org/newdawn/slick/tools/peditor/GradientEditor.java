@@ -306,7 +306,11 @@ public class GradientEditor extends JPanel {
 			return;
 		}
 		
-		selected.pos = (mx - 10) / (float) width;
+		float newPos = (mx - 10) / (float) width;
+		newPos = Math.min(1, newPos);
+		newPos = Math.max(0, newPos);
+		
+		selected.pos = newPos;
 		sortPoints();
 		fireUpdate();
 	}
