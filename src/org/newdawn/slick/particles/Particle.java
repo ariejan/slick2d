@@ -156,6 +156,7 @@ public class Particle {
 	 */
 	public void adjustSize(float delta) {
 		size += delta;
+		size = Math.max(0,size);
 	}
 	
 	/**

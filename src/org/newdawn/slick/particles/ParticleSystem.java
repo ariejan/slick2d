@@ -62,6 +62,17 @@ public class ParticleSystem {
 	}
 	
 	/**
+	 * Get the blending mode in use
+	 * 
+	 * @see #BLEND_COMBINE
+	 * @see #BLEND_ADDITIVE
+	 * @return The blending mode in use
+	 */
+	public int getBlendingMode() {
+		return blendingMode;
+	}
+	
+	/**
 	 * Create a particle specific to this system, override for your own implementations. 
 	 * These particles will be cached and reused within this system.
 	 * 
@@ -79,6 +90,25 @@ public class ParticleSystem {
 	 */
 	public void setBlendingMode(int mode) {
 		this.blendingMode = mode;
+	}
+	
+	/**
+	 * Get the number of emitters applied to the system
+	 * 
+	 * @return The number of emitters applied to the system
+	 */
+	public int getEmitterCount() {
+		return emitters.size();
+	}
+	
+	/**
+	 * Get an emitter a specified index int he list contained within this system
+	 * 
+	 * @param index The index of the emitter to retrieve
+	 * @return The particle emitter 
+	 */
+	public ParticleEmitter getEmitter(int index) {
+		return (ParticleEmitter) emitters.get(index);
 	}
 	
 	/**
