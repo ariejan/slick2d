@@ -698,7 +698,7 @@ public class Input {
 						for (int i=0;i<listeners.size();i++) {
 							InputListener listener = (InputListener) listeners.get(i);
 							if (listener.isAcceptingInput()) {
-								listener.mouseMoved(0, 0, Mouse.getEventDX(), Mouse.getEventDY());
+								listener.mouseMoved(0, 0, Mouse.getEventDX(), -Mouse.getEventDY());
 								if (consumed) {
 									break;
 								}
@@ -729,7 +729,7 @@ public class Input {
 			for (int i=0;i<listeners.size();i++) {
 				InputListener listener = (InputListener) listeners.get(i);
 				if (listener.isAcceptingInput()) {
-					listener.mouseMoved(lastMouseX,  height-lastMouseY, getMouseX(), height-getMouseY());
+					listener.mouseMoved(lastMouseX,  lastMouseY, getMouseX(), getMouseY());
 					if (consumed) {
 						break;
 					}
