@@ -80,8 +80,8 @@ public class SettingsPanel extends ControlPanel {
 		add(imagePanel);
 		yPos+=45;
 		
-		addValue("gravity",new ValuePanel("Gravity",-100,100,0,"The gravity effect to apply"));
-		lengthPanel = new MinMaxPanel("Effect Length",0,50000,1000,1000,true,-1,"The length the effect will last");
+		addValue("gravity",new ValuePanel("Gravity",-200,200,0,"The gravity effect to apply"));
+		lengthPanel = new MinMaxPanel("Effect Length",0,100000,1000,1000,true,-1,"The length the effect will last");
 		addMinMax("length", lengthPanel);
 	}
 	

@@ -14,8 +14,8 @@ public class PositionControls extends ControlPanel implements InputPanelListener
 	public PositionControls() {
 		setLayout(null);
 	
-		addMinMax("x", new MinMaxPanel("X Offset",-1000,1000,1,1,"The offset on the x-axis at which particles will appear"));
-		addMinMax("y", new MinMaxPanel("Y Offset",-1000,1000,1,1,"The offset on the y-axis at which particles will appear"));
+		addMinMax("x", new MinMaxPanel("X Offset",-10000,10000,1,1,"The offset on the x-axis at which particles will appear"));
+		addMinMax("y", new MinMaxPanel("Y Offset",-10000,10000,1,1,"The offset on the y-axis at which particles will appear"));
 		addValue("spread", new ValuePanel("Spread Angle (degrees)",0,360,360,"The range of angles the particles can spew out in"));
 		addValue("angularOffset", new ValuePanel("Angular Offset (degrees)",0,360,360,"The direction the particles should spill out at"));
 		addMinMax("initialDistance", new MinMaxPanel("Initial Distance",0,10000,0,0,"The distance from the emitter center particles will appear at"));
