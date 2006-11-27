@@ -181,6 +181,7 @@ public class AppGameContainer extends GameContainer {
 		Display.setTitle(game.getTitle());
 
 		Log.info("LWJGL Version: "+Sys.getVersion());
+		Log.info("DisplayMode: "+targetDisplayMode);
 		
 		AccessController.doPrivileged(new PrivilegedAction() {
             public Object run() {
