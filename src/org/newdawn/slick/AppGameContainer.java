@@ -85,12 +85,17 @@ public class AppGameContainer extends GameContainer {
 			targetDisplayMode = null;
 			if (fullscreen) {
 				DisplayMode[] modes = Display.getAvailableDisplayModes();
+				int freq = 0;
+				
 				for (int i=0;i<modes.length;i++) {
 					DisplayMode current = modes[i];
 					
 					if ((current.getWidth() == width) && (current.getHeight() == height)) {
-						if ((targetDisplayMode == null) || (current.getFrequency() == originalDisplayMode.getFrequency())) {
-							targetDisplayMode = current;
+						if ((targetDisplayMode == null) || (current.getFrequency() >= freq)) {
+							if ((targetDisplayMode == null) || (current.getBitsPerPixel() > targetDisplayMode.getBitsPerPixel())) {
+								targetDisplayMode = current;
+								freq = targetDisplayMode.getFrequency();
+							}
 						}
 					}
 				}
@@ -181,7 +186,8 @@ public class AppGameContainer extends GameContainer {
 		Display.setTitle(game.getTitle());
 
 		Log.info("LWJGL Version: "+Sys.getVersion());
-		Log.info("DisplayMode: "+targetDisplayMode);
+		Log.info("OriginalDisplayMode: "+originalDisplayMode);
+		Log.info("TargetDisplayMode: "+targetDisplayMode);
 		
 		AccessController.doPrivileged(new PrivilegedAction() {
             public Object run() {
