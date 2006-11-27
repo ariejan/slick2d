@@ -136,9 +136,9 @@ public abstract class StateBasedGame implements Game {
 	public abstract void initStatesList(GameContainer container) throws SlickException;
 	
 	/**
-	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public final void render(Graphics g) throws SlickException {
+	public final void render(GameContainer container, Graphics g) throws SlickException {
 		currentState.render(this, g);
 		
 		if (leaveTransition != null) {
@@ -200,6 +200,15 @@ public abstract class StateBasedGame implements Game {
 		return title;
 	}
 
+	/**
+	 * Get the container holding this game
+	 * 
+	 * @return The game container holding this game
+	 */
+	public GameContainer getContainer() {
+		return container;
+	}
+	
 	/**
 	 * @see org.newdawn.slick.InputListener#controllerButtonPressed(int, int)
 	 */

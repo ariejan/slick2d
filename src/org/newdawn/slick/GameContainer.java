@@ -290,7 +290,7 @@ public abstract class GameContainer {
 		graphics.resetLineWidth();
 		graphics.setAntiAlias(false);
 		try {
-			game.render(graphics);
+			game.render(this, graphics);
 		} catch (Throwable e) {
 			Log.error(e);
 			throw new SlickException("Game.render() failure - check the game code.");

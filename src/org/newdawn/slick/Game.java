@@ -32,11 +32,12 @@ public interface Game extends InputListener {
 	/**
 	 * Render the game's screen here. 
 	 * 
+	 * @param container The container holing this game
 	 * @param g The graphics context that can be used to render. However, normal rendering
 	 * routines can also be used.
  	 * @throws SlickException Throw to indicate a internal error
 	 */
-	public void render(Graphics g) throws SlickException;
+	public void render(GameContainer container, Graphics g) throws SlickException;
 	
 	/**
 	 * Notification that a game close has been requested

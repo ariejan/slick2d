@@ -39,7 +39,7 @@ public class FontTest extends BasicGame {
 	}
 
 	/**
-	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.Graphics)
 	 */
 	public void render(Graphics g) {
 		font.drawString(80, 5, "A Font Example", Color.red);
