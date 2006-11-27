@@ -219,6 +219,9 @@ public class MouseOverArea extends BasicComponent {
 				}
 			}
 		}
+		
+		mouseDown = false;
+		state = NORMAL;
 	}
 	
 	/**
