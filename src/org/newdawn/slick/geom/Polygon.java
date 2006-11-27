@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.opengl.Texture;
 
 /**
  * A polygon to be draw to the graphcis context
@@ -94,6 +95,7 @@ public class Polygon {
 			updated = false;
 		}
 		
+		Texture.bindNone();
 		GL11.glBegin(GL11.GL_TRIANGLES);
 			int count = tris.getTriangleCount();
 			for (int i=0;i<count;i++) {
