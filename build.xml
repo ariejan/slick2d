@@ -56,6 +56,26 @@
 	<copy file="lib/slick.jar" toDir="applet"/>
 </target>
 
+<!-- build the pedigree tool -->
+<target name="build-pedigree" depends="build-slick">
+	<delete dir="lib/pedigree.jar"/>
+	<javac includes="org/newdawn/slick/tools/peditor/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
+	    <classpath>
+	      <pathelement path="lib/slick.jar"/>
+	      <pathelement path="lib/lwjgl.jar"/>
+	    </classpath>
+	</javac>
+	<jar destfile="lib/pedigree.jar" 
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/peditor/**">
+		<manifest>
+	      <attribute name="Main-Class" value="org.newdawn.slick.tools.peditor.ParticleEditor"/>
+	      <attribute name="Class-Path" value="slick.jar lwjgl.jar"/>
+	    </manifest>
+	</jar>
+	<jar update="true" destfile="lib/pedigree.jar" 
+		 basedir="tools" includes="org/newdawn/slick/tools/peditor/data/*"/>
+</target>
+
 <!--
  Generate the javadoc from the Slick sources
 -->
@@ -113,6 +133,47 @@
 	</zip>
 </target>
 	
+<!--
+  Build pedigree distribution 
+-->
+<target name="dist-pedigree" depends="build-pedigree">
+	<zip destfile="${dist}/pedigree.zip">
+	    <fileset dir="lib" includes="pedigree.jar"/>
+	    <fileset dir="lib" includes="lwjgl.jar"/>
+	    <fileset dir="lib" includes="slick.jar"/>
+	    <zipfileset src="lib/natives-win32.jar"/>
+	    <zipfileset src="lib/natives-linux.jar"/>
+	    <zipfileset src="lib/natives-mac.jar"/>
+	    <fileset dir="." includes="pedigree-readme.xml"/>
+	    <fileset dir="." includes="testdata/flame.xml"/>
+	    <fileset dir="." includes="testdata/smoke.xml"/>
+	    <fileset dir="." includes="testdata/system.xml"/>
+	</zip>
+</target>
+
+<target name="build-webstart-pedigree" depends="build-pedigree">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	
+	<copyandsign jar="pedigree.jar"/>
+</target>
+
+<target name="upload-pedigree" depends="build-webstart-pedigree, dist-pedigree">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="dist/pedigree.zip"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/pedigree.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	
+</target>
+
 <!--
  Create a keystore to use when signing your own games
 -->
