@@ -121,6 +121,7 @@
 	    <fileset dir="." includes="applet/natives.jar"/>
 	    <fileset dir="." includes="javadoc/**"/>
 	    <fileset dir="." includes="src/org/newdawn/slick/**"/>
+	    <fileset dir="." includes="tools/**"/>
 	    <fileset dir="." includes="lib/**"/>
 	    <fileset dir="." includes="testdata/**"/>
 	    <fileset dir="." includes="scripts/**"/>
