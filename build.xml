@@ -253,6 +253,7 @@
 	<createdemojnlp name="packedtest" title="Slick2D Packed Sprite Sheet Test" mainclass="org.newdawn.slick.tests.PackedSheetTest"/>
 
 	<createdemojnlp name="storedstatetest" title="Slick2D Stored State Test" mainclass="org.newdawn.slick.tests.SavedStateTest"/>
+	<createdemojnlp name="pedigreetest" title="Slick2D Pedigree Test" mainclass="org.newdawn.slick.tests.PedigreeTest"/>
 
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
