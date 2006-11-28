@@ -51,6 +51,8 @@ public class ParticleEditor extends JFrame {
 	private JMenuItem imp = new JMenuItem("Import Emitter");
 	/** Save a single particle emitter */
 	private JMenuItem exp = new JMenuItem("Export Emitter");
+	/** Toggle the HUD  */
+	private JMenuItem hud = new JMenuItem("Toggle Overlay");
 	/** Exit the editor */
 	private JMenuItem quit = new JMenuItem("Exit");
 
@@ -125,11 +127,18 @@ public class ParticleEditor extends JFrame {
 		file.add(imp);
 		file.add(exp);
 		file.addSeparator();
+		file.add(hud);
+		file.addSeparator();
 		file.add(quit);
 
 		newSystem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createNewSystem();
+			}
+		});
+		hud.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.setHud(!canvas.isHudOn());
 			}
 		});
 		load.addActionListener(new ActionListener() {

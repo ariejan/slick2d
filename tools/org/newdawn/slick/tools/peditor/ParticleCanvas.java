@@ -46,6 +46,8 @@ public class ParticleCanvas extends AWTGLCanvas {
 	private int frameCount;
 	/** The maximum number of particles in use */
 	private int max;
+	/** True if the hud should be displayed */
+	private boolean hudOn = true;
 	
 	/**
 	 * Create a new canvas
@@ -56,6 +58,24 @@ public class ParticleCanvas extends AWTGLCanvas {
 		super();
 	}
 
+	/**
+	 * Check if this hud is being displayed
+	 * 
+	 * @return True if this hud is being displayed
+	 */
+	public boolean isHudOn() {
+		return hudOn;
+	}
+	
+	/**
+	 * Indicate if the HUD should be drawn
+	 * 
+	 * @param hud True if the HUD should be drawn
+	 */
+	public void setHud(boolean hud) {
+		this.hudOn = hud;
+	}
+	
 	/**
 	 * Add an emitter to the particle system held here
 	 * 
@@ -182,10 +202,13 @@ public class ParticleCanvas extends AWTGLCanvas {
 
 		max = Math.max(max, system.getParticleCount());
 		
-		graphics.setColor(Color.white);
-		graphics.drawString("FPS:"+fps, 10,10);
-		graphics.drawString("Particles: "+system.getParticleCount(), 10,25);
-		graphics.drawString("Max: "+max, 10,40);
+		if (hudOn) {
+			graphics.setColor(Color.white);
+			graphics.drawString("FPS: "+fps, 10,10);
+			graphics.drawString("Particles: "+system.getParticleCount(), 10,25);
+			graphics.drawString("Max: "+max, 10,40);
+			graphics.drawString("LMB: Position Emitter       RMB: Default Position", 90,527);
+		}
 		
 		GL11.glTranslatef(250,300,0);
 		system.render();
