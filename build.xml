@@ -38,6 +38,10 @@
  Build the java source to the Slick Library
 -->
 <target name="build-slick" depends="init">
+	<propertyfile file="src/version">
+		<entry key="build" type="int" operation="+" value="1"/>
+    </propertyfile>
+    
 	<delete dir="lib/slick.jar"/>
 	<javac includes="org/newdawn/slick/**" debug="true" srcdir="src" destdir="${build.dir}/classes" target="1.4" source="1.4">
 	    <classpath>
