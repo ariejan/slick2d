@@ -79,8 +79,9 @@ public class SettingsPanel extends ControlPanel {
 		imagePanel.setBounds(0,55,280,55);
 		add(imagePanel);
 		yPos+=45;
-		
-		addValue("gravity",new ValuePanel("Gravity",-200,200,0,"The gravity effect to apply"));
+
+		addValue("gravity",new ValuePanel("Gravity",-200,200,0,"The gravity effect to apply",false));
+		addValue("wind",new ValuePanel("Wind",-200,200,0,"The horizontal force effect to apply",false));
 		lengthPanel = new MinMaxPanel("Effect Length",0,100000,1000,1000,true,-1,"The length the effect will last");
 		addMinMax("length", lengthPanel);
 	}
@@ -112,6 +113,7 @@ public class SettingsPanel extends ControlPanel {
 		name.setText(emitter.name);
 		
 		link(emitter.gravityFactor, "gravity");
+		link(emitter.windFactor, "wind");
 		link(emitter.length, "length");
 	}
 

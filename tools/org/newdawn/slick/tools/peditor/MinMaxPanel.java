@@ -117,6 +117,15 @@ public class MinMaxPanel extends DefaultPanel {
 	}
 	
 	/**
+	 * @see org.newdawn.slick.tools.peditor.DefaultPanel#setEnabled(boolean)
+	 */
+	public void setEnabled(boolean e) {
+		enabled.setEnabled(e);
+		minSpinner.setEnabled(enabled.isSelected() || !enablement);
+		maxSpinner.setEnabled(enabled.isSelected() || !enablement);
+	}
+	
+	/**
 	 * Set the minimum value
 	 * 
 	 * @param value The value to use as the lower bound
@@ -161,7 +170,7 @@ public class MinMaxPanel extends DefaultPanel {
 	 * 
 	 * @param source The source of this event
 	 */
-	private void fireUpdated(Object source) {
+	void fireUpdated(Object source) {
 		if (updateDisable) {
 			return;
 		}

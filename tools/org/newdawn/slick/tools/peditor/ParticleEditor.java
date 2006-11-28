@@ -2,6 +2,9 @@ package org.newdawn.slick.tools.peditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -10,6 +13,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -37,6 +41,8 @@ import org.newdawn.slick.util.Log;
 public class ParticleEditor extends JFrame {
 	/** The canvas displaying the particles */
 	private ParticleCanvas canvas;
+	/** Create a new system */
+	private JMenuItem newSystem = new JMenuItem("New System");
 	/** Load a complete particle system */
 	private JMenuItem load = new JMenuItem("Load System");
 	/** Save a complete particle system */
@@ -65,6 +71,8 @@ public class ParticleEditor extends JFrame {
 	private ConfigurableEmitter selected;
 	/** Chooser used to load/save/import/export */
 	private JFileChooser chooser = new JFileChooser(new File("."));
+	/** Reset the particle counts on the canvas */
+	private JButton reset = new JButton("Reset Maximum");
 	
 	/**
 	 * Create a new editor
@@ -109,6 +117,8 @@ public class ParticleEditor extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		
 		JMenu file = new JMenu("File");
+		file.add(newSystem);
+		file.addSeparator();
 		file.add(load);
 		file.add(save);
 		file.addSeparator();
@@ -117,6 +127,11 @@ public class ParticleEditor extends JFrame {
 		file.addSeparator();
 		file.add(quit);
 
+		newSystem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				createNewSystem();
+			}
+		});
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				loadSystem();
@@ -165,9 +180,11 @@ public class ParticleEditor extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
-		additive.setBounds(500,0,300,25);
 		canvas.setBounds(0,0,500,600);
 		controls.setBounds(500,20,300,600);
+		reset.setBounds(680,0,110,25);
+		panel.add(reset);
+		additive.setBounds(500,0,150,25);
 		panel.add(additive);
 		panel.add(canvas);
 		panel.add(controls);
@@ -182,6 +199,11 @@ public class ParticleEditor extends JFrame {
 				updateBlendMode();
 			}
 		});
+		reset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.resetCounts();
+			}
+		});
 		
 		ConfigurableEmitter test = new ConfigurableEmitter("Default");
 		emitters.add(test);
@@ -193,7 +215,28 @@ public class ParticleEditor extends JFrame {
 		setSize(800,600);
 		setResizable(false);
 		setVisible(true);
-	
+
+		canvas.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.getButton() != 1) {
+					positionControls.setPosition(0,0);
+				}
+			}
+		});
+		
+		canvas.addMouseMotionListener(new MouseMotionListener() {
+
+			public void mouseDragged(MouseEvent e) {
+				int xp = e.getX() - 250;
+				int yp = e.getY() - 300;
+				positionControls.setPosition(xp,yp);
+			}
+
+			public void mouseMoved(MouseEvent e) {
+			}
+			
+		});
+		
 		emitters.setSelected(0);
 	}
 	
@@ -240,6 +283,14 @@ public class ParticleEditor extends JFrame {
 		}
 	}
 
+	/**
+	 * Create a completely new particle system
+	 */
+	public void createNewSystem() {
+		canvas.clearSystem(additive.isSelected());
+		emitters.clear();
+	}
+	
 	/**
 	 * Load a complete particle system XML description
 	 */

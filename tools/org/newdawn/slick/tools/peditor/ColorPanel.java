@@ -37,8 +37,8 @@ public class ColorPanel extends ControlPanel {
 		});
 		
 		yPos+=90;
-		addValue("startAlpha",new ValuePanel("Starting Alpha",0,255,255,"The alpha value for particles at their birth"));
-		addValue("endAlpha",new ValuePanel("Ending Alpha",0,255,0,"The alpha value for particles at their death"));
+		addValue("startAlpha",new ValuePanel("Starting Alpha",0,255,255,"The alpha value for particles at their birth",false));
+		addValue("endAlpha",new ValuePanel("Ending Alpha",0,255,0,"The alpha value for particles at their death",false));
 	}
 	
 	/**

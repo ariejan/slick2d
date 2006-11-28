@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.AWTGLCanvas;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.Color;
@@ -37,6 +38,14 @@ public class ParticleCanvas extends AWTGLCanvas {
 	private Font defaultFont;
 	/** The list of emitters being displayed in the system */
 	private ArrayList emitters = new ArrayList();
+	/** The frame rate */
+	private int fps;
+	/** The last update of fps */
+	private int lastUpdate;
+	/** The number of frames since last count */
+	private int frameCount;
+	/** The maximum number of particles in use */
+	private int max;
 	
 	/**
 	 * Create a new canvas
@@ -82,6 +91,8 @@ public class ParticleCanvas extends AWTGLCanvas {
 		
 		Log.info("Starting display "+width+"x"+height);
 		String extensions = GL11.glGetString(GL11.GL_EXTENSIONS);
+		
+		Display.setVSyncEnabled(true);
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glShadeModel(GL11.GL_SMOOTH);        
@@ -131,6 +142,22 @@ public class ParticleCanvas extends AWTGLCanvas {
 	}
 
 	/**
+	 * Clear the particle system held in this canvas
+	 * 
+	 * @param additive True if the particle system should be set to additive
+	 */
+	public void clearSystem(boolean additive) {
+		try {
+			system = new ParticleSystem(new Image("org/newdawn/slick/data/particle.tga"),2000);
+			if (additive) {
+				system.setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
+			}
+		} catch (SlickException e) {
+			Log.error(e);
+		}
+	}
+	
+	/**
 	 * Set the particle system to be displayed
 	 * 
 	 * @param system The system to be displayed
@@ -140,12 +167,26 @@ public class ParticleCanvas extends AWTGLCanvas {
 	}
 	
 	/**
+	 * Reset the counts held in this canvas (maximum particles for instance)
+	 */
+	public void resetCounts() {
+		max = 0;
+	}
+	
+	/**
 	 * @see org.lwjgl.opengl.AWTGLCanvas#paintGL()
 	 */
 	protected void paintGL() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		GL11.glLoadIdentity();
 
+		max = Math.max(max, system.getParticleCount());
+		
+		graphics.setColor(Color.white);
+		graphics.drawString("FPS:"+fps, 10,10);
+		graphics.drawString("Particles: "+system.getParticleCount(), 10,25);
+		graphics.drawString("Max: "+max, 10,40);
+		
 		GL11.glTranslatef(250,300,0);
 		system.render();
 		
@@ -165,6 +206,14 @@ public class ParticleCanvas extends AWTGLCanvas {
 		long thisTime = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
 		long delta = thisTime - lastTime;
 		lastTime = thisTime;
+		
+		frameCount++;
+		lastUpdate -= delta;
+		if (lastUpdate < 0) {
+			fps = frameCount;
+			frameCount = 0;
+			lastUpdate = 1000;
+		}
 		
 		for (int i=0;i<emitters.size();i++) {
 			((ConfigurableEmitter) emitters.get(i)).replayCheck();

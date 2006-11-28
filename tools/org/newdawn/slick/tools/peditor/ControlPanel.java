@@ -109,6 +109,7 @@ public abstract class ControlPanel extends DefaultPanel implements InputPanelLis
 	private void link(Value value, ValuePanel panel) {
 		controlToData.put(panel, value);
 		panel.setValue((int) value.getValue());
+		panel.setLinear(value.isLinear());
 	}
 
 	/**
@@ -153,6 +154,7 @@ public abstract class ControlPanel extends DefaultPanel implements InputPanelLis
 		Value value = (Value) controlToData.get(source);
 		if (value != null) {
 			value.setValue(source.getValue());
+			value.setLinear(source.isLinear());
 		} else {
 			throw new RuntimeException("No data set specified for the GUI source");
 		}
