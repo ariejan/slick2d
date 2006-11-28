@@ -34,6 +34,8 @@ public class ParticleSystem {
 	protected Particle dummy;
 	/** The blending mode */
 	private int blendingMode = BLEND_COMBINE;
+	/** The number of particles in use */
+	private int pCount;
 	
 	/**
 	 * Create a new particle system
@@ -161,11 +163,22 @@ public class ParticleSystem {
 			}
 		}
 		
+		pCount = 0;
 		for (int i=0;i<particles.length;i++) {
 			if (particles[i].inUse()) {
 				particles[i].update(delta);
+				pCount++;
 			}
 		}
+	}
+	
+	/**
+	 * Get the number of particles in use in this system
+	 * 
+	 * @return The number of particles in use in this system
+	 */
+	public int getParticleCount() {
+		return pCount;
 	}
 	
 	/**

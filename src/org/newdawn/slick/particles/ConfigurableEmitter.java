@@ -56,6 +56,8 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	public Value growthFactor = new Value(0);
 	/** The factor of gravity to apply */
 	public Value gravityFactor = new Value(0);
+	/** The factor of wind to apply */
+	public Value windFactor = new Value(0);
 	/** The length of the effect */
 	public Range length = new Range(1000,1000);
 	/** The color range @see ColorRecord */
@@ -241,7 +243,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		particleCount++;
 		
 		particle.adjustSize(delta * growthFactor.getValue() * 0.001f);
-		particle.adjustVelocity(0, gravityFactor.getValue() * 0.0001f);
+		particle.adjustVelocity(windFactor.getValue() * 0.0001f, gravityFactor.getValue() * 0.0001f);
 		
 		float offset = particle.getLife() / particle.getOriginalLife();
 		float inv = 1 - offset;
@@ -310,7 +312,11 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	public class Value {
 		/** The value configured */
 		private float value;
-
+		/** True if this value should given linear random numbers */
+		private boolean linear;
+		/** The next value */
+		private float next;
+		
 		/**
 		 * Create a new configurable new value
 		 * 
@@ -344,7 +350,34 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		 * @return The random number
 		 */
 		public float random() {
+			if (linear){
+				float ret = next;
+				next++;
+				if (next > value) {
+					next = 0;
+				}
+				
+				return ret;
+			}
 			return (float) (Math.random() * value);
+		}
+		
+		/**
+		 * Check if this value should give linear random numbers
+		 * 
+		 * @return True if this value should give linear random numbers
+		 */
+		public boolean isLinear() {
+			return linear;
+		}
+		
+		/**
+		 * Indicate if this value should give linear random numbers
+		 * 
+		 * @param linear True if this value should give linear random numbers
+		 */
+		public void setLinear(boolean linear) {
+			this.linear = linear;
 		}
 	}
 

@@ -252,6 +252,7 @@ public class ParticleIO {
 		parseValueElement(getFirstNamedElement(element, "angularOffset"), emitter.angularOffset);
 		parseValueElement(getFirstNamedElement(element, "growthFactor"), emitter.growthFactor);
 		parseValueElement(getFirstNamedElement(element, "gravityFactor"), emitter.gravityFactor);
+		parseValueElement(getFirstNamedElement(element, "windFactor"), emitter.windFactor);
 		parseValueElement(getFirstNamedElement(element, "startAlpha"), emitter.startAlpha);
 		parseValueElement(getFirstNamedElement(element, "endAlpha"), emitter.endAlpha);
 		
@@ -295,6 +296,7 @@ public class ParticleIO {
 		root.appendChild(createValueElement(document, "angularOffset", emitter.angularOffset));
 		root.appendChild(createValueElement(document, "growthFactor", emitter.growthFactor));
 		root.appendChild(createValueElement(document, "gravityFactor", emitter.gravityFactor));
+		root.appendChild(createValueElement(document, "windFactor", emitter.windFactor));
 		root.appendChild(createValueElement(document, "startAlpha", emitter.startAlpha));
 		root.appendChild(createValueElement(document, "endAlpha", emitter.endAlpha));
 		
@@ -344,6 +346,7 @@ public class ParticleIO {
 	private static Element createValueElement(Document document, String name, ConfigurableEmitter.Value value) {
 		Element element = document.createElement(name);
 		element.setAttribute("value", ""+value.getValue());
+		element.setAttribute("linear", ""+value.isLinear());
 		
 		return element;
 	}
@@ -355,6 +358,9 @@ public class ParticleIO {
 	 * @param range The range to configure based on the XML
 	 */
 	private static void parseRangeElement(Element element, ConfigurableEmitter.Range range) {
+		if (element == null) {
+			return;
+		}
 		range.setMin(Float.parseFloat(element.getAttribute("min")));
 		range.setMax(Float.parseFloat(element.getAttribute("max")));
 		range.setEnabled("true".equals(element.getAttribute("enabled")));
@@ -367,6 +373,10 @@ public class ParticleIO {
 	 * @param value The value to configure based on the XML
 	 */
 	private static void parseValueElement(Element element, ConfigurableEmitter.Value value) {
+		if (element == null) {
+			return;
+		}
 		value.setValue(Float.parseFloat(element.getAttribute("value")));
+		value.setLinear("true".equals(element.getAttribute("linear")));
 	}
 }
