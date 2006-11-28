@@ -2,12 +2,14 @@ package org.newdawn.slick;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Properties;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.Log;
+import org.newdawn.slick.util.ResourceLoader;
 
 /**
  * A generic game container that handles the game loop, fps recording and
@@ -62,6 +64,27 @@ public abstract class GameContainer {
 		lastFrame = getTime();
 		
 		input.addListener(game);
+		getBuildVersion();
+	}
+	
+	/**
+	 * Get the build number of slick 
+	 * 
+	 * @return The build number of slick
+	 */
+	public static int getBuildVersion() {
+		try {
+			Properties props = new Properties();
+			props.load(ResourceLoader.getResourceAsStream("version"));
+			
+			int build = Integer.parseInt(props.getProperty("build"));
+			Log.info("Slick Build #"+build);
+			
+			return build;
+		} catch (Exception e) {
+			Log.error("Unable to determine Slick build number");
+			return -1;
+		}
 	}
 	
 	/**
