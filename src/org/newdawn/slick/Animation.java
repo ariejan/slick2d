@@ -8,6 +8,7 @@ import org.lwjgl.Sys;
  * A utility to hold and render animations
  *
  * @author kevin
+ * @author DeX (speed updates)
  */
 public class Animation {
 	/** The list of frames to render in this animation */
@@ -20,6 +21,8 @@ public class Animation {
 	private boolean stopped = false;
 	/** The time left til the next frame */
 	private long timeLeft;
+	/** The current speed of the animation */
+	private float speed = 1.0f;
 	
 	/**
 	 * Create an empty animation
@@ -57,6 +60,25 @@ public class Animation {
 		}
 		nextFrame();
 	}
+
+	/**
+	  * Adjust the overall speed of the animation.
+	  *
+	  * @param spd The speed to run the animation. Default: 1.0
+	  */
+	public void setSpeed(float spd) {
+	   if (speed >= 0) speed = spd;
+	}
+
+	/**
+	 * Returns the current speed of the animation.
+	 * 
+	 * @return The speed this animation is being played back at
+	 */
+	public float getSpeed() {
+	   return speed;
+	}
+
 	
 	/**
 	 * Stop the animation
@@ -179,7 +201,7 @@ public class Animation {
 		
 		if ((getTime() > nextChange) || (currentFrame == -1)) {
 			currentFrame = (currentFrame + 1) % frames.size();
-			nextChange = getTime() + ((Frame) frames.get(currentFrame)).duration;
+			nextChange = (long) (getTime() + (((Frame) frames.get(currentFrame)).duration / speed));
 		}
 	}
 	
