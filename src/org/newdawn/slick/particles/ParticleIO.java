@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
@@ -107,6 +108,17 @@ public class ParticleIO {
 	 * @throws IOException Indicates a failure to save or encode the system XML.
 	 */
 	public static void saveConfiguredSystem(File file, ParticleSystem system) throws IOException {
+		saveConfiguredSystem(new FileOutputStream(file), system);
+	}
+	
+	/**
+	 * Save a particle system with only ConfigurableEmitters in to an XML file
+	 * 
+	 * @param out The location to which we'll save
+	 * @param system The system to store
+	 * @throws IOException Indicates a failure to save or encode the system XML.
+	 */
+	public static void saveConfiguredSystem(OutputStream out, ParticleSystem system) throws IOException {
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document document = builder.newDocument();
@@ -126,7 +138,7 @@ public class ParticleIO {
 				}
 			}
 			
-            Result result = new StreamResult(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));   
+            Result result = new StreamResult(new OutputStreamWriter(out, "utf-8"));   
 			DOMSource source = new DOMSource(document);
 			
             TransformerFactory factory = TransformerFactory.newInstance();
@@ -201,12 +213,23 @@ public class ParticleIO {
 	 * @throws IOException Indicates a failure to write or encode the XML
 	 */
 	public static void saveEmitter(File file, ConfigurableEmitter emitter) throws IOException {
+		saveEmitter(new FileOutputStream(file), emitter);
+	}
+	
+	/**
+	 * Save a single emitter to the XML file
+	 * 
+	 * @param out The location to which we should save
+	 * @param emitter The emitter to store to the XML file
+	 * @throws IOException Indicates a failure to write or encode the XML
+	 */
+	public static void saveEmitter(OutputStream out, ConfigurableEmitter emitter) throws IOException {
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document document = builder.newDocument();
 			
 			document.appendChild(emitterToElement(document, emitter));    
-            Result result = new StreamResult(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));   
+            Result result = new StreamResult(new OutputStreamWriter(out, "utf-8"));   
 			DOMSource source = new DOMSource(document);
 			
             TransformerFactory factory = TransformerFactory.newInstance();
