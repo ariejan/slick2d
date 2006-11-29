@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +51,8 @@ public class ParticleEditor extends JFrame {
 	private JMenuItem save = new JMenuItem("Save System");
 	/** Load a single particle emitter */
 	private JMenuItem imp = new JMenuItem("Import Emitter");
+	/** Clone a single particle emitter */
+	private JMenuItem clone = new JMenuItem("Clone Emitter");
 	/** Save a single particle emitter */
 	private JMenuItem exp = new JMenuItem("Export Emitter");
 	/** Toggle the HUD  */
@@ -69,12 +73,16 @@ public class ParticleEditor extends JFrame {
 	
 	/** Control for the type of particle system blending */
 	private JCheckBox additive = new JCheckBox("Additive Blending");
+	/** Control for the type of particle point usage */
+	private JCheckBox pointsEnabled = new JCheckBox("Use Points");
 	/** The currently selected particle emitter */
 	private ConfigurableEmitter selected;
 	/** Chooser used to load/save/import/export */
 	private JFileChooser chooser = new JFileChooser(new File("."));
 	/** Reset the particle counts on the canvas */
 	private JButton reset = new JButton("Reset Maximum");
+	/** Play or Pause the current rendering */
+	private JButton pause = new JButton("Play/Pause");
 	
 	/**
 	 * Create a new editor
@@ -125,6 +133,7 @@ public class ParticleEditor extends JFrame {
 		file.add(save);
 		file.addSeparator();
 		file.add(imp);
+		file.add(clone);
 		file.add(exp);
 		file.addSeparator();
 		file.add(hud);
@@ -149,6 +158,11 @@ public class ParticleEditor extends JFrame {
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveSystem();
+			}
+		});
+		clone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cloneEmitter();
 			}
 		});
 		exp.addActionListener(new ActionListener() {
@@ -179,7 +193,7 @@ public class ParticleEditor extends JFrame {
 		emitters.setBorder(BorderFactory.createTitledBorder("Emitters"));
 		controls.add(emitters);
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.setBounds(0,150,300,450);
+		tabs.setBounds(0,150,300,350);
 		controls.add(tabs);
 		
 		tabs.add("Settings", settingsPanel);
@@ -190,11 +204,15 @@ public class ParticleEditor extends JFrame {
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
 		canvas.setBounds(0,0,500,600);
-		controls.setBounds(500,20,300,600);
-		reset.setBounds(680,0,110,25);
-		panel.add(reset);
+		controls.setBounds(500,20,300,575);
+		reset.setBounds(180,500,110,25);
+		controls.add(reset);
+		pause.setBounds(0,500,110,25);
+		controls.add(pause);
 		additive.setBounds(500,0,150,25);
 		panel.add(additive);
+		pointsEnabled.setBounds(650,0,150,25);
+		panel.add(pointsEnabled);
 		panel.add(canvas);
 		panel.add(controls);
 
@@ -208,9 +226,19 @@ public class ParticleEditor extends JFrame {
 				updateBlendMode();
 			}
 		});
+		pointsEnabled.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.getSystem().setUsePoints(pointsEnabled.isSelected());
+			}
+		});
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				canvas.resetCounts();
+			}
+		});
+		pause.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				canvas.setPaused(!canvas.isPaused());
 			}
 		});
 		
@@ -269,6 +297,29 @@ public class ParticleEditor extends JFrame {
 	}
 
 	/**
+	 * Clone the selected emitter
+	 */
+	public void cloneEmitter() {
+		if (selected == null) {
+			return;
+		}
+		
+		try {
+			ByteArrayOutputStream bout = new ByteArrayOutputStream();
+			ParticleIO.saveEmitter(bout, selected);
+			ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
+			ConfigurableEmitter emitter = ParticleIO.loadEmitter(bin);
+			emitter.name = emitter.name + "_clone";
+			
+			addEmitter(emitter);
+			emitters.setSelected(emitter);
+		} catch (IOException e) {
+			Log.error(e);
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+	}
+	
+	/**
 	 * Export an emitter XML file
 	 */
 	public void exportEmitter() {
@@ -297,6 +348,7 @@ public class ParticleEditor extends JFrame {
 	 */
 	public void createNewSystem() {
 		canvas.clearSystem(additive.isSelected());
+		pointsEnabled.setSelected(false);
 		emitters.clear();
 	}
 	
@@ -316,6 +368,7 @@ public class ParticleEditor extends JFrame {
 					emitters.add((ConfigurableEmitter) system.getEmitter(i));
 				}
 				additive.setSelected(system.getBlendingMode() == ParticleSystem.BLEND_ADDITIVE);
+				pointsEnabled.setSelected(system.usePoints());
 			} catch (IOException e) {
 				Log.error(e);
 				JOptionPane.showMessageDialog(this, e.getMessage());
@@ -327,10 +380,6 @@ public class ParticleEditor extends JFrame {
 	 * Save a complete particle system XML description
 	 */
 	public void saveSystem() {
-		if (selected == null) {
-			return;
-		}
-		
 		int resp = chooser.showSaveDialog(this);
 		if (resp == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();

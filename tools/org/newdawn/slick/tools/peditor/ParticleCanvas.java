@@ -48,6 +48,8 @@ public class ParticleCanvas extends AWTGLCanvas {
 	private int max;
 	/** True if the hud should be displayed */
 	private boolean hudOn = true;
+	/** True if the rendering is paused */
+	private boolean paused;
 	
 	/**
 	 * Create a new canvas
@@ -58,6 +60,24 @@ public class ParticleCanvas extends AWTGLCanvas {
 		super();
 	}
 
+	/** 
+	 * Indicate if this canvas should pause
+	 * 
+	 * @param paused True if the rendering should pause
+	 */
+	public void setPaused(boolean paused) {
+		this.paused = paused;
+	}
+	
+	/**
+	 * Check if the canvas is paused
+	 * 
+	 * @return True if the canvas is paused
+	 */
+	public boolean isPaused() {
+		return paused;
+	}
+	
 	/**
 	 * Check if this hud is being displayed
 	 * 
@@ -238,10 +258,12 @@ public class ParticleCanvas extends AWTGLCanvas {
 			lastUpdate = 1000;
 		}
 		
-		for (int i=0;i<emitters.size();i++) {
-			((ConfigurableEmitter) emitters.get(i)).replayCheck();
+		if (!paused) {
+			for (int i=0;i<emitters.size();i++) {
+				((ConfigurableEmitter) emitters.get(i)).replayCheck();
+			}
+			system.update((int) delta);
 		}
-		system.update((int) delta);
 	}
 
 	/**
