@@ -69,7 +69,7 @@ public class AppGameContainer extends GameContainer {
 		
 		originalDisplayMode = Display.getDisplayMode();
 		
-		setDisplayMode(width,height,false);
+		setDisplayMode(width,height,fullscreen);
 	}
 	
 	/**
