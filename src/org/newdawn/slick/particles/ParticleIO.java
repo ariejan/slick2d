@@ -77,6 +77,8 @@ public class ParticleIO {
 			} else {
 				system.setBlendingMode(ParticleSystem.BLEND_COMBINE);
 			}
+			boolean points = "true".equals(element.getAttribute("points"));
+			system.setUsePoints(points);
 			
 			NodeList list = element.getElementsByTagName("emitter");
 			for (int i=0;i<list.getLength();i++) {
@@ -111,6 +113,7 @@ public class ParticleIO {
 
 			Element root = document.createElement("system");
 			root.setAttribute("additive", ""+(system.getBlendingMode() == ParticleSystem.BLEND_ADDITIVE));
+			root.setAttribute("points", ""+(system.usePoints()));
 			
 			document.appendChild(root);
 			for (int i=0;i<system.getEmitterCount();i++) {

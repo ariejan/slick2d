@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -36,6 +37,8 @@ public class ParticleSystem {
 	private int blendingMode = BLEND_COMBINE;
 	/** The number of particles in use */
 	private int pCount;
+	/** True if we're going to use points to render the particles */
+	private boolean usePoints;
 	
 	/**
 	 * Create a new particle system
@@ -44,6 +47,24 @@ public class ParticleSystem {
 	 */
 	public ParticleSystem(Image defaultSprite) {
 		this(defaultSprite, DEFAULT_PARTICLES);
+	}
+	
+	/**
+	 * Indicate if this engine should use points to render the particles
+	 * 
+	 * @param usePoints True if points should be used to render the particles
+	 */
+	public void setUsePoints(boolean usePoints) {
+		this.usePoints = usePoints;
+	}
+	
+	/**
+	 * Check if this engine should use points to render the particles
+	 * 
+	 * @return True if the engine should use points to render the particles
+	 */
+	public boolean usePoints() {
+		return usePoints;
 	}
 	
 	/**
@@ -138,13 +159,20 @@ public class ParticleSystem {
 		if (blendingMode == BLEND_ADDITIVE) {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		}
+		if (usePoints()) {
+			GL11.glEnable( GL11.GL_POINT_SMOOTH ); 
+			Texture.bindNone();
+		}
 		
 		for (int i=0;i<particles.length;i++) {
 			if (particles[i].inUse()) {
 				particles[i].render();
 			}
 		}
-		
+
+		if (usePoints()) {
+			GL11.glDisable( GL11.GL_POINT_SMOOTH ); 
+		}
 		if (blendingMode == BLEND_ADDITIVE) {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}

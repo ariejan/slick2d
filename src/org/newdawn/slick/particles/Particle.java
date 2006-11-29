@@ -1,5 +1,6 @@
 package org.newdawn.slick.particles;
 
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 
@@ -83,7 +84,15 @@ public class Particle {
 	 * Render this particle 
 	 */
 	public void render() {
-		image.draw((int) (x-(size/2)),(int) (y-(size/2)),(int) size,(int) size,color);
+		if (engine.usePoints()) { 
+			GL11.glPointSize(size/2);
+			color.bind();
+			GL11.glBegin(GL11.GL_POINTS);
+				GL11.glVertex2f(x,y);
+			GL11.glEnd();
+		} else {
+			image.draw((int) (x-(size/2)),(int) (y-(size/2)),(int) size,(int) size,color);
+		}
 	}
 	
 	/**
