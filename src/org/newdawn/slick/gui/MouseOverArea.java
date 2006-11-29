@@ -55,6 +55,8 @@ public class MouseOverArea extends BasicComponent {
 	
 	/** The state of the area */
 	private int state = NORMAL;
+	/** True if the mouse has been up since last press */
+	private boolean mouseUp;
 	
 	/**
 	 * Create a new mouse over area
@@ -197,9 +199,10 @@ public class MouseOverArea extends BasicComponent {
 			currentImage = normalImage;
 			currentColor = normalColor;
 			state = NORMAL;
+			mouseUp = false;
 		} else {
 			if (mouseDown) {
-				if (state != MOUSE_DOWN) {
+				if ((state != MOUSE_DOWN) && (mouseUp)) {
 					if (mouseDownSound != null) {
 						mouseDownSound.play();
 					}
@@ -207,8 +210,10 @@ public class MouseOverArea extends BasicComponent {
 					currentColor = mouseDownColor;
 					state = MOUSE_DOWN;
 					listener.componentActivated(this);
+					mouseUp = false;
 				}
 			} else {
+				mouseUp = true;
 				if (state != MOUSE_OVER) {
 					if (mouseOverSound != null) {
 						mouseOverSound.play();
@@ -216,7 +221,7 @@ public class MouseOverArea extends BasicComponent {
 					currentImage = mouseOverImage;
 					currentColor = mouseOverColor;
 					state = MOUSE_OVER;
-				}
+				} 
 			}
 		}
 		
