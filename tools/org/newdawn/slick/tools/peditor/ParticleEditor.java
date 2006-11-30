@@ -199,7 +199,7 @@ public class ParticleEditor extends JFrame {
 		tabs.add("Settings", settingsPanel);
 		tabs.add("Emission", emissionControls);
 		tabs.add("Position", positionControls);
-		tabs.add("Color", colorPanel);
+		tabs.add("Rendering", colorPanel);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);

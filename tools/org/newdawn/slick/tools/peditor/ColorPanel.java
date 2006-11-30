@@ -4,9 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.particles.ConfigurableEmitter;
+import org.newdawn.slick.particles.Particle;
 import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
 
 /**
@@ -20,6 +24,13 @@ public class ColorPanel extends ControlPanel {
 	private GradientEditor grad;
 	/** True if we should ignore update events */
 	private boolean blockUpdates = false;
+
+	/** The selection for inherit the rendering settings */
+	private JRadioButton inherit;
+	/** The selection for using quads */
+	private JRadioButton quads;
+	/** The selection for using points */
+	private JRadioButton points;
 	
 	/**
 	 * Create a new panel to allow particle colour configuration
@@ -39,6 +50,49 @@ public class ColorPanel extends ControlPanel {
 		yPos+=90;
 		addValue("startAlpha",new ValuePanel("Starting Alpha",0,255,255,"The alpha value for particles at their birth",false));
 		addValue("endAlpha",new ValuePanel("Ending Alpha",0,255,0,"The alpha value for particles at their death",false));
+
+		JPanel usePanel = new DefaultPanel();
+		usePanel.setBorder(BorderFactory.createTitledBorder("Rendering"));
+		usePanel.setLayout(null);
+		inherit = new JRadioButton("Inherit");
+		quads = new JRadioButton("Quads");
+		points = new JRadioButton("Points");
+		ButtonGroup group = new ButtonGroup();
+		group.add(inherit);
+		group.add(quads);
+		group.add(points);
+		
+		ActionListener al = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateRender();
+			}
+		};
+		inherit.addActionListener(al);
+		quads.addActionListener(al);
+		points.addActionListener(al);
+		
+		inherit.setSelected(true);
+		inherit.setBounds(10,15,100,25); usePanel.add(inherit); inherit.setOpaque(false);
+		quads.setBounds(110,15,100,25); usePanel.add(quads); quads.setOpaque(false);
+		points.setBounds(210,15,100,25); usePanel.add(points); points.setOpaque(false);
+		usePanel.setBounds(0,yPos+15,280,45);
+		add(usePanel);
+		yPos+=45;
+	}
+	
+	/**
+	 * Update the render setting
+	 */
+	private void updateRender() {
+		if (inherit.isSelected()) {
+			emitter.usePoints = Particle.INHERIT_POINTS;
+		}
+		if (quads.isSelected()) {
+			emitter.usePoints = Particle.USE_QUADS;
+		}
+		if (points.isSelected()) {
+			emitter.usePoints = Particle.USE_POINTS;
+		}
 	}
 	
 	/**
@@ -79,6 +133,16 @@ public class ColorPanel extends ControlPanel {
 			grad.addPoint(pos, new java.awt.Color(col.r,col.g,col.b,1.0f));
 		}
 		blockUpdates = false;
+		
+		if (emitter.usePoints == Particle.INHERIT_POINTS) {
+			inherit.setSelected(true);
+		}
+		if (emitter.usePoints == Particle.USE_POINTS) {
+			points.setSelected(true);
+		}
+		if (emitter.usePoints == Particle.USE_QUADS) {
+			quads.setSelected(true);
+		}
 	}
 
 }

@@ -69,7 +69,6 @@ public class SettingsPanel extends ControlPanel {
 		JButton browse = new JButton("Browse");
 		browse.setBounds(200,20,70,25);
 		browse.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				browseForImage();
 			}
@@ -79,7 +78,7 @@ public class SettingsPanel extends ControlPanel {
 		imagePanel.setBounds(0,55,280,55);
 		add(imagePanel);
 		yPos+=45;
-
+		
 		addValue("gravity",new ValuePanel("Gravity",-200,200,0,"The gravity effect to apply",false));
 		addValue("wind",new ValuePanel("Wind",-200,200,0,"The horizontal force effect to apply",false));
 		lengthPanel = new MinMaxPanel("Effect Length",0,100000,1000,1000,true,-1,"The length the effect will last");
