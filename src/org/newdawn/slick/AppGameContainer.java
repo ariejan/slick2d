@@ -13,10 +13,12 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.CursorLoader;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.ImageIOImageData;
 import org.newdawn.slick.opengl.TGAImageData;
+import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -162,6 +164,23 @@ public class AppGameContainer extends GameContainer {
 			Mouse.setNativeCursor(cursor);
 		} catch (Exception e) {
 			Log.error("Failed to load and apply cursor.", e);
+		}
+	}
+
+	/**
+	 * @see org.newdawn.slick.GameContainer#reinit()
+	 */
+	public void reinit() throws SlickException {
+		TextureLoader.get().clear();
+		SoundStore.get().clear();
+		initSystem();
+		enterOrtho();
+		
+		try {
+			game.init(this);
+		} catch (SlickException e) {
+			Log.error(e);
+			running = false;
 		}
 	}
 	

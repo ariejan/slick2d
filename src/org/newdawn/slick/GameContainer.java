@@ -68,6 +68,14 @@ public abstract class GameContainer {
 	}
 	
 	/**
+	 * Renitialise the game and the context in which it's being rendered
+	 * 
+	 * @throws SlickException Indicates a failure rerun initialisation routines
+	 */
+	public void reinit() throws SlickException {
+	}
+	
+	/**
 	 * Get the build number of slick 
 	 * 
 	 * @return The build number of slick

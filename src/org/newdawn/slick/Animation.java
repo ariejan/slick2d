@@ -199,9 +199,10 @@ public class Animation {
 			return;
 		}
 		
-		if ((getTime() > nextChange) || (currentFrame == -1)) {
+		long now = getTime();
+		if ((now > nextChange) || (currentFrame == -1)) {
 			currentFrame = (currentFrame + 1) % frames.size();
-			nextChange = (long) (getTime() + (((Frame) frames.get(currentFrame)).duration / speed));
+			nextChange = (long) (now + (((Frame) frames.get(currentFrame)).duration / speed));
 		}
 	}
 	
