@@ -66,6 +66,8 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	public Value startAlpha = new Value(255);
 	/** The ending alpha value */
 	public Value endAlpha = new Value(0);
+	/** The points indicate */
+	public int usePoints = Particle.INHERIT_POINTS;
 	
 	/** The name attribute */
 	public String name;
@@ -231,6 +233,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 				
 				ColorRecord start = (ColorRecord) colors.get(0);
 				p.setColor(start.col.r, start.col.g, start.col.b, startAlpha.getValue() / 255.0f);
+				p.setUsePoint(usePoints);
 			}
 		}
 	}

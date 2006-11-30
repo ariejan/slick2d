@@ -3,6 +3,7 @@ package org.newdawn.slick.particles;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.opengl.Texture;
 
 /**
  * A single particle within a system
@@ -10,6 +11,13 @@ import org.newdawn.slick.Image;
  * @author kevin
  */
 public class Particle {
+	/** Indicates the particle should inherit it's use of points */
+	public static final int INHERIT_POINTS = 1;
+	/** Indicates the particle should explicitly use points */
+	public static final int USE_POINTS = 2;
+	/** Indicates the particle should explicitly not use points */
+	public static final int USE_QUADS = 3;
+	
 	/** The x coordinate of the particle */
 	protected float x;
 	/** The y coordinate of the particle */
@@ -34,6 +42,8 @@ public class Particle {
 	protected Image image;
 	/** The type identifier of this particle */
 	protected int type;
+	/** How this particle should be rendered */
+	protected int usePoints = INHERIT_POINTS;
 	
 	/**
 	 * Create a new particle belonging to given engine
@@ -42,6 +52,60 @@ public class Particle {
 	 */
 	public Particle(ParticleSystem engine) {
 		this.engine = engine;
+	}
+	
+	/**
+	 * Get the x offset of this particle
+	 * 
+	 * @return The x offset of this particle
+	 */
+	public float getX() {
+		return x;
+	}
+
+	/**
+	 * Get the y offset of this particle
+	 * 
+	 * @return The y offset of this particle
+	 */
+	public float getY() {
+		return y;
+	}
+
+	/**
+	 * Get the size of this particle
+	 * 
+	 * @return The size of this particle
+	 */
+	public float getSize() {
+		return size;
+	}
+
+	/**
+	 * Get the x component of the velocity of this particle
+	 * 
+	 * @return The  x component of the velocity of this particle
+	 */
+	public float getVelocityX() {
+		return vx;
+	}
+
+	/**
+	 * Get the y component of the velocity of this particle
+	 * 
+	 * @return The  y component of the velocity of this particle
+	 */
+	public float getVelocityY() {
+		return vy;
+	}
+
+	/**
+	 * Get the color of this particle
+	 * 
+	 * @return The color of this particle
+	 */
+	public Color getColor() {
+		return color;
 	}
 	
 	/**
@@ -84,7 +148,9 @@ public class Particle {
 	 * Render this particle 
 	 */
 	public void render() {
-		if (engine.usePoints()) { 
+		if ((engine.usePoints() && (usePoints == INHERIT_POINTS)) || (usePoints == USE_POINTS)) { 
+			Texture.bindNone();
+			GL11.glEnable(GL11.GL_POINT_SMOOTH);
 			GL11.glPointSize(size/2);
 			color.bind();
 			GL11.glBegin(GL11.GL_POINTS);
@@ -138,6 +204,18 @@ public class Particle {
 	 */
 	public void setType(int type) {
 		this.type = type;
+	}
+	
+	/**
+	 * Indicate how this particle should be renered
+	 * 
+	 * @param usePoints The indicator for rendering
+	 * @see #USE_POINTS
+	 * @see #USE_QUADS
+	 * @see #INHERIT_POINTS
+	 */
+	public void setUsePoint(int usePoints) {
+		this.usePoints = usePoints;
 	}
 	
 	/**

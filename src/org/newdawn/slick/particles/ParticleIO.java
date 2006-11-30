@@ -264,6 +264,16 @@ public class ParticleIO {
 	private static void elementToEmitter(Element element, ConfigurableEmitter emitter) {
 		emitter.name = element.getAttribute("name");
 		emitter.setImageName(element.getAttribute("imageName"));
+		
+		String renderType = element.getAttribute("renderType");
+		emitter.usePoints = Particle.INHERIT_POINTS;
+		if (renderType.equals("quads")) {
+			emitter.usePoints = Particle.USE_QUADS;
+		}
+		if (renderType.equals("points")) {
+			emitter.usePoints = Particle.USE_POINTS;
+		}
+		
 		parseRangeElement(getFirstNamedElement(element, "spawnInterval"), emitter.spawnInterval);
 		parseRangeElement(getFirstNamedElement(element, "spawnCount"), emitter.spawnCount);
 		parseRangeElement(getFirstNamedElement(element, "initialLife"), emitter.initialLife);
@@ -307,6 +317,16 @@ public class ParticleIO {
 		Element root = document.createElement("emitter");
 		root.setAttribute("name", emitter.name);
 		root.setAttribute("imageName", emitter.imageName == null ? "" : emitter.imageName);
+
+		if (emitter.usePoints == Particle.INHERIT_POINTS) {
+			root.setAttribute("renderType","inherit");
+		}
+		if (emitter.usePoints == Particle.USE_POINTS) {
+			root.setAttribute("renderType","points");
+		}
+		if (emitter.usePoints == Particle.USE_QUADS) {
+			root.setAttribute("renderType","quads");
+		}
 		
 		root.appendChild(createRangeElement(document, "spawnInterval", emitter.spawnInterval));
 		root.appendChild(createRangeElement(document, "spawnCount", emitter.spawnCount));
