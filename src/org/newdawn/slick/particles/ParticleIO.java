@@ -304,6 +304,9 @@ public class ParticleIO {
 			
 			emitter.addColorPoint(offset, new Color(r,g,b,1));
 		}
+		
+		// generate new random play length
+		emitter.replay();
 	}
 	
 	/**
