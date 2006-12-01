@@ -57,6 +57,7 @@ public class InputTest extends BasicGame {
 	public void render(GameContainer container, Graphics g) {
 		g.setColor(Color.white);
 		g.drawString(message, 10, 50);
+		g.drawString(""+container.getInput().getMouseY(), 10, 400);
 		g.drawString("Use the primary gamepad to control the blob, and hit a gamepad button to change the color", 10, 90);
 
 		for (int i=0;i<lines.size();i++) {
