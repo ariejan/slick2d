@@ -57,6 +57,8 @@
 		 basedir="${build.dir}/classes" includes="org/newdawn/slick/**"/>
 	<jar update="true" destfile="lib/slick.jar" 
 		 basedir="src" includes="org/newdawn/slick/data/*"/>
+	<jar update="true" destfile="lib/slick.jar" 
+		 basedir="src" includes="version"/>
 	<copy file="lib/slick.jar" toDir="applet"/>
 </target>
 
