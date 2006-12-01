@@ -16,6 +16,13 @@ public interface ParticleEmitter {
 	 * @param delta The amount of time in milliseconds since last emitter update
 	 */
 	public void update(ParticleSystem system, int delta);
+
+	/**
+	 * Check if this emitter has completed it's cycle
+	 * 
+	 * @return True if the emitter has completed it's cycle
+	 */
+	public boolean completed();
 	
 	/**
 	 * Update a single particle that this emitter produced

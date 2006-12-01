@@ -156,6 +156,7 @@ public class ParticleCanvas extends AWTGLCanvas {
 		try {
 			system = new ParticleSystem(new Image("org/newdawn/slick/data/particle.tga"),2000);
 			system.setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
+			system.setRemoveCompletedEmitters(false);
 			
 			for (int i=0;i<waiting.size();i++) {
 				system.addEmitter((ParticleEmitter) waiting.get(i));
@@ -192,6 +193,7 @@ public class ParticleCanvas extends AWTGLCanvas {
 			if (additive) {
 				system.setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
 			}
+			system.setRemoveCompletedEmitters(false);
 		} catch (SlickException e) {
 			Log.error(e);
 		}
@@ -205,6 +207,7 @@ public class ParticleCanvas extends AWTGLCanvas {
 	public void setSystem(ParticleSystem system) {
 		this.system = system;
 		emitters.clear();
+		system.setRemoveCompletedEmitters(false);
 		for (int i=0;i<system.getEmitterCount();i++) {
 			emitters.add(system.getEmitter(i));
 		}

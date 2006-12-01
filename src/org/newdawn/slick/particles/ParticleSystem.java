@@ -43,6 +43,8 @@ public class ParticleSystem {
 	private float x;
 	/** The x coordinate at which this system should be rendered */
 	private float y;
+	/** True if we should remove completed emitters */
+	private boolean removeCompletedEmitters = true;
 	
 	/**
 	 * Create a new particle system
@@ -51,6 +53,15 @@ public class ParticleSystem {
 	 */
 	public ParticleSystem(Image defaultSprite) {
 		this(defaultSprite, DEFAULT_PARTICLES);
+	}
+	
+	/**
+	 * Indicate if completed emitters should be removed
+	 * 
+	 * @param remove True if completed emitters should be removed
+	 */
+	public void setRemoveCompletedEmitters(boolean remove) {
+		removeCompletedEmitters = remove;
 	}
 	
 	/**
@@ -204,12 +215,19 @@ public class ParticleSystem {
 	 * @param delta The amount of time thats passed since last update in milliseconds
 	 */
 	public void update(int delta) {
+		ArrayList removeMe = new ArrayList();
 		for (int i=0;i<emitters.size();i++) {
 			ParticleEmitter emitter = (ParticleEmitter) emitters.get(i);
 			if (emitter.isEnabled()) {
 				emitter.update(this, delta);
+				if (removeCompletedEmitters) {
+					if (emitter.completed()) {
+						removeMe.add(emitter);
+					}
+				}
 			}
 		}
+		emitters.removeAll(removeMe);
 		
 		pCount = 0;
 		for (int i=0;i<particles.length;i++) {
