@@ -42,7 +42,7 @@ public abstract class GameContainer {
 	private Graphics graphics;
 	
 	/** The input system to pass to the game */
-	private Input input = new Input();
+	private Input input;
 	/** The FPS we want to lock to */
 	private int targetFPS = -1;
 	/** True if we should show the fps */
@@ -63,7 +63,6 @@ public abstract class GameContainer {
 		this.game = game;
 		lastFrame = getTime();
 		
-		input.addListener(game);
 		getBuildVersion();
 	}
 	
@@ -358,7 +357,9 @@ public abstract class GameContainer {
         GL11.glViewport(0,0,width,height);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
+		input = new Input(height);
 		input.init(height);
+		input.addListener(game);
 	}
 	
 	/**

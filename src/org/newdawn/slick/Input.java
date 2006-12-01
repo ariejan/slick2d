@@ -308,6 +308,15 @@ public class Input {
 	private int height;
 	
 	/**
+	 * Create a new input with the height of the screen
+	 * 
+	 * @param height The height of the screen
+	 */
+	public Input(int height) {
+		init(height);
+	}
+	
+	/**
 	 * Add a listener to be notified of input events
 	 * 
 	 * @param listener The listener to be notified
