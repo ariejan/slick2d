@@ -91,6 +91,8 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	private int timeout;
 	/** The number of particles in use by this emitter */
 	private int particleCount;
+	/** The system this emitter is being updated to */
+	private ParticleSystem engine;
 	
 	/**
 	 * Create a new emitter configurable externally
@@ -99,7 +101,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 */
 	public ConfigurableEmitter(String name) {
 		this.name = name;
-		timeout = (int) (Math.random() * length.random());
+		timeout = (int) (length.random());
 		
 		colors.add(new ColorRecord(0,Color.white));
 		colors.add(new ColorRecord(1,Color.red));
@@ -181,6 +183,8 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 *      int)
 	 */
 	public void update(ParticleSystem system, int delta) {
+		this.engine = system;
+		
 		if (updateImage) {
 			updateImage = false;
 			try {
@@ -295,15 +299,17 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 * Cause the emitter to replay it's circle
 	 */
 	public void replay() {
-		timeout = (int) (Math.random() * length.random());
+		timeout = (int) (length.random());
 	}
 	
 	/**
 	 * Check if the replay has died out - used by the editor
 	 */
 	public void replayCheck() {
-		if (particleCount == 0) {
-			replay();
+		if (completed()) {
+			if (engine.getParticleCount() == 0) {
+				replay();
+			}
 		}
 	}
 	
