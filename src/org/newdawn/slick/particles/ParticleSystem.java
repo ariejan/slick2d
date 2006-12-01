@@ -39,6 +39,10 @@ public class ParticleSystem {
 	private int pCount;
 	/** True if we're going to use points to render the particles */
 	private boolean usePoints;
+	/** The x coordinate at which this system should be rendered */
+	private float x;
+	/** The x coordinate at which this system should be rendered */
+	private float y;
 	
 	/**
 	 * Create a new particle system
@@ -153,9 +157,23 @@ public class ParticleSystem {
 	}
 	
 	/**
+	 * Set the position at which this system should render relative to the current
+	 * graphics context setup
+	 * 
+	 * @param x The x coordinate at which this system should be centered
+ 	 * @param y The y coordinate at which this system should be centered
+	 */
+	public void setPosition(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	/**
 	 * Render the particles in the system
 	 */
 	public void render() {
+		GL11.glTranslatef(x,y,0);
+		
 		if (blendingMode == BLEND_ADDITIVE) {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		}
@@ -176,6 +194,8 @@ public class ParticleSystem {
 		if (blendingMode == BLEND_ADDITIVE) {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
+		
+		GL11.glTranslatef(-x,-y,0);
 	}
 	
 	/**
