@@ -204,6 +204,10 @@ public class ParticleCanvas extends AWTGLCanvas {
 	 */
 	public void setSystem(ParticleSystem system) {
 		this.system = system;
+		emitters.clear();
+		for (int i=0;i<system.getEmitterCount();i++) {
+			emitters.add(system.getEmitter(i));
+		}
 	}
 	
 	/**
