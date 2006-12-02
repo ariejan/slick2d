@@ -41,11 +41,32 @@ public class TextureLoader {
     private HashMap texturesNearest = new HashMap();
     /** The destination pixel format */
     private int dstPixelFormat = GL11.GL_RGBA;
+    /** True if we're using deferred loading */
+    private boolean deferred;
     
     /** 
      * Create a new texture loader based on the game panel
      */
     public TextureLoader() {
+    }
+    
+    /**
+     * True if we should only record the request to load in the intention
+     * of loading the texture later
+     * 
+     * @param deferred True if the we should load a token
+     */
+    public void setDeferredLoading(boolean deferred) {
+    	this.deferred = deferred;
+    }
+    
+    /**
+     * Check if we're using deferred loading
+     * 
+     * @return True if we're loading deferred textures
+     */
+    public boolean isDeferredLoading() {
+    	return deferred;
     }
     
     /**
@@ -117,7 +138,12 @@ public class TextureLoader {
      * @throws IOException Indicates a failure to load the image
      */
     public Texture getTexture(InputStream in, String resourceName, boolean flipped, int filter) throws IOException {
-        HashMap hash = texturesLinear;
+    	if (deferred) {
+	    	return new DeferredTexture(in, resourceName, flipped, filter);
+	    }
+
+    	
+    	HashMap hash = texturesLinear;
         if (filter == GL11.GL_NEAREST) {
         	hash = texturesNearest;
         }
@@ -149,7 +175,7 @@ public class TextureLoader {
      * @return The texture loaded
      * @throws IOException Indicates a failure to load the image
      */
-    public Texture getTexture(InputStream in, 
+    private Texture getTexture(InputStream in, 
     						  String resourceName, 
                               int target, 
                               int magFilter, 

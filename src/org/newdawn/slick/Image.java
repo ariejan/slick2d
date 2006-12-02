@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
-import org.newdawn.slick.util.ResourceLoader;
 
 /**
  * An image loaded from a file and renderable to the canvas
@@ -81,7 +80,7 @@ public class Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public Image(String ref, boolean flipped) throws SlickException {
-		this(ResourceLoader.getResourceAsStream(ref), ref, flipped);
+		this(ref, flipped, FILTER_LINEAR);
 	}
 
 	/**
@@ -93,7 +92,13 @@ public class Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public Image(String ref, boolean flipped, int filter) throws SlickException {
-		this(ResourceLoader.getResourceAsStream(ref), ref, flipped, filter);
+		try {
+			this.ref = ref;
+			texture = TextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST);
+		} catch (IOException e) {
+			Log.error(e);
+			throw new SlickException("Failed to load image from: "+ref, e);
+		}
 	}
 	
 	/**
@@ -139,8 +144,6 @@ public class Image {
 	Image(ImageBuffer buffer, int filter) {
 		texture = TextureLoader.get().getTexture(buffer, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST);
 		ref = texture.toString();
-		
-		init();
 	}
 	
 	/**
@@ -160,14 +163,16 @@ public class Image {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
 		}
-		
-		init();
 	}
 
 	/**
 	 * Initialise internal data
 	 */
 	private void init() {
+		if (width != 0) {
+			return;
+		}
+		
 		width = texture.getImageWidth();
 		height = texture.getImageHeight();
 		textureOffsetX = 0;
@@ -213,6 +218,8 @@ public class Image {
 	 * @param height The height to render the image at
 	 */
 	public void drawEmbedded(int x,int y,int width,int height) {
+		init();
+		
 	    GL11.glTexCoord2f(textureOffsetX, textureOffsetY);
 		GL11.glVertex3f(x, y, 0);
 		GL11.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
@@ -270,6 +277,8 @@ public class Image {
 	 * @param height The height to render the image at
 	 */
 	public void drawFlash(int x,int y,int width,int height) {
+		init();
+		
 		Color.white.bind();
 		texture.bind();
 
@@ -311,6 +320,8 @@ public class Image {
 	 * @return The image represent the sub-part of this image
 	 */
 	public Image getSubImage(int x,int y,int width,int height) {
+		init();
+		
 		float newTextureOffsetX = ((x / (float) this.width) * textureWidth) + textureOffsetX;
 		float newTextureOffsetY = ((y / (float) this.height) * textureHeight) + textureOffsetY;
 		float newTextureWidth = ((width / (float) this.width) * textureWidth);
@@ -336,6 +347,7 @@ public class Image {
 	 * @return The width of this image
 	 */
 	public int getWidth() {
+		init();
 		return width;
 	}
 
@@ -345,6 +357,7 @@ public class Image {
 	 * @return The height of this image
 	 */
 	public int getHeight() {
+		init();
 		return height;
 	}
 	
@@ -355,6 +368,7 @@ public class Image {
 	 * @return The copy of this image
 	 */
 	public Image copy() {
+		init();
 		return getSubImage(0,0,width,height);
 	}
 	
@@ -366,6 +380,7 @@ public class Image {
 	 * @return The new scaled image
 	 */
 	public Image getScaledCopy(int width, int height) {
+		init();
 		Image image = copy();
 		image.width = width;
 		image.height = height;
@@ -381,6 +396,7 @@ public class Image {
 	 * @return The flipped image instance
 	 */
 	public Image getFlippedCopy(boolean flipHorizontal, boolean flipVertical) {
+		init();
 		Image image = copy();
 		
 		if (flipHorizontal) {
@@ -430,6 +446,8 @@ public class Image {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
+		init();
+		
 		return "[Image "+ref+" "+width+"x"+height+"  "+textureOffsetX+","+textureOffsetY+","+textureWidth+","+textureHeight+"]";
 	}
 	

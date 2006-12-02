@@ -54,6 +54,8 @@ public class SoundStore {
 
 	/** True if the music is paused */
 	private boolean paused;
+	/** True if we're returning deferred versions of resources */
+	private boolean deferred;
 	
 	/**
 	 * Create a new sound store
@@ -67,7 +69,26 @@ public class SoundStore {
 	public void clear() {
 		store = new SoundStore();
 	}
-	
+
+    /**
+     * True if we should only record the request to load in the intention
+     * of loading the sound later
+     * 
+     * @param deferred True if the we should load a token
+     */
+    public void setDeferredLoading(boolean deferred) {
+    	this.deferred = deferred;
+    }
+    
+    /**
+     * Check if we're using deferred loading
+     * 
+     * @return True if we're loading deferred sounds
+     */
+    public boolean isDeferredLoading() {
+    	return deferred;
+    }
+    
 	/**
 	 * Inidicate whether music should be playing
 	 * 
@@ -412,6 +433,12 @@ public class SoundStore {
 		if (!soundWorks) {
 			return new InternalSound(this, 0);
 		}
+		if (!inited) {
+			throw new RuntimeException("Can't load sounds until SoundStore is init()");
+		}
+		if (deferred) {
+			return new DeferredSound(ref, DeferredSound.MOD);
+		}
 		Log.info("Loading: "+ref);
 		
 		return new MODSound(this, ResourceLoader.getResourceAsStream(ref));
@@ -428,10 +455,13 @@ public class SoundStore {
 		if (!soundWorks) {
 			return new InternalSound(this, 0);
 		}
-		
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init()");
 		}
+		if (deferred) {
+			return new DeferredSound(ref, DeferredSound.WAV);
+		}
+		
 		int buffer = -1;
 		
 		if (loaded.get(ref) != null) {
@@ -473,10 +503,14 @@ public class SoundStore {
 		if (!soundWorks) {
 			return new InternalSound(this, 0);
 		}
-		
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init()");
 		}
+		if (deferred) {
+			System.out.println("Return deferred for: "+ref);
+			return new DeferredSound(ref, DeferredSound.OGG);
+		}
+		
 		int buffer = -1;
 		
 		if (loaded.get(ref) != null) {
