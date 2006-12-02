@@ -261,6 +261,7 @@
 
 	<createdemojnlp name="storedstatetest" title="Slick2D Stored State Test" mainclass="org.newdawn.slick.tests.SavedStateTest"/>
 	<createdemojnlp name="pedigreetest" title="Slick2D Pedigree Test" mainclass="org.newdawn.slick.tests.PedigreeTest"/>
+	<createdemojnlp name="flashtest" title="Slick2D Flash Test" mainclass="org.newdawn.slick.tests.FlashTest"/>
 
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
@@ -326,7 +327,7 @@
 <!--
  Upload everything, i.e. create a complete update to the Slick stuff.
 -->
-<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc">
+<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree">
 </target>
 
 <!--
