@@ -75,7 +75,7 @@ public class SoundTest extends BasicGame {
 			if (music.playing()) {
 				music.pause();
 			} else {
-				music.play();
+				music.loop();
 			}
 		}
 		if (key == Input.KEY_E) {
