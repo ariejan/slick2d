@@ -50,16 +50,34 @@ public class ParticleCanvas extends AWTGLCanvas {
 	private boolean hudOn = true;
 	/** True if the rendering is paused */
 	private boolean paused;
+	/** The amount the system moves */
+	private int systemMove;
+	/** The y position of the system */
+	private float ypos;
 	
 	/**
 	 * Create a new canvas
 	 * 
+	 * @param editor The editor which this canvas is part of
 	 * @throws LWJGLException Indicates a failure to create the OpenGL context
 	 */
-	public ParticleCanvas() throws LWJGLException {
+	public ParticleCanvas(ParticleEditor editor) throws LWJGLException {
 		super();
 	}
 
+	/**
+	 * Set how much the system should move
+	 * 
+	 * @param move The amount of the system should move
+	 * @param reset True if the position should be reset
+	 */
+	public void setSystemMove(int move, boolean reset) {
+		this.systemMove = move;
+		if (reset) {
+			ypos = 0;
+		}
+	}
+	
 	/** 
 	 * Indicate if this canvas should pause
 	 * 
@@ -238,6 +256,9 @@ public class ParticleCanvas extends AWTGLCanvas {
 		}
 		
 		GL11.glTranslatef(250,300,0);
+		for (int i=0;i<emitters.size();i++) {
+			((ConfigurableEmitter) emitters.get(i)).setPosition(0, ypos);
+		}
 		system.render();
 		
 		graphics.setColor(new Color(0,0,0,0.5f));
@@ -266,6 +287,14 @@ public class ParticleCanvas extends AWTGLCanvas {
 		}
 		
 		if (!paused) {
+			ypos += delta * 0.002 * systemMove;
+			if (ypos > 300) {
+				ypos = -300;
+			}
+			if (ypos < -300) {
+				ypos = 300;
+			}
+			
 			for (int i=0;i<emitters.size();i++) {
 				((ConfigurableEmitter) emitters.get(i)).replayCheck();
 			}

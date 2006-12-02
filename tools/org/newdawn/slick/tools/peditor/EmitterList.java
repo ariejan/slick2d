@@ -115,7 +115,9 @@ public class EmitterList extends JPanel {
 	 * @param index The index to be selected
 	 */
 	public void setSelected(int index) {
-		list.setSelectedIndex(index);
+		if (index < emitters.size()) {
+			list.setSelectedIndex(index);
+		}
 	}
 	
 	/**

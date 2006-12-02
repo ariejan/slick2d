@@ -25,8 +25,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import org.lwjgl.LWJGLException;
@@ -80,9 +83,11 @@ public class ParticleEditor extends JFrame {
 	/** Chooser used to load/save/import/export */
 	private JFileChooser chooser = new JFileChooser(new File("."));
 	/** Reset the particle counts on the canvas */
-	private JButton reset = new JButton("Reset Maximum");
+	private JButton reset = new JButton("Reset Max");
 	/** Play or Pause the current rendering */
 	private JButton pause = new JButton("Play/Pause");
+	/** The slider defining the movement of the system */
+	private JSlider systemMove = new JSlider(-100,100,0);
 	
 	/**
 	 * Create a new editor
@@ -185,7 +190,7 @@ public class ParticleEditor extends JFrame {
 		bar.add(file);
 		setJMenuBar(bar);
 		
-		canvas = new ParticleCanvas();
+		canvas = new ParticleCanvas(this);
 		canvas.setSize(500,600);
 		JPanel controls = new JPanel();
 		controls.setLayout(null);
@@ -205,9 +210,11 @@ public class ParticleEditor extends JFrame {
 		panel.setLayout(null);
 		canvas.setBounds(0,0,500,600);
 		controls.setBounds(500,20,300,575);
-		reset.setBounds(180,500,110,25);
+		reset.setBounds(90,500,90,25);
 		controls.add(reset);
-		pause.setBounds(0,500,110,25);
+		systemMove.setBounds(180,500,120,25);
+		controls.add(systemMove);
+		pause.setBounds(0,500,90,25);
 		controls.add(pause);
 		additive.setBounds(500,0,150,25);
 		panel.add(additive);
@@ -216,6 +223,12 @@ public class ParticleEditor extends JFrame {
 		panel.add(canvas);
 		panel.add(controls);
 
+		systemMove.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				canvas.setSystemMove(systemMove.getValue(),false);
+			}
+		});
+		
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
@@ -258,6 +271,8 @@ public class ParticleEditor extends JFrame {
 				if (e.getButton() != 1) {
 					positionControls.setPosition(0,0);
 				}
+				systemMove.setValue(0);
+				canvas.setSystemMove(0,true);
 			}
 		});
 		
@@ -267,6 +282,8 @@ public class ParticleEditor extends JFrame {
 				int xp = e.getX() - 250;
 				int yp = e.getY() - 300;
 				positionControls.setPosition(xp,yp);
+				systemMove.setValue(0);
+				canvas.setSystemMove(0,true);
 			}
 
 			public void mouseMoved(MouseEvent e) {
@@ -275,6 +292,15 @@ public class ParticleEditor extends JFrame {
 		});
 		
 		emitters.setSelected(0);
+	}
+	
+	/**
+	 * Set the movement of the system
+	 * 
+	 * @param move The movement of the system
+	 */
+	public void setSystemMove(int move) {
+		systemMove.setValue(move);
 	}
 	
 	/**
@@ -369,6 +395,8 @@ public class ParticleEditor extends JFrame {
 				}
 				additive.setSelected(system.getBlendingMode() == ParticleSystem.BLEND_ADDITIVE);
 				pointsEnabled.setSelected(system.usePoints());
+				
+				emitters.setSelected(0);
 			} catch (IOException e) {
 				Log.error(e);
 				JOptionPane.showMessageDialog(this, e.getMessage());
