@@ -252,9 +252,8 @@ public class Image {
 	public void draw(int x,int y,int width,int height,Color filter) {
 		if (filter != null) {
 			filter.bind();
-		} else {
-			Color.white.bind();
-		}
+		} 
+		
 		texture.bind();
 
 		GL11.glBegin(GL11.GL_QUADS);
