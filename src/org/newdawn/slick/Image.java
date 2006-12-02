@@ -3,7 +3,9 @@ package org.newdawn.slick;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.lwjgl.opengl.EXTSecondaryColor;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
@@ -250,12 +252,53 @@ public class Image {
 	public void draw(int x,int y,int width,int height,Color filter) {
 		if (filter != null) {
 			filter.bind();
+		} else {
+			Color.white.bind();
 		}
 		texture.bind();
-		
+
 		GL11.glBegin(GL11.GL_QUADS);
 			drawEmbedded(x,y,width,height);
 		GL11.glEnd();
+	}
+	
+	/**
+	 * Draw this image at a specified location and size as a silohette
+	 * 
+	 * @param x The x location to draw the image at
+	 * @param y The y location to draw the image at
+	 * @param width The width to render the image at
+	 * @param height The height to render the image at
+	 */
+	public void drawFlash(int x,int y,int width,int height) {
+		Color.white.bind();
+		texture.bind();
+
+		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
+			GL11.glEnable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
+			EXTSecondaryColor.glSecondaryColor3ubEXT((byte)255, 
+													 (byte)255, 
+													 (byte)255);
+		}
+		
+		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+
+		GL11.glBegin(GL11.GL_QUADS);
+			drawEmbedded(x,y,width,height);
+		GL11.glEnd();
+		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
+			GL11.glDisable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
+		}
+	}
+
+	/**
+	 * Draw this image at a specified location and size in a white silohette
+	 * 
+	 * @param x The x location to draw the image at
+	 * @param y The y location to draw the image at
+	 */
+	public void drawFlash(int x,int y) {
+		drawFlash(x,y,getWidth(),getHeight());
 	}
 	
 	/**
