@@ -307,8 +307,10 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 */
 	public void replayCheck() {
 		if (completed()) {
-			if (engine.getParticleCount() == 0) {
-				replay();
+			if (engine != null) {
+				if (engine.getParticleCount() == 0) {
+					replay();
+				}
 			}
 		}
 	}
