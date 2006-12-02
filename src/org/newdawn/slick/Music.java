@@ -81,6 +81,7 @@ public class Music {
 	 */
 	public void loop(float pitch, float volume) {
 		if (currentMusic != null) {
+			currentMusic.stop();
 			currentMusic.playing = false;
 		}
 		

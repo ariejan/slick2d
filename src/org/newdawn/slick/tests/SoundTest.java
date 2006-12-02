@@ -21,6 +21,10 @@ public class SoundTest extends BasicGame {
 	private Sound charlie;
 	/** The music to be played */
 	private Music music;
+	/** The music to be played */
+	private Music musica;
+	/** The music to be played */
+	private Music musicb;
 	/** The sound to be played */
 	private Sound engine;
 	
@@ -38,8 +42,9 @@ public class SoundTest extends BasicGame {
 		sound = new Sound("testdata/restart.ogg");
 		charlie = new Sound("testdata/cbrown01.wav");
 		engine = new Sound("testdata/engine.wav");
-		music = new Music("testdata/SMB-X.XM");
-		music.loop(1.0f,0.5f);
+		music = musica = new Music("testdata/SMB-X.XM");
+		musicb = new Music("testdata/testloop.ogg");
+		musica.loop(1.0f,0.5f);
 	}
 
 	/**
@@ -50,6 +55,7 @@ public class SoundTest extends BasicGame {
 		g.drawString("Press P to pause/resume music (XM)",100,130);
 		g.drawString("Press E to pause/resume engine sound (WAV)",100,190);
 		g.drawString("Press enter for charlie (WAV)",100,160);
+		g.drawString("Press C to change music",100,210);
 	}
 
 	/**
@@ -77,6 +83,15 @@ public class SoundTest extends BasicGame {
 			} else {
 				music.loop();
 			}
+		}
+		if (key == Input.KEY_C) {
+			if (music == musica) {
+				music = musicb;
+			} else {
+				music = musica;
+			}
+			
+			music.loop();
 		}
 		if (key == Input.KEY_E) {
 			if (engine.playing()) {

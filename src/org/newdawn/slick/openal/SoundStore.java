@@ -335,6 +335,8 @@ public class SoundStore {
 				AL10.alSourceStop(sources.get(0));
 			}
 			
+			getMusicSource();
+			
 			AL10.alSourcei(sources.get(0), AL10.AL_BUFFER, buffer);
 			AL10.alSourcef(sources.get(0), AL10.AL_PITCH, pitch);
 			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, gain); 
@@ -348,6 +350,24 @@ public class SoundStore {
 				AL10.alSourcePlay(sources.get(0)); 
 			}
 		}
+	}
+	
+	/**
+	 * Get the OpenAL source used for music
+	 * 
+	 * @return The open al source used for music
+	 */
+	public int getMusicSource() {
+		IntBuffer deleteMe = BufferUtils.createIntBuffer(1);
+		deleteMe.put(sources.get(0));
+		deleteMe.flip();
+		AL10.alDeleteSources(deleteMe);
+		
+		IntBuffer musicChannel = BufferUtils.createIntBuffer(1);
+		AL10.alGenSources(musicChannel);
+		sources.put(0,musicChannel.get(0));
+		
+		return sources.get(0);
 	}
 	
 	/**
@@ -394,7 +414,7 @@ public class SoundStore {
 		}
 		Log.info("Loading: "+ref);
 		
-		return new MODSound(this, sources.get(0), ResourceLoader.getResourceAsStream(ref));
+		return new MODSound(this, ResourceLoader.getResourceAsStream(ref));
 	}
 	
 	/**

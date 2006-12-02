@@ -15,8 +15,6 @@ public class MODSound extends InternalSound {
 	/** The MOD play back system */
 	private static OpenALMODPlayer player = new OpenALMODPlayer();
 	
-	/** The source to play back on */
-	private int source;
 	/** The module to play back */
 	private Module module;
 	/** The sound store this belongs to */
@@ -26,14 +24,11 @@ public class MODSound extends InternalSound {
 	 * Create a mod sound to be played back 
 	 * 
 	 * @param store The store this sound belongs to 
-	 * @param source The source to play back on
 	 * @param in The input stream to read the data from
 	 * @throws IOException Indicates a failure to load a sound
 	 */
-	public MODSound(SoundStore store, int source, InputStream in) throws IOException {
-		this.source = source;
+	public MODSound(SoundStore store, InputStream in) throws IOException {
 		this.store = store;
-		
 		module = OpenALMODPlayer.loadModule(in);
 	}
 	
@@ -41,7 +36,7 @@ public class MODSound extends InternalSound {
 	 * @see org.newdawn.slick.openal.InternalSound#playAsMusic(float, float, boolean)
 	 */
 	public void playAsMusic(float pitch, float gain, boolean loop) {
-		player.play(module, source, loop, SoundStore.get().isMusicOn());
+		player.play(module, store.getMusicSource(), loop, SoundStore.get().isMusicOn());
 		player.setup(pitch, gain);
 		
 		store.setMOD(this);
