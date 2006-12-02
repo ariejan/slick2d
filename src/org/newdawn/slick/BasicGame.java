@@ -129,24 +129,6 @@ public abstract class BasicGame implements Game {
 	}
 
 	/**
-	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
-	 */
-	public void render(GameContainer container, Graphics g) throws SlickException {
-		render(g);
-	}
-	
-	/**
-	 * Utility method for those not caring about the game container
-	 * 
-	 * @param g The graphics context to draw against
-	 * @throws SlickException Indicates a failure to render the contents
-	 * @deprecated
-	 */
-	public void render(Graphics g) throws SlickException {
-		
-	}
-
-	/**
 	 * @see org.newdawn.slick.Game#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public abstract void update(GameContainer container, int delta) throws SlickException;

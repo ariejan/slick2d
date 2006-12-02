@@ -1,7 +1,6 @@
 package org.newdawn.slick.state;
 
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
@@ -17,24 +16,6 @@ public abstract class BasicGameState implements GameState {
 	 */
 	public boolean isAcceptingInput() {
 		return true;
-	}
-
-	/**
-	 * @see org.newdawn.slick.state.GameState#render(org.newdawn.slick.GameContainer, org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.Graphics)
-	 */
-	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-		render(game,g);
-	}
-	
-	/**
-	 * Render this state to the game's graphics context
-	 * 
-	 * @param game The game holding this state
-	 * @param g The graphics context to render to
-	 * @throws SlickException Indicates a failure to render an artifact
-	 * @deprecated
-	 */
-	public void render(StateBasedGame game, Graphics g) throws SlickException {
 	}
 	
 	/**
