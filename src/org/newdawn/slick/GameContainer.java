@@ -255,8 +255,9 @@ public abstract class GameContainer {
 	 * @return The time taken to render the last frame
 	 */
 	protected int getDelta() {
-		int delta = (int) (getTime() - lastFrame);
-		lastFrame = getTime();
+		long time = getTime();
+		int delta = (int) (time - lastFrame);
+		lastFrame = time;
 		
 		return delta;
 	}
