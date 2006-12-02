@@ -191,78 +191,81 @@ public class AppGameContainer extends GameContainer {
 	 */
 	public void start() throws SlickException {
 		try {
-			getInput().initControllers();
-		} catch (SlickException e) {
-			Log.info("Controllers not available");
-		} catch (Throwable e) {
-			Log.info("Controllers not available");
-		}
-		
-		if (targetDisplayMode == null) {
-			setDisplayMode(640,480,false);
-		}
-
-		Display.setTitle(game.getTitle());
-
-		Log.info("LWJGL Version: "+Sys.getVersion());
-		Log.info("OriginalDisplayMode: "+originalDisplayMode);
-		Log.info("TargetDisplayMode: "+targetDisplayMode);
-		
-		AccessController.doPrivileged(new PrivilegedAction() {
-            public Object run() {
-        		try {
-        			Display.create();
-        		} catch (Exception e) {
-        			Log.error(e);
-        		}
-				
-				return null;
-            }});
-		
-		if (!Display.isCreated()) {
-			throw new SlickException("Failed to initialise the LWJGL display");
-		}
-		
-		initSystem();
-		enterOrtho();
-
-		try {
-			game.init(this);
-		} catch (SlickException e) {
-			Log.error(e);
-			running = false;
-		}
-		
-		getDelta();
-		while (running()) {
-			int delta = getDelta();
-			
-			if (!Display.isVisible()) {
-				try { Thread.sleep(100); } catch (Exception e) {}
-			} else {
-				Thread.yield();
-				try {
-					updateAndRender(delta);
-				} catch (SlickException e) {
-					Log.error(e);
-					running = false;
-					break;
-				}
+			try {
+				getInput().initControllers();
+			} catch (SlickException e) {
+				Log.info("Controllers not available");
+			} catch (Throwable e) {
+				Log.info("Controllers not available");
 			}
 			
-			updateFPS();
-
-			Display.update();
-			
-			if (Display.isCloseRequested()) {
-				if (game.closeRequested()) {
-					running = false;
-				}
+			if (targetDisplayMode == null) {
+				setDisplayMode(640,480,false);
 			}
-		}
 	
-		AL.destroy();
-		Display.destroy();
+			Display.setTitle(game.getTitle());
+	
+			Log.info("LWJGL Version: "+Sys.getVersion());
+			Log.info("OriginalDisplayMode: "+originalDisplayMode);
+			Log.info("TargetDisplayMode: "+targetDisplayMode);
+			
+			AccessController.doPrivileged(new PrivilegedAction() {
+	            public Object run() {
+	        		try {
+	        			Display.create();
+	        		} catch (Exception e) {
+	        			Log.error(e);
+	        		}
+					
+					return null;
+	            }});
+			
+			if (!Display.isCreated()) {
+				throw new SlickException("Failed to initialise the LWJGL display");
+			}
+			
+			initSystem();
+			enterOrtho();
+	
+			try {
+				game.init(this);
+			} catch (SlickException e) {
+				Log.error(e);
+				running = false;
+			}
+			
+			getDelta();
+			while (running()) {
+				int delta = getDelta();
+				
+				if (!Display.isVisible()) {
+					try { Thread.sleep(100); } catch (Exception e) {}
+				} else {
+					Thread.yield();
+					try {
+						updateAndRender(delta);
+					} catch (SlickException e) {
+						Log.error(e);
+						running = false;
+						break;
+					}
+				}
+				
+				updateFPS();
+	
+				Display.update();
+				
+				if (Display.isCloseRequested()) {
+					if (game.closeRequested()) {
+						running = false;
+					}
+				}
+			}
+		} finally {
+			AL.destroy();
+			Display.destroy();
+		}
+		
 		System.exit(0);
 	}
 
