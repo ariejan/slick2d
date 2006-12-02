@@ -270,23 +270,7 @@ public class AppGameContainer extends GameContainer {
 	 * @see org.newdawn.slick.GameContainer#setIcon(java.lang.String)
 	 */
 	public void setIcon(String ref) throws SlickException {
-		ImageData data;
-		boolean flip = false;
-		
-		if (ref.endsWith(".tga")) {
-			data = new TGAImageData();
-		} else {
-			data = new ImageIOImageData();
-			flip = true;
-		}
-		
-		try {
-			ByteBuffer buf = data.loadImage(ResourceLoader.getResourceAsStream(ref), flip, true);
-			Display.setIcon(new ByteBuffer[] {buf});
-		} catch (Exception e) {
-			Log.error(e);
-			throw new SlickException("Failed to set the icon");
-		}
+		setIcons(new String[] {ref});
 	}
 
 	/**
@@ -331,5 +315,32 @@ public class AppGameContainer extends GameContainer {
 			// null implemetnation
 		}
 		
+	}
+
+	/**
+	 * @see org.newdawn.slick.GameContainer#setIcons(java.lang.String[])
+	 */
+	public void setIcons(String[] refs) throws SlickException {
+		ByteBuffer[] bufs = new ByteBuffer[refs.length];
+		for (int i=0;i<refs.length;i++) {
+			ImageData data;
+			boolean flip = false;
+			
+			if (refs[i].endsWith(".tga")) {
+				data = new TGAImageData();
+			} else {
+				data = new ImageIOImageData();
+				flip = true;
+			}
+			
+			try {
+				bufs[i] = data.loadImage(ResourceLoader.getResourceAsStream(refs[i]), flip, true);
+			} catch (Exception e) {
+				Log.error(e);
+				throw new SlickException("Failed to set the icon");
+			}
+		}
+		
+		Display.setIcon(bufs);
 	}
 }

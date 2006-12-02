@@ -181,6 +181,18 @@ public abstract class GameContainer {
 	public abstract void setIcon(String ref) throws SlickException;
 	
 	/**
+	 * Set the icons to be used for this application. Note that the size of the icon
+	 * defines how it will be used. Important ones to note
+	 * 
+	 * Windows window icon must be 16x16
+	 * Windows alt-tab icon must be 24x24 or 32x32 depending on Windows version (XP=32)
+	 * 
+	 * @param refs The reference to the icon to be displayed
+	 * @throws SlickException Indicates a failure to load the icon
+	 */
+	public abstract void setIcons(String[] refs) throws SlickException;
+	
+	/**
 	 * Get the accurate system time
 	 * 
 	 * @return The system time in milliseconds

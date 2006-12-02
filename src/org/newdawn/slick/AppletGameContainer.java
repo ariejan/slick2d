@@ -283,6 +283,12 @@ public class AppletGameContainer extends Applet {
 		public void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException {
 			// unsupported in an applet
 		}
+
+		/**
+		 * @see org.newdawn.slick.GameContainer#setIcons(java.lang.String[])
+		 */
+		public void setIcons(String[] refs) throws SlickException {
+		}
 		
 	}
 }
