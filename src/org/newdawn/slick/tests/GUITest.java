@@ -14,6 +14,7 @@ import org.newdawn.slick.gui.BasicComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.gui.TextField;
+import org.newdawn.slick.util.Log;
 
 /**
  * A test for the GUI components available in Slick. Very simple stuff
@@ -35,6 +36,8 @@ public class GUITest extends BasicGame implements ComponentListener {
 	private Image background;
 	/** The font used to render */
 	private Font font;
+	/** The container */
+	private AppGameContainer app;
 	
 	/**
 	 * Create a new test of GUI  rendering
@@ -47,6 +50,10 @@ public class GUITest extends BasicGame implements ComponentListener {
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
+		if (container instanceof AppGameContainer) {
+			app = (AppGameContainer) container;
+		}
+		
 		font = new AngelCodeFont("testdata/demo2.fnt","testdata/demo2_00.tga");
 		field = new TextField(container, font, 150,20,500,35, this);
 		
@@ -90,6 +97,15 @@ public class GUITest extends BasicGame implements ComponentListener {
 	public void keyPressed(int key, char c) {
 		if (key == Input.KEY_ESCAPE) {
 			System.exit(0);
+		}
+		if (key == Input.KEY_F1) {
+			if (app != null) {
+				try {
+					app.setDisplayMode(640,480,false);		
+				} catch (SlickException e) {
+					Log.error(e);
+				}
+			}
 		}
 	}
 	

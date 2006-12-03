@@ -83,6 +83,10 @@ public class AppGameContainer extends GameContainer {
 	 * @throws SlickException Indicates a failure to initialise the display
 	 */
 	public void setDisplayMode(int width, int height, boolean fullscreen) throws SlickException {
+		if ((this.width == width) && (this.height == height) && (isFullscreen() == fullscreen)) {
+			return;
+		}
+		
 		try {
 			targetDisplayMode = null;
 			if (fullscreen) {
@@ -118,7 +122,7 @@ public class AppGameContainer extends GameContainer {
 			if (Display.isCreated()) {
 				initGL();
 				enterOrtho();
-			}
+			} 
 		} catch (LWJGLException e) {
 			throw new SlickException("Unable to setup mode "+width+"x"+height+" fullscreen="+fullscreen, e);
 		}
@@ -143,6 +147,10 @@ public class AppGameContainer extends GameContainer {
 	 * @throws SlickException Indicates we failed to change the display mode
 	 */
 	public void setFullscreen(boolean fullscreen) throws SlickException {
+		if (isFullscreen() == fullscreen) {
+			return;
+		}
+		
 		if (!fullscreen) {
 			try {
 				Display.setFullscreen(fullscreen);

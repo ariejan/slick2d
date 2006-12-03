@@ -370,9 +370,11 @@ public abstract class GameContainer {
         GL11.glViewport(0,0,width,height);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
-		input = new Input(height);
+		if (input == null) {
+			input = new Input(height);
+			input.addListener(game);
+		}
 		input.init(height);
-		input.addListener(game);
 	}
 	
 	/**
