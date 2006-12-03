@@ -3,6 +3,7 @@ package org.newdawn.slick;
 import java.util.ArrayList;
 
 import org.lwjgl.Sys;
+import org.newdawn.slick.util.Log;
 
 /**
  * A utility to hold and render animations
@@ -16,7 +17,7 @@ public class Animation {
 	/** The frame currently being displayed */
 	private int currentFrame = -1;
 	/** The time the next frame change should take place */
-	private long nextChange;
+	private long nextChange = -1;
 	/** True if the animation is stopped */
 	private boolean stopped = false;
 	/** The time left til the next frame */
@@ -125,9 +126,14 @@ public class Animation {
 	 * Add animation frame to the animation
 	 * 
 	 * @param frame The image to display for the frame
-	 * @param duration The duration to display the animation for
+	 * @param duration The duration to display the frame for
 	 */
 	public void addFrame(Image frame, int duration) {
+		if (duration == 0) {
+			Log.error("Invalid duration: "+duration);
+			throw new RuntimeException("Invalid duration: "+duration);
+		}
+		
 		frames.add(new Frame(frame, duration));
 		if (frames.size() == 1) {
 			nextFrame();
@@ -198,9 +204,13 @@ public class Animation {
 		if (frames.size() == 0) {
 			return;
 		}
+		if (frames.size() == 1) {
+			currentFrame = 0;
+			return;
+		}
 		
 		long now = getTime();
-		if (currentFrame == -1) {
+		if (nextChange <= 0) {
 			nextChange = now;
 		}
 		while ((now > nextChange) || (currentFrame == -1)) {
