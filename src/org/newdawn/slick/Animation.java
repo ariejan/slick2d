@@ -165,10 +165,10 @@ public class Animation {
 			return;
 		}
 		
+		nextFrame();
+		
 		Frame frame = (Frame) frames.get(currentFrame);
 		frame.image.draw(x,y,width,height);
-		
-		nextFrame();
 	}
 
 	/**
