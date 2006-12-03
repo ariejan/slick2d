@@ -200,6 +200,9 @@ public class Animation {
 		}
 		
 		long now = getTime();
+		if (currentFrame == -1) {
+			nextChange = now;
+		}
 		while ((now > nextChange) || (currentFrame == -1)) {
 			currentFrame = (currentFrame + 1) % frames.size();
 			nextChange = (long) (nextChange + (((Frame) frames.get(currentFrame)).duration / speed));
