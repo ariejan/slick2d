@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -20,6 +22,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
@@ -117,7 +120,23 @@ public class ParticleIO {
 			if (!element.getNodeName().equals("system")) {
 				throw new IOException("Not a particle system file");
 			}
-			ParticleSystem system = new ParticleSystem(new Image("org/newdawn/slick/data/particle.tga"),2000);
+			
+			Image defaultParticleImage = (Image) AccessController.doPrivileged(new PrivilegedAction() {
+	            public Object run() {
+	            	try {
+		        		return new Image("org/newdawn/slick/data/particle.tga");
+	            	} catch (SlickException e) {
+	            		Log.error(e);
+	            	}
+	                return null; // nothing to return
+	            }
+	        });
+			
+			if (defaultParticleImage == null) {
+				throw new SlickException("Unable to load default particle image");
+			}
+			
+			ParticleSystem system = new ParticleSystem(defaultParticleImage, 2000);
 			boolean additive = "true".equals(element.getAttribute("additive"));
 			if (additive) {
 				system.setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
