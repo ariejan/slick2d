@@ -41,7 +41,7 @@ public class ParticleIO {
 	 * @throws IOException Indicates a failure to find, read or parse the XML file
 	 */
 	public static ParticleSystem loadConfiguredSystem(String ref) throws IOException {
-		return loadConfiguredSystem(ResourceLoader.getResourceAsStream(ref));
+		return loadConfiguredSystem(ResourceLoader.getResourceAsStream(ref), null);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class ParticleIO {
 	 * @throws IOException Indicates a failure to find, read or parse the XML file
 	 */
 	public static ParticleSystem loadConfiguredSystem(File ref) throws IOException {
-		return loadConfiguredSystem(new FileInputStream(ref));
+		return loadConfiguredSystem(new FileInputStream(ref), null);
 	}
 
 	/**
@@ -63,6 +63,52 @@ public class ParticleIO {
 	 * @throws IOException Indicates a failure to find, read or parse the XML file
 	 */
 	public static ParticleSystem loadConfiguredSystem(InputStream ref) throws IOException {
+		return loadConfiguredSystem(ref, null);
+	}
+	
+	/**
+	 * Load a set of configured emitters into a single system 
+	 * 
+	 * @param ref The reference to the XML file (file or classpath)
+	 * @return A configured particle system
+	 * @param factory The factory used to create the emitter than will be poulated with loaded
+	 * data.
+	 * @throws IOException Indicates a failure to find, read or parse the XML file
+	 */
+	public static ParticleSystem loadConfiguredSystem(String ref, ConfigurableEmitterFactory factory) throws IOException {
+		return loadConfiguredSystem(ResourceLoader.getResourceAsStream(ref), factory);
+	}
+
+	/**
+	 * Load a set of configured emitters into a single system 
+	 * 
+	 * @param ref The XML file to read
+	 * @return A configured particle system
+	 * @param factory The factory used to create the emitter than will be poulated with loaded
+	 * data.
+	 * @throws IOException Indicates a failure to find, read or parse the XML file
+	 */
+	public static ParticleSystem loadConfiguredSystem(File ref, ConfigurableEmitterFactory factory) throws IOException {
+		return loadConfiguredSystem(new FileInputStream(ref), factory);
+	}
+
+	/**
+	 * Load a set of configured emitters into a single system 
+	 * 
+	 * @param ref The stream to read the XML from
+	 * @return A configured particle system
+	 * @param factory The factory used to create the emitter than will be poulated with loaded
+	 * data.
+	 * @throws IOException Indicates a failure to find, read or parse the XML file
+	 */
+	public static ParticleSystem loadConfiguredSystem(InputStream ref, ConfigurableEmitterFactory factory) throws IOException {
+		if (factory == null) {
+			factory = new ConfigurableEmitterFactory() {
+				public ConfigurableEmitter createEmitter(String name) {
+					return new ConfigurableEmitter(name);
+				}
+			};
+		}
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document document = builder.parse(ref);
@@ -84,7 +130,7 @@ public class ParticleIO {
 			NodeList list = element.getElementsByTagName("emitter");
 			for (int i=0;i<list.getLength();i++) {
 				Element em = (Element) list.item(i);
-				ConfigurableEmitter emitter = new ConfigurableEmitter("");
+				ConfigurableEmitter emitter = factory.createEmitter("new");
 				elementToEmitter(em, emitter);
 				
 				system.addEmitter(emitter);
@@ -161,7 +207,7 @@ public class ParticleIO {
 	 * @throws IOException Indicates a failure to find, read or parse the XML file
 	 */
 	public static ConfigurableEmitter loadEmitter(String ref) throws IOException {
-		return loadEmitter(ResourceLoader.getResourceAsStream(ref));
+		return loadEmitter(ResourceLoader.getResourceAsStream(ref), null);
 	}
 
 	/**
@@ -172,7 +218,7 @@ public class ParticleIO {
 	 * @throws IOException Indicates a failure to find, read or parse the XML file
 	 */
 	public static ConfigurableEmitter loadEmitter(File ref) throws IOException {
-		return loadEmitter(new FileInputStream(ref));
+		return loadEmitter(new FileInputStream(ref), null);
 		
 	}
 	
@@ -184,6 +230,53 @@ public class ParticleIO {
 	 * @throws IOException Indicates a failure to find, read or parse the XML file
 	 */
 	public static ConfigurableEmitter loadEmitter(InputStream ref) throws IOException {
+		return loadEmitter(ref, null);
+	}
+	
+	/**
+	 * Load a single emitter from an XML file
+	 * 
+	 * @param ref The reference to the emitter XML file to load (classpath or file)
+	 * @return The configured emitter
+	 * @param factory The factory used to create the emitter than will be poulated with loaded
+	 * data.
+	 * @throws IOException Indicates a failure to find, read or parse the XML file
+	 */
+	public static ConfigurableEmitter loadEmitter(String ref, ConfigurableEmitterFactory factory) throws IOException {
+		return loadEmitter(ResourceLoader.getResourceAsStream(ref), factory);
+	}
+
+	/**
+	 * Load a single emitter from an XML file
+	 * 
+	 * @param ref The XML file to read
+	 * @return The configured emitter
+	 * @param factory The factory used to create the emitter than will be poulated with loaded
+	 * data.
+	 * @throws IOException Indicates a failure to find, read or parse the XML file
+	 */
+	public static ConfigurableEmitter loadEmitter(File ref, ConfigurableEmitterFactory factory) throws IOException {
+		return loadEmitter(new FileInputStream(ref), factory);
+		
+	}
+	
+	/**
+	 * Load a single emitter from an XML file
+	 * 
+	 * @param ref The stream to read the XML from
+	 * @param factory The factory used to create the emitter than will be poulated with loaded
+	 * data.
+	 * @return The configured emitter
+	 * @throws IOException Indicates a failure to find, read or parse the XML file
+	 */
+	public static ConfigurableEmitter loadEmitter(InputStream ref, ConfigurableEmitterFactory factory) throws IOException {
+		if (factory == null) {
+			factory = new ConfigurableEmitterFactory() {
+				public ConfigurableEmitter createEmitter(String name) {
+					return new ConfigurableEmitter(name);
+				}
+			};
+		}
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document document = builder.parse(ref);
@@ -192,7 +285,7 @@ public class ParticleIO {
 				throw new IOException("Not a particle emitter file");
 			}
 			
-			ConfigurableEmitter emitter = new ConfigurableEmitter("new");
+			ConfigurableEmitter emitter = factory.createEmitter("new");
 			elementToEmitter(document.getDocumentElement(), emitter);
 			
 			return emitter;
