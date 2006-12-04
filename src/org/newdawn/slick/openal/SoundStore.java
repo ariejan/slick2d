@@ -434,7 +434,7 @@ public class SoundStore {
 			return new InternalSound(this, 0);
 		}
 		if (!inited) {
-			throw new RuntimeException("Can't load sounds until SoundStore is init()");
+			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
 		}
 		if (deferred) {
 			return new DeferredSound(ref, DeferredSound.MOD);
@@ -456,7 +456,7 @@ public class SoundStore {
 			return new InternalSound(this, 0);
 		}
 		if (!inited) {
-			throw new RuntimeException("Can't load sounds until SoundStore is init()");
+			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
 		}
 		if (deferred) {
 			return new DeferredSound(ref, DeferredSound.WAV);
@@ -504,7 +504,7 @@ public class SoundStore {
 			return new InternalSound(this, 0);
 		}
 		if (!inited) {
-			throw new RuntimeException("Can't load sounds until SoundStore is init()");
+			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
 		}
 		if (deferred) {
 			System.out.println("Return deferred for: "+ref);

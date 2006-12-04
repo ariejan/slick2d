@@ -209,6 +209,8 @@ public class MinMaxPanel extends DefaultPanel {
 		if (enablement) {
 			enabled.setSelected(e);
 		}
+		minSpinner.setEnabled(enabled.isSelected() || !enablement);
+		maxSpinner.setEnabled(enabled.isSelected() || !enablement);
 	}
 	
 	/**

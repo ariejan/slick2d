@@ -53,6 +53,8 @@ public abstract class GameContainer {
 	private long storedDelta;
 	/** The maximum logic update interval */
 	private long maximumLogicInterval = 0;
+	/** The last game started */
+	private Game lastGame;
 	
 	/**
 	 * Create a new game container wrapping a given game
@@ -372,9 +374,11 @@ public abstract class GameContainer {
 
 		if (input == null) {
 			input = new Input(height);
-			input.addListener(game);
 		}
 		input.init(height);
+		input.removeListener(lastGame);
+		input.addListener(game);
+		lastGame = game;
 	}
 	
 	/**

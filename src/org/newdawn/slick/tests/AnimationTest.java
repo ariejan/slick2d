@@ -40,6 +40,7 @@ public class AnimationTest extends BasicGame {
 			animation.addFrame(sheet.getSprite(i,0), 150);
 		}
 		
+		container.setTargetFrameRate(20);
 	}
 
 	/**

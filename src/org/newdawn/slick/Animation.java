@@ -24,6 +24,8 @@ public class Animation {
 	private long timeLeft;
 	/** The current speed of the animation */
 	private float speed = 1.0f;
+	/** The frame to stop at */
+	private int stopAt = -2;
 	
 	/**
 	 * Create an empty animation
@@ -60,6 +62,16 @@ public class Animation {
 			addFrame(frames[i], durations[i]);
 		}
 		nextFrame();
+	}
+	
+	/**
+	 * Check if this animation has stopped (either explictly or because it's reached its target frame)
+	 * 
+	 * @see #stopAt
+	 * @return True if the animation has stopped
+	 */
+	public boolean isStopped() {
+		return stopped;
 	}
 
 	/**
@@ -204,18 +216,30 @@ public class Animation {
 		if (frames.size() == 0) {
 			return;
 		}
+		long now = getTime();
+		
 		if (frames.size() == 1) {
+			nextChange = (long) (now + nextChange + (((Frame) frames.get(0)).duration / speed));
 			currentFrame = 0;
 			return;
 		}
 		
-		long now = getTime();
 		if (nextChange <= 0) {
 			nextChange = now;
+			currentFrame = -1;
 		}
-		while ((now > nextChange) || (currentFrame == -1)) {
+		
+		while (((now >= nextChange) || (currentFrame == -1)) && (currentFrame != stopAt)) {
 			currentFrame = (currentFrame + 1) % frames.size();
-			nextChange = (long) (nextChange + (((Frame) frames.get(currentFrame)).duration / speed));
+			
+			int realDuration = (int) (((Frame) frames.get(currentFrame)).duration / speed);
+			nextChange = nextChange + realDuration;
+
+			//System.out.println(((Frame) frames.get(currentFrame)).duration + "," + speed + " = "+realDuration+" currentFrame: "+currentFrame+" now:"+now+" nextChange: "+nextChange);
+		}
+		
+		if (currentFrame == stopAt) {
+			stopped = true;
 		}
 	}
 	
@@ -226,6 +250,30 @@ public class Animation {
 	 */
 	private long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	}
+	
+	/**
+	 * Indicate the animation should stop when it reaches the specified
+	 * frame index (note, not frame number but index in the animation
+	 * 
+	 * @param frameIndex The index of the frame to stop at
+	 */
+	public void stopAt(int frameIndex) {
+		stopAt = frameIndex; 
+	}
+	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		String res = "[Animation ("+frames.size()+") ";
+		for (int i=0;i<frames.size();i++) {
+			Frame frame = (Frame) frames.get(i);
+			res += frame.duration+",";
+		}
+		
+		res += "]";
+		return res;
 	}
 	
 	/**

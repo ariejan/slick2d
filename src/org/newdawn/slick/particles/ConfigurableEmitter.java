@@ -66,6 +66,8 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	public Value startAlpha = new Value(255);
 	/** The ending alpha value */
 	public Value endAlpha = new Value(0);
+	/** The number of particles that will be emitted */
+	public Range emitCount = new Range(1000,1000);
 	/** The points indicate */
 	public int usePoints = Particle.INHERIT_POINTS;
 	
@@ -93,6 +95,8 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	private int particleCount;
 	/** The system this emitter is being updated to */
 	private ParticleSystem engine;
+	/** The number of particles that are left ot emit */
+	private int leftToEmit;
 	
 	/**
 	 * Create a new emitter configurable externally
@@ -101,6 +105,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 */
 	public ConfigurableEmitter(String name) {
 		this.name = name;
+		leftToEmit = (int) emitCount.random();
 		timeout = (int) (length.random());
 		
 		colors.add(new ColorRecord(0,Color.white));
@@ -198,8 +203,13 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		particleCount = 0;
 		
 		if (length.isEnabled()) {
-			timeout -= delta;
 			if (timeout < 0) {
+				return;
+			}
+			timeout -= delta;
+		}
+		if (emitCount.isEnabled()) {
+			if (leftToEmit <= 0) {
 				return;
 			}
 		}
@@ -238,6 +248,13 @@ public class ConfigurableEmitter implements ParticleEmitter {
 				ColorRecord start = (ColorRecord) colors.get(0);
 				p.setColor(start.col.r, start.col.g, start.col.b, startAlpha.getValue() / 255.0f);
 				p.setUsePoint(usePoints);
+				
+				if (emitCount.isEnabled()) {
+					leftToEmit--;
+					if (leftToEmit <= 0) {
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -292,13 +309,27 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 * @return True if the emitter has completed it's cycle
 	 */
 	public boolean completed() {
-		return timeout < 0;
+		if (length.isEnabled()) {
+			if (timeout > 0) {
+				return false;
+			}
+		}
+		if (emitCount.isEnabled()) {
+			if (leftToEmit > 0) {
+				return false;
+			}
+		}
+		if (engine == null) {
+			return false;
+		}
+		return (engine.getParticleCount() == 0);
 	}
 	
 	/**
 	 * Cause the emitter to replay it's circle
 	 */
 	public void replay() {
+		leftToEmit = (int) emitCount.random();
 		timeout = (int) (length.random());
 	}
 	
@@ -448,7 +479,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 			this.min = min;
 			this.max = max;
 		}
-
+		
 		/**
 		 * Generate a random number in the range
 		 * 

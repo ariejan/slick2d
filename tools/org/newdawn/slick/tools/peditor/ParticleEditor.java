@@ -73,6 +73,8 @@ public class ParticleEditor extends JFrame {
 	private SettingsPanel settingsPanel;
 	/** The color controls for particles */
 	private ColorPanel colorPanel;
+	/** The limiting controls for particles */
+	private LimitPanel limitPanel;
 	
 	/** Control for the type of particle system blending */
 	private JCheckBox additive = new JCheckBox("Additive Blending");
@@ -128,6 +130,7 @@ public class ParticleEditor extends JFrame {
 		positionControls = new PositionControls();
 		settingsPanel = new SettingsPanel(emitters);
 		colorPanel = new ColorPanel();
+		limitPanel = new LimitPanel(emitters);
 		
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		
@@ -205,6 +208,7 @@ public class ParticleEditor extends JFrame {
 		tabs.add("Emission", emissionControls);
 		tabs.add("Position", positionControls);
 		tabs.add("Rendering", colorPanel);
+		tabs.add("Limit", limitPanel);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -457,16 +461,19 @@ public class ParticleEditor extends JFrame {
 			settingsPanel.setEnabled(false);
 			positionControls.setEnabled(false);
 			colorPanel.setEnabled(false);
+			limitPanel.setEnabled(false);
 		} else {
 			emissionControls.setEnabled(true);
 			settingsPanel.setEnabled(true);
 			positionControls.setEnabled(true);
 			colorPanel.setEnabled(true);
+			limitPanel.setEnabled(true);
 			
 			emissionControls.setTarget(emitter);
 			positionControls.setTarget(emitter);
 			settingsPanel.setTarget(emitter);
 			colorPanel.setTarget(emitter);
+			limitPanel.setTarget(emitter);
 		}
 	}
 	

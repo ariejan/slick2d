@@ -364,7 +364,12 @@ public class ParticleIO {
 	 * @return The requested element
 	 */
 	private static Element getFirstNamedElement(Element element, String name) {
-		return (Element) element.getElementsByTagName(name).item(0);
+		NodeList list = element.getElementsByTagName(name);
+		if (list.getLength() == 0) {
+			return null;
+		}
+		
+		return (Element) list.item(0);
 	}
 	
 	/**
@@ -395,6 +400,7 @@ public class ParticleIO {
 		parseRangeElement(getFirstNamedElement(element, "initialDistance"), emitter.initialDistance);
 		parseRangeElement(getFirstNamedElement(element, "speed"), emitter.speed);
 		parseRangeElement(getFirstNamedElement(element, "length"), emitter.length);
+		parseRangeElement(getFirstNamedElement(element, "emitCount"), emitter.emitCount);
 		
 		parseValueElement(getFirstNamedElement(element, "spread"), emitter.spread);
 		parseValueElement(getFirstNamedElement(element, "angularOffset"), emitter.angularOffset);
@@ -452,6 +458,7 @@ public class ParticleIO {
 		root.appendChild(createRangeElement(document, "initialDistance", emitter.initialDistance));
 		root.appendChild(createRangeElement(document, "speed", emitter.speed));
 		root.appendChild(createRangeElement(document, "length", emitter.length));
+		root.appendChild(createRangeElement(document, "emitCount", emitter.emitCount));
 		
 		root.appendChild(createValueElement(document, "spread", emitter.spread));
 		root.appendChild(createValueElement(document, "angularOffset", emitter.angularOffset));

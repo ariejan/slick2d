@@ -28,8 +28,6 @@ public class SettingsPanel extends ControlPanel {
 	private EmitterList list;
 	/** Choose used to select image files */
 	private JFileChooser chooser = new JFileChooser(new File("."));
-	/** The length of the effect */
-	private MinMaxPanel lengthPanel;
 	
 	/**
 	 * Create a new panel for global settings controls
@@ -81,8 +79,6 @@ public class SettingsPanel extends ControlPanel {
 		
 		addValue("gravity",new ValuePanel("Gravity",-200,200,0,"The gravity effect to apply",false));
 		addValue("wind",new ValuePanel("Wind",-200,200,0,"The horizontal force effect to apply",false));
-		lengthPanel = new MinMaxPanel("Effect Length",0,100000,1000,1000,true,-1,"The length the effect will last");
-		addMinMax("length", lengthPanel);
 	}
 	
 	/**
@@ -113,20 +109,6 @@ public class SettingsPanel extends ControlPanel {
 		
 		link(emitter.gravityFactor, "gravity");
 		link(emitter.windFactor, "wind");
-		link(emitter.length, "length");
-	}
-
-	/**
-	 * @see org.newdawn.slick.tools.peditor.ControlPanel#minMaxUpdated(org.newdawn.slick.tools.peditor.MinMaxPanel)
-	 */
-	public void minMaxUpdated(MinMaxPanel source) {
-		super.minMaxUpdated(source);
-		
-		if (emitter != null) {
-			if (source == lengthPanel) {
-				emitter.replay();
-			}
-		}
 	}
 
 }

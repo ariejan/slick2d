@@ -141,7 +141,6 @@ public class TextureLoader {
     	if (deferred) {
 	    	return new DeferredTexture(in, resourceName, flipped, filter);
 	    }
-
     	
     	HashMap hash = texturesLinear;
         if (filter == GL11.GL_NEAREST) {
@@ -151,6 +150,13 @@ public class TextureLoader {
     	Texture tex = (Texture) hash.get(resourceName);
         if (tex != null) {
         	return tex;
+        }
+        
+        // horrible test until I can find something more suitable
+        try {
+        	GL11.glGetError();
+        } catch (NullPointerException e) {
+        	throw new RuntimeException("Image based resources must be loaded as part of init() or the game loop. They cannot be loaded before initialisation.");
         }
         
         tex = getTexture(in, resourceName,

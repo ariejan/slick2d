@@ -322,6 +322,9 @@ public class Input {
 	 * @param listener The listener to be notified
 	 */
 	public void addListener(InputListener listener) {
+		if (listeners.contains(listener)) {
+			return;
+		}
 		listeners.add(listener);
 	}
 
@@ -353,6 +356,7 @@ public class Input {
 		this.height = height;
 		lastMouseX = getMouseX();
 		lastMouseY = getMouseY();
+		listeners.clear();
 	}
 	
 	/**

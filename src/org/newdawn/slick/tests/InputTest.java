@@ -9,6 +9,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.Log;
 
 /**
  * A test for input
@@ -34,6 +35,8 @@ public class InputTest extends BasicGame {
 	private Input input;
 	/** The scroll box */
 	private int ypos;
+	/** The container holding this test */
+	private AppGameContainer app;
 	
 	/**
 	 * Create a new input test
@@ -46,6 +49,10 @@ public class InputTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
+		if (container instanceof AppGameContainer) {
+			app = (AppGameContainer) container;
+		}
+		
 		input = container.getInput();
 		x = 300;
 		y = 300;
@@ -95,6 +102,14 @@ public class InputTest extends BasicGame {
 	public void keyPressed(int key, char c) {
 		if (key == Input.KEY_ESCAPE) {
 			System.exit(0);
+		}
+		if (key == Input.KEY_F1) {
+			if (app != null) {
+				try {
+					app.setDisplayMode(600, 600, false);
+					app.reinit();
+				} catch (Exception e) { Log.error(e); }
+			}
 		}
 	}
 
