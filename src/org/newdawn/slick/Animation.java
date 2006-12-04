@@ -17,7 +17,7 @@ public class Animation {
 	/** The frame currently being displayed */
 	private int currentFrame = -1;
 	/** The time the next frame change should take place */
-	private long nextChange = -1;
+	private long nextChange = getTime();
 	/** True if the animation is stopped */
 	private boolean stopped = false;
 	/** The time left til the next frame */
@@ -216,18 +216,8 @@ public class Animation {
 		if (frames.size() == 0) {
 			return;
 		}
+		
 		long now = getTime();
-		
-		if (frames.size() == 1) {
-			nextChange = (long) (now + nextChange + (((Frame) frames.get(0)).duration / speed));
-			currentFrame = 0;
-			return;
-		}
-		
-		if (nextChange <= 0) {
-			nextChange = now;
-			currentFrame = -1;
-		}
 		
 		while (((now >= nextChange) || (currentFrame == -1)) && (currentFrame != stopAt)) {
 			currentFrame = (currentFrame + 1) % frames.size();
