@@ -249,7 +249,7 @@ public class AppGameContainer extends GameContainer {
 				if (!Display.isVisible()) {
 					try { Thread.sleep(100); } catch (Exception e) {}
 				} else {
-					Thread.yield();
+					//Thread.yield();
 					try {
 						updateAndRender(delta);
 					} catch (SlickException e) {

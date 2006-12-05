@@ -31,7 +31,7 @@ public class Animation {
 	 * Create an empty animation
 	 */
 	public Animation() {
-		nextFrame();
+		currentFrame = 0;
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class Animation {
 		for (int i=0;i<frames.length;i++) {
 			addFrame(frames[i], duration);
 		}
-		nextFrame();
+		currentFrame = 0;
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class Animation {
 		for (int i=0;i<frames.length;i++) {
 			addFrame(frames[i], durations[i]);
 		}
-		nextFrame();
+		currentFrame = 0;
 	}
 	
 	/**
@@ -130,7 +130,8 @@ public class Animation {
 			return;
 		}
 		stopped = false;
-		currentFrame = -1;
+		currentFrame = 0;
+		nextChange = getTime() + (int) (((Frame) frames.get(0)).duration / speed);
 		nextFrame();
 	}
 	
@@ -147,9 +148,7 @@ public class Animation {
 		}
 		
 		frames.add(new Frame(frame, duration));
-		if (frames.size() == 1) {
-			nextFrame();
-		}
+		currentFrame = 0;
 	}
 
 	/**

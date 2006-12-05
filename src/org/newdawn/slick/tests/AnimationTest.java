@@ -18,6 +18,8 @@ import org.newdawn.slick.SpriteSheet;
 public class AnimationTest extends BasicGame {
 	/** The animation loaded */
 	private Animation animation;
+	/** The limited animation loaded */
+	private Animation limited;
 	/** The container */
 	private GameContainer container;
 	
@@ -39,6 +41,11 @@ public class AnimationTest extends BasicGame {
 		for (int i=0;i<8;i++) {
 			animation.addFrame(sheet.getSprite(i,0), 150);
 		}
+		limited = new Animation();
+		for (int i=0;i<8;i++) {
+			limited.addFrame(sheet.getSprite(i,0), 150);
+		}
+		limited.stopAt(7);
 		
 		container.setTargetFrameRate(20);
 	}
@@ -47,10 +54,12 @@ public class AnimationTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) {
+		g.drawString("Space to restart() animation", 100, 50);
 		g.setBackground(new Color(0.4f,0.6f,0.6f));
 		g.scale(-1,1);
 		animation.draw(-100,100);
 		animation.draw(-200,100,36*4,65*4);
+		limited.draw(-400,100,36*4,65*4);
 	}
 
 	/**
@@ -80,6 +89,9 @@ public class AnimationTest extends BasicGame {
 	public void keyPressed(int key, char c) {
 		if (key == Input.KEY_ESCAPE) {
 			container.exit();
+		}
+		if (key == Input.KEY_SPACE) {
+			limited.restart();
 		}
 	}
 }
