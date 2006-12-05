@@ -10,6 +10,7 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.glu.GLU;
 import org.newdawn.slick.util.ResourceLoader;
@@ -257,8 +258,9 @@ public class TextureLoader {
      * @param dataSource The image data to generate the texture from
      * @param filter The filter to use when scaling the texture
      * @return The texture created
+     * @throws IOException Indicates the texture is too big for the hardware
      */
-    public Texture getTexture(ImageData dataSource, int filter)
+    public Texture getTexture(ImageData dataSource, int filter) throws IOException
     { 
     	int target = GL11.GL_TEXTURE_2D;
     	
@@ -297,6 +299,13 @@ public class TextureLoader {
         
         texture.setWidth(width);
         texture.setHeight(height);
+        
+        IntBuffer temp = BufferUtils.createIntBuffer(16);
+        GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE, temp);
+        int max = temp.get(0);
+        if ((width > max) || (height > max)) {
+        	throw new IOException("Attempt to allocate a texture to big for the current hardware");
+        }
         
         GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, minFilter); 
         GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter); 

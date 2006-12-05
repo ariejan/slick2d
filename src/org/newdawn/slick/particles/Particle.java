@@ -362,6 +362,15 @@ public class Particle {
 	}
 	
 	/**
+	 * Get the emitter that owns this particle
+	 * 
+	 * @return The emitter that owns this particle 
+	 */
+	public ParticleEmitter getEmitter() {
+		return emitter;
+	}
+	
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {

@@ -275,7 +275,25 @@ public class ParticleSystem {
 	 */
 	public void release(Particle particle) {
 		if (particle != dummy) {
-			available.add(particle);
+			if (particle.inUse()) {
+				available.add(particle);
+			}
 		}
+	}
+	
+	/**
+	 * Release all the particles owned by the specified emitter
+	 * 
+	 * @param emitter The emitter owning the particles that should be released
+	 */
+	public void releaseAll(ParticleEmitter emitter) {
+		for (int i=0;i<particles.length;i++) {
+			if (particles[i].inUse()) {
+				if (particles[i].getEmitter() == emitter) {
+					release(particles[i]);
+				}
+			}
+		}
+		
 	}
 }

@@ -142,8 +142,12 @@ public class Image {
 	 * @param filter The filter to use when scaling this image
 	 */
 	Image(ImageBuffer buffer, int filter) {
-		texture = TextureLoader.get().getTexture(buffer, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST);
-		ref = texture.toString();
+		try {
+			texture = TextureLoader.get().getTexture(buffer, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST);
+			ref = texture.toString();
+		} catch (IOException e) {
+			Log.error(e);
+		}
 	}
 	
 	/**

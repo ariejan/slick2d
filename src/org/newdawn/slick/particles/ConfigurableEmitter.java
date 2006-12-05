@@ -329,8 +329,16 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 * Cause the emitter to replay it's circle
 	 */
 	public void replay() {
+		reset();
 		leftToEmit = (int) emitCount.random();
 		timeout = (int) (length.random());
+	}
+	
+	/**
+	 * Release all the particles held by this emitter
+	 */
+	public void reset() {
+		engine.releaseAll(this);
 	}
 	
 	/**
