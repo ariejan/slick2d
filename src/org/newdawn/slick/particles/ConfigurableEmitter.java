@@ -330,6 +330,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 */
 	public void replay() {
 		reset();
+		nextSpawn = 0;
 		leftToEmit = (int) emitCount.random();
 		timeout = (int) (length.random());
 	}
@@ -338,7 +339,9 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 * Release all the particles held by this emitter
 	 */
 	public void reset() {
-		engine.releaseAll(this);
+		if (engine != null) {
+			engine.releaseAll(this);
+		}
 	}
 	
 	/**
