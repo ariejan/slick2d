@@ -309,20 +309,24 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 * @return True if the emitter has completed it's cycle
 	 */
 	public boolean completed() {
+		if (engine == null) {
+			return false;
+		}
+		
 		if (length.isEnabled()) {
 			if (timeout > 0) {
 				return false;
 			}
+			return (engine.getParticleCount() == 0);
 		}
 		if (emitCount.isEnabled()) {
 			if (leftToEmit > 0) {
 				return false;
 			}
+			return (engine.getParticleCount() == 0);
 		}
-		if (engine == null) {
-			return false;
-		}
-		return (engine.getParticleCount() == 0);
+		
+		return false;
 	}
 	
 	/**
