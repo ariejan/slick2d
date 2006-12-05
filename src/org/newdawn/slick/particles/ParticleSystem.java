@@ -275,9 +275,7 @@ public class ParticleSystem {
 	 */
 	public void release(Particle particle) {
 		if (particle != dummy) {
-			if (particle.inUse()) {
-				available.add(particle);
-			}
+			available.add(particle);
 		}
 	}
 	
@@ -290,6 +288,7 @@ public class ParticleSystem {
 		for (int i=0;i<particles.length;i++) {
 			if (particles[i].inUse()) {
 				if (particles[i].getEmitter() == emitter) {
+					particles[i].setLife(-1);
 					release(particles[i]);
 				}
 			}
