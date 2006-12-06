@@ -278,6 +278,16 @@
 		 trust="true"
 		 port="122"
 		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="lib/slick.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="src/version"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
 </target>
 
 <!--
