@@ -17,7 +17,7 @@ public class Animation {
 	/** The frame currently being displayed */
 	private int currentFrame = -1;
 	/** The time the next frame change should take place */
-	private long nextChange = getTime();
+	private long nextChange = 0;
 	/** True if the animation is stopped */
 	private boolean stopped = false;
 	/** The time left til the next frame */
@@ -26,12 +26,18 @@ public class Animation {
 	private float speed = 1.0f;
 	/** The frame to stop at */
 	private int stopAt = -2;
-	
+	/** The last time the frame was automagically updated */
+	private long lastUpdate;
+	/** True if this is the first update */
+	private boolean firstUpdate = true;
+	/** True if we should auto update the animation - default true */
+	private boolean autoUpdate = true;
+
 	/**
 	 * Create an empty animation
 	 */
 	public Animation() {
-		currentFrame = 0;
+		this(true);
 	}
 
 	/**
@@ -41,10 +47,7 @@ public class Animation {
 	 * @param duration The duration to show each frame
 	 */
 	public Animation(Image[] frames, int duration) {
-		for (int i=0;i<frames.length;i++) {
-			addFrame(frames[i], duration);
-		}
-		currentFrame = 0;
+		this(frames, duration, true);
 	}
 	
 	/**
@@ -54,6 +57,46 @@ public class Animation {
 	 * @param durations The duration to show each frame
 	 */
 	public Animation(Image[] frames, int[] durations) {
+		this(frames, durations, true);
+	}
+	
+	/**
+	 * Create an empty animation
+	 * 
+	 * @param autoUpdate True if this animation should automatically update. This means that the
+	 * current frame will be caculated based on the time between renders
+	 */
+	public Animation(boolean autoUpdate) {
+		currentFrame = 0;
+		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * Create a new animation from a set of images
+	 * 
+	 * @param frames The images for the animation frames
+	 * @param duration The duration to show each frame
+	 * @param autoUpdate True if this animation should automatically update. This means that the
+	 * current frame will be caculated based on the time between renders
+	 */
+	public Animation(Image[] frames, int duration, boolean autoUpdate) {
+		for (int i=0;i<frames.length;i++) {
+			addFrame(frames[i], duration);
+		}
+		currentFrame = 0;
+		this.autoUpdate = autoUpdate;
+	}
+	
+	/**
+	 * Create a new animation from a set of images
+	 * 
+	 * @param frames The images for the animation frames
+	 * @param durations The duration to show each frame
+	 * @param autoUpdate True if this animation should automatically update. This means that the
+	 * current frame will be caculated based on the time between renders
+	 */
+	public Animation(Image[] frames, int[] durations, boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 		if (frames.length != durations.length) {
 			throw new RuntimeException("There must be one duration per frame");
 		}
@@ -100,7 +143,7 @@ public class Animation {
 		if (frames.size() == 0) {
 			return;
 		}
-		timeLeft = nextChange - getTime();
+		timeLeft = nextChange;
 		stopped = true;
 	}
 
@@ -115,7 +158,7 @@ public class Animation {
 			return;
 		}
 		stopped = false;
-		nextChange = getTime() + timeLeft;
+		nextChange = timeLeft;
 	}
 	
 	/**
@@ -131,8 +174,7 @@ public class Animation {
 		}
 		stopped = false;
 		currentFrame = 0;
-		nextChange = getTime() + (int) (((Frame) frames.get(0)).duration / speed);
-		nextFrame();
+		nextChange = (int) (((Frame) frames.get(0)).duration / speed);
 	}
 	
 	/**
@@ -182,7 +224,16 @@ public class Animation {
 			return;
 		}
 		
-		nextFrame();
+		if (autoUpdate) {
+			long now = getTime();
+			long delta = now - lastUpdate;
+			if (firstUpdate) {
+				delta = 0;
+				firstUpdate = false;
+			}
+			lastUpdate = now;
+			nextFrame(delta);
+		}
 		
 		Frame frame = (Frame) frames.get(currentFrame);
 		frame.image.draw(x,y,width,height);
@@ -191,9 +242,31 @@ public class Animation {
 	/**
 	 * Update the animation cycle without draw the image, useful
 	 * for keeping two animations in sync
+	 * 
+	 * @deprecated
 	 */
 	public void updateNoDraw() {
-		nextFrame();
+		if (autoUpdate) {
+			long now = getTime();
+			long delta = now - lastUpdate;
+			if (firstUpdate) {
+				delta = 0;
+				firstUpdate = false;
+			}
+			lastUpdate = now;
+			nextFrame(delta);
+		}
+	}
+	
+	/**
+	 * Update the animation, note that this will have odd effects if auto update
+	 * is also turned on
+	 * 
+	 * @see #autoUpdate
+	 * @param delta The amount of time thats passed since last update
+	 */
+	public void update(long delta) {
+		nextFrame(delta);
 	}
 	
 	/**
@@ -207,8 +280,10 @@ public class Animation {
 	
 	/**
 	 * Check if we need to move to the next frame
+	 * 
+	 * @param delta The amount of time thats passed since last update
 	 */
-	private void nextFrame() {
+	private void nextFrame(long delta) {
 		if (stopped) {
 			return;
 		}
@@ -216,15 +291,12 @@ public class Animation {
 			return;
 		}
 		
-		long now = getTime();
+		nextChange -= delta;
 		
-		while (((now >= nextChange) || (currentFrame == -1)) && (currentFrame != stopAt)) {
+		while (nextChange < 0 && (currentFrame != stopAt)) {
 			currentFrame = (currentFrame + 1) % frames.size();
-			
 			int realDuration = (int) (((Frame) frames.get(currentFrame)).duration / speed);
 			nextChange = nextChange + realDuration;
-
-			//System.out.println(((Frame) frames.get(currentFrame)).duration + "," + speed + " = "+realDuration+" currentFrame: "+currentFrame+" now:"+now+" nextChange: "+nextChange);
 		}
 		
 		if (currentFrame == stopAt) {

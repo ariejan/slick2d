@@ -37,7 +37,7 @@ public class AngelCodeFont implements Font {
 	 * @throws SlickException Indicates a failure to load either file
 	 */
 	public AngelCodeFont(String fntFile, String imgFile) throws SlickException {
-		font = new Image(imgFile, imgFile.endsWith(".png"));
+		font = new Image(imgFile, !imgFile.endsWith(".tga"));
 	
 		parseFnt(ResourceLoader.getResourceAsStream(fntFile));
 	}

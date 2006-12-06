@@ -20,8 +20,12 @@ public class AnimationTest extends BasicGame {
 	private Animation animation;
 	/** The limited animation loaded */
 	private Animation limited;
+	/** The manual update animation loaded */
+	private Animation manual;
 	/** The container */
 	private GameContainer container;
+	/** Start limited counter */
+	private int start = 5000;
 	
 	/**
 	 * Create a new image rendering test
@@ -46,8 +50,10 @@ public class AnimationTest extends BasicGame {
 			limited.addFrame(sheet.getSprite(i,0), 150);
 		}
 		limited.stopAt(7);
-		
-		container.setTargetFrameRate(20);
+		manual = new Animation(false);
+		for (int i=0;i<8;i++) {
+			manual.addFrame(sheet.getSprite(i,0), 150);
+		}
 	}
 
 	/**
@@ -55,17 +61,28 @@ public class AnimationTest extends BasicGame {
 	 */
 	public void render(GameContainer container, Graphics g) {
 		g.drawString("Space to restart() animation", 100, 50);
+		g.drawString("Til Limited animation: "+start, 100, 500);
+		g.drawString("Hold 1 to move the manually animated", 100, 70);
 		g.setBackground(new Color(0.4f,0.6f,0.6f));
 		g.scale(-1,1);
 		animation.draw(-100,100);
 		animation.draw(-200,100,36*4,65*4);
-		limited.draw(-400,100,36*4,65*4);
+		if (start < 0) {
+			limited.draw(-400,100,36*4,65*4);
+		}
+		manual.draw(-600,100,36*4,65*4);
 	}
 
 	/**
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(GameContainer container, int delta) {
+		if (container.getInput().isKeyDown(Input.KEY_1)) {
+			manual.update(delta);
+		}
+		if (start >= 0) {
+			start -= delta;
+		}
 	}
 
 	/**
