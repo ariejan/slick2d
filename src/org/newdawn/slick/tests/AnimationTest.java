@@ -22,6 +22,8 @@ public class AnimationTest extends BasicGame {
 	private Animation limited;
 	/** The manual update animation loaded */
 	private Animation manual;
+	/** The animation loaded */
+	private Animation pingPong;
 	/** The container */
 	private GameContainer container;
 	/** Start limited counter */
@@ -54,6 +56,8 @@ public class AnimationTest extends BasicGame {
 		for (int i=0;i<8;i++) {
 			manual.addFrame(sheet.getSprite(i,0), 150);
 		}
+		pingPong = new Animation(sheet, 0,0,7,0,true,150,true);
+		pingPong.setPingPong(true);
 	}
 
 	/**
@@ -63,6 +67,8 @@ public class AnimationTest extends BasicGame {
 		g.drawString("Space to restart() animation", 100, 50);
 		g.drawString("Til Limited animation: "+start, 100, 500);
 		g.drawString("Hold 1 to move the manually animated", 100, 70);
+		g.drawString("PingPong Frame:"+pingPong.getFrame(), 600, 70);
+		
 		g.setBackground(new Color(0.4f,0.6f,0.6f));
 		g.scale(-1,1);
 		animation.draw(-100,100);
@@ -71,6 +77,7 @@ public class AnimationTest extends BasicGame {
 			limited.draw(-400,100,36*4,65*4);
 		}
 		manual.draw(-600,100,36*4,65*4);
+		pingPong.draw(-700,100,36*2,65*2);
 	}
 
 	/**
@@ -108,7 +115,7 @@ public class AnimationTest extends BasicGame {
 			container.exit();
 		}
 		if (key == Input.KEY_SPACE) {
-			limited.restart();
+			manual.restart();
 		}
 	}
 }

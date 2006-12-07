@@ -32,7 +32,11 @@ public class Animation {
 	private boolean firstUpdate = true;
 	/** True if we should auto update the animation - default true */
 	private boolean autoUpdate = true;
-
+	/** The direction the animation is running */
+	private int direction = 1;
+	/** True if the animation in ping ponging back and forth */
+	private boolean pingPong;
+	
 	/**
 	 * Create an empty animation
 	 */
@@ -105,6 +109,69 @@ public class Animation {
 			addFrame(frames[i], durations[i]);
 		}
 		currentFrame = 0;
+	}
+	
+	/**
+	 * Create a new animation based on the sprite from a sheet. It assumed that
+	 * the sprites are organised on horizontal scan lines and that every sprite
+	 * in the sheet should be used.
+	 * 
+	 * @param frames The sprite sheet containing the frames
+	 * @param duration The duration each frame should be displayed for
+	 */
+	public Animation(SpriteSheet frames, int duration) {
+		this(frames, 0,0,frames.getHorizontalCount(),frames.getVerticalCount(),true,duration,true);
+	}
+	
+	/**
+	 * Create a new animation based on a selection of sprites from a sheet
+	 * 
+	 * @param frames The sprite sheet containing the frames
+	 * @param duration The duration each frame should be displayed for
+	 * @param x1 The x coordinate of the first sprite from the sheet to appear in the animation
+	 * @param y1 The y coordinate of the first sprite from the sheet to appear in the animation
+	 * @param x2 The x coordinate of the last sprite from the sheet to appear in the animation
+	 * @param y2 The y coordinate of the last sprite from the sheet to appear in the animation
+	 * @param horizontalScan True if the sprites are arranged in hoizontal scan lines. Otherwise 
+	 * vertical is assumed
+	 * @param autoUpdate True if this animation should automatically update based on the render times
+	 */
+	public Animation(SpriteSheet frames, int x1, int y1, int x2, int y2, boolean horizontalScan, int duration, boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+		
+		if (horizontalScan) {
+			for (int x=x1;x<=x2;x++) {
+				for (int y=0;y<=y2;y++) {
+					addFrame(frames.getSprite(x, y), duration);
+				}
+			}
+		} else {
+			for (int y=0;y<=y2;y++) {
+				for (int x=x1;x<=x2;x++) {
+					addFrame(frames.getSprite(x, y), duration);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Indicate if this animation should automatically update based on the
+	 * time between renders or if it should need updating via the update()
+	 * method.
+	 * 
+	 * @param auto True if this animation should automatically update
+	 */
+	public void setAutoUpdate(boolean auto) {
+		this.autoUpdate = auto;
+	}
+	
+	/**
+	 * Indicate if this animation should ping pong back and forth
+	 * 
+	 * @param pingPong True if the animation should ping pong
+	 */
+	public void setPingPong(boolean pingPong) {
+		this.pingPong = pingPong;
 	}
 	
 	/**
@@ -294,7 +361,13 @@ public class Animation {
 		nextChange -= delta;
 		
 		while (nextChange < 0 && (currentFrame != stopAt)) {
-			currentFrame = (currentFrame + 1) % frames.size();
+			currentFrame = (currentFrame + direction) % frames.size();
+			
+			if (pingPong) {
+				if ((currentFrame == 0) || (currentFrame == frames.size()-1)) {
+					direction = -direction;
+				}
+			}
 			int realDuration = (int) (((Frame) frames.get(currentFrame)).duration / speed);
 			nextChange = nextChange + realDuration;
 		}

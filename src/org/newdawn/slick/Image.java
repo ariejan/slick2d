@@ -172,7 +172,7 @@ public class Image {
 	/**
 	 * Initialise internal data
 	 */
-	private void init() {
+	protected void init() {
 		if (width != 0) {
 			return;
 		}
@@ -440,6 +440,7 @@ public class Image {
 			throw new RuntimeException("Attempt to start use of a sprite sheet before ending use with another - see endUse()");
 		}
 		inUse = this;
+		init();
 		
 		Color.white.bind();
 		texture.bind();

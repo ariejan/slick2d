@@ -27,13 +27,6 @@ public class SpriteSheet extends Image {
 		
 		this.tw = tw;
 		this.th = th;
-
-		subImages = new Image[width/tw][height/th];
-		for (int x=0;x<width/tw;x++) {
-			for (int y=0;y<height/th;y++) {
-				subImages[x][y] = getSprite(x,y);
-			}
-		}
 	}
 	
 	/**
@@ -49,13 +42,6 @@ public class SpriteSheet extends Image {
 		
 		this.tw = tw;
 		this.th = th;
-
-		subImages = new Image[width/tw][height/th];
-		for (int x=0;x<width/tw;x++) {
-			for (int y=0;y<height/th;y++) {
-				subImages[x][y] = getSprite(x,y);
-			}
-		}
 	}
 	
 	/**
@@ -72,6 +58,17 @@ public class SpriteSheet extends Image {
 		
 		this.tw = tw;
 		this.th = th;
+	}
+	
+	/**
+	 * @see org.newdawn.slick.Image#init()
+	 */
+	protected void init() {
+		super.init();
+		
+		if (subImages != null) {
+			return;
+		}
 		
 		subImages = new Image[width/tw][height/th];
 		for (int x=0;x<width/tw;x++) {
@@ -89,6 +86,8 @@ public class SpriteSheet extends Image {
 	 * @return The single image from the sprite sheet
 	 */
 	public Image getSprite(int x, int y) {
+		init();
+		
 		return getSubImage(x*tw,y*th,tw,th);
 	}
 	
@@ -98,6 +97,8 @@ public class SpriteSheet extends Image {
 	 * @return The number of sprites across the sheet
 	 */
 	public int getHorizontalCount() {
+		init();
+		
 		return subImages.length;
 	}
 	
@@ -107,6 +108,8 @@ public class SpriteSheet extends Image {
 	 * @return The number of sprite down the sheet
 	 */
 	public int getVerticalCount() {
+		init();
+		
 		return subImages[0].length;
 	}
 	
