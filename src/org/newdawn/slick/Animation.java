@@ -120,7 +120,7 @@ public class Animation {
 	 * @param duration The duration each frame should be displayed for
 	 */
 	public Animation(SpriteSheet frames, int duration) {
-		this(frames, 0,0,frames.getHorizontalCount(),frames.getVerticalCount(),true,duration,true);
+		this(frames, 0,0,frames.getHorizontalCount()-1,frames.getVerticalCount()-1,true,duration,true);
 	}
 	
 	/**
@@ -141,12 +141,12 @@ public class Animation {
 		
 		if (horizontalScan) {
 			for (int x=x1;x<=x2;x++) {
-				for (int y=0;y<=y2;y++) {
+				for (int y=y1;y<=y2;y++) {
 					addFrame(frames.getSprite(x, y), duration);
 				}
 			}
 		} else {
-			for (int y=0;y<=y2;y++) {
+			for (int y=y1;y<=y2;y++) {
 				for (int x=x1;x<=x2;x++) {
 					addFrame(frames.getSprite(x, y), duration);
 				}
