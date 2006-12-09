@@ -264,6 +264,8 @@
 	<createdemojnlp name="flashtest" title="Slick2D Flash Test" mainclass="org.newdawn.slick.tests.FlashTest"/>
 	<createdemojnlp name="deferredtest" title="Slick2D Deferred Test" mainclass="org.newdawn.slick.tests.DeferredLoadingTest"/>
 
+	<createdemojnlp name="spritesheetfonttest" title="Slick2D Sprite Sheet Font Test" mainclass="org.newdawn.slick.tests.SpriteSheetFontTest"/>
+
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
 

@@ -277,7 +277,7 @@ public class Animation {
 		draw(x,y,((Frame) frames.get(currentFrame)).image.getWidth(),
 				 ((Frame) frames.get(currentFrame)).image.getHeight());
 	}
-	
+
 	/**
 	 * Draw the animation
 	 * 
@@ -287,6 +287,19 @@ public class Animation {
 	 * @param height The height to draw the animation at
 	 */
 	public void draw(int x,int y,int width,int height) {
+		draw(x,y,width,height,null);
+	}
+	
+	/**
+	 * Draw the animation
+	 * 
+	 * @param x The x position to draw the animation at
+	 * @param y The y position to draw the animation at
+	 * @param width The width to draw the animation at
+	 * @param height The height to draw the animation at
+	 * @param col The colour filter to use
+	 */
+	public void draw(int x,int y,int width,int height, Color col) {
 		if (frames.size() == 0) {
 			return;
 		}
@@ -303,7 +316,7 @@ public class Animation {
 		}
 		
 		Frame frame = (Frame) frames.get(currentFrame);
-		frame.image.draw(x,y,width,height);
+		frame.image.draw(x,y,width,height, col);
 	}
 
 	/**

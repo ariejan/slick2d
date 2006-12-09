@@ -115,7 +115,7 @@ public class AnimationTest extends BasicGame {
 			container.exit();
 		}
 		if (key == Input.KEY_SPACE) {
-			manual.restart();
+			limited.restart();
 		}
 	}
 }
