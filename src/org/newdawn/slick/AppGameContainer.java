@@ -199,14 +199,6 @@ public class AppGameContainer extends GameContainer {
 	 */
 	public void start() throws SlickException {
 		try {
-			try {
-				getInput().initControllers();
-			} catch (SlickException e) {
-				Log.info("Controllers not available");
-			} catch (Throwable e) {
-				Log.info("Controllers not available");
-			}
-			
 			if (targetDisplayMode == null) {
 				setDisplayMode(640,480,false);
 			}
@@ -234,7 +226,15 @@ public class AppGameContainer extends GameContainer {
 			
 			initSystem();
 			enterOrtho();
-	
+
+			try {
+				getInput().initControllers();
+			} catch (SlickException e) {
+				Log.info("Controllers not available");
+			} catch (Throwable e) {
+				Log.info("Controllers not available");
+			}
+			
 			try {
 				game.init(this);
 			} catch (SlickException e) {

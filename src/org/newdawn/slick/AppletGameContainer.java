@@ -198,6 +198,9 @@ public class AppletGameContainer extends Applet {
 		 * @throws SlickException Indicates a failure to inialise the basic framework
 		 */
 		public void initApplet() throws SlickException {
+			initSystem();
+			enterOrtho();
+
 			try {
 				getInput().initControllers();
 			} catch (SlickException e) {
@@ -206,9 +209,6 @@ public class AppletGameContainer extends Applet {
 				Log.info("Controllers not available");
 			}
 			
-			initSystem();
-			enterOrtho();
-
 			game.init(this);
 			getDelta();
 		}
