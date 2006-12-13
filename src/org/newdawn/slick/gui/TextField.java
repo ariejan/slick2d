@@ -193,6 +193,18 @@ public class TextField extends BasicComponent {
 	}
 	
 	/**
+	 * Set the position of the cursor
+	 * 
+	 * @param pos The new position of the cursor
+	 */
+	public void setCursorPos(int pos) {
+		cursorPos = pos;
+		if (cursorPos > value.length()) {
+			cursorPos = value.length();
+		}
+	}
+	
+	/**
 	 * Indicate whether the mouse cursor should be visible or not
 	 * 
 	 * @param visibleCursor True if the mouse cursor should be visible

@@ -287,7 +287,7 @@ public class Animation {
 	 * @param height The height to draw the animation at
 	 */
 	public void draw(int x,int y,int width,int height) {
-		draw(x,y,width,height,null);
+		draw(x,y,width,height,Color.white);
 	}
 	
 	/**

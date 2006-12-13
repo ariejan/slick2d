@@ -3,6 +3,7 @@ package org.newdawn.slick.particles;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.Log;
@@ -206,6 +207,7 @@ public class ParticleSystem {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
 		
+		Color.white.bind();
 		GL11.glTranslatef(-x,-y,0);
 	}
 	
