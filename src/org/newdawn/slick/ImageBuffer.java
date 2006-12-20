@@ -91,9 +91,9 @@ public class ImageBuffer implements ImageData {
 	}
 
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean)
+	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, int[])
 	 */
-	public ByteBuffer loadImage(InputStream fis, boolean flipped) throws IOException {
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, int[] transparent) throws IOException {
 		throw new IOException("WriteableImageSource doesn't support loading");
 	}
 
@@ -172,9 +172,9 @@ public class ImageBuffer implements ImageData {
     }
 
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean)
+	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean, int[])
 	 */
-	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha) throws IOException {
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha, int[] transparent) throws IOException {
 		throw new IOException("WriteableImageSource doesn't support loading");
 	}
 	

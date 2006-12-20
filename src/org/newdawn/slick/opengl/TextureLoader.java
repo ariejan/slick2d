@@ -103,14 +103,15 @@ public class TextureLoader {
      * @param source The file to load the texture from
      * @param flipped True if we should flip the texture on the y axis while loading
      * @param filter The filter to use
+	 * @param transparent The colour to interpret as transparent or null if none
      * @return The texture loaded
      * @throws IOException Indicates a failure to load the image
      */
-    public Texture getTexture(File source, boolean flipped,int filter) throws IOException {
+    public Texture getTexture(File source, boolean flipped,int filter, int[] transparent) throws IOException {
     	String resourceName = source.getAbsolutePath();
     	InputStream in = new FileInputStream(source);
     	
-    	return getTexture(in, resourceName, flipped, filter);
+    	return getTexture(in, resourceName, flipped, filter, transparent);
     }
 
     /**
@@ -119,13 +120,14 @@ public class TextureLoader {
      * @param resourceName The location to load the texture from
      * @param flipped True if we should flip the texture on the y axis while loading
      * @param filter The filter to use when scaling the texture
+	 * @param transparent The colour to interpret as transparent or null if none
      * @return The texture loaded
      * @throws IOException Indicates a failure to load the image
      */
-    public Texture getTexture(String resourceName, boolean flipped, int filter) throws IOException {
+    public Texture getTexture(String resourceName, boolean flipped, int filter, int[] transparent) throws IOException {
     	InputStream in = ResourceLoader.getResourceAsStream(resourceName);
     	
-    	return getTexture(in, resourceName, flipped, filter);
+    	return getTexture(in, resourceName, flipped, filter, transparent);
     }
     
     /**
@@ -135,12 +137,13 @@ public class TextureLoader {
      * @param resourceName The name to give this image in the internal cache
      * @param flipped True if we should flip the image on the y-axis while loading
      * @param filter The filter to use when scaling the texture
+	 * @param transparent The colour to interpret as transparent or null if none
      * @return The texture loaded
      * @throws IOException Indicates a failure to load the image
      */
-    public Texture getTexture(InputStream in, String resourceName, boolean flipped, int filter) throws IOException {
+    public Texture getTexture(InputStream in, String resourceName, boolean flipped, int filter, int[] transparent) throws IOException {
     	if (deferred) {
-	    	return new DeferredTexture(in, resourceName, flipped, filter);
+	    	return new DeferredTexture(in, resourceName, flipped, filter, transparent);
 	    }
     	
     	HashMap hash = texturesLinear;
@@ -148,7 +151,7 @@ public class TextureLoader {
         	hash = texturesNearest;
         }
         
-    	Texture tex = (Texture) hash.get(resourceName);
+    	Texture tex = (Texture) hash.get(resourceName+":"+transparent);
         if (tex != null) {
         	return tex;
         }
@@ -163,7 +166,7 @@ public class TextureLoader {
         tex = getTexture(in, resourceName,
                          GL11.GL_TEXTURE_2D, 
                          filter, 
-                         filter, flipped);
+                         filter, flipped, transparent);
         
         hash.put(resourceName,tex);
         
@@ -179,6 +182,7 @@ public class TextureLoader {
      * @param target The texture target we're loading this texture into
      * @param minFilter The scaling down filter
      * @param magFilter The scaling up filter
+	 * @param transparent The colour to interpret as transparent or null if none
      * @return The texture loaded
      * @throws IOException Indicates a failure to load the image
      */
@@ -186,7 +190,7 @@ public class TextureLoader {
     						  String resourceName, 
                               int target, 
                               int magFilter, 
-                              int minFilter, boolean flipped) throws IOException 
+                              int minFilter, boolean flipped, int[] transparent) throws IOException 
     { 
         // create the texture ID for this texture 
         int textureID = createTextureID(); 
@@ -210,7 +214,7 @@ public class TextureLoader {
         	imageData = new ImageIOImageData();
         }
         
-    	textureBuffer = imageData.loadImage(new BufferedInputStream(in), flipped);
+    	textureBuffer = imageData.loadImage(new BufferedInputStream(in), flipped, transparent);
     	
     	width = imageData.getWidth();
     	height = imageData.getHeight();

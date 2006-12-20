@@ -23,20 +23,24 @@ public class DeferredTexture extends Texture implements DeferredResource {
 	private int filter;
 	/** The texture we're proxying for */
 	private Texture target;
-
+	/** The color to be transparent */
+	private int[] trans;
+	
 	/**
 	 * Create a new deferred texture
 	 * 
 	 * @param in The input stream from which to read the texture
-	 * @param resourceName
-	 * @param flipped
-	 * @param filter
+	 * @param resourceName The name to give the resource
+ 	 * @param flipped True if the image should be flipped
+	 * @param filter The filter to apply
+	 * @param trans The colour to defined as transparent
 	 */
-	public DeferredTexture(InputStream in, String resourceName, boolean flipped, int filter) {
+	public DeferredTexture(InputStream in, String resourceName, boolean flipped, int filter, int[] trans) {
 		this.in = in;
 		this.resourceName = resourceName;
 		this.flipped = flipped;
 		this.filter = filter;
+		this.trans = trans;
 		
 		LoadingList.get().add(this);
 	}
@@ -47,7 +51,7 @@ public class DeferredTexture extends Texture implements DeferredResource {
 	public void load() throws IOException {
 		boolean before = TextureLoader.get().isDeferredLoading();
 		TextureLoader.get().setDeferredLoading(false);
-		target = TextureLoader.get().getTexture(in, resourceName, flipped, filter);
+		target = TextureLoader.get().getTexture(in, resourceName, flipped, filter, trans);
 		TextureLoader.get().setDeferredLoading(before);
 	}
 	

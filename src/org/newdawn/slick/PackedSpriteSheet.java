@@ -33,10 +33,21 @@ public class PackedSpriteSheet {
 	 * @throws SlickException Indicates a failure to read the definition file
 	 */
 	public PackedSpriteSheet(String def) throws SlickException {
+		this(def, null);
+	}
+	
+	/**
+	 * Create a new packed sprite sheet based on a ImagePacker definition file
+	 * 
+	 * @param def The location of the definition file to read
+	 * @param trans The color to be treated as transparent
+	 * @throws SlickException Indicates a failure to read the definition file
+	 */
+	public PackedSpriteSheet(String def, Color trans) throws SlickException {
 		def = def.replace('\\', '/');
 		basePath = def.substring(0,def.lastIndexOf("/")+1);
 		
-		loadDefinition(def);
+		loadDefinition(def, trans);
 	}
 
 	/**
@@ -47,12 +58,24 @@ public class PackedSpriteSheet {
 	 * @throws SlickException Indicates a failure to read the definition file
 	 */
 	public PackedSpriteSheet(String def, int filter) throws SlickException {
+		this(def, filter, null);
+	}
+	
+	/**
+	 * Create a new packed sprite sheet based on a ImagePacker definition file
+	 * 
+	 * @param def The location of the definition file to read
+	 * @param filter The image filter to use when loading the packed sprite image
+	 * @param trans The color to be treated as transparent
+	 * @throws SlickException Indicates a failure to read the definition file
+	 */
+	public PackedSpriteSheet(String def, int filter, Color trans) throws SlickException {
 		this.filter = filter;
 		
 		def = def.replace('\\', '/');
 		basePath = def.substring(0,def.lastIndexOf("/")+1);
 		
-		loadDefinition(def);
+		loadDefinition(def, trans);
 	}
 	
 	/**
@@ -97,14 +120,15 @@ public class PackedSpriteSheet {
 	 * Load the definition file and parse each of the sections
 	 * 
 	 * @param def The location of the definitions file
+	 * @param trans The color to be treated as transparent
 	 * @throws SlickException Indicates a failure to read or parse the definitions file
 	 * or referenced image.
 	 */
-	private void loadDefinition(String def) throws SlickException {
+	private void loadDefinition(String def, Color trans) throws SlickException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceLoader.getResourceAsStream(def)));
 	
 		try {
-			image = new Image(basePath+reader.readLine(), true, filter);
+			image = new Image(basePath+reader.readLine(), true, filter, trans);
 			while (reader.ready()) {
 				if (reader.readLine() == null) {
 					break;

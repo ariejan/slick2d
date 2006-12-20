@@ -28,7 +28,7 @@ public class SpriteSheet extends Image {
 		this.tw = tw;
 		this.th = th;
 	}
-	
+
 	/**
 	 * Create a new sprite sheet based on a image location
 	 * 
@@ -38,7 +38,20 @@ public class SpriteSheet extends Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public SpriteSheet(String ref,int tw,int th) throws SlickException {
-		super(ref, true, FILTER_NEAREST);
+		this(ref,tw,th,null);
+	}
+	
+	/**
+	 * Create a new sprite sheet based on a image location
+	 * 
+	 * @param ref The location of the sprite sheet to load
+	 * @param tw The width of the tiles on the sheet 
+	 * @param th The height of the tiles on the sheet 
+	 * @param col The colour to treat as transparent
+	 * @throws SlickException Indicates a failure to load the image
+	 */
+	public SpriteSheet(String ref,int tw,int th, Color col) throws SlickException {
+		super(ref, true, FILTER_NEAREST, col);
 		
 		this.tw = tw;
 		this.th = th;

@@ -87,20 +87,23 @@ public class TGAImageData implements ImageData {
 	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream)
 	 */
 	public ByteBuffer loadImage(InputStream fis) throws IOException {
-		return loadImage(fis,true);
+		return loadImage(fis,true, null);
 	}
 	
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean)
+	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, int[])
 	 */
-	public ByteBuffer loadImage(InputStream fis, boolean flipped) throws IOException {
-		return loadImage(fis, flipped, false);
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, int[] transparent) throws IOException {
+		return loadImage(fis, flipped, false, transparent);
 	}
 	
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean)
+	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean, int[])
 	 */
-	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha) throws IOException {
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha, int[] transparent) throws IOException {
+		if (transparent != null) { 
+			forceAlpha = true;
+		}
 		byte red = 0;
 		byte green = 0;
 		byte blue = 0;
@@ -218,6 +221,21 @@ public class TGAImageData implements ImageData {
 			}
 		}
 		fis.close();
+		
+		if (transparent != null) {
+	        for (int i=0;i<rawData.length;i+=4) {
+	        	boolean match = true;
+	        	for (int c=0;c<3;c++) {
+	        		if (rawData[i+c] != transparent[c]) {
+	        			match = false;
+	        		}
+	        	}
+	  
+	        	if (match) {
+	        		rawData[i+3] = 0;
+	           	}
+	        }
+        }
 		
 		// Get a pointer to the image memory
 		ByteBuffer scratch = BufferUtils.createByteBuffer(rawData.length);

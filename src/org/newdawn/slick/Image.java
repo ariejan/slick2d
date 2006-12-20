@@ -76,6 +76,17 @@ public class Image {
 	 * Create an image based on a file at the specified location
 	 * 
 	 * @param ref The location of the image file to load
+	 * @param trans The color to be treated as transparent
+	 * @throws SlickException Indicates a failure to load the image
+	 */
+	public Image(String ref, Color trans) throws SlickException  {
+		this(ref, true, FILTER_LINEAR, trans);
+	}
+	
+	/**
+	 * Create an image based on a file at the specified location
+	 * 
+	 * @param ref The location of the image file to load
 	 * @param flipped True if the image should be flipped on the y-axis on load
 	 * @throws SlickException Indicates a failure to load the image
 	 */
@@ -92,9 +103,29 @@ public class Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public Image(String ref, boolean flipped, int filter) throws SlickException {
+		this(ref, flipped, filter, null);
+	}
+	
+	/**
+	 * Create an image based on a file at the specified location
+	 * 
+	 * @param ref The location of the image file to load
+	 * @param flipped True if the image should be flipped on the y-axis on load
+	 * @param filter The filtering method to use when scaling this image
+	 * @param transparent The color to treat as transparent
+	 * @throws SlickException Indicates a failure to load the image
+	 */
+	public Image(String ref, boolean flipped, int filter, Color transparent) throws SlickException {
 		try {
 			this.ref = ref;
-			texture = TextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST);
+			int[] trans = null;
+			if (transparent != null) {
+				trans = new int[3];
+				trans[0] = (int) (transparent.r * 255);
+				trans[1] = (int) (transparent.g * 255);
+				trans[2] = (int) (transparent.b * 255);
+			}
+			texture = TextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST, trans);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
@@ -123,7 +154,7 @@ public class Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public Image(InputStream in, String ref, boolean flipped,int filter) throws SlickException {
-		load(in, ref, flipped, filter);
+		load(in, ref, flipped, filter, null);
 	}
 	
 	/**
@@ -157,12 +188,20 @@ public class Image {
 	 * @param ref The name that should be assigned to the image
 	 * @param flipped True if the image should be flipped on the y-axis  on load
 	 * @param filter The filter to use when scaling this image
+	 * @param transparent The color to treat as transparent
 	 * @throws SlickException Indicates a failure to load the image
 	 */
-	private void load(InputStream in, String ref, boolean flipped, int filter) throws SlickException {
+	private void load(InputStream in, String ref, boolean flipped, int filter, Color transparent) throws SlickException {
 		try {
 			this.ref = ref;
-			texture = TextureLoader.get().getTexture(in, ref, flipped, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST);
+			int[] trans = null;
+			if (transparent != null) {
+				trans = new int[3];
+				trans[0] = (int) (transparent.r * 255);
+				trans[1] = (int) (transparent.g * 255);
+				trans[2] = (int) (transparent.b * 255);
+			}
+			texture = TextureLoader.get().getTexture(in, ref, flipped, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST, trans);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);

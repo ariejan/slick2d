@@ -55,7 +55,7 @@ public class CursorLoader {
 			imageData = new ImageIOImageData();
 		}
 		
-		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false);
+		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false, null);
 		for (int i=0;i<buf.limit();i+=4) {
 			byte red = buf.get(i);
 			byte green = buf.get(i+1);
@@ -104,7 +104,7 @@ public class CursorLoader {
 		cursorDelaysBuffer.flip();
 
 		ImageData imageData = new TGAImageData();
-		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false);
+		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false, null);
 					
 		return new Cursor(width, height, x, y, cursorDelays.length, buf.asIntBuffer(), cursorDelaysBuffer);
 	}

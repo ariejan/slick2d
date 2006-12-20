@@ -94,20 +94,24 @@ public class ImageIOImageData implements ImageData {
 	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream)
 	 */
 	public ByteBuffer loadImage(InputStream fis) throws IOException {
-		return loadImage(fis, true);
+		return loadImage(fis, true, null);
 	}
 
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean)
+	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, int[])
 	 */
-	public ByteBuffer loadImage(InputStream fis, boolean flipped) throws IOException {
-		return loadImage(fis, flipped, false);
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, int[] transparent) throws IOException {
+		return loadImage(fis, flipped, false, transparent);
 	}
 
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean)
+	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean, int[])
 	 */
-	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha) throws IOException {
+	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha, int[] transparent) throws IOException {
+		if (transparent != null) {
+			forceAlpha = true;
+		}
+		
 		BufferedImage bufferedImage = ImageIO.read(fis);
 	    ByteBuffer imageBuffer = null; 
         WritableRaster raster;
@@ -160,6 +164,21 @@ public class ImageIOImageData implements ImageData {
         // that be used by OpenGL to produce a texture.
         byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer()).getData(); 
 
+        if (transparent != null) {
+	        for (int i=0;i<data.length;i+=4) {
+	        	boolean match = true;
+	        	for (int c=0;c<3;c++) {
+	        		if (data[i+c] != transparent[c]) {
+	        			match = false;
+	        		}
+	        	}
+	  
+	        	if (match) {
+	         		data[i+3] = 0;
+	           	}
+	        }
+        }
+        
         imageBuffer = ByteBuffer.allocateDirect(data.length); 
         imageBuffer.order(ByteOrder.nativeOrder()); 
         imageBuffer.put(data, 0, data.length); 

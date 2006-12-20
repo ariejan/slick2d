@@ -23,6 +23,15 @@ public class Texture {
 	/** The last texture that was bound to */
 	static Texture lastBind;
 	
+	/**
+	 * Retrieve the last texture bound through the texture interface
+	 * 
+	 * @return The last texture bound
+	 */
+	public static Texture getLastBind() {
+		return lastBind;
+	}
+	
     /** The GL target type */
     private int target; 
     /** The GL texture ID */

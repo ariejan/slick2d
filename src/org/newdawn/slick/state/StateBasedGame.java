@@ -10,6 +10,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.Transition;
+import org.newdawn.slick.util.Log;
 
 /**
  * A state based game isolated different stages of the game (menu, ingame, hiscores, etc) into 
@@ -111,6 +112,14 @@ public abstract class StateBasedGame implements Game {
 		if (nextState == null) {
 			throw new RuntimeException("No game state registered with the ID: "+id);
 		}
+		
+		if (leave == null) {
+			try {
+				currentState.leave(container, this);
+			} catch (SlickException e) {
+				Log.error(e);
+			}
+		}
 	}
 	
 	/**
@@ -161,6 +170,9 @@ public abstract class StateBasedGame implements Game {
 				currentState = nextState;
 				nextState = null;
 				leaveTransition = null;
+				if (enterTransition == null) {
+					nextState.enter(container, this);
+				}
 			} else {
 				return;
 			}

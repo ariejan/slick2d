@@ -211,6 +211,24 @@ public class ParticleSystem {
 	}
 	
 	/**
+	 * Get the x coordiante of the position of the system
+	 * 
+	 * @return The x coordinate of the position of the system
+	 */
+	public float getPositionX() {
+		return x;
+	}
+	
+	/**
+	 * Get the y coordiante of the position of the system
+	 * 
+	 * @return The y coordinate of the position of the system
+	 */
+	public float getPositionY() {
+		return y;
+	}
+	
+	/**
 	 * Set the position at which this system should render relative to the current
 	 * graphics context setup
 	 * 

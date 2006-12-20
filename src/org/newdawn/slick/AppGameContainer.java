@@ -345,7 +345,7 @@ public class AppGameContainer extends GameContainer {
 			}
 			
 			try {
-				bufs[i] = data.loadImage(ResourceLoader.getResourceAsStream(refs[i]), flip, true);
+				bufs[i] = data.loadImage(ResourceLoader.getResourceAsStream(refs[i]), flip, true, null);
 			} catch (Exception e) {
 				Log.error(e);
 				throw new SlickException("Failed to set the icon");
