@@ -65,7 +65,7 @@ public class FireEmitter implements ParticleEmitter {
 			p.setSize(size);
 			float vx = (float) (-0.02f + (Math.random() * 0.04f));
 			float vy = (float) (-(Math.random() * 0.15f));
-			p.setVelocity(vx,vy);
+			p.setVelocity(vx,vy,1.1f);
 		}
 	}
 
@@ -99,7 +99,6 @@ public class FireEmitter implements ParticleEmitter {
 	 * @see org.newdawn.slick.particles.ParticleEmitter#completed()
 	 */
 	public boolean completed() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }

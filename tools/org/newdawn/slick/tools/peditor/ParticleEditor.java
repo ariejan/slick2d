@@ -28,6 +28,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
@@ -75,6 +76,8 @@ public class ParticleEditor extends JFrame {
 	private ColorPanel colorPanel;
 	/** The limiting controls for particles */
 	private LimitPanel limitPanel;
+	/** The whiskas panel */
+	private WhiskasPanel whiskasPanel;
 	
 	/** Control for the type of particle system blending */
 	private JCheckBox additive = new JCheckBox("Additive Blending");
@@ -91,13 +94,16 @@ public class ParticleEditor extends JFrame {
 	/** The slider defining the movement of the system */
 	private JSlider systemMove = new JSlider(-100,100,0);
 	
+	/** the frame **/
+	private JFrame graphEditorFrame;
+	
 	/**
 	 * Create a new editor
 	 * 
 	 * @throws LWJGLException Indicates a failure to create an OpenGL context
 	 */
 	public ParticleEditor() throws LWJGLException {
-		super("Pedigree");
+		super("Pedigree - Whiskas flavoured");
 
 		chooser.setFileFilter(new FileFilter() {
 			public boolean accept(File f) {
@@ -131,6 +137,7 @@ public class ParticleEditor extends JFrame {
 		settingsPanel = new SettingsPanel(emitters);
 		colorPanel = new ColorPanel();
 		limitPanel = new LimitPanel(emitters);
+		whiskasPanel= new WhiskasPanel( emitters, colorPanel, emissionControls );
 		
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		
@@ -209,6 +216,7 @@ public class ParticleEditor extends JFrame {
 		tabs.add("Position", positionControls);
 		tabs.add("Rendering", colorPanel);
 		tabs.add("Limit", limitPanel);
+		tabs.add("Whiskas", whiskasPanel);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
@@ -294,8 +302,38 @@ public class ParticleEditor extends JFrame {
 			}
 			
 		});
-		
+
+		// init graph window
+		initGraphEditorWindow();
+
 		emitters.setSelected(0);
+	}
+	
+	/**
+	 * init the graph editor window
+	 */
+	private void initGraphEditorWindow()
+	{
+	    // create the window
+	    GraphEditorWindow editor = new GraphEditorWindow();
+
+	    whiskasPanel.setEditor(editor);
+
+	    graphEditorFrame= new JFrame("Whiskas Gradient Editor");
+	    graphEditorFrame.getContentPane().add(editor);
+	    graphEditorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+	    graphEditorFrame.pack();
+	    graphEditorFrame.setSize(600, 300);
+	    graphEditorFrame.setLocation(this.getX(), this.getY()+this.getHeight());
+	    graphEditorFrame.setVisible(true);
+	    
+		try {
+			InputStream in = ParticleEditor.class.getClassLoader().getResourceAsStream("org/newdawn/slick/tools/peditor/data/icon.gif");
+			
+			graphEditorFrame.setIconImage(ImageIO.read(in));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -462,18 +500,21 @@ public class ParticleEditor extends JFrame {
 			positionControls.setEnabled(false);
 			colorPanel.setEnabled(false);
 			limitPanel.setEnabled(false);
+			whiskasPanel.setEnabled(false);
 		} else {
 			emissionControls.setEnabled(true);
 			settingsPanel.setEnabled(true);
 			positionControls.setEnabled(true);
 			colorPanel.setEnabled(true);
 			limitPanel.setEnabled(true);
+			whiskasPanel.setEnabled(true);
 			
 			emissionControls.setTarget(emitter);
 			positionControls.setTarget(emitter);
 			settingsPanel.setTarget(emitter);
 			colorPanel.setTarget(emitter);
 			limitPanel.setTarget(emitter);
+			whiskasPanel.setTarget(emitter);
 		}
 	}
 	

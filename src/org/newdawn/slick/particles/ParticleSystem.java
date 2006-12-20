@@ -1,6 +1,8 @@
 package org.newdawn.slick.particles;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
@@ -26,12 +28,51 @@ public class ParticleSystem {
 	
 	/** The default image for the particles */
 	private Image sprite;
-	/** The particles being rendered and maintained */
-	protected Particle[] particles;
+	
+	/**
+	 * A pool of particles being used by a specific emitter
+	 * 
+	 * @author void
+	 */
+	private class ParticlePool
+	{
+		/** The particles being rendered and maintained */
+		public Particle[] particles;
+		/** The list of particles left to be used, if this size() == 0 then the particle engine was too small for the effect */
+		public ArrayList available;
+
+		/**
+		 * Create a new particle pool contiaining a set of particles
+		 * 
+		 * @param system The system that owns the particles over all
+		 * @param maxParticles The maximum number of particles in the pool
+		 */
+		public ParticlePool( ParticleSystem system, int maxParticles )
+		{
+			particles= new Particle[ maxParticles ];
+			available= new ArrayList();
+			
+			for( int i=0; i<particles.length; i++ )
+			{
+				particles[i] = createParticle( system );
+				available.add(particles[i]);
+			}
+		}
+	}
+	
+	/**
+	 * A map from emitter to a the particle pool holding the particles it uses
+	 * void: this is now sorted by emitters to allow emitter specfic state to be set for
+	 * each emitter. actually this is used to allow setting an individual blend mode for
+	 * each emitter
+	 */
+	protected HashMap particlesByEmitter = new HashMap();
+	/** The maximum number of particles allows per emitter */
+	protected int maxParticlesPerEmitter;
+	
 	/** The list of emittered producing and controlling particles */
 	protected ArrayList emitters = new ArrayList();
-	/** The list of particles left to be used, if this size() == 0 then the particle engine was too small for the effect */
-	protected ArrayList available = new ArrayList();
+	
 	/** The dummy particle to return should no more particles be available */
 	protected Particle dummy;
 	/** The blending mode */
@@ -91,13 +132,9 @@ public class ParticleSystem {
 	 */
 	public ParticleSystem(Image defaultSprite, int maxParticles) {
 		this.sprite = defaultSprite;
-		particles = new Particle[maxParticles];
+		this.maxParticlesPerEmitter= maxParticles;
 	
 		dummy = createParticle(this);
-		for (int i=0;i<particles.length;i++) {
-			particles[i] = createParticle(this);
-			available.add(particles[i]);
-		}
 	}
 	
 	/**
@@ -157,6 +194,9 @@ public class ParticleSystem {
 	 */
 	public void addEmitter(ParticleEmitter emitter) {
 		emitters.add(emitter);
+		
+		ParticlePool pool= new ParticlePool( this, maxParticlesPerEmitter );
+		particlesByEmitter.put( emitter, pool );
 	}
 	
 	/**
@@ -166,6 +206,8 @@ public class ParticleSystem {
 	 */
 	public void removeEmitter(ParticleEmitter emitter) {
 		emitters.remove(emitter);
+		
+		particlesByEmitter.remove( emitter );
 	}
 	
 	/**
@@ -194,10 +236,29 @@ public class ParticleSystem {
 			Texture.bindNone();
 		}
 		
-		for (int i=0;i<particles.length;i++) {
-			if (particles[i].inUse()) {
-				particles[i].render();
+		// iterate over all emitters
+		for( int emitterIdx=0; emitterIdx<emitters.size(); emitterIdx++ )
+		{
+			// get emitter
+			ParticleEmitter emitter= (ParticleEmitter)emitters.get( emitterIdx );
+			
+			// check for additive override and enable when set
+			if( emitter instanceof ConfigurableEmitter )
+				if( ((ConfigurableEmitter)emitter).useAdditive )
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			
+			// now get the particle pool for this emitter and render all particles that are in use
+			ParticlePool pool= (ParticlePool)particlesByEmitter.get( emitter );
+			for( int i=0; i<pool.particles.length; i++ )
+			{
+				if( pool.particles[i].inUse() )
+					pool.particles[i].render();
 			}
+
+			// reset additive blend mode
+			if( emitter instanceof ConfigurableEmitter )
+				if( ((ConfigurableEmitter)emitter).useAdditive )
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		}
 
 		if (usePoints()) {
@@ -232,10 +293,19 @@ public class ParticleSystem {
 		emitters.removeAll(removeMe);
 		
 		pCount = 0;
-		for (int i=0;i<particles.length;i++) {
-			if (particles[i].inUse()) {
-				particles[i].update(delta);
-				pCount++;
+		
+		if( !particlesByEmitter.isEmpty() )
+		{
+			Iterator it= particlesByEmitter.values().iterator();
+			while( it.hasNext())
+			{
+				ParticlePool pool= (ParticlePool)it.next();
+				for (int i=0;i<pool.particles.length;i++) {
+					if (pool.particles[i].inUse()) {
+						pool.particles[i].update(delta);
+						pCount++;
+					}
+				}
 			}
 		}
 	}
@@ -257,11 +327,14 @@ public class ParticleSystem {
 	 * @param life The time the new particle should live for
 	 * @return A particle from the system
 	 */
-	public Particle getNewParticle(ParticleEmitter emitter, float life) {
-		if (available.size() > 0) {
-			Particle p = (Particle) available.remove(0);
-			p.init(emitter, life);
-			p.setImage(sprite);
+	public Particle getNewParticle(ParticleEmitter emitter, float life)
+	{
+		ParticlePool pool= (ParticlePool)particlesByEmitter.get( emitter );
+		if( pool.available.size() > 0 )
+		{
+			Particle p = (Particle) pool.available.remove( 0 );
+			p.init( emitter, life );
+			p.setImage( sprite );
 			
 			return p;
 		}
@@ -276,8 +349,10 @@ public class ParticleSystem {
 	 * @param particle The particle to be released
 	 */
 	public void release(Particle particle) {
-		if (particle != dummy) {
-			available.add(particle);
+		if (particle != dummy)
+		{
+			ParticlePool pool= (ParticlePool)particlesByEmitter.get( particle.getEmitter() );
+			pool.available.add( particle );
 		}
 	}
 	
@@ -287,14 +362,21 @@ public class ParticleSystem {
 	 * @param emitter The emitter owning the particles that should be released
 	 */
 	public void releaseAll(ParticleEmitter emitter) {
-		for (int i=0;i<particles.length;i++) {
-			if (particles[i].inUse()) {
-				if (particles[i].getEmitter() == emitter) {
-					particles[i].setLife(-1);
-					release(particles[i]);
+		if( !particlesByEmitter.isEmpty() )
+		{
+			Iterator it= particlesByEmitter.values().iterator();
+			while( it.hasNext())
+			{
+				ParticlePool pool= (ParticlePool)it.next();
+				for (int i=0;i<pool.particles.length;i++) {
+					if (pool.particles[i].inUse()) {
+						if (pool.particles[i].getEmitter() == emitter) {
+							pool.particles[i].setLife(-1);
+							release(pool.particles[i]);
+						}
+					}
 				}
 			}
 		}
-		
 	}
 }

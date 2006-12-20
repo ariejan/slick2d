@@ -124,7 +124,19 @@ public class MinMaxPanel extends DefaultPanel {
 		minSpinner.setEnabled(enabled.isSelected() || !enablement);
 		maxSpinner.setEnabled(enabled.isSelected() || !enablement);
 	}
-	
+
+	/**
+	 * Force the state of this component
+	 * 
+	 * @param e True if we want this component to be enabled
+	 */
+	public void setEnabledForced(boolean e)
+	{
+		enabled.setEnabled(e);
+		minSpinner.setEnabled(e);
+		maxSpinner.setEnabled(e);
+	}
+
 	/**
 	 * Set the minimum value
 	 * 

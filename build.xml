@@ -163,6 +163,7 @@
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
 	<copyandsign jar="pedigree.jar"/>
+	<createdemojnlp name="pedigree" title="Slick2D Pedigree, Whiskas flavoured" mainclass="org.newdawn.slick.tools.peditor.ParticleEditor"/>
 </target>
 
 <target name="upload-pedigree" depends="build-webstart-pedigree, dist-pedigree">

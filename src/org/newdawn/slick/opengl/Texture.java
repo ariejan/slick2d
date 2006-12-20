@@ -91,6 +91,15 @@ public class Texture {
     }
     
     /**
+     * Clear slick caching of the last bound texture so that an 
+     * external texture binder can play with the context before returning 
+     * control to slick.
+     */
+    public static void unbind() {
+    	lastBind = null;
+    }
+    
+    /**
      * Bind the  GL context to a texture
      */
     public void bind() {

@@ -9,6 +9,9 @@ import org.newdawn.slick.particles.ConfigurableEmitter;
  * @author kevin
  */
 public class EmissionControls extends ControlPanel {
+	/** The panel controlling the initial size of the particles */
+	private MinMaxPanel initialSize;
+	
 	/**
 	 * Create a new panel to control emission settings
 	 */
@@ -17,7 +20,8 @@ public class EmissionControls extends ControlPanel {
 	
 		addMinMax("spawnInterval", new MinMaxPanel("Spawn Interval (ms)",1,100000,100,100, "The interval between the production of particles"));
 		addMinMax("spawnCount", new MinMaxPanel("Spawn Count (# of particles)",1,100,1,1, "The number of particles created each spawn"));
-		addMinMax("initialSize", new MinMaxPanel("Initial Size",1,100000,1,1,"The initial size of the produced particles"));
+		initialSize= new MinMaxPanel("Initial Size",1,100000,1,1,"The initial size of the produced particles");
+		addMinMax("initialSize", initialSize);
 		addMinMax("initialLife", new MinMaxPanel("Initial Life (ms)",1,100000,1,1,"The lifetime the particles will exist for in milliseconds"));
 		addMinMax("speed", new MinMaxPanel("Particle Speed",-10000,10000,0,0,"The speed at which the particles will come out of the emitter"));
 		addValue("growth", new ValuePanel("Growth Factor",-200,200,0,"The amount and sign of the growth particles will undergo during their lifetime",false));
@@ -33,5 +37,14 @@ public class EmissionControls extends ControlPanel {
 		link(emitter.initialLife, "initialLife");
 		link(emitter.speed, "speed");
 		link(emitter.growthFactor, "growth");
+	}
+
+	/**
+	 * Get the panel displaying the initial size of the particles
+	 * 
+	 * @return The panel displaying the initial size
+	 */
+	public MinMaxPanel getInitialSize() {
+		return initialSize;
 	}
 }

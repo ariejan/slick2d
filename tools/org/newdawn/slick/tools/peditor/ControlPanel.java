@@ -3,7 +3,9 @@ package org.newdawn.slick.tools.peditor;
 import java.util.HashMap;
 
 import org.newdawn.slick.particles.ConfigurableEmitter;
+import org.newdawn.slick.particles.ConfigurableEmitter.RandomValue;
 import org.newdawn.slick.particles.ConfigurableEmitter.Range;
+import org.newdawn.slick.particles.ConfigurableEmitter.SimpleValue;
 import org.newdawn.slick.particles.ConfigurableEmitter.Value;
 
 /**
@@ -108,8 +110,11 @@ public abstract class ControlPanel extends DefaultPanel implements InputPanelLis
 	 */
 	private void link(Value value, ValuePanel panel) {
 		controlToData.put(panel, value);
-		panel.setValue((int) value.getValue());
-		panel.setLinear(value.isLinear());
+		
+		if( value instanceof SimpleValue )
+			panel.setValue((int) ((SimpleValue)value).getValue( 0 ));
+		else if( value instanceof RandomValue )
+			panel.setValue((int) ((RandomValue)value).getValue());
 	}
 
 	/**
@@ -153,8 +158,10 @@ public abstract class ControlPanel extends DefaultPanel implements InputPanelLis
 		
 		Value value = (Value) controlToData.get(source);
 		if (value != null) {
-			value.setValue(source.getValue());
-			value.setLinear(source.isLinear());
+			if( value instanceof SimpleValue)
+				((SimpleValue)value).setValue( source.getValue());
+			else if( value instanceof RandomValue )
+				((RandomValue)value).setValue( source.getValue());
 		} else {
 			throw new RuntimeException("No data set specified for the GUI source");
 		}

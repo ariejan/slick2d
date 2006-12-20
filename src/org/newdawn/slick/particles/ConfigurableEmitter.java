@@ -5,15 +5,13 @@ import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.particles.Particle;
-import org.newdawn.slick.particles.ParticleEmitter;
-import org.newdawn.slick.particles.ParticleSystem;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.util.FastTrig;
 import org.newdawn.slick.util.Log;
 
 /**
- * An emitter than can be externally configured. This configuration can also be saved/loaded
- * using the ParticleIO class.
+ * An emitter than can be externally configured. This configuration can also be
+ * saved/loaded using the ParticleIO class.
  * 
  * @see ParticleIO
  * 
@@ -22,16 +20,17 @@ import org.newdawn.slick.util.Log;
 public class ConfigurableEmitter implements ParticleEmitter {
 	/** The path from which the images should be loaded */
 	private static String relativePath = "";
-	
+
 	/**
 	 * Set the path from which images should be loaded
 	 * 
-	 * @param path The path from which images should be loaded
+	 * @param path
+	 *            The path from which images should be loaded
 	 */
 	public static void setRelativePath(String path) {
 		relativePath = path;
 	}
-	
+
 	/** The spawn interval range property - how often spawn happens */
 	public Range spawnInterval = new Range(100, 100);
 	/** The spawn count property - how many particles are spawned each time */
@@ -45,32 +44,54 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	/** The offset from the y position */
 	public Range yOffset = new Range(0, 0);
 	/** The spread of the particles */
-	public Value spread = new Value(360);
+	public RandomValue spread = new RandomValue(360);
 	/** The angular offset */
-	public Value angularOffset = new Value(0);
+	public Value angularOffset = new SimpleValue(0);
 	/** The initial distance of the particles */
 	public Range initialDistance = new Range(0, 0);
 	/** The speed particles fly out */
 	public Range speed = new Range(50, 50);
 	/** The growth factor on the particles */
-	public Value growthFactor = new Value(0);
+	public Value growthFactor = new SimpleValue(0);
 	/** The factor of gravity to apply */
-	public Value gravityFactor = new Value(0);
+	public Value gravityFactor = new SimpleValue(0);
 	/** The factor of wind to apply */
-	public Value windFactor = new Value(0);
+	public Value windFactor = new SimpleValue(0);
 	/** The length of the effect */
-	public Range length = new Range(1000,1000);
-	/** The color range @see ColorRecord */
+	public Range length = new Range(1000, 1000);
+	/**
+	 * The color range
+	 * 
+	 * @see ColorRecord
+	 */
 	public ArrayList colors = new ArrayList();
 	/** The starting alpha value */
-	public Value startAlpha = new Value(255);
+	public Value startAlpha = new SimpleValue(255);
 	/** The ending alpha value */
-	public Value endAlpha = new Value(0);
+	public Value endAlpha = new SimpleValue(0);
+
+	/** Whiskas - Interpolated value for alpha */
+	public LinearInterpolator alpha;
+	/** Whiskas - Interpolated value for size */
+	public LinearInterpolator size;
+	/** Whiskas - Interpolated value for velocity */
+	public LinearInterpolator velocity;
+	/** Whiskas - Interpolated value for y axis scaling */
+	public LinearInterpolator scaleY;
+
 	/** The number of particles that will be emitted */
-	public Range emitCount = new Range(1000,1000);
+	public Range emitCount = new Range(1000, 1000);
 	/** The points indicate */
 	public int usePoints = Particle.INHERIT_POINTS;
-	
+
+	/** True if the quads should be orieted based on velocity */
+	public boolean useOriented = false;
+	/**
+	 * True if the additivie blending mode should be used for particles owned by
+	 * this emitter
+	 */
+	public boolean useAdditive = false;
+
 	/** The name attribute */
 	public String name;
 	/** The name of the image in use */
@@ -79,7 +100,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	private Image image;
 	/** True if the image needs updating */
 	private boolean updateImage;
-	
+
 	/** True if the emitter is enabled */
 	private boolean enabled = true;
 	/** The x coordinate of the position of this emitter */
@@ -88,7 +109,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	private float y;
 	/** The time in milliseconds til the next spawn */
 	private int nextSpawn = 0;
-	
+
 	/** The timeout counting down to spawn */
 	private int timeout;
 	/** The number of particles in use by this emitter */
@@ -97,19 +118,40 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	private ParticleSystem engine;
 	/** The number of particles that are left ot emit */
 	private int leftToEmit;
-	
+
 	/**
 	 * Create a new emitter configurable externally
 	 * 
-	 * @param name The name of emitter
+	 * @param name
+	 *            The name of emitter
 	 */
 	public ConfigurableEmitter(String name) {
 		this.name = name;
 		leftToEmit = (int) emitCount.random();
 		timeout = (int) (length.random());
-		
-		colors.add(new ColorRecord(0,Color.white));
-		colors.add(new ColorRecord(1,Color.red));
+
+		colors.add(new ColorRecord(0, Color.white));
+		colors.add(new ColorRecord(1, Color.red));
+
+		ArrayList curve = new ArrayList();
+		curve.add(new Vector2f(0.0f, 0.0f));
+		curve.add(new Vector2f(1.0f, 255.0f));
+		alpha = new LinearInterpolator(curve, 0, 255);
+
+		curve = new ArrayList();
+		curve.add(new Vector2f(0.0f, 0.0f));
+		curve.add(new Vector2f(1.0f, 255.0f));
+		size = new LinearInterpolator(curve, 0, 255);
+
+		curve = new ArrayList();
+		curve.add(new Vector2f(0.0f, 0.0f));
+		curve.add(new Vector2f(1.0f, 1.0f));
+		velocity = new LinearInterpolator(curve, 0, 1);
+
+		curve = new ArrayList();
+		curve.add(new Vector2f(0.0f, 0.0f));
+		curve.add(new Vector2f(1.0f, 1.0f));
+		scaleY = new LinearInterpolator(curve, 0, 1);
 	}
 
 	/**
@@ -118,13 +160,14 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 * 
 	 * @see #setRelativePath(String)
 	 * 
-	 * @param imageName The name of the image to use on a per particle reference
+	 * @param imageName
+	 *            The name of the image to use on a per particle reference
 	 */
 	public void setImageName(String imageName) {
 		if (imageName.length() == 0) {
 			imageName = null;
 		}
-		
+
 		this.imageName = imageName;
 		if (imageName == null) {
 			image = null;
@@ -143,8 +186,10 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	/**
 	 * Set the position of this particle source
 	 * 
-	 * @param x The x coodinate of that this emitter should spawn at
-	 * @param y The y coodinate of that this emitter should spawn at
+	 * @param x
+	 *            The x coodinate of that this emitter should spawn at
+	 * @param y
+	 *            The y coodinate of that this emitter should spawn at
 	 */
 	public void setPosition(float x, float y) {
 		this.x = x;
@@ -189,11 +234,11 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 */
 	public void update(ParticleSystem system, int delta) {
 		this.engine = system;
-		
+
 		if (updateImage) {
 			updateImage = false;
 			try {
-				image = new Image(relativePath+"/"+imageName);
+				image = new Image(relativePath + "/" + imageName);
 			} catch (SlickException e) {
 				image = null;
 				Log.error(e);
@@ -201,7 +246,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		}
 
 		particleCount = 0;
-		
+
 		if (length.isEnabled()) {
 			if (timeout < 0) {
 				return;
@@ -213,7 +258,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 				return;
 			}
 		}
-		
+
 		nextSpawn -= delta;
 		if (nextSpawn < 0) {
 			nextSpawn = (int) spawnInterval.random();
@@ -223,32 +268,33 @@ public class ConfigurableEmitter implements ParticleEmitter {
 				Particle p = system.getNewParticle(this, initialLife.random());
 				p.setSize(initialSize.random());
 				p.setPosition(x + xOffset.random(), y + yOffset.random());
-				p.setVelocity(0, 0);
+				p.setVelocity(0, 0, 0);
 
 				float dist = initialDistance.random();
 				float power = speed.random();
 				if ((dist != 0) || (power != 0)) {
-					float s = spread.random();
-					float ang = (s + angularOffset.getValue() - (spread.getValue() / 2)) - 90;
+					float s = spread.getValue(0);
+					float ang = (s + angularOffset.getValue(0) - (spread
+							.getValue() / 2)) - 90;
 					float xa = (float) FastTrig.cos(Math.toRadians(ang)) * dist;
 					float ya = (float) FastTrig.sin(Math.toRadians(ang)) * dist;
-					float xv = (float) FastTrig.cos(Math.toRadians(ang))
-							* power * 0.001f;
-					float yv = (float) FastTrig.sin(Math.toRadians(ang))
-							* power * 0.001f;
-
 					p.adjustPosition(xa, ya);
-					p.setVelocity(xv, yv);
+
+					float xv = (float) FastTrig.cos(Math.toRadians(ang));
+					float yv = (float) FastTrig.sin(Math.toRadians(ang));
+					p.setVelocity(xv, yv, power * 0.001f);
 				}
-				
+
 				if (image != null) {
 					p.setImage(image);
 				}
-				
+
 				ColorRecord start = (ColorRecord) colors.get(0);
-				p.setColor(start.col.r, start.col.g, start.col.b, startAlpha.getValue() / 255.0f);
+				p.setColor(start.col.r, start.col.g, start.col.b, startAlpha
+						.getValue(0) / 255.0f);
 				p.setUsePoint(usePoints);
-				
+				p.setOriented(useOriented);
+
 				if (emitCount.isEnabled()) {
 					leftToEmit--;
 					if (leftToEmit <= 0) {
@@ -265,25 +311,25 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 */
 	public void updateParticle(Particle particle, int delta) {
 		particleCount++;
-		
-		particle.adjustSize(delta * growthFactor.getValue() * 0.001f);
-		particle.adjustVelocity(windFactor.getValue() * 0.0001f, gravityFactor.getValue() * 0.0001f);
-		
+
+		particle.adjustDirection(windFactor.getValue(0) * 0.001f, gravityFactor
+				.getValue(0) * 0.001f);
+
 		float offset = particle.getLife() / particle.getOriginalLife();
 		float inv = 1 - offset;
 		float colOffset = 0;
 		float colInv = 1;
-		
+
 		Color startColor = null;
 		Color endColor = null;
-		for (int i=0;i<colors.size()-1;i++) {
+		for (int i = 0; i < colors.size() - 1; i++) {
 			ColorRecord rec1 = (ColorRecord) colors.get(i);
-			ColorRecord rec2 = (ColorRecord) colors.get(i+1);
-		
+			ColorRecord rec2 = (ColorRecord) colors.get(i + 1);
+
 			if ((inv >= rec1.pos) && (inv <= rec2.pos)) {
 				startColor = rec1.col;
 				endColor = rec2.col;
-				
+
 				float step = rec2.pos - rec1.pos;
 				colOffset = inv - rec1.pos;
 				colOffset /= step;
@@ -291,16 +337,36 @@ public class ConfigurableEmitter implements ParticleEmitter {
 				colInv = 1 - colOffset;
 			}
 		}
-		
-		if (startColor != null) {	
-			float r = (startColor.r * colOffset) + (endColor.r * colInv); 
-			float g = (startColor.g * colOffset) + (endColor.g * colInv); 
-			float b = (startColor.b * colOffset) + (endColor.b * colInv); 
-			float a = ((startAlpha.getValue() / 255.0f) * offset) + 
-			          ((endAlpha.getValue() / 255.0f) * inv);
-			particle.setColor(r,g,b,a);
+
+		if (startColor != null) {
+			float r = (startColor.r * colOffset) + (endColor.r * colInv);
+			float g = (startColor.g * colOffset) + (endColor.g * colInv);
+			float b = (startColor.b * colOffset) + (endColor.b * colInv);
+
+			float a;
+			if (alpha.isActive()) {
+				a = alpha.getValue(inv) / 255.0f;
+			} else {
+				a = ((startAlpha.getValue(0) / 255.0f) * offset)
+						+ ((endAlpha.getValue(0) / 255.0f) * inv);
+			}
+			particle.setColor(r, g, b, a);
 		}
-		
+
+		if (size.isActive()) {
+			float s = size.getValue(inv);
+			particle.setSize(s);
+		} else {
+			particle.adjustSize(delta * growthFactor.getValue(0) * 0.001f);
+		}
+
+		if (velocity.isActive()) {
+			particle.setSpeed(velocity.getValue(inv));
+		}
+
+		if (scaleY.isActive()) {
+			particle.setScaleY(scaleY.getValue(inv));
+		}
 	}
 
 	/**
@@ -312,7 +378,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		if (engine == null) {
 			return false;
 		}
-		
+
 		if (length.isEnabled()) {
 			if (timeout > 0) {
 				return false;
@@ -325,10 +391,10 @@ public class ConfigurableEmitter implements ParticleEmitter {
 			}
 			return (engine.getParticleCount() == 0);
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Cause the emitter to replay it's circle
 	 */
@@ -338,7 +404,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		leftToEmit = (int) emitCount.random();
 		timeout = (int) (length.random());
 	}
-	
+
 	/**
 	 * Release all the particles held by this emitter
 	 */
@@ -347,7 +413,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 			engine.releaseAll(this);
 		}
 	}
-	
+
 	/**
 	 * Check if the replay has died out - used by the editor
 	 */
@@ -360,26 +426,40 @@ public class ConfigurableEmitter implements ParticleEmitter {
 			}
 		}
 	}
-	
+
 	/**
-	 * A configurable single value
-	 *
-	 * @author kevin
+	 * a general interface to provide a general value :]
+	 * 
+	 * @author void
 	 */
-	public class Value {
+	public interface Value {
+		/**
+		 * get the current value that might depend from the given time
+		 * 
+		 * @param time
+		 * @return the current value
+		 */
+		public float getValue(float time);
+	}
+
+	/**
+	 * A configurable simple single value
+	 * 
+	 * @author void
+	 */
+	public class SimpleValue implements Value {
 		/** The value configured */
 		private float value;
-		/** True if this value should given linear random numbers */
-		private boolean linear;
 		/** The next value */
 		private float next;
-		
+
 		/**
 		 * Create a new configurable new value
 		 * 
-		 * @param value The initial value
+		 * @param value
+		 *            The initial value
 		 */
-		private Value(float value) {
+		private SimpleValue(float value) {
 			this.value = value;
 		}
 
@@ -388,59 +468,203 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		 * 
 		 * @return The currently configured value
 		 */
-		public float getValue() {
+		public float getValue(float time) {
 			return value;
 		}
 
 		/**
 		 * Set the configured value
 		 * 
-		 * @param value The configured value
+		 * @param value
+		 *            The configured value
+		 */
+		public void setValue(float value) {
+			this.value = value;
+		}
+	}
+
+	/**
+	 * A configurable simple linear random value
+	 * 
+	 * @author void
+	 */
+	public class RandomValue implements Value {
+		/** The value configured */
+		private float value;
+
+		/**
+		 * Create a new configurable new value
+		 * 
+		 * @param value
+		 *            The initial value
+		 */
+		private RandomValue(float value) {
+			this.value = value;
+		}
+
+		/**
+		 * Get the currently configured value
+		 * 
+		 * @return The currently configured value
+		 */
+		public float getValue(float time) {
+			return (float) (Math.random() * value);
+		}
+
+		/**
+		 * Set the configured value
+		 * 
+		 * @param value
+		 *            The configured value
 		 */
 		public void setValue(float value) {
 			this.value = value;
 		}
 
 		/**
-		 * Generate a random number based on the currently configured value
+		 * get the configured value
 		 * 
-		 * @return The random number
+		 * @return the configured value
 		 */
-		public float random() {
-			if (linear){
-				float ret = next;
-				next++;
-				if (next > value) {
-					next = 0;
+		public float getValue() {
+			return value;
+		}
+	}
+
+	/**
+	 * A value computed based on linear interpolation between a set of points
+	 * 
+	 * @author void
+	 */
+	public class LinearInterpolator implements Value {
+		/** The list of points to interpolate between */
+		private ArrayList curve;
+		/** True if this interpolation value is active */
+		private boolean active;
+		/** The minimum value in the data set */
+		private int min;
+		/** The maximum value in the data set */
+		private int max;
+
+		/**
+		 * Create a new interpolated value
+		 * 
+		 * @param curve The set of points to interpolate between
+		 * @param min The minimum value in the dataset
+		 * @param max The maximum value possible in the dataset
+		 */
+		public LinearInterpolator(ArrayList curve, int min, int max) {
+			this.curve = curve;
+			this.min = min;
+			this.max = max;
+			this.active = false;
+		}
+
+		/**
+		 * Set the collection of data points to interpolate between
+		 * 
+		 * @param curve The list of data points to interpolate between
+		 */
+		public void setCurve(ArrayList curve) {
+			this.curve = curve;
+		}
+
+		/**
+		 * The list of data points to interpolate between
+		 * 
+		 * @return A list of Vector2f of the data points to interpolate between
+		 */
+		public ArrayList getCurve() {
+			return curve;
+		}
+
+		/**
+		 * Get the value to use at a given time value
+		 * 
+		 * @param t The time value (expecting t in [0,1])
+		 * @return The value to use at the specified time
+		 */
+		public float getValue(float t) {
+			// first: determine the segment we are in
+			Vector2f p0 = (Vector2f) curve.get(0);
+			for (int i = 1; i < curve.size(); i++) {
+				Vector2f p1 = (Vector2f) curve.get(i);
+
+				if (t >= p0.getX() && t <= p1.getX()) {
+					// found the segment
+					float st = (t - p0.getX())
+							/ (p1.getX() - p0.getX());
+					float r = p0.getY() + st
+							* (p1.getY() - p0.getY());
+					// System.out.println( "t: " + t + ", " + p0.x + ", " + p0.y
+					// + " : " + p1.x + ", " + p1.y + " => " + r );
+
+					return r;
 				}
-				
-				return ret;
+
+				p0 = p1;
 			}
-			return (float) (Math.random() * value);
+			return 0;
 		}
-		
+
 		/**
-		 * Check if this value should give linear random numbers
+		 * Check if this interpolated value should be used
 		 * 
-		 * @return True if this value should give linear random numbers
+		 * @return True if this value is in use
 		 */
-		public boolean isLinear() {
-			return linear;
+		public boolean isActive() {
+			return active;
 		}
-		
+
 		/**
-		 * Indicate if this value should give linear random numbers
+		 * Indicate if this interpoalte value should be used
 		 * 
-		 * @param linear True if this value should give linear random numbers
+		 * @param active True if this value should be used
 		 */
-		public void setLinear(boolean linear) {
-			this.linear = linear;
+		public void setActive(boolean active) {
+			this.active = active;
+		}
+
+		/**
+		 * Get the maxmimum value possible in this data set
+		 * 
+		 * @return The maximum value possible in this data set
+		 */
+		public int getMax() {
+			return max;
+		}
+
+		/**
+		 * Set the maximum value possible in this data set
+		 * 
+		 * @param max The maximum value possible in this data set
+		 */
+		public void setMax(int max) {
+			this.max = max;
+		}
+
+		/**
+		 * Get the minimum value possible in this data set
+		 * 
+		 * @return The minimum value possible in this data set
+		 */
+		public int getMin() {
+			return min;
+		}
+
+		/**
+		 * Set the minimum value possible in this data set
+		 * 
+		 * @param min The minimum value possible in this data set
+		 */
+		public void setMin(int min) {
+			this.min = min;
 		}
 	}
 
 	/**
 	 * A single element in the colour range of this emitter
-	 *
+	 * 
 	 * @author kevin
 	 */
 	public class ColorRecord {
@@ -448,29 +672,33 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		public float pos;
 		/** The color at this position */
 		public Color col;
-		
+
 		/**
 		 * Create a new record
 		 * 
-		 * @param pos The position in the life cycle (0 = start, 1 = end)
-		 * @param col The color applied at this position
+		 * @param pos
+		 *            The position in the life cycle (0 = start, 1 = end)
+		 * @param col
+		 *            The color applied at this position
 		 */
 		public ColorRecord(float pos, Color col) {
 			this.pos = pos;
 			this.col = col;
 		}
 	}
-	
+
 	/**
 	 * Add a point in the colour cycle
 	 * 
-	 * @param pos The position in the life cycle (0 = start, 1 = end)
-	 * @param col The color applied at this position
+	 * @param pos
+	 *            The position in the life cycle (0 = start, 1 = end)
+	 * @param col
+	 *            The color applied at this position
 	 */
 	public void addColorPoint(float pos, Color col) {
 		colors.add(new ColorRecord(pos, col));
 	}
-	
+
 	/**
 	 * A simple bean describing a range of values
 	 * 
@@ -487,14 +715,16 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		/**
 		 * Create a new configurable range
 		 * 
-		 * @param min The minimum value of the range
-		 * @param max The maximum value of the range
+		 * @param min
+		 *            The minimum value of the range
+		 * @param max
+		 *            The maximum value of the range
 		 */
 		private Range(float min, float max) {
 			this.min = min;
 			this.max = max;
 		}
-		
+
 		/**
 		 * Generate a random number in the range
 		 * 
@@ -512,18 +742,19 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		public boolean isEnabled() {
 			return enabled;
 		}
-		
+
 		/**
 		 * Indicate if this option should be enabled
 		 * 
-		 * @param enabled True if this option should be enabled
+		 * @param enabled
+		 *            True if this option should be enabled
 		 */
 		public void setEnabled(boolean enabled) {
 			this.enabled = enabled;
 		}
-		
+
 		/**
-		 * Get the maximum value for this range 
+		 * Get the maximum value for this range
 		 * 
 		 * @return The maximum value for this range
 		 */
@@ -534,14 +765,15 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		/**
 		 * Set the maxmium value for this range
 		 * 
-		 * @param max The maximum value for this range
+		 * @param max
+		 *            The maximum value for this range
 		 */
 		public void setMax(float max) {
 			this.max = max;
 		}
 
 		/**
-		 * Get the minimum value for this range 
+		 * Get the minimum value for this range
 		 * 
 		 * @return The minimum value for this range
 		 */
@@ -552,7 +784,8 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		/**
 		 * Set the minimum value for this range
 		 * 
-		 * @param min The minimum value for this range
+		 * @param min
+		 *            The minimum value for this range
 		 */
 		public void setMin(float min) {
 			this.min = min;
