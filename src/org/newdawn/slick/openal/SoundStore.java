@@ -2,6 +2,7 @@ package org.newdawn.slick.openal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -57,6 +58,11 @@ public class SoundStore {
 	/** True if we're returning deferred versions of resources */
 	private boolean deferred;
 	
+	/** The buffer used to set the velocity of a source */
+    private FloatBuffer sourceVel = BufferUtils.createFloatBuffer(3).put(new float[] { 0.0f, 0.0f, 0.0f });
+    /** The buffer used to set the position of a source */
+    private FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3);
+    
 	/**
 	 * Create a new sound store
 	 */
@@ -252,6 +258,19 @@ public class SoundStore {
 				soundWorks = false;
 				Log.error("- AL init failed");
 			} else {
+				FloatBuffer listenerOri = BufferUtils.createFloatBuffer(6).put(
+						new float[] { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f });
+				FloatBuffer listenerVel = BufferUtils.createFloatBuffer(3).put(
+						new float[] { 0.0f, 0.0f, 0.0f });
+				FloatBuffer listenerPos = BufferUtils.createFloatBuffer(3).put(
+						new float[] { 0.0f, 0.0f, 0.0f });
+				listenerPos.flip();
+				listenerVel.flip();
+				listenerOri.flip();
+				AL10.alListener(AL10.AL_POSITION, listenerPos);
+				AL10.alListener(AL10.AL_VELOCITY, listenerVel);
+				AL10.alListener(AL10.AL_ORIENTATION, listenerOri);
+   			 
 				Log.info("- Sounds source generated");
 			}
 		}
@@ -277,6 +296,23 @@ public class SoundStore {
 	 * @return source The source that will be used
 	 */
 	int playAsSound(int buffer,float pitch,float gain,boolean loop) {
+		return playAsSoundAt(buffer, pitch, gain, loop, 0, 0, 0);
+	}
+	
+	/**
+	 * Play the specified buffer as a sound effect with the specified
+	 * pitch and gain.
+	 * 
+	 * @param buffer The ID of the buffer to play
+	 * @param pitch The pitch to play at
+	 * @param gain The gain to play at
+	 * @param loop True if the sound should loop
+	 * @param x The x position to play the sound from
+	 * @param y The y position to play the sound from
+	 * @param z The z position to play the sound from
+	 * @return source The source that will be used
+	 */
+	int playAsSoundAt(int buffer,float pitch,float gain,boolean loop,float x, float y, float z) {
 		gain *= soundVolume;
 		if (gain == 0) {
 			gain = 0.001f;
@@ -295,6 +331,15 @@ public class SoundStore {
 				AL10.alSourcef(sources.get(nextSource), AL10.AL_GAIN, gain); 
 			    AL10.alSourcei(sources.get(nextSource), AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
 			    
+			    sourcePos.clear();
+			    sourceVel.clear();
+				sourceVel.put(new float[] { 0, 0, 0 });
+				sourcePos.put(new float[] { x, y, z });
+			    sourcePos.flip();
+			    sourceVel.flip();
+			    AL10.alSource(sources.get(nextSource), AL10.AL_POSITION, sourcePos);
+    			AL10.alSource(sources.get(nextSource), AL10.AL_VELOCITY, sourceVel);
+			    
 				AL10.alSourcePlay(sources.get(nextSource)); 
 				
 				return nextSource;
@@ -303,7 +348,6 @@ public class SoundStore {
 		
 		return -1;
 	}
-	
 	/**
 	 * Check if a particular source is playing
 	 * 

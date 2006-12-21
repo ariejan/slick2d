@@ -64,6 +64,21 @@ public class InternalSound {
 		index = store.playAsSound(buffer, pitch, gain, loop);
 	}
 
+
+	/**
+	 * Play this sound as a sound effect
+	 * 
+	 * @param pitch The pitch of the play back
+	 * @param gain The gain of the play back
+	 * @param loop True if we should loop
+	 * @param x The x position of the sound
+	 * @param y The y position of the sound
+	 * @param z The z position of the sound
+	 */
+	public void playAsSoundEffect(float pitch, float gain, boolean loop, float x, float y, float z) {
+		index = store.playAsSoundAt(buffer, pitch, gain, loop, x, y, z);
+	}
+	
 	/**
 	 * Play this sound as music
 	 * 

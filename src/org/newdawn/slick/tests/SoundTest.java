@@ -44,7 +44,7 @@ public class SoundTest extends BasicGame {
 		engine = new Sound("testdata/engine.wav");
 		music = musica = new Music("testdata/SMB-X.XM");
 		musicb = new Music("testdata/testloop.ogg");
-		musica.loop(1.0f,0.5f);
+		//musica.loop(1.0f,0.5f);
 	}
 
 	/**
@@ -73,6 +73,12 @@ public class SoundTest extends BasicGame {
 		}
 		if (key == Input.KEY_SPACE) {
 			sound.play();
+		}
+		if (key == Input.KEY_A) {
+			sound.playAt(-1, 0, 0);
+		}
+		if (key == Input.KEY_L) {
+			sound.playAt(1, 0, 0);
 		}
 		if (key == Input.KEY_RETURN) {
 			charlie.play(1.0f,1.0f);
