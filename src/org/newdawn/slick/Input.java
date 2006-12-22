@@ -649,7 +649,7 @@ public class Input {
 	 * @param width The width of the game view
 	 * @param height The height of the game view
 	 */
-	void poll(int width, int height) {
+	public void poll(int width, int height) {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				keys[Keyboard.getEventKey()] = Keyboard.getEventCharacter();
