@@ -346,7 +346,7 @@ public class Particle {
 	 * @param diry The y component of the new velocity
 	 */
 	public void setVelocity(float dirx, float diry) {
-		setVelocity(dirx,diry,speed);
+		setVelocity(dirx,diry,1);
 	}
 	
 	/**
