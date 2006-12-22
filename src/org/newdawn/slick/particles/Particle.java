@@ -340,6 +340,16 @@ public class Particle {
 	}
 
 	/**
+	 * Set the velocity of the particle
+	 * 
+	 * @param dirx The x component of the new velocity
+	 * @param diry The y component of the new velocity
+	 */
+	public void setVelocity(float dirx, float diry) {
+		setVelocity(dirx,diry,speed);
+	}
+	
+	/**
 	 * Adjust (add) the position of this particle
 	 * 
 	 * @param dx
