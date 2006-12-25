@@ -99,6 +99,7 @@
 		<packageset dir="src" defaultexcludes="yes">
 		      <include name="org/newdawn/slick"/>
 		      <include name="org/newdawn/slick/*"/>
+		      <include name="org/newdawn/slick/state/*"/>
 		</packageset>
 		<classpath>
 		  <pathelement path="lib/slick.jar"/>
