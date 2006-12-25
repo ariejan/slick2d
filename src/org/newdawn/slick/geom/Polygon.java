@@ -108,4 +108,47 @@ public class Polygon {
 			}
 		GL11.glEnd();
 	}
+	
+	/**
+	 * Check if this polygon contains the given point
+	 * 
+	 * @param x The x position of the point to check
+	 * @param y The y position of the point to check
+	 * @return True if the point is contained in the polygon
+	 */
+	public boolean contains(float x, float y) {
+		if (updated) {
+			tris.triangulate();
+			updated = false;
+		}
+		
+		int count = tris.getTriangleCount();
+		for (int i=0;i<count;i++) {
+			if (inTriangle(i, x, y)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Check if a point lies within a triangle
+	 * 
+	 * @param triangle The index of the triangle to check
+	 * @param x The x position of the point
+	 * @param y The y position of the point
+	 * @return True if the point lies within the triangle
+	 */
+	private boolean inTriangle(int triangle, float x, float y) {
+		float[] a = tris.getTrianglePoint(triangle, 0);
+		float[] b = tris.getTrianglePoint(triangle, 1);
+		float[] c = tris.getTrianglePoint(triangle, 2);
+		
+		boolean sideA = ((b[1]-a[1])*(x-a[0])-(b[0]-a[0])*(y-a[1])) > 0.0f;
+		boolean sideB = ((c[1]-b[1])*(x-b[0])-(c[0]-b[0])*(y-b[1])) > 0.0f;
+		if (sideA != sideB) return false;
+		boolean sideC = ((a[1]-c[1])*(x-c[0])-(a[0]-c[0])*(y-c[1])) > 0.0f;
+		return (sideA == sideC);
+	}
 }
