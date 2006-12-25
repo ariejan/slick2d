@@ -55,7 +55,7 @@ public class CursorLoader {
 			imageData = new ImageIOImageData();
 		}
 		
-		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false, null);
+		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false, true, null);
 		for (int i=0;i<buf.limit();i+=4) {
 			byte red = buf.get(i);
 			byte green = buf.get(i+1);
@@ -73,7 +73,7 @@ public class CursorLoader {
 			if (yspot < 0) {
 				yspot = 0;
 			}
-			return new Cursor(imageData.getWidth(), imageData.getHeight(), x, yspot, 1, buf.asIntBuffer(), null);
+			return new Cursor(imageData.getTexWidth(), imageData.getTexHeight(), x, yspot, 1, buf.asIntBuffer(), null);
 		} catch (Throwable e) {
 			Log.info("Chances are you cursor is too small for this platform");
 			throw new LWJGLException(e);

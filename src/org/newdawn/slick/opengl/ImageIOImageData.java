@@ -136,9 +136,7 @@ public class ImageIOImageData implements ImageData {
         this.texWidth = texWidth;
         
         // create a raster that can be used by OpenGL as a source
-
         // for a texture
-
         if (bufferedImage.getColorModel().hasAlpha() || forceAlpha) {
         	depth = 32;
             raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,texWidth,texHeight,4,null);
