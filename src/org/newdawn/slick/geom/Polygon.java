@@ -75,6 +75,10 @@ public class Polygon {
 	public Polygon getScaled(float offset) {
 		Polygon result = new Polygon();
 		
+		float[] p1 = (float []) points.get(0);
+		float[] p2 = (float []) points.get(1);
+		boolean clockwise = (p2[0] > p1[0]) || (p1[1] > p2[1]);
+		
 		for (int i=0;i<points.size();i++) {
 			int pi = i-1 < 0 ? points.size() - 1 : i - 1;
 			int ni = i+1 > points.size() - 1 ? 0 : i + 1;
@@ -96,13 +100,23 @@ public class Polygon {
 			dx2 /= l2;
 			dy2 /= l2;
 			
-			float dx = (dx1 + dx2) / 2;
-			float dy = (dy1 + dy2) / 2;
+			float dx = (dx1 + dx2);
+			float dy = (dy1 + dy2);
 			float l = (float) Math.sqrt((dx*dx)+(dy*dy));
 			dx /= l;
 			dy /= l;
 			
-			result.addPoint(c[0]+(dy*offset), c[1]-(dx*offset));
+			float px = c[0]-(dy*offset);
+			float py = c[1]+(dx*offset);
+			if ((offset < 0) && (!contains(px,py))) {
+				px = c[0]+(dy*offset);
+				py = c[1]-(dx*offset);
+			}
+			if ((offset > 0) && (contains(px,py))) {
+				px = c[0]+(dy*offset);
+				py = c[1]-(dx*offset);
+			}
+			result.addPoint(px,py);
 		}
 		
 		return result;
