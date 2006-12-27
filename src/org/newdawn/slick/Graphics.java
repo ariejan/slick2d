@@ -294,6 +294,32 @@ public class Graphics {
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(x,screenHeight-y-height,width,height);
 	}
+
+	/**
+	 * Fill a rectangle with the given image used as a pattern
+	 * 
+	 * @param x1 The x coordinate of the top left corner
+	 * @param y1 The y coordinate of the top left corner
+	 * @param width The width of the rectangle to fill
+	 * @param height The height of the rectangle to fill
+	 * @param pattern The image to pattern across the rectangle
+	 * @param scale The scale to use on the texture
+	 */
+	public void fillRect(int x1,int y1,int width,int height, Image pattern, float scale) {
+		pattern.bind();
+		currentColor.bind();
+		
+		GL11.glBegin(GL11.GL_QUADS);
+			GL11.glTexCoord2f(x1*scale,y1*scale);
+			GL11.glVertex2f(x1,y1);
+			GL11.glTexCoord2f((x1+width)*scale,y1*scale);
+			GL11.glVertex2f(x1+width,y1);
+			GL11.glTexCoord2f((x1+width)*scale,(y1+height)*scale);
+			GL11.glVertex2f(x1+width,y1+height);
+			GL11.glTexCoord2f(x1*scale,(y1+height)*scale);
+			GL11.glVertex2f(x1,y1+height);
+		GL11.glEnd();
+	}
 	
 	/**
 	 * Fill a rectangle on the canvas in the current color

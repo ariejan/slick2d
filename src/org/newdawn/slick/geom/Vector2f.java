@@ -189,4 +189,23 @@ public strictfp class Vector2f {
 		
 		return (float) Math.sqrt((dx*dx)+(dy*dy));
 	}
+	
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return (int) ((x*y)*1000);
+	}
+	
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object other) {
+		if (other instanceof Vector2f) {
+			Vector2f o = ((Vector2f) other);
+			return (o.x == x) && (o.y == y);
+		}
+		
+		return false;
+	}
 }

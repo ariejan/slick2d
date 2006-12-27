@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.opengl.Texture;
 
 /**
@@ -66,6 +67,48 @@ public class Polygon {
 	}
 	
 	/**
+	 * Get a polygon based on this one 
+	 * 
+	 * @param offset The offset from the current points to form the new one
+	 * @return The newly created polygon
+	 */
+	public Polygon getScaled(float offset) {
+		Polygon result = new Polygon();
+		
+		for (int i=0;i<points.size();i++) {
+			int pi = i-1 < 0 ? points.size() - 1 : i - 1;
+			int ni = i+1 > points.size() - 1 ? 0 : i + 1;
+
+			float[] p = (float[]) points.get(pi);
+			float[] c = (float[]) points.get(i);
+			float[] n = (float[]) points.get(ni);
+			
+			// first line
+			float dx1 = c[0] - p[0];
+			float dy1 = c[1] - p[1];
+			float l1 = (float) Math.sqrt((dx1*dx1)+(dy1*dy1));
+			dx1 /= l1;
+			dy1 /= l1;
+			// second line
+			float dx2 = (n[0] - c[0]);
+			float dy2 = (n[1] - c[1]);
+			float l2 = (float) Math.sqrt((dx2*dx2)+(dy2*dy2));
+			dx2 /= l2;
+			dy2 /= l2;
+			
+			float dx = (dx1 + dx2) / 2;
+			float dy = (dy1 + dy2) / 2;
+			float l = (float) Math.sqrt((dx*dx)+(dy*dy));
+			dx /= l;
+			dy /= l;
+			
+			result.addPoint(c[0]+(dy*offset), c[1]-(dx*offset));
+		}
+		
+		return result;
+	}
+	
+	/**
 	 * Get the number of points in this polygon
 	 * 
 	 * @return The number of points in this polygon
@@ -104,6 +147,37 @@ public class Polygon {
 				pt = tris.getTrianglePoint(i, 1);
 				GL11.glVertex3f(pt[0],pt[1],0);
 				pt = tris.getTrianglePoint(i, 2);
+				GL11.glVertex3f(pt[0],pt[1],0);
+			}
+		GL11.glEnd();
+	}
+	
+	/**
+	 * Render the polygon with an image
+	 * 
+	 * @param g The graphics context on which to render 
+	 * @param image The image to use to texture this polygon - note image bounding will not
+	 * be taken into account so subimages will use the full image.
+	 * @param scale The scaling to apply to the image
+	 */
+	public void texture(Graphics g, Image image, float scale) {
+		if (updated) {
+			tris.triangulate();
+			updated = false;
+		}
+		
+		image.bind();
+		GL11.glBegin(GL11.GL_TRIANGLES);
+			int count = tris.getTriangleCount();
+			for (int i=0;i<count;i++) {
+				float[] pt = tris.getTrianglePoint(i, 0);
+				GL11.glTexCoord2f(pt[0] * scale,pt[1] * scale);
+				GL11.glVertex3f(pt[0],pt[1],0);
+				pt = tris.getTrianglePoint(i, 1);
+				GL11.glTexCoord2f(pt[0] * scale,pt[1] * scale);
+				GL11.glVertex3f(pt[0],pt[1],0);
+				pt = tris.getTrianglePoint(i, 2);
+				GL11.glTexCoord2f(pt[0] * scale,pt[1] * scale);
 				GL11.glVertex3f(pt[0],pt[1],0);
 			}
 		GL11.glEnd();

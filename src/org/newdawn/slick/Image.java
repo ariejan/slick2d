@@ -209,6 +209,13 @@ public class Image {
 	}
 
 	/**
+	 * Bind to the texture of this image
+	 */
+	public void bind() {
+		texture.bind();
+	}
+	
+	/**
 	 * Initialise internal data
 	 */
 	protected void init() {
