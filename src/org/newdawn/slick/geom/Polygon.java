@@ -152,11 +152,13 @@ public class Polygon {
 			updated = false;
 		}
 		
+		float[] pt;
+		
 		Texture.bindNone();
 		GL11.glBegin(GL11.GL_TRIANGLES);
 			int count = tris.getTriangleCount();
 			for (int i=0;i<count;i++) {
-				float[] pt = tris.getTrianglePoint(i, 0);
+				pt = tris.getTrianglePoint(i, 0);
 				GL11.glVertex3f(pt[0],pt[1],0);
 				pt = tris.getTrianglePoint(i, 1);
 				GL11.glVertex3f(pt[0],pt[1],0);

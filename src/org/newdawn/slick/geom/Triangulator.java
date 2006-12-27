@@ -89,6 +89,7 @@ public class Triangulator {
 		if (!tried) {
 			throw new RuntimeException("Call triangulate() before accessing triangles");
 		}
+		
 		return tris.get((tri*3)+i).toArray();
 	}
 	
@@ -291,7 +292,9 @@ public class Triangulator {
 		private float x;
 		/** The y coorindate of this point */
 		private float y;
-
+		/** The points in an array */
+		private float[] array;
+		
 		/**
 		 * Create a new point
 		 * 
@@ -301,6 +304,7 @@ public class Triangulator {
 		public Point(float x, float y) {
 			this.x = x;
 			this.y = y;
+			array = new float[] {x,y};
 		}
 
 		/**
@@ -327,7 +331,7 @@ public class Triangulator {
 		 * @return The contents of this point as a float array
 		 */
 		public float[] toArray() {
-			return new float[] {x,y};
+			return array;
 		}
 	}
 	
