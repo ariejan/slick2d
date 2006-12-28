@@ -104,6 +104,17 @@ public strictfp class Circle {
 	}
 	
 	/**
+	 * Check if a point is contained by this circle
+	 * 
+	 * @param x The x coordinate of the point to check
+	 * @param y The y coorindate of the point to check
+	 * @return True if the point is contained by this circle
+	 */
+	public boolean contains(float x, float y) {
+		return intersects(new Circle(x,y,0));
+	}
+	
+	/**
 	 * Check if this circle touches a rectangle
 	 * 
 	 * @param other The rectangle to check against
