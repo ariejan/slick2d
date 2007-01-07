@@ -20,6 +20,8 @@ public class DeferredSound extends InternalSound implements DeferredResource {
 	public static final int WAV = 2;
 	/** Indicate a MOD/XM to be loaded */
 	public static final int MOD = 3;
+	/** Indicate a AIF to be loaded */
+	public static final int AIF = 4;
 	
 	/** The type of sound to be loader */
 	private int type;
@@ -65,6 +67,9 @@ public class DeferredSound extends InternalSound implements DeferredResource {
 			break;
 		case MOD:
 			target = SoundStore.get().getMOD(ref);
+			break;
+		case AIF:
+			target = SoundStore.get().getAIF(ref);
 			break;
 		default:
 			Log.error("Unrecognised sound type: "+type);

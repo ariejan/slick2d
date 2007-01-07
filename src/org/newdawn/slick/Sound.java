@@ -28,10 +28,12 @@ public class Sound {
 				sound = SoundStore.get().getOgg(ref);
 			} else if (ref.toLowerCase().endsWith(".wav")) {
 				sound = SoundStore.get().getWAV(ref);
+			} else if (ref.toLowerCase().endsWith(".aif")) {
+				sound = SoundStore.get().getAIF(ref);
 			} else if (ref.toLowerCase().endsWith(".xm") || ref.toLowerCase().endsWith(".mod")) {
 				sound = SoundStore.get().getMOD(ref);
 			} else {
-				throw new SlickException("Only .xm, .mod and .ogg are currently supported.");
+				throw new SlickException("Only .xm, .mod, .aif, .wav and .ogg are currently supported.");
 			}
 		} catch (Exception e) {
 			Log.error(e);

@@ -8,7 +8,10 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.CrossStateTransition;
+import org.newdawn.slick.state.transition.EmptyTransition;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
@@ -24,7 +27,7 @@ public class TestState1 extends BasicGameState {
 	private Font font;
 	/** The game holding this state */
 	private StateBasedGame game;
-	
+
 	/**
 	 * @see org.newdawn.slick.state.BasicGameState#getID()
 	 */
@@ -62,8 +65,18 @@ public class TestState1 extends BasicGameState {
 	 * @see org.newdawn.slick.state.BasicGameState#keyReleased(int, char)
 	 */
 	public void keyReleased(int key, char c) {
+		
 		if (key == Input.KEY_2) {
-			game.enterState(TestState2.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));
+			GameState target = game.getState(TestState2.ID);
+			
+			final long start = System.currentTimeMillis();
+			CrossStateTransition t = new CrossStateTransition(target) {				
+				public boolean isComplete() {
+					return (System.currentTimeMillis() - start) > 2000;
+				}
+			};
+			
+			game.enterState(TestState2.ID, t, new EmptyTransition());
 		}
 		if (key == Input.KEY_3) {
 			game.enterState(TestState3.ID, new FadeOutTransition(Color.black), new FadeInTransition(Color.black));

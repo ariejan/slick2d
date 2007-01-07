@@ -136,6 +136,10 @@ public abstract class StateBasedGame implements Game {
 		
 			state.init(container, this);
 		}
+		
+		if (currentState != null) {
+			currentState.enter(container, this);
+		}
 	}
 
 	/**
@@ -150,12 +154,18 @@ public abstract class StateBasedGame implements Game {
 	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public final void render(GameContainer container, Graphics g) throws SlickException {
+		if (leaveTransition != null) {
+			leaveTransition.preRender(this, container, g);
+		} else if (enterTransition != null) {
+			enterTransition.preRender(this, container, g);
+		}
+		
 		currentState.render(container, this, g);
 		
 		if (leaveTransition != null) {
-			leaveTransition.render(container, g);
+			leaveTransition.postRender(this, container, g);
 		} else if (enterTransition != null) {
-			enterTransition.render(container, g);
+			enterTransition.postRender(this, container, g);
 		}
 	}
 
@@ -164,7 +174,7 @@ public abstract class StateBasedGame implements Game {
 	 */
 	public final void update(GameContainer container, int delta) throws SlickException {
 		if (leaveTransition != null) {
-			leaveTransition.update(container, delta);
+			leaveTransition.update(this, container, delta);
 			if (leaveTransition.isComplete()) {
 				currentState.leave(container, this);
 				currentState = nextState;
@@ -179,7 +189,7 @@ public abstract class StateBasedGame implements Game {
 		}
 		
 		if (enterTransition != null) {
-			enterTransition.update(container, delta);
+			enterTransition.update(this, container, delta);
 			if (enterTransition.isComplete()) {
 				currentState.enter(container, this);
 				enterTransition = null;

@@ -3,6 +3,7 @@ package org.newdawn.slick.state.transition;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * A transition to fade out to a given colour
@@ -31,9 +32,9 @@ public class FadeOutTransition implements Transition {
 	}
 
 	/**
-	 * @see org.newdawn.slick.state.transition.Transition#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.state.transition.Transition#postRender(org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(GameContainer container, Graphics g) {
+	public void postRender(StateBasedGame game, GameContainer container, Graphics g) {
 		Color old = g.getColor();
 		g.setColor(color);
 		g.fillRect(0, 0, container.getWidth(), container.getHeight());
@@ -41,13 +42,19 @@ public class FadeOutTransition implements Transition {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.state.transition.Transition#update(org.newdawn.slick.GameContainer, int)
+	 * @see org.newdawn.slick.state.transition.Transition#update(org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.GameContainer, int)
 	 */
-	public void update(GameContainer container, int delta) {
+	public void update(StateBasedGame game, GameContainer container, int delta) {
 		color.a += delta * 0.002f;
 		if (color.a > 1) {
 			color.a = 1;
 		}
+	}
+
+	/**
+	 * @see org.newdawn.slick.state.transition.Transition#preRender(org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
+	 */
+	public void preRender(StateBasedGame game, GameContainer container, Graphics g) {
 	}
 
 }

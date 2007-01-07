@@ -489,6 +489,56 @@ public class SoundStore {
 	}
 	
 	/**
+	 * Get the Sound based on a specified AIF file
+	 * 
+	 * @param ref The reference to the AIF file in the classpath
+	 * @return The Sound read from the AIF file
+	 * @throws IOException Indicates a failure to load the AIF
+	 */
+	public InternalSound getAIF(String ref) throws IOException {
+		if (!soundWorks) {
+			return new InternalSound(this, 0);
+		}
+		if (!inited) {
+			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
+		}
+		if (deferred) {
+			return new DeferredSound(ref, DeferredSound.AIF);
+		}
+		
+		int buffer = -1;
+		
+		if (loaded.get(ref) != null) {
+			buffer = ((Integer) loaded.get(ref)).intValue();
+		} else {
+			Log.info("Loading: "+ref);
+			try {
+				IntBuffer buf = BufferUtils.createIntBuffer(1);
+				
+				InputStream in = ResourceLoader.getResourceAsStream(ref);
+				AiffData data = AiffData.create(in);
+				AL10.alGenBuffers(buf);
+				AL10.alBufferData(buf.get(0), data.format, data.data, data.samplerate);
+				
+				loaded.put(ref,new Integer(buf.get(0)));
+				buffer = buf.get(0);
+			} catch (Exception e) {
+				Log.error(e);
+				IOException x = new IOException("Failed to load: "+ref);
+				x.initCause(e);
+				
+				throw x;
+			}
+		}
+		
+		if (buffer == -1) {
+			throw new IOException("Unable to load: "+ref);
+		}
+		
+		return new InternalSound(this, buffer);
+	}
+	
+	/**
 	 * Get the Sound based on a specified WAV file
 	 * 
 	 * @param ref The reference to the WAV file in the classpath
@@ -524,8 +574,10 @@ public class SoundStore {
 				buffer = buf.get(0);
 			} catch (Exception e) {
 				Log.error(e);
-				Sys.alert("Error","Failed to load: "+ref+" - "+e.getMessage());
-				System.exit(0);
+				IOException x = new IOException("Failed to load: "+ref);
+				x.initCause(e);
+				
+				throw x;
 			}
 		}
 		

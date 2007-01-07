@@ -109,11 +109,50 @@ public class TiledMap {
 	}
 	
 	/**
+	 * Get the width of the map
+	 * 
+	 * @return The width of the map (in tiles)
+	 */
+	public int getWidth() {
+		return width;
+	}
+
+	/**
+	 * Get the height of the map
+	 * 
+	 * @return The height of the map (in tiles)
+	 */
+	public int getHeight() {
+		return height;
+	}
+
+	/**
+	 * Get the height of a single tile
+	 * 
+	 * @return The height of a single tile (in pixels)
+	 */
+	public int getTileHeight() {
+		return tileHeight;
+	}
+
+	/**
+	 * Get the width of a single tile
+	 * 
+	 * @return The height of a single tile (in pixels)
+	 */
+	public int getTileWidth() {
+		return tileWidth;
+	}
+	   
+	/**
 	 * Get the global ID of a tile at specified location in the map
 	 * 
-	 * @param x The x location of the tile
-	 * @param y The y location of the tile
-	 * @param layerIndex The index of the layer to retireve the tile from 
+	 * @param x
+	 *            The x location of the tile
+	 * @param y
+	 *            The y location of the tile
+	 * @param layerIndex
+	 *            The index of the layer to retireve the tile from
 	 * @return The global ID of the tile
 	 */
 	public int getTileId(int x,int y,int layerIndex) {
