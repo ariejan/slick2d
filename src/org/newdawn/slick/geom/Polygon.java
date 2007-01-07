@@ -67,6 +67,25 @@ public class Polygon {
 	}
 	
 	/**
+	 * Check if a particular location is a vertex of this polygon
+	 * 
+	 * @param x The x coordinate to check
+	 * @param y The y coordinate to check
+	 * @return True if the cordinates supplied are a vertex of this polygon
+	 */
+	public boolean hasVertex(float x, float y) {
+		for (int i=0;i<points.size();i++) {
+			float[] pt = (float[]) points.get(i);
+			
+			if ((pt[0] == x) && (pt[1] == y)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Get a polygon based on this one 
 	 * 
 	 * @param offset The offset from the current points to form the new one

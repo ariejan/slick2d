@@ -26,9 +26,6 @@ public class ParticleSystem {
 	/** The default number of particles in the system */
 	private static final int DEFAULT_PARTICLES = 100;
 	
-	/** The default image for the particles */
-	private Image sprite;
-	
 	/**
 	 * A pool of particles being used by a specific emitter
 	 * 
@@ -87,6 +84,11 @@ public class ParticleSystem {
 	private float y;
 	/** True if we should remove completed emitters */
 	private boolean removeCompletedEmitters = true;
+
+	/** The default image for the particles */
+	private Image sprite;
+	/** True if the particle system is visible */
+	private boolean visible = true;
 	
 	/**
 	 * Create a new particle system
@@ -95,6 +97,26 @@ public class ParticleSystem {
 	 */
 	public ParticleSystem(Image defaultSprite) {
 		this(defaultSprite, DEFAULT_PARTICLES);
+	}
+	
+	/**
+	 * Check if this system is currently visible, i.e. it's actually
+	 * rendered
+	 * 
+	 * @return True if the particle system is rendered
+	 */
+	public boolean isVisible() {
+		return visible;
+	}
+	
+	/**
+	 * Indicate whether the particle system should be visible, i.e. whether
+	 * it'll actually render
+	 * 
+	 * @param visible True if the particle system should render
+	 */
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 	
 	/**
@@ -244,6 +266,10 @@ public class ParticleSystem {
 	 * Render the particles in the system
 	 */
 	public void render() {
+		if (!visible) {
+			return;
+		}
+		
 		GL11.glTranslatef(x,y,0);
 		
 		if (blendingMode == BLEND_ADDITIVE) {
