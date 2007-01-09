@@ -43,6 +43,7 @@ import java.nio.ShortBuffer;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.AudioFormat.Encoding;
 
 import org.lwjgl.openal.AL10;
 
@@ -219,7 +220,7 @@ public class AiffData {
 		}
 
 		//insert data into bytebuffer
-		ByteBuffer buffer = convertAudioBytes(buf, audioformat.getSampleSizeInBits() == 16);
+		ByteBuffer buffer = convertAudioBytes(audioformat, buf, audioformat.getSampleSizeInBits() == 16);
 
 		//create our result
 		AiffData Aiffdata =
@@ -237,11 +238,12 @@ public class AiffData {
 	/**
 	 * Convert the audio bytes into the stream
 	 * 
+	 * @param format The audio format being decoded
 	 * @param audio_bytes The audio byts
 	 * @param two_bytes_data True if we using double byte data
 	 * @return The byte bufer of data
 	 */
-	private static ByteBuffer convertAudioBytes(byte[] audio_bytes, boolean two_bytes_data) {
+	private static ByteBuffer convertAudioBytes(AudioFormat format, byte[] audio_bytes, boolean two_bytes_data) {
 		ByteBuffer dest = ByteBuffer.allocateDirect(audio_bytes.length);
 		dest.order(ByteOrder.nativeOrder());
 		ByteBuffer src = ByteBuffer.wrap(audio_bytes);
@@ -252,8 +254,13 @@ public class AiffData {
 			while (src_short.hasRemaining())
 				dest_short.put(src_short.get());
 		} else {
-			while (src.hasRemaining())
-				dest.put(src.get());
+			while (src.hasRemaining()) {
+				byte b = src.get();
+				if (format.getEncoding() == Encoding.PCM_SIGNED) {
+					b = (byte) (b + 127);
+				}
+				dest.put(b);
+			}
 		}
 		dest.rewind();
 		return dest;

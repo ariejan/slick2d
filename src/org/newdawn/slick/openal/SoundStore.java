@@ -653,6 +653,7 @@ public class SoundStore {
 		
 		currentMusic = sources.get(0);
 		this.mod = sound;
+		paused = false;
 	}
 	
 	/**
@@ -667,7 +668,7 @@ public class SoundStore {
 		if (paused) {
 			return;
 		}
-		
+
 		if (music) {
 			if (mod != null) {
 				try {
