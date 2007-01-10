@@ -20,6 +20,8 @@ import org.newdawn.slick.util.Log;
 public class FontTest extends BasicGame {
 	/** The font we're going to use to render */
 	private Font font;
+	/** The font we're going to use to render */
+	private Font font2;
 	/** The image of the font to compare against */
 	private Image image;
 	
@@ -35,6 +37,7 @@ public class FontTest extends BasicGame {
 	 */
 	public void init(GameContainer container) throws SlickException {
 		font = new AngelCodeFont("testdata/demo2.fnt","testdata/demo2_00.tga");
+		font2 = new AngelCodeFont("testdata/hiero.fnt","testdata/hiero.png");
 		image = new Image("testdata/demo2_00.tga", false);
 	}
 
@@ -46,7 +49,12 @@ public class FontTest extends BasicGame {
 		font.drawString(100, 32, "Here is a more complete line that hopefully");
 		font.drawString(100, 36 + font.getHeight("Here is a more complete line that hopefully"), 
 				             "will show some kerning.");
-		image.draw(100,200);
+		
+		font2.drawString(80, 105, "A Font Example", Color.red);
+		font2.drawString(100, 132, "Here is a more complete line that hopefully");
+		font2.drawString(100, 136 + font2.getHeight("Here is a more complete line that hopefully"), 
+				             "will show some kerning.");
+		image.draw(100,400);
 	}
 
 	/**
