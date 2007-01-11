@@ -82,6 +82,19 @@
 		 basedir="tools" includes="org/newdawn/slick/tools/peditor/data/*"/>
 </target>
 
+<!-- build the hiero tool -->
+<target name="build-hiero" depends="init">
+	<delete dir="lib/hiero.jar"/>
+	<javac includes="org/newdawn/slick/tools/hiero/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
+	</javac>
+	<jar destfile="lib/hiero.jar" 
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/hiero/**">
+		<manifest>
+	      <attribute name="Main-Class" value="org.newdawn.slick.tools.hiero.Hiero"/>
+	    </manifest>
+	</jar>
+</target>
+
 <!--
  Generate the javadoc from the Slick sources
 -->
@@ -181,6 +194,38 @@
 		 port="122"
 		 verbose="true"/>
 	
+</target>
+
+<!--
+  Build hiero distribution 
+-->
+<target name="dist-hiero" depends="build-hiero">
+	<zip destfile="${dist}/hiero.zip">
+	    <fileset dir="lib" includes="hiero.jar"/>
+	</zip>
+</target>
+
+<target name="build-webstart-hiero" depends="build-hiero">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	
+	<copyandsign jar="hiero.jar"/>
+	<createdemojnlp name="hiero" title="Slick2D Hiero Bitmap Font Generator" mainclass="org.newdawn.slick.tools.hiero.Hiero"/>
+</target>
+
+<target name="upload-hiero" depends="build-webstart-hiero, dist-hiero">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="dist/hiero.zip"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/hiero.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
 </target>
 
 <!--
