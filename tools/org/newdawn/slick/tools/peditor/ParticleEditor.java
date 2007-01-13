@@ -61,6 +61,8 @@ public class ParticleEditor extends JFrame {
 	private JMenuItem exp = new JMenuItem("Export Emitter");
 	/** Toggle the HUD  */
 	private JMenuItem hud = new JMenuItem("Toggle Overlay");
+	/** Toggle the graphice editor  */
+	private JMenuItem whiskas = new JMenuItem("Show/Hide Graph Editor");
 	/** Exit the editor */
 	private JMenuItem quit = new JMenuItem("Exit");
 
@@ -155,6 +157,7 @@ public class ParticleEditor extends JFrame {
 		file.add(exp);
 		file.addSeparator();
 		file.add(hud);
+		file.add(whiskas);
 		file.addSeparator();
 		file.add(quit);
 
@@ -196,6 +199,11 @@ public class ParticleEditor extends JFrame {
 		quit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.exit(0);
+			}
+		});
+		whiskas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				graphEditorFrame.setVisible(!graphEditorFrame.isVisible());
 			}
 		});
 		
@@ -324,7 +332,7 @@ public class ParticleEditor extends JFrame {
 
 	    graphEditorFrame= new JFrame("Whiskas Gradient Editor");
 	    graphEditorFrame.getContentPane().add(editor);
-	    graphEditorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+	    graphEditorFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 	    graphEditorFrame.pack();
 	    graphEditorFrame.setSize(600, 300);
 	    graphEditorFrame.setLocation(this.getX(), this.getY()+this.getHeight());
@@ -356,33 +364,42 @@ public class ParticleEditor extends JFrame {
 		int resp = chooser.showOpenDialog(this);
 		if (resp == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-
+			File path = file.getParentFile();
+			
 			try {
 				final ConfigurableEmitter emitter = ParticleIO.loadEmitter(file);
 				
+				
 				if (emitter.getImageName() != null) {
-					chooser.setDialogTitle("Locate the image: "+emitter.getImageName());
-					resp = chooser.showOpenDialog(this);
-					FileFilter filter = new FileFilter() {
-						public boolean accept(File f) {
-							if (f.isDirectory()) {
-								return true;
+					File possible = new File(path, emitter.getImageName());
+					
+					if (possible.exists()) {
+						emitter.setImageName(possible.getAbsolutePath());
+					} else {
+						chooser.setDialogTitle("Locate the image: "+emitter.getImageName());
+						resp = chooser.showOpenDialog(this);
+						FileFilter filter = new FileFilter() {
+							public boolean accept(File f) {
+								if (f.isDirectory()) {
+									return true;
+								}
+								
+								return (f.getName().equals(emitter.getImageName()));
 							}
-							
-							return (f.getName().equals(emitter.getImageName()));
+	
+							public String getDescription() {
+								return emitter.getImageName();
+							}
+						};
+						chooser.addChoosableFileFilter(filter);
+						if (resp == JFileChooser.APPROVE_OPTION) {
+							File image = chooser.getSelectedFile();
+							emitter.setImageName(image.getAbsolutePath());
+							path = image.getParentFile();
 						}
-
-						public String getDescription() {
-							return emitter.getImageName();
-						}
-					};
-					chooser.addChoosableFileFilter(filter);
-					if (resp == JFileChooser.APPROVE_OPTION) {
-						File image = chooser.getSelectedFile();
-						emitter.setImageName(image.getAbsolutePath());
+						chooser.resetChoosableFileFilters();
+						chooser.addChoosableFileFilter(xmlFileFilter);
 					}
-					chooser.resetChoosableFileFilters();
-					chooser.addChoosableFileFilter(xmlFileFilter);
 				}
 				
 				addEmitter(emitter);
@@ -459,7 +476,8 @@ public class ParticleEditor extends JFrame {
 		int resp = chooser.showOpenDialog(this);
 		if (resp == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-
+			File path = file.getParentFile();
+			
 			try {
 				ParticleSystem system = ParticleIO.loadConfiguredSystem(file);
 				canvas.setSystem(system);
@@ -469,30 +487,38 @@ public class ParticleEditor extends JFrame {
 					final ConfigurableEmitter emitter = (ConfigurableEmitter) system.getEmitter(i);
 					
 					if (emitter.getImageName() != null) {
-						chooser.setDialogTitle("Locate the image: "+emitter.getImageName());
-						FileFilter filter = new FileFilter() {
-							public boolean accept(File f) {
-								if (f.isDirectory()) {
-									return true;
+						File possible = new File(path, emitter.getImageName());
+						if (possible.exists()) {
+							emitter.setImageName(possible.getAbsolutePath());
+						} else {
+							chooser.setDialogTitle("Locate the image: "+emitter.getImageName());
+							FileFilter filter = new FileFilter() {
+								public boolean accept(File f) {
+									if (f.isDirectory()) {
+										return true;
+									}
+									
+									return (f.getName().equals(emitter.getImageName()));
 								}
-								
-								return (f.getName().equals(emitter.getImageName()));
+	
+								public String getDescription() {
+									return emitter.getImageName();
+								}
+							};
+							
+							chooser.addChoosableFileFilter(filter);
+							resp = chooser.showOpenDialog(this);
+							if (resp == JFileChooser.APPROVE_OPTION) {
+								File image = chooser.getSelectedFile();
+								emitter.setImageName(image.getAbsolutePath());
+								path = image.getParentFile();
 							}
-
-							public String getDescription() {
-								return emitter.getImageName();
-							}
-						};
-						chooser.addChoosableFileFilter(filter);
-						resp = chooser.showOpenDialog(this);
-						if (resp == JFileChooser.APPROVE_OPTION) {
-							File image = chooser.getSelectedFile();
-							emitter.setImageName(image.getAbsolutePath());
+							chooser.setDialogTitle("Open");
+							chooser.resetChoosableFileFilters();
+							chooser.addChoosableFileFilter(xmlFileFilter);
 						}
-						chooser.setDialogTitle("Open");
-						chooser.resetChoosableFileFilters();
-						chooser.addChoosableFileFilter(xmlFileFilter);
 					}
+					
 					emitters.add(emitter);
 				}
 				additive.setSelected(system.getBlendingMode() == ParticleSystem.BLEND_ADDITIVE);
