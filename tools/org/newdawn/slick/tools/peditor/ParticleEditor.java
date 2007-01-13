@@ -94,8 +94,10 @@ public class ParticleEditor extends JFrame {
 	/** The slider defining the movement of the system */
 	private JSlider systemMove = new JSlider(-100,100,0);
 	
-	/** the frame **/
+	/** The graph editor frame **/
 	private JFrame graphEditorFrame;
+	/** The filter in use */
+	private FileFilter xmlFileFilter;
 	
 	/**
 	 * Create a new editor
@@ -105,7 +107,7 @@ public class ParticleEditor extends JFrame {
 	public ParticleEditor() throws LWJGLException {
 		super("Pedigree - Whiskas flavoured");
 
-		chooser.setFileFilter(new FileFilter() {
+		xmlFileFilter = new FileFilter() {
 			public boolean accept(File f) {
 				if (f.isDirectory()) {
 					return true;
@@ -121,7 +123,8 @@ public class ParticleEditor extends JFrame {
 			public String getDescription() {
 				return "XML Files";
 			}
-		});
+		};
+		chooser.setFileFilter(xmlFileFilter);
 		
 		try {
 			InputStream in = ParticleEditor.class.getClassLoader().getResourceAsStream("org/newdawn/slick/tools/peditor/data/icon.gif");
@@ -349,12 +352,39 @@ public class ParticleEditor extends JFrame {
 	 * Import an emitter XML file
 	 */
 	public void importEmitter() {
+		chooser.setDialogTitle("Open");
 		int resp = chooser.showOpenDialog(this);
 		if (resp == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
 
 			try {
-				ConfigurableEmitter emitter = ParticleIO.loadEmitter(file);
+				final ConfigurableEmitter emitter = ParticleIO.loadEmitter(file);
+				
+				if (emitter.getImageName() != null) {
+					chooser.setDialogTitle("Locate the image: "+emitter.getImageName());
+					resp = chooser.showOpenDialog(this);
+					FileFilter filter = new FileFilter() {
+						public boolean accept(File f) {
+							if (f.isDirectory()) {
+								return true;
+							}
+							
+							return (f.getName().equals(emitter.getImageName()));
+						}
+
+						public String getDescription() {
+							return emitter.getImageName();
+						}
+					};
+					chooser.addChoosableFileFilter(filter);
+					if (resp == JFileChooser.APPROVE_OPTION) {
+						File image = chooser.getSelectedFile();
+						emitter.setImageName(image.getAbsolutePath());
+					}
+					chooser.resetChoosableFileFilters();
+					chooser.addChoosableFileFilter(xmlFileFilter);
+				}
+				
 				addEmitter(emitter);
 				emitters.setSelected(emitter);
 			} catch (IOException e) {
@@ -394,7 +424,8 @@ public class ParticleEditor extends JFrame {
 		if (selected == null) {
 			return;
 		}
-		
+
+		chooser.setDialogTitle("Save");
 		int resp = chooser.showSaveDialog(this);
 		if (resp == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
@@ -424,6 +455,7 @@ public class ParticleEditor extends JFrame {
 	 * Load a complete particle system XML description
 	 */
 	public void loadSystem() {
+		chooser.setDialogTitle("Open");
 		int resp = chooser.showOpenDialog(this);
 		if (resp == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
@@ -432,8 +464,36 @@ public class ParticleEditor extends JFrame {
 				ParticleSystem system = ParticleIO.loadConfiguredSystem(file);
 				canvas.setSystem(system);
 				emitters.clear();
+				
 				for (int i=0;i<system.getEmitterCount();i++) {
-					emitters.add((ConfigurableEmitter) system.getEmitter(i));
+					final ConfigurableEmitter emitter = (ConfigurableEmitter) system.getEmitter(i);
+					
+					if (emitter.getImageName() != null) {
+						chooser.setDialogTitle("Locate the image: "+emitter.getImageName());
+						FileFilter filter = new FileFilter() {
+							public boolean accept(File f) {
+								if (f.isDirectory()) {
+									return true;
+								}
+								
+								return (f.getName().equals(emitter.getImageName()));
+							}
+
+							public String getDescription() {
+								return emitter.getImageName();
+							}
+						};
+						chooser.addChoosableFileFilter(filter);
+						resp = chooser.showOpenDialog(this);
+						if (resp == JFileChooser.APPROVE_OPTION) {
+							File image = chooser.getSelectedFile();
+							emitter.setImageName(image.getAbsolutePath());
+						}
+						chooser.setDialogTitle("Open");
+						chooser.resetChoosableFileFilters();
+						chooser.addChoosableFileFilter(xmlFileFilter);
+					}
+					emitters.add(emitter);
 				}
 				additive.setSelected(system.getBlendingMode() == ParticleSystem.BLEND_ADDITIVE);
 				pointsEnabled.setSelected(system.usePoints());

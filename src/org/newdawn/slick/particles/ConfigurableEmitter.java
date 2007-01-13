@@ -175,6 +175,15 @@ public class ConfigurableEmitter implements ParticleEmitter {
 			updateImage = true;
 		}
 	}
+	
+	/**
+	 * The name of the image to load
+	 * 
+	 * @return The name of the image to load
+	 */
+	public String getImageName() {
+		return imageName;
+	}
 
 	/**
 	 * @see java.lang.Object#toString()
