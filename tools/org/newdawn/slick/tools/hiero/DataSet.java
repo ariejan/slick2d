@@ -31,6 +31,10 @@ public class DataSet
         this.lineHeight = lineHeight;
     }
 	
+    public void dumpStats() {
+    	System.out.println("Kerning Count: "+kerning.size());
+    }
+    
 	public void toAngelCode(PrintStream out) {
 		out.println("info face=\""+fontName+"\" size="+size+" bold=0 italic=0 charset=\""+setName+"\" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1");
 		out.println("common lineHeight="+lineHeight+" base=26 scaleW="+width+" scaleH="+height+" pages=1 packed=0");

@@ -58,6 +58,10 @@ public class FontPanel extends JPanel {
         repaint(0);
     }
     
+    public void generateData() {
+    	gen.generateData();
+    }
+    
     public void generate() {
     	if (gen == null) {
     		return;

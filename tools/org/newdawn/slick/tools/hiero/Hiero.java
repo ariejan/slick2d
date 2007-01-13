@@ -163,6 +163,7 @@ public class Hiero extends JFrame {
     		}
     		
     		try {
+                fontPanel.generateData();
     			fontPanel.save(path);
     		} catch (IOException e) {
     			e.printStackTrace();
