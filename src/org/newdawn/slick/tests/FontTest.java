@@ -46,13 +46,13 @@ public class FontTest extends BasicGame {
 	 */
 	public void render(GameContainer container, Graphics g) {
 		font.drawString(80, 5, "A Font Example", Color.red);
-		font.drawString(100, 32, "Here is a more complete line that hopefully");
-		font.drawString(100, 36 + font.getHeight("Here is a more complete line that hopefully"), 
+		font.drawString(100, 32, "We - AV - Here is a more complete line that hopefully");
+		font.drawString(100, 36 + font.getHeight("We Here is a more complete line that hopefully"), 
 				             "will show some kerning.");
 		
 		font2.drawString(80, 105, "A Font Example", Color.red);
-		font2.drawString(100, 132, "Here is a more complete line that hopefully");
-		font2.drawString(100, 136 + font2.getHeight("Here is a more complete line that hopefully"), 
+		font2.drawString(100, 132, "We - AV - Here is a more complete line that hopefully");
+		font2.drawString(100, 136 + font2.getHeight("We - Here is a more complete line that hopefully"), 
 				             "will show some kerning.");
 		image.draw(100,400);
 	}

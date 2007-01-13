@@ -7,6 +7,7 @@ import java.util.Iterator;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.Log;
 
@@ -25,6 +26,16 @@ public class ParticleSystem {
 	
 	/** The default number of particles in the system */
 	private static final int DEFAULT_PARTICLES = 100;
+
+	/**
+	 * Set the path from which images should be loaded
+	 * 
+	 * @param path
+	 *            The path from which images should be loaded
+	 */
+	public static void setRelativePath(String path) {
+		ConfigurableEmitter.setRelativePath(path);
+	}
 	
 	/**
 	 * A pool of particles being used by a specific emitter
@@ -89,7 +100,9 @@ public class ParticleSystem {
 	private Image sprite;
 	/** True if the particle system is visible */
 	private boolean visible = true;
-	
+	/** The name of the default image */
+	private String defaultImageName;
+
 	/**
 	 * Create a new particle system
 	 * 
@@ -97,6 +110,15 @@ public class ParticleSystem {
 	 */
 	public ParticleSystem(Image defaultSprite) {
 		this(defaultSprite, DEFAULT_PARTICLES);
+	}
+	
+	/**
+	 * Create a new particle system
+	 * 
+	 * @param defaultSpriteRef The sprite to render for each particle
+	 */
+	public ParticleSystem(String defaultSpriteRef) {
+		this(defaultSpriteRef, DEFAULT_PARTICLES);
 	}
 	
 	/**
@@ -149,14 +171,37 @@ public class ParticleSystem {
 	/**
 	 * Create a new particle system
 	 * 
+	 * @param defaultSpriteRef The sprite to render for each particle
+	 * @param maxParticles The number of particles available in the system
+	 */
+	public ParticleSystem(String defaultSpriteRef, int maxParticles) {
+		this.maxParticlesPerEmitter= maxParticles;
+	
+		setDefaultImageName(defaultSpriteRef);
+		dummy = createParticle(this);
+	}
+
+	/**
+	 * Create a new particle system
+	 * 
 	 * @param defaultSprite The sprite to render for each particle
 	 * @param maxParticles The number of particles available in the system
 	 */
 	public ParticleSystem(Image defaultSprite, int maxParticles) {
-		this.sprite = defaultSprite;
 		this.maxParticlesPerEmitter= maxParticles;
 	
+		sprite = defaultSprite;
 		dummy = createParticle(this);
+	}
+	
+	/**
+	 * Set the default image name 
+	 * 
+	 * @param ref The default image name
+	 */
+	public void setDefaultImageName(String ref) {
+		defaultImageName = ref;
+		sprite = null;
 	}
 	
 	/**
@@ -266,6 +311,15 @@ public class ParticleSystem {
 	 * Render the particles in the system
 	 */
 	public void render() {
+		if ((sprite == null) && (defaultImageName != null)) {
+			try {
+				sprite = new Image(defaultImageName);
+			} catch (SlickException e) {
+				Log.error(e);
+				defaultImageName = null;
+			}
+		}
+		
 		if (!visible) {
 			return;
 		}
