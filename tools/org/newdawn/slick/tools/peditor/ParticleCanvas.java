@@ -171,18 +171,14 @@ public class ParticleCanvas extends AWTGLCanvas {
 		GL11.glOrtho(0, width, height, 0, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		
-		try {
-			system = new ParticleSystem(new Image("org/newdawn/slick/data/particle.tga"),2000);
-			system.setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
-			system.setRemoveCompletedEmitters(false);
-			
-			for (int i=0;i<waiting.size();i++) {
-				system.addEmitter((ParticleEmitter) waiting.get(i));
-			}
-			waiting.clear();
-		} catch (SlickException e) {
-			Log.error(e);
+		system = new ParticleSystem("org/newdawn/slick/data/particle.tga",2000);
+		system.setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
+		system.setRemoveCompletedEmitters(false);
+		
+		for (int i=0;i<waiting.size();i++) {
+			system.addEmitter((ParticleEmitter) waiting.get(i));
 		}
+		waiting.clear();
 		lastTime = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
 
 		AccessController.doPrivileged(new PrivilegedAction() {
@@ -206,15 +202,11 @@ public class ParticleCanvas extends AWTGLCanvas {
 	 * @param additive True if the particle system should be set to additive
 	 */
 	public void clearSystem(boolean additive) {
-		try {
-			system = new ParticleSystem(new Image("org/newdawn/slick/data/particle.tga"),2000);
-			if (additive) {
-				system.setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
-			}
-			system.setRemoveCompletedEmitters(false);
-		} catch (SlickException e) {
-			Log.error(e);
+		system = new ParticleSystem("org/newdawn/slick/data/particle.tga",2000);
+		if (additive) {
+			system.setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
 		}
+		system.setRemoveCompletedEmitters(false);
 	}
 	
 	/**
