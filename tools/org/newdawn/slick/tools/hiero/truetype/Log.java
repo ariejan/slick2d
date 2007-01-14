@@ -12,7 +12,7 @@ public class Log {
 	 * @param msg The message to log
 	 */
 	public void error(String msg) {
-		System.err.println(msg);
+		//System.err.println(msg);
 	}
 
 	/** 
@@ -21,7 +21,7 @@ public class Log {
 	 * @param msg The message to log
 	 */
 	public void debug(String msg) {
-		System.err.println(msg);
+		//System.err.println(msg);
 	}
 
 	/** 
@@ -30,7 +30,7 @@ public class Log {
 	 * @param msg The message to log
 	 */
 	public void warn(String msg) {
-		System.err.println(msg);
+		//System.err.println(msg);
 	}
 
 	/** 
@@ -39,7 +39,7 @@ public class Log {
 	 * @param msg The message to log
 	 */
 	public void fatal(String msg) {
-		System.err.println(msg);
+		//System.err.println(msg);
 	}
 
 	/** 
@@ -48,7 +48,7 @@ public class Log {
 	 * @param msg The message to log
 	 */
 	public void info(String msg) {
-		System.err.println(msg);
+		//System.err.println(msg);
 	}
 
 	/** 
@@ -57,7 +57,7 @@ public class Log {
 	 * @param msg The message to log
 	 */
 	public void trace(String msg) {
-		System.err.println(msg);
+		//System.err.println(msg);
 	}
 	
 	/**

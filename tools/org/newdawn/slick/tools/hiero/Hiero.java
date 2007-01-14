@@ -1,7 +1,6 @@
 package org.newdawn.slick.tools.hiero;
 
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -31,19 +30,39 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.newdawn.slick.tools.hiero.truetype.FontData;
+
+/**
+ * A tool to generate bitmap fonts
+ *
+ * @author kevin
+ */
 public class Hiero extends JFrame {
+	/** The character set for all ascii characters */
     public static final CharSet SET_ASCII = new CharSet(32, 255,"ASCII");
+    /** The subset for NEHE style fonts */
     public static final CharSet SET_NEHE = new CharSet(32, 32+96,"NEHE");
     
-    private Font font = new Font("Verdana", Font.ITALIC, 50);
+    /** The font data for the currently selected font */
+    private FontData font;
+    /** The list of fonts available */
     private DefaultListModel fonts = new DefaultListModel();
+    /** The visual list of fonts */
     private JList fontList = new JList(fonts);
+    /** The panel displaying the rendered font texture */
     private FontPanel fontPanel;
+    /** The size of the font rendered */
     private JSpinner size;
+    /** Indicator for bold fonts */
     private JCheckBox bold;
+    /** Indicator for italic fonts */
     private JCheckBox italic;
+    /** The chooser for everything */
     private JFileChooser chooser = new JFileChooser(new File("."));
     
+    /**
+     * Create a new instance of the tool
+     */
     public Hiero() {
         super("Hiero Bitmap Font Tool");
    
@@ -68,8 +87,7 @@ public class Hiero extends JFrame {
         pane.setBounds(5,5,550,550);
         panel.add(pane);
 
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        String fontNames[] = ge.getAvailableFontFamilyNames();
+        String fontNames[] = FontData.getFamilyNames();
         for (int i=0;i<fontNames.length;i++) {
         	fonts.addElement(fontNames[i]);
         }
@@ -154,6 +172,9 @@ public class Hiero extends JFrame {
         size.setValue(new Integer(45));
     }
     
+    /**
+     * Save the font out to the data file and image
+     */
     private void saveFont() {
     	int resp = chooser.showSaveDialog(this);
     	if (resp == JFileChooser.APPROVE_OPTION) {
@@ -172,11 +193,33 @@ public class Hiero extends JFrame {
     	}
     }
     
+    /**
+     * Update the current font
+     */
     private void updateFont() {
     	String name = fontList.getSelectedValue().toString();
     	int size = ((Integer) this.size.getValue()).intValue();
-    	boolean bold = this.bold.isSelected();
-    	boolean italic = this.italic.isSelected();
+    	
+    	boolean supportsBold = FontData.getBold(name) != null;
+    	boolean supportsItalic = FontData.getItalic(name) != null;
+    	boolean bold = this.bold.isSelected() && supportsBold;
+    	boolean italic = this.italic.isSelected() && supportsItalic;
+    	
+    	if (FontData.getPlain(name) == null) {
+    		if (supportsBold) {
+    			bold = true;
+    			this.bold.setSelected(true);
+    			supportsBold = false;
+    		}
+    		if (supportsItalic) {
+    			italic = true;
+    			this.italic.setSelected(true);
+    			supportsItalic = false;
+    		}
+    	}
+    	
+    	this.bold.setEnabled(supportsBold);
+    	this.italic.setEnabled(supportsItalic);
     	
     	int style = Font.PLAIN;
     	if (bold) {
@@ -186,10 +229,16 @@ public class Hiero extends JFrame {
     		style |= Font.ITALIC;
     	}
     	
-    	font = new Font(name, style, size);
+    	font = FontData.getStyled(name, style);
+    	font = font.deriveFont(size);
     	fontPanel.setFont(font);
     }
     
+    /**
+     * Entry point into the application
+     * 
+     * @param argv The arguments passed to the program
+     */
     public static void main(String[] argv) {
         new Hiero();
     }

@@ -454,10 +454,11 @@ public class TTFFile {
      * Reads the font using a FontFileReader.
      *
      * @param in The FontFileReader to use
+     * @return False if the font was invalid 
      * @throws IOException In case of an I/O problem
      */
-    public void readFont(FontFileReader in) throws IOException {
-        readFont(in, (String)null);
+    public boolean readFont(FontFileReader in) throws IOException {
+        return readFont(in, (String)null);
     }
 
     /**

@@ -5,41 +5,67 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.font.GlyphMetrics;
 import java.awt.font.GlyphVector;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import org.newdawn.slick.tools.hiero.truetype.FontData;
+
 /**
- * TODO: Document this class
+ * A class to generate a font texture with any given effects
  *
  * @author kevin
  */
 public class FontTextureGenerator {
+	/** The generated image */
 	private BufferedImage image;
+	/** The generated overlay */
 	private BufferedImage overlay;
+	/** The dataset generated */
 	private DataSet data;
-	private Font font;
+	/** The font data being rendered */
+	private FontData font;
+	/** The width of the texture generated */
 	private int width;
+	/** The height of the texture generated */
 	private int height;
+	/** The character set being rendered */
 	private CharSet set;
+	/** The list of glyph bounds */
 	private ArrayList rects;
 	
+	/**
+	 * Get the image generated 
+	 * 
+	 * @return The image generated
+	 */
 	public BufferedImage getImage() {
 		return image;
 	}
     
+	/**
+	 * Get the overlay image generated
+	 * 
+	 * @return The overlay image generated
+	 */
 	public BufferedImage getOverlay() {
 		return overlay;
 	}
 	
+	/**
+	 * Get the data set generated 
+	 * 
+	 * @return The dataset generated 
+	 */
 	public DataSet getDataSet() {
 		return data;
 	}
 	
+	/**
+	 * Generate a data set for the rendering
+	 */
 	public void generateData() {
         Graphics2D g = (Graphics2D) image.getGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -48,13 +74,22 @@ public class FontTextureGenerator {
         
         for (int i=0;i<rects.size();i++) {
         	GlyphRect rect = (GlyphRect) rects.get(i);
-        	rect.storeData(g, data, set);
+        	rect.storeData(data, set);
         }
         
         data.dumpStats();
 	}
 
-	public void generate(Font font, int width, int height, CharSet set) {
+	/**
+	 * Generate the texture image
+	 * 
+	 * @param font The font to be rendered
+	 * @param width The width of the texture to be generated
+	 * @param height The height of the texture to be generated
+	 * @param set The set to be generated
+	 */
+	public void generate(FontData font, int width, int height, CharSet set) {
+		this.font = font;
         int xp = 0;
         int yp = 0;
         
@@ -75,7 +110,7 @@ public class FontTextureGenerator {
         int xpadding = 0;
         int ypadding = 0;
         
-        g.setFont(font);
+        g.setFont(font.getJavaFont());
         og.setColor(Color.red);
         og.drawRect(0,0,width,height);
         
@@ -83,7 +118,7 @@ public class FontTextureGenerator {
         int lineHeight = des + g.getFontMetrics().getMaxAscent() + ypadding;
         yp += lineHeight-des;
 
-        data = new DataSet(font.getName(), font.getSize(), lineHeight, width, height, set.getName(), "font.png");
+        data = new DataSet(font.getName(), (int) font.getSize(), lineHeight, width, height, set.getName(), "font.png");
 
         rects = new ArrayList();
         
@@ -177,60 +212,117 @@ public class FontTextureGenerator {
         });
     }
 
-    private int getKerning(Graphics2D g, char first, char second) {
-    	String text = second+""+first;
-        GlyphVector vector = g.getFont().layoutGlyphVector(g.getFontRenderContext(), text.toCharArray(), 0, text.length(), Font.LAYOUT_LEFT_TO_RIGHT);
-
-        Rectangle f = vector.getGlyphPixelBounds(0, g.getFontRenderContext(), 0, 0).getBounds();
-        Rectangle s = vector.getGlyphPixelBounds(1, g.getFontRenderContext(), 0, 0).getBounds();
-        GlyphMetrics met0 = vector.getGlyphMetrics(0);
-        GlyphMetrics met1 = vector.getGlyphMetrics(1);
-
-        float xdif = (float) ((s.getX() - met1.getLSB()) - (f.getX() - met0.getLSB()));
-        float advance = met0.getAdvance();
-        
-        int kern = (int) (xdif - advance);
-        return kern;
+	/**
+	 * Get the kerning value for a pair of characters 
+	 * 
+	 * @param first The first character
+	 * @param second The second character
+	 * @return The kerning offset in pixels
+	 */
+    private int getKerning(char first, char second) {
+    	return font.getKerning(first, second);
     }
 
+    /**
+     * Get the glyph's offset on y axis for rendering
+     * 
+     * @param g The graphics context
+     * @param vector The glyph vector to extract the data from
+     * @return The y offset of the glyph
+     */
     private int getGlyphYOffset(Graphics2D g, GlyphVector vector) {
         Rectangle bounds = vector.getPixelBounds(g.getFontRenderContext(), 0,0);
         
-        return (int) (bounds.y);
+        return (bounds.y);
     }
-    
+
+    /**
+     * Get the glyph's height for rendering
+     * 
+     * @param g The graphics context
+     * @param vector The glyph vector to extract the data from
+     * @return The height of the glyph
+     */
     private int getGlyphHeight(Graphics2D g, GlyphVector vector) {
-        return (int) vector.getGlyphVisualBounds(0).getBounds().height;
+        return vector.getGlyphVisualBounds(0).getBounds().height;
     }
-    
+
+    /**
+     * Get the glyph's advance on the x axis for rendering
+     * 
+     * @param g The graphics context
+     * @param vector The glyph vector to extract the data from
+     * @return The x advance of the glyph
+     */
     private int getGlyphAdvanceX(Graphics2D g, GlyphVector vector) {
         return (int) vector.getGlyphMetrics(0).getAdvanceX();
     }
 
+    /**
+     * Get the glyph's advance on the y axis for rendering
+     * 
+     * @param g The graphics context
+     * @param vector The glyph vector to extract the data from
+     * @return The y advance of the glyph
+     */
     private int getGlyphAdvanceY(Graphics2D g, GlyphVector vector) {
         return (int) vector.getGlyphMetrics(0).getAdvanceY();
     }
-    
+
+    /**
+     * Get the glyph's LSB for rendering
+     * 
+     * @param g The graphics context
+     * @param vector The glyph vector to extract the data from
+     * @return The LSB of the glyph
+     */
     private int getGlyphLSB(Graphics2D g, GlyphVector vector) {
         return (int) vector.getGlyphMetrics(0).getLSB();
     }
 
+    /**
+     * Get the glyph's RSB for rendering
+     * 
+     * @param g The graphics context
+     * @param vector The glyph vector to extract the data from
+     * @return The RSB of the glyph
+     */
     private int getGlyphRSB(Graphics2D g, GlyphVector vector) {
         return (int) vector.getGlyphMetrics(0).getRSB();
     }
     
+    /**
+     * A record of a single rendered character
+     *
+     * @author kevin
+     */
     private class GlyphRect {
+    	/** The character rendered */
     	public char c;
+    	/** The x position of the glyph on the sheet */
     	public int x;
+    	/** The y position of the glyph on the sheet */
     	public int y;
+    	/** The width of the glyph on the sheet */
     	public int width;
+    	/** The height of the glyph on the sheet */
     	public int height;
+    	/** The advance on the x axis for the glyph */
     	public int advance;
+    	/** The offset for rendering on the y axis for the glyph */
     	public int yoffset;
+    	/** The x draw offset for rendering purposes */
     	public int xDrawOffset;
+    	/** The y draw offset for rendering purposes */
     	public int yDrawOffset;
     	
-    	public void storeData(Graphics2D g, DataSet data, CharSet set) {
+    	/**
+    	 * Store the data for the glyph into the data set
+    	 * 
+    	 * @param data The data set to populate
+    	 * @param set The character set being rendered
+    	 */
+    	public void storeData(DataSet data, CharSet set) {
             data.addCharacter(c, advance, x,y, width, height,yoffset);
             
             int[] kerns = new int[1000];
@@ -239,18 +331,28 @@ public class FontTextureGenerator {
             for (int j=set.getStart();j<=set.getEnd();j++) {    
             	char second = (char) j;
             	
-            	int kerning = getKerning(g, c, second);
+            	int kerning = getKerning(c, second);
             	if (kerning != 0) {
             		data.addKerning(c, second, kerning);
             	}
             }
     	}
     	
+    	/**
+    	 * Draw the glyph
+    	 * 
+    	 * @param g The graphics context on which to draw
+    	 */
     	public void drawGlyph(Graphics2D g) {
     		g.setColor(Color.white);
     		g.drawString(""+c, x + xDrawOffset, y - yoffset + yDrawOffset);
     	}
     	
+    	/**
+    	 * Draw the overlay info to the graphics context
+    	 * 
+    	 * @param og The overlay graphics to draw onto
+     	 */
     	public void drawOverlay(Graphics2D og) {
     		og.setColor(Color.yellow);
             og.drawRect(x,y,width,height);
