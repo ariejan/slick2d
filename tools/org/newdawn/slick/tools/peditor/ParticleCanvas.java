@@ -289,7 +289,9 @@ public class ParticleCanvas extends AWTGLCanvas {
 			for (int i=0;i<emitters.size();i++) {
 				((ConfigurableEmitter) emitters.get(i)).replayCheck();
 			}
-			system.update((int) delta);
+			for (int i=0;i<delta;i++) {
+				system.update(1);
+			}
 		}
 	}
 
