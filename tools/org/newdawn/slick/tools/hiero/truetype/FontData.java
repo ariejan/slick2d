@@ -2,14 +2,25 @@ package org.newdawn.slick.tools.hiero.truetype;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * A wrapper that brings Java font and TTF read fonts together.
@@ -21,7 +32,8 @@ public class FontData {
 	private static String userhome = System.getProperty("user.home");
 	
 	/** The windows list of possible font locations */
- 	private static File[] win32 = new File[] {new File("c:/windows/fonts")
+ 	private static File[] win32 = new File[] {
+ 											  new File("c:/windows/fonts")
  	};
 	/** The macos list of possible font locations */
 	private static File[] macos = new File[] {new File("/System/Library/Fonts/"),
@@ -137,7 +149,15 @@ public class FontData {
 	 * @param fonts The fonts list to add to
 	 */
 	private static void processFontDirectory(File dir, ArrayList fonts) {
+		if (!dir.exists()) {
+			return;
+		}
+		
 		File[] sources = dir.listFiles();
+		if (sources == null) {
+			return;
+		}
+		
 		for (int j=0;j<sources.length;j++) {
 			File source = sources[j];
 		
@@ -209,9 +229,74 @@ public class FontData {
 			
 				processFontDirectory(loc, fonts);
 			}
+
+			if (os.startsWith("Linux")) {
+				locateLinuxFonts(new File("/etc/fonts/fonts.conf"));
+			}
 		}
 		
 		return (FontData[]) fonts.toArray(new FontData[0]);
+	}
+	
+	/**
+	 * Locate the linux fonts based on the XML configuration file
+	 * 
+	 * @param file The location of the XML file
+	 */
+	private static void locateLinuxFonts(File file) {
+		if (!file.exists()) {
+			System.err.println("Unable to open: "+file.getAbsolutePath());
+			return;
+		}
+
+		try {
+			InputStream in = new FileInputStream(file);
+		
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			ByteArrayOutputStream temp = new ByteArrayOutputStream();
+			PrintStream pout = new PrintStream(temp);
+			while (reader.ready()) {
+				String line = reader.readLine();
+				if (line.indexOf("DOCTYPE") == -1) {
+					pout.println(line);
+				}
+			}
+			
+			in = new ByteArrayInputStream(temp.toByteArray());
+		
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			
+			Document document = builder.parse(in);
+			
+			NodeList dirs = document.getElementsByTagName("dir");
+			for (int i=0;i<dirs.getLength();i++) {
+				Element element = (Element) dirs.item(i);
+				String dir = element.getFirstChild().getTextContent();
+				
+				if (dir.startsWith("~")) {
+					dir = dir.substring(1);
+					dir = userhome + dir;
+				}
+				
+				addFontDirectory(new File(dir));
+			}
+			
+			NodeList includes = document.getElementsByTagName("include");
+			for (int i=0;i<includes.getLength();i++) {
+				Element element = (Element) dirs.item(i);
+				String inc = element.getFirstChild().getTextContent();
+				if (inc.startsWith("~")) {
+					inc = inc.substring(1);
+					inc = userhome + inc;
+				}
+				
+				locateLinuxFonts(new File(inc));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Unable to process: "+file.getAbsolutePath());
+		}
 	}
 	
 	/**
@@ -219,7 +304,7 @@ public class FontData {
 	 * 
 	 * @param dir The directory containing fonts
 	 */
-	public void addFontDirectory(File dir) {
+	public static void addFontDirectory(File dir) {
 		processFontDirectory(dir, fonts);
 	}
 	

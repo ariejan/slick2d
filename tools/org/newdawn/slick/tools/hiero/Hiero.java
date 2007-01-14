@@ -77,6 +77,15 @@ public class Hiero extends JFrame {
         		saveFont();
         	}
         });
+        JMenuItem addDir = new JMenuItem("Add Font Directory");
+        addDir.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		addDirectory();
+        	}
+        });
+        
+        file.add(addDir);
+        file.addSeparator();
         file.add(save);
         
         JPanel panel = new JPanel();
@@ -87,10 +96,7 @@ public class Hiero extends JFrame {
         pane.setBounds(5,5,550,550);
         panel.add(pane);
 
-        String fontNames[] = FontData.getFamilyNames();
-        for (int i=0;i<fontNames.length;i++) {
-        	fonts.addElement(fontNames[i]);
-        }
+        updateFontList();
         
         JLabel label;
         
@@ -232,6 +238,31 @@ public class Hiero extends JFrame {
     	font = FontData.getStyled(name, style);
     	font = font.deriveFont(size);
     	fontPanel.setFont(font);
+    }
+    
+    /**
+     * Update the list of fonts available
+     */
+    public void updateFontList() {
+    	fonts.clear();
+    	
+        String fontNames[] = FontData.getFamilyNames();
+        for (int i=0;i<fontNames.length;i++) {
+        	fonts.addElement(fontNames[i]);
+        }
+    }
+    /**
+     * Add a font directory
+     */
+    public void addDirectory() {
+    	JFileChooser chooser = new JFileChooser(".");
+    	chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    	int resp = chooser.showOpenDialog(this);
+    	if (resp == JFileChooser.APPROVE_OPTION) {
+    		File dir = chooser.getSelectedFile();
+    		FontData.addFontDirectory(dir);
+    		updateFontList();
+    	}
     }
     
     /**
