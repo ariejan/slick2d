@@ -36,6 +36,10 @@ public class FontPanel extends JPanel {
     private BufferedImage overlay;
     /** The genrator used to produce the image */
     private FontTextureGenerator gen;
+    /** The x padding to apply */
+    private int xpadding;
+    /** The y padding to apply */
+    private int ypadding;
     
     /**
      * Create a new font panel
@@ -103,7 +107,7 @@ public class FontPanel extends JPanel {
     		return;
     	}
     	
-    	gen.generate(font, width, height, set);
+    	gen.generate(font, width, height, set, xpadding, ypadding);
     	image = gen.getImage();
     	overlay = gen.getOverlay();
     	data = gen.getDataSet();
@@ -116,8 +120,13 @@ public class FontPanel extends JPanel {
      * @throws IOException Indicates a failure to write to the file
      */
     public void save(String ref) throws IOException {
-    	ImageIO.write(image, "PNG", new FileOutputStream(ref+".png"));
-    	data.toAngelCode(new PrintStream(new FileOutputStream(ref+".fnt")));
+    	FileOutputStream fout = new FileOutputStream(ref+".png");
+    	ImageIO.write(image, "PNG", fout);
+    	fout.close();
+    	
+    	fout = new FileOutputStream(ref+".fnt");
+    	data.toAngelCode(new PrintStream(fout));
+    	fout.close();
     }
     
     /**
@@ -135,5 +144,18 @@ public class FontPanel extends JPanel {
         
         generate();
         repaint(0);
+    }
+    
+    /**
+     * Set the padding to apply round characters
+     * 
+     * @param padding The padding to apply round characters
+     */
+    public void setPadding(int padding) {
+    	xpadding = padding;
+    	ypadding = padding;
+    	
+    	generate();
+    	repaint(0);
     }
 }

@@ -58,6 +58,17 @@ public class FontData {
 	private static HashMap italic = new HashMap();
 	/** Bold Italic fonts */
 	private static HashMap bolditalic = new HashMap();
+	/** Set the status listener */
+	private static StatusListener statusListener;
+
+	/**
+	 * Set the the status listener that will be notified of font loading progress
+	 * 
+	 * @param listener The listener to be notified of font loading progress
+	 */
+	public static void setStatusListener(StatusListener listener) {
+		statusListener = listener;
+	}
 	
 	/**
 	 * Get the list of all the font family names available
@@ -173,6 +184,9 @@ public class FontData {
 			}
 			if (source.getName().toLowerCase().endsWith(".ttf")) {
 				try {
+					if (statusListener != null) {
+						statusListener.updateStatus("Processing "+source.getName());
+					}
 					FontData data = new FontData(new FileInputStream(source), 1);
 					fonts.add(data);
 					
@@ -196,6 +210,9 @@ public class FontData {
 				} catch (Exception e) {
 					if (DEBUG) {
 						System.err.println("Unable to process: "+source.getAbsolutePath());
+					}
+					if (statusListener != null) {
+						statusListener.updateStatus("Unable to process: "+source.getName());
 					}
 				}
 			}

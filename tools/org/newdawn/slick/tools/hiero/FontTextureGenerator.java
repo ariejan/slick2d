@@ -87,8 +87,10 @@ public class FontTextureGenerator {
 	 * @param width The width of the texture to be generated
 	 * @param height The height of the texture to be generated
 	 * @param set The set to be generated
+	 * @param xpadding The padding on the x axis
+	 * @param ypadding The padding on the y axis
 	 */
-	public void generate(FontData font, int width, int height, CharSet set) {
+	public void generate(FontData font, int width, int height, CharSet set, int xpadding, int ypadding) {
 		this.font = font;
         int xp = 0;
         int yp = 0;
@@ -107,9 +109,6 @@ public class FontTextureGenerator {
         overlay = new BufferedImage(width+1, height+1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D og = (Graphics2D) overlay.getGraphics();
 
-        int xpadding = 0;
-        int ypadding = 0;
-        
         g.setFont(font.getJavaFont());
         og.setColor(Color.red);
         og.drawRect(0,0,width,height);
@@ -132,7 +131,7 @@ public class FontTextureGenerator {
             int lsb = getGlyphLSB(g, vector);
             int rsb = getGlyphRSB(g, vector);
             int fontWidth = getGlyphAdvanceX(g, vector) + (xpadding * 2);
-            int fontHeight = getGlyphHeight(g, vector)+2;
+            int fontHeight = getGlyphHeight(g, vector)+2 + (ypadding * 2);
             int yoffset = getGlyphYOffset(g, vector)-1;
             int advance = getGlyphAdvanceX(g, vector) + (xpadding * 2);
             
@@ -154,7 +153,7 @@ public class FontTextureGenerator {
             rect.x = xp;
             rect.y = yp+yoffset;
             rect.xDrawOffset = xoffset + xpadding;
-            rect.yDrawOffset = -1 - ypadding;
+            rect.yDrawOffset = -1 + ypadding;
             rect.width = fontWidth;
             rect.height = fontHeight;
             rect.yoffset = yoffset;

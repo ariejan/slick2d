@@ -1,6 +1,9 @@
 package org.newdawn.slick.tools.hiero;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -9,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 
+import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -59,6 +63,10 @@ public class Hiero extends JFrame {
     private JCheckBox italic;
     /** The chooser for everything */
     private JFileChooser chooser = new JFileChooser(new File("."));
+    /** The width of the texture to generate */
+    private int textureWidth = 512;
+    /** The height of the texture to generate */
+    private int textureHeight = 512;
     
     /**
      * Create a new instance of the tool
@@ -71,8 +79,14 @@ public class Hiero extends JFrame {
         bar.add(file);
         setJMenuBar(bar);
         
-        JMenuItem save = new JMenuItem("Save");
+        JMenuItem save = new JMenuItem("Save Bitmap Font");
         save.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		saveFont();
+        	}
+        });
+        JMenuItem quit = new JMenuItem("Exit");
+        quit.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		saveFont();
         	}
@@ -87,27 +101,43 @@ public class Hiero extends JFrame {
         file.add(addDir);
         file.addSeparator();
         file.add(save);
+        file.addSeparator();
+        file.add(quit);
         
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
+        Box panel = Box.createHorizontalBox();
         
         fontPanel = new FontPanel();
         JScrollPane pane = new JScrollPane(fontPanel);
         pane.setBounds(5,5,550,550);
         panel.add(pane);
 
+        JPanel controls = new JPanel();
+        controls.setLayout(null);
+        controls.setBounds(560,0,180,550);
+        Box vert = Box.createVerticalBox();
+        Component strut = Box.createRigidArea(new Dimension(180,5));
+        
+        vert.add(controls);
+        vert.add(strut);
+        panel.add(vert);
+        vert.setMinimumSize(new Dimension(180,550));
+        vert.setMaximumSize(new Dimension(180,550));
+        vert.setPreferredSize(new Dimension(180,550));
+        
+        Splash splash = new Splash();
         updateFontList();
+        splash.dispose();
         
         JLabel label;
         
         label = new JLabel("Font");
-        label.setBounds(560,5,165,25);
-        panel.add(label);
+        label.setBounds(5,5,165,25);
+        controls.add(label);
         
         JScrollPane list = new JScrollPane(fontList);
-        list.setBounds(560,30,165,200);
+        list.setBounds(5,30,165,200);
         fontList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        panel.add(list);
+        controls.add(list);
         fontList.setSelectedValue("Arial", true);
         fontList.addListSelectionListener(new ListSelectionListener() {
         	public void valueChanged(ListSelectionEvent e) {
@@ -116,11 +146,11 @@ public class Hiero extends JFrame {
         });
         
         label = new JLabel("Size");
-        label.setBounds(555,230,165,25);
-        panel.add(label);
-        size = new JSpinner(new SpinnerNumberModel(10,8,100,1));
-        size.setBounds(560,255,165,25);
-        panel.add(size);
+        label.setBounds(5,230,165,25);
+        controls.add(label);
+        size = new JSpinner(new SpinnerNumberModel(10,8,300,1));
+        size.setBounds(5,255,165,25);
+        controls.add(size);
         size.addChangeListener(new ChangeListener() {
         	public void stateChanged(ChangeEvent e) {
         		updateFont();
@@ -128,8 +158,8 @@ public class Hiero extends JFrame {
         });
         
         bold = new JCheckBox("Bold");
-        bold.setBounds(560,280,165,25);
-        panel.add(bold);
+        bold.setBounds(5,280,165,25);
+        controls.add(bold);
         bold.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		updateFont();
@@ -137,8 +167,8 @@ public class Hiero extends JFrame {
         });
         
         italic = new JCheckBox("Italic");
-        italic.setBounds(560,305,165,25);
-        panel.add(italic);
+        italic.setBounds(5,305,165,25);
+        controls.add(italic);
         italic.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		updateFont();
@@ -146,27 +176,79 @@ public class Hiero extends JFrame {
         });
         
         label = new JLabel("Character Set");
-        label.setBounds(560,330,165,25);
-        panel.add(label);
+        label.setBounds(5,330,165,25);
+        controls.add(label);
         
         Vector types = new Vector();
         types.addElement(SET_ASCII);
         types.addElement(SET_NEHE);
         
         final JComboBox type = new JComboBox(types);
-        type.setBounds(560,355,165,25);
-        panel.add(type);
+        type.setBounds(5,355,165,25);
+        controls.add(type);
         type.setSelectedItem(SET_NEHE);
+
+        label = new JLabel("Width");
+        label.setBounds(5,380,165,25);
+        controls.add(label);
+        
+        Vector widths = new Vector();
+        widths.addElement("64");
+        widths.addElement("128");
+        widths.addElement("256");
+        widths.addElement("512");
+        widths.addElement("1024");
+        
+        final JComboBox width = new JComboBox(widths);
+        width.setBounds(5,405,165,25);
+        controls.add(width);
+        width.setSelectedItem("512");
+
+        label = new JLabel("Height");
+        label.setBounds(5,430,165,25);
+        controls.add(label);
+        
+        final JComboBox height = new JComboBox(widths);
+        height.setBounds(5,455,165,25);
+        controls.add(height);
+        height.setSelectedItem("512");
         
         type.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		fontPanel.setCharSet((CharSet) type.getSelectedItem());
         	}
         });
+        width.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		textureWidth = Integer.parseInt(width.getSelectedItem().toString());
+        		fontPanel.setRequiredDimensions(textureWidth, textureHeight);
+        	}
+        });
+        height.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		textureHeight = Integer.parseInt(height.getSelectedItem().toString());
+        		fontPanel.setRequiredDimensions(textureWidth, textureHeight);
+        	}
+        });
+
+        label = new JLabel("Padding");
+        label.setBounds(5,480,165,25);
+        controls.add(label);
+        final JSpinner padding = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+        padding.setBounds(5,505,165,25);
+        controls.add(padding);
+        padding.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) {
+        		fontPanel.setPadding(((Integer) padding.getValue()).intValue());
+        	}
+        });
         
-        setResizable(false);
+        //setResizable(false);
         setContentPane(panel);
     	setSize(750,620);
+    	
+    	Dimension dims = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation((dims.width - getWidth())/2, (dims.height - getHeight()) / 2);
         setVisible(true);
         
         addWindowListener(new WindowAdapter() {
@@ -175,7 +257,7 @@ public class Hiero extends JFrame {
         	}
         });
         
-        size.setValue(new Integer(45));
+        size.setValue(new Integer(32));
     }
     
     /**
@@ -215,17 +297,23 @@ public class Hiero extends JFrame {
     		if (supportsBold) {
     			bold = true;
     			this.bold.setSelected(true);
-    			supportsBold = false;
-    		}
-    		if (supportsItalic) {
+    		} else if (supportsItalic) {
     			italic = true;
     			this.italic.setSelected(true);
-    			supportsItalic = false;
     		}
+			supportsBold = false;
+			supportsItalic = false;
     	}
     	
     	this.bold.setEnabled(supportsBold);
     	this.italic.setEnabled(supportsItalic);
+    	
+    	if (bold && italic) {
+    		if (FontData.getBoldItalic(name) == null) {
+    			italic = false;
+    			bold = false;
+    		}
+    	}
     	
     	int style = Font.PLAIN;
     	if (bold) {
