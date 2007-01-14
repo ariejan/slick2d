@@ -321,8 +321,8 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	public void updateParticle(Particle particle, int delta) {
 		particleCount++;
 
-		particle.adjustDirection(windFactor.getValue(0) * 0.001f, gravityFactor
-				.getValue(0) * 0.001f);
+		particle.adjustDirection(windFactor.getValue(0) * 0.00005f * delta, gravityFactor
+				.getValue(0) * 0.00005f * delta);
 
 		float offset = particle.getLife() / particle.getOriginalLife();
 		float inv = 1 - offset;
