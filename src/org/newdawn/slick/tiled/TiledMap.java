@@ -360,8 +360,9 @@ public class TiledMap {
 			tileWidth = Integer.parseInt(element.getAttribute("tilewidth"));
 			tileHeight = Integer.parseInt(element.getAttribute("tileheight"));
 			int spacing = 0;
-			if (element.getAttribute("spacing") != null) {
-				spacing = Integer.parseInt(element.getAttribute("spacing"));
+			String sv = element.getAttribute("spacing");
+			if ((sv != null) && (!sv.equals(""))) {
+				spacing = Integer.parseInt(sv);
 			}
 			NodeList list = element.getElementsByTagName("image");
 			Element imageNode = (Element) list.item(0);
