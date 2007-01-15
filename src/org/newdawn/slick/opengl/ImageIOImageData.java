@@ -161,12 +161,13 @@ public class ImageIOImageData implements ImageData {
         // build a byte buffer from the temporary image 
         // that be used by OpenGL to produce a texture.
         byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer()).getData(); 
-
+        
         if (transparent != null) {
 	        for (int i=0;i<data.length;i+=4) {
 	        	boolean match = true;
 	        	for (int c=0;c<3;c++) {
-	        		if (data[i+c] != transparent[c]) {
+	        		int value = data[i+c] < 0 ? 256 + data[i+c] : data[i+c];
+	        		if (value != transparent[c]) {
 	        			match = false;
 	        		}
 	        	}

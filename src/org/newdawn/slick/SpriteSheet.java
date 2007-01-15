@@ -14,6 +14,8 @@ public class SpriteSheet extends Image {
 	private int th;
 	/** Subimages */
 	private Image[][] subImages;
+	/** The spacing between tiles */
+	private int spacing;
 	
 	/**
 	 * Create a new sprite sheet based on a image location
@@ -29,6 +31,22 @@ public class SpriteSheet extends Image {
 		this.th = th;
 	}
 
+	/**
+	 * Create a new sprite sheet based on a image location
+	 * 
+	 * @param image The image to based the sheet of
+	 * @param tw The width of the tiles on the sheet 
+	 * @param th The height of the tiles on the sheet 
+	 * @param spacing The spacing between tiles
+	 */
+	public SpriteSheet(Image image,int tw,int th,int spacing) {
+		super(image);
+		
+		this.tw = tw;
+		this.th = th;
+		this.spacing = spacing;
+	}
+	
 	/**
 	 * Create a new sprite sheet based on a image location
 	 * 
@@ -83,9 +101,9 @@ public class SpriteSheet extends Image {
 			return;
 		}
 		
-		subImages = new Image[width/tw][height/th];
-		for (int x=0;x<width/tw;x++) {
-			for (int y=0;y<height/th;y++) {
+		subImages = new Image[(width/(tw+spacing))][(height/(th+spacing))];
+		for (int x=0;x<width/(tw+spacing);x++) {
+			for (int y=0;y<height/(th+spacing);y++) {
 				subImages[x][y] = getSprite(x,y);
 			}
 		}
@@ -101,7 +119,7 @@ public class SpriteSheet extends Image {
 	public Image getSprite(int x, int y) {
 		init();
 		
-		return getSubImage(x*tw,y*th,tw,th);
+		return getSubImage(x*(tw+spacing),y*(th+spacing),tw,th);
 	}
 	
 	/**

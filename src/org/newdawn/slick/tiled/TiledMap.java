@@ -11,6 +11,7 @@ import java.util.zip.GZIPInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
@@ -358,15 +359,27 @@ public class TiledMap {
 			}
 			tileWidth = Integer.parseInt(element.getAttribute("tilewidth"));
 			tileHeight = Integer.parseInt(element.getAttribute("tileheight"));
-			
+			int spacing = 0;
+			if (element.getAttribute("spacing") != null) {
+				spacing = Integer.parseInt(element.getAttribute("spacing"));
+			}
 			NodeList list = element.getElementsByTagName("image");
 			Element imageNode = (Element) list.item(0);
 			String ref = imageNode.getAttribute("source");
 			
-			Image image = new Image(tilesLocation+"/"+ref,true,Image.FILTER_NEAREST);
-			tiles = new SpriteSheet(image , tileWidth, tileHeight);
-			tilesAcross = tiles.getWidth() / tileWidth;
-			tilesDown = tiles.getHeight() / tileHeight;
+			Color trans = null;
+			String t = imageNode.getAttribute("trans");
+			if ((t != null) && (t.length() > 0)) {
+				int c = Integer.parseInt(t, 16);
+				
+				trans = new Color(c);
+			}
+			
+			System.out.println(spacing+" : "+trans);
+			Image image = new Image(tilesLocation+"/"+ref,true,Image.FILTER_NEAREST,trans);
+			tiles = new SpriteSheet(image , tileWidth, tileHeight, spacing);
+			tilesAcross = tiles.getWidth() / (tileWidth + spacing);
+			tilesDown = tiles.getHeight() / (tileHeight + spacing);
 			
 			NodeList pElements = element.getElementsByTagName("tile");
 			for (int i=0;i<pElements.getLength();i++) {
