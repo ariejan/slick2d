@@ -376,7 +376,6 @@ public class TiledMap {
 				trans = new Color(c);
 			}
 			
-			System.out.println(spacing+" : "+trans);
 			Image image = new Image(tilesLocation+"/"+ref,true,Image.FILTER_NEAREST,trans);
 			tiles = new SpriteSheet(image , tileWidth, tileHeight, spacing);
 			tilesAcross = tiles.getWidth() / (tileWidth + spacing);
