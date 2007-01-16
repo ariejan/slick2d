@@ -240,7 +240,7 @@ public class FontData {
 			if (os.startsWith("Linux")) {
 				locs = linux;
 			}
-			if (os.startsWith("MacOS")) {
+			if (os.startsWith("Mac OS")) {
 				locs = macos;
 			}
 			

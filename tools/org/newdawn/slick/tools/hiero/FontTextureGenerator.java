@@ -15,7 +15,6 @@ import java.util.Comparator;
 import org.newdawn.slick.tools.hiero.effects.DrawingContext;
 import org.newdawn.slick.tools.hiero.effects.Effect;
 import org.newdawn.slick.tools.hiero.effects.Glyph;
-import org.newdawn.slick.tools.hiero.effects.OutlineEffect;
 import org.newdawn.slick.tools.hiero.truetype.FontData;
 
 /**
@@ -24,6 +23,17 @@ import org.newdawn.slick.tools.hiero.truetype.FontData;
  * @author kevin
  */
 public class FontTextureGenerator implements DrawingContext {
+	/** Idenitfier for the top padding */
+	public static final int TOP = 1;
+	/** Idenitfier for the left padding */
+	public static final int LEFT = 2;
+	/** Idenitfier for the right padding */
+	public static final int RIGHT = 3;
+	/** Idenitfier for the bottom padding */
+	public static final int BOTTOM = 4;
+	/** Idenitfier for the advance padding */
+	public static final int ADVANCE = 4;
+	
 	/** The generated image */
 	private BufferedImage image;
 	/** The generated overlay */
@@ -109,12 +119,10 @@ public class FontTextureGenerator implements DrawingContext {
 	 *            The height of the texture to be generated
 	 * @param set
 	 *            The set to be generated
-	 * @param xpadding
-	 *            The padding on the x axis
-	 * @param ypadding
-	 *            The padding on the y axis
+	 * @param padding 
+	 *            The padding information
 	 */
-	public void generate(FontData font, int width, int height, CharSet set, int xpadding, int ypadding) {
+	public void generate(FontData font, int width, int height, CharSet set, int[] padding) {
 		this.font = font;
         int xp = 0;
         int yp = 0;
@@ -139,7 +147,7 @@ public class FontTextureGenerator implements DrawingContext {
         og.drawRect(0,0,width,height);
         
         int des = g.getFontMetrics().getMaxDescent();
-        int lineHeight = des + g.getFontMetrics().getMaxAscent() + ypadding;
+        int lineHeight = des + g.getFontMetrics().getMaxAscent() + padding[BOTTOM] + padding[TOP];
         yp += lineHeight-des;
 
         data = new DataSet(font.getName(), (int) font.getSize(), lineHeight, width, height, set.getName(), "font.png");
@@ -155,10 +163,10 @@ public class FontTextureGenerator implements DrawingContext {
             int xoffset = 0;
             int lsb = getGlyphLSB(g, vector);
             int rsb = getGlyphRSB(g, vector);
-            int fontWidth = getGlyphAdvanceX(g, vector) + (xpadding * 2);
-            int fontHeight = getGlyphHeight(g, vector)+2 + (ypadding * 2);
+            int fontWidth = getGlyphAdvanceX(g, vector) + padding[LEFT] + padding[RIGHT];
+            int fontHeight = getGlyphHeight(g, vector)+2 + padding[TOP] + padding[BOTTOM];
             int yoffset = getGlyphYOffset(g, vector)-1;
-            int advance = getGlyphAdvanceX(g, vector) + (xpadding * 2);
+            int advance = getGlyphAdvanceX(g, vector) + padding[ADVANCE];
             
             if (lsb < 0) {
             	xoffset = -lsb + 1;
@@ -177,8 +185,8 @@ public class FontTextureGenerator implements DrawingContext {
             rect.c = first;
             rect.x = xp;
             rect.y = yp+yoffset;
-            rect.xDrawOffset = xoffset + xpadding;
-            rect.yDrawOffset = -1 + ypadding;
+            rect.xDrawOffset = xoffset + padding[LEFT];
+            rect.yDrawOffset = -1 + padding[TOP];
             rect.width = fontWidth;
             rect.height = fontHeight;
             rect.yoffset = yoffset;

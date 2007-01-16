@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 import org.newdawn.slick.tools.hiero.truetype.FontData;
@@ -25,6 +24,17 @@ import org.newdawn.slick.tools.hiero.truetype.FontData;
  * @author kevin
  */
 public class FontPanel extends JPanel {
+	/** Idenitfier for the top padding */
+	public static final int TOP = FontTextureGenerator.TOP;
+	/** Idenitfier for the left padding */
+	public static final int LEFT = FontTextureGenerator.LEFT;
+	/** Idenitfier for the right padding */
+	public static final int RIGHT = FontTextureGenerator.RIGHT;
+	/** Idenitfier for the bottom padding */
+	public static final int BOTTOM = FontTextureGenerator.BOTTOM;
+	/** Idenitfier for the advance padding */
+	public static final int ADVANCE = FontTextureGenerator.ADVANCE;
+	
 	/** The width of the texture to use */
 	private int width;
 	/** The height of the texture to use */
@@ -41,10 +51,8 @@ public class FontPanel extends JPanel {
     private BufferedImage overlay;
     /** The genrator used to produce the image */
     private FontTextureGenerator gen;
-    /** The x padding to apply */
-    private int xpadding;
-    /** The y padding to apply */
-    private int ypadding;
+    /** The padding to apply */
+    private int[] padding = new int[5];
 	/** The background paint */
 	private Paint background;
 	
@@ -132,7 +140,7 @@ public class FontPanel extends JPanel {
     		return;
     	}
     	
-    	gen.generate(font, width, height, set, xpadding, ypadding);
+    	gen.generate(font, width, height, set, padding);
     	image = gen.getImage();
     	overlay = gen.getOverlay();
     	data = gen.getDataSet();
@@ -174,11 +182,11 @@ public class FontPanel extends JPanel {
     /**
      * Set the padding to apply round characters
      * 
+     * @param type The type of padding to configure
      * @param padding The padding to apply round characters
      */
-    public void setPadding(int padding) {
-    	xpadding = padding;
-    	ypadding = padding;
+    public void setPadding(int type, int padding) {
+    	this.padding[type] = padding;
     	
     	generate();
     	repaint(0);

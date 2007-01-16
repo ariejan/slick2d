@@ -113,16 +113,15 @@ public class Hiero extends JFrame {
 
         JPanel controls = new JPanel();
         controls.setLayout(null);
-        controls.setBounds(560,0,180,550);
         Box vert = Box.createVerticalBox();
         Component strut = Box.createRigidArea(new Dimension(180,5));
         
         vert.add(controls);
         vert.add(strut);
         panel.add(vert);
-        vert.setMinimumSize(new Dimension(180,550));
-        vert.setMaximumSize(new Dimension(180,550));
-        vert.setPreferredSize(new Dimension(180,550));
+        vert.setMinimumSize(new Dimension(180,650));
+        vert.setMaximumSize(new Dimension(180,650));
+        vert.setPreferredSize(new Dimension(180,650));
         
         Splash splash = new Splash();
         updateFontList();
@@ -234,18 +233,63 @@ public class Hiero extends JFrame {
         label = new JLabel("Padding");
         label.setBounds(5,480,165,25);
         controls.add(label);
-        final JSpinner padding = new JSpinner(new SpinnerNumberModel(0,0,100,1));
-        padding.setBounds(5,505,165,25);
-        controls.add(padding);
-        padding.addChangeListener(new ChangeListener() {
+        final JSpinner paddingTop = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+        final JSpinner paddingLeft = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+        final JSpinner paddingRight = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+        final JSpinner paddingBottom = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+        final JSpinner paddingAdvance = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+        
+        paddingTop.setBounds(60,495,50,25);
+        controls.add(paddingTop);
+        paddingLeft.setBounds(5,520,50,25);
+        controls.add(paddingLeft);
+        paddingRight.setBounds(110,520,50,25);
+        controls.add(paddingRight);
+        paddingBottom.setBounds(60,545,50,25);
+        controls.add(paddingBottom);
+        paddingTop.addChangeListener(new ChangeListener() {
         	public void stateChanged(ChangeEvent e) {
-        		fontPanel.setPadding(((Integer) padding.getValue()).intValue());
+        		fontPanel.setPadding(FontPanel.TOP, ((Integer) paddingTop.getValue()).intValue());
+        	}
+        });
+        paddingLeft.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) {
+        		fontPanel.setPadding(FontPanel.LEFT, ((Integer) paddingLeft.getValue()).intValue());
+        		int total = ((Integer) paddingLeft.getValue()).intValue();
+        		total += ((Integer) paddingRight.getValue()).intValue();
+        		
+        		paddingAdvance.setValue(new Integer(total));
+        	}
+        });
+        paddingRight.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) {
+        		fontPanel.setPadding(FontPanel.RIGHT, ((Integer) paddingRight.getValue()).intValue());
+        		int total = ((Integer) paddingLeft.getValue()).intValue();
+        		total += ((Integer) paddingRight.getValue()).intValue();
+        		
+        		paddingAdvance.setValue(new Integer(total));
+        	}
+        });
+        paddingBottom.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) {
+        		fontPanel.setPadding(FontPanel.BOTTOM, ((Integer) paddingBottom.getValue()).intValue());
+        	}
+        });
+
+        label = new JLabel("Advance Padding");
+        label.setBounds(5,570,165,25);
+        controls.add(label);
+        paddingAdvance.setBounds(5,595,50,25);
+        controls.add(paddingAdvance);
+        paddingAdvance.addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent e) {
+        		fontPanel.setPadding(FontPanel.ADVANCE, ((Integer) paddingAdvance.getValue()).intValue());
         	}
         });
         
         //setResizable(false);
         setContentPane(panel);
-    	setSize(750,620);
+    	setSize(750,700);
     	
     	Dimension dims = Toolkit.getDefaultToolkit().getScreenSize();
 		setLocation((dims.width - getWidth())/2, (dims.height - getHeight()) / 2);
