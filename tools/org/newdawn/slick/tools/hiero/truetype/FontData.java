@@ -37,6 +37,9 @@ public class FontData {
  	};
 	/** The macos list of possible font locations */
 	private static File[] macos = new File[] {new File("/System/Library/Fonts/"),
+											  new File("/Library/Fonts/"),
+											  new File("/System Folder/Fonts/"),
+											  new File("/Network/Library/Fonts/"),
 											  new File(userhome+"/Library/Fonts")
 	};
 	/** The linux list of possible font locations */

@@ -4,12 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Paint;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 import org.newdawn.slick.tools.hiero.truetype.FontData;
@@ -40,11 +45,28 @@ public class FontPanel extends JPanel {
     private int xpadding;
     /** The y padding to apply */
     private int ypadding;
-    
+	/** The background paint */
+	private Paint background;
+	
     /**
      * Create a new font panel
      */
     public FontPanel() {
+		Color base = Color.gray;
+		BufferedImage image = new BufferedImage(50, 50,
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) image.getGraphics();
+		g.setColor(base);
+		g.fillRect(0, 0, image.getWidth(), image.getHeight());
+		g.setColor(base.darker());
+		g.fillRect(image.getWidth() / 2, 0, image.getWidth() / 2, image
+				.getHeight() / 2);
+		g.fillRect(0, image.getHeight() / 2, image.getWidth() / 2, image
+				.getHeight() / 2);
+
+		background = new TexturePaint(image, new Rectangle(0, 0, image
+				.getWidth(), image.getHeight()));
+		
     	setBackground(Color.black);
     	
     	gen = new FontTextureGenerator();
@@ -57,9 +79,12 @@ public class FontPanel extends JPanel {
     /**=
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
-    public void paintComponent(Graphics g) { 
-        super.paintComponent(g);
+    public void paintComponent(Graphics g1d) { 
+        super.paintComponent(g1d);
         
+        Graphics2D g = (Graphics2D) g1d;
+        g.setPaint(background);
+        g.fillRect(0,0,getWidth(), getHeight());
         g.drawImage(image, 0, 0, null);
         g.drawImage(overlay, 0, 0, null);
     }

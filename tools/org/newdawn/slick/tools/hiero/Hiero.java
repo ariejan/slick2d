@@ -62,7 +62,7 @@ public class Hiero extends JFrame {
     /** Indicator for italic fonts */
     private JCheckBox italic;
     /** The chooser for everything */
-    private JFileChooser chooser = new JFileChooser(new File("."));
+    private JFileChooser chooser = new JFileChooser();
     /** The width of the texture to generate */
     private int textureWidth = 512;
     /** The height of the texture to generate */
@@ -88,7 +88,7 @@ public class Hiero extends JFrame {
         JMenuItem quit = new JMenuItem("Exit");
         quit.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		saveFont();
+        		System.exit(0);
         	}
         });
         JMenuItem addDir = new JMenuItem("Add Font Directory");
@@ -285,6 +285,10 @@ public class Hiero extends JFrame {
      * Update the current font
      */
     private void updateFont() {
+    	if (fontList.getSelectedValue() == null) {
+    		return;
+    	}
+    	
     	String name = fontList.getSelectedValue().toString();
     	int size = ((Integer) this.size.getValue()).intValue();
     	
@@ -343,7 +347,6 @@ public class Hiero extends JFrame {
      * Add a font directory
      */
     public void addDirectory() {
-    	JFileChooser chooser = new JFileChooser(".");
     	chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
     	int resp = chooser.showOpenDialog(this);
     	if (resp == JFileChooser.APPROVE_OPTION) {
