@@ -47,5 +47,34 @@ public class OutlineEffect implements Effect {
 	 * @see org.newdawn.slick.tools.hiero.effects.Effect#setProperty(java.lang.String, java.lang.String)
 	 */
 	public void setProperty(String key, String value) {
+		float v = Float.parseFloat(value);
+		
+		if (key.equals("width")) {
+			width = v;
+		}
+		if (key.equals("color")) {
+			col = new Color(Integer.parseInt(value, 16));
+		}
+	}
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.Effect#getPropertyNames()
+	 */
+	public String[] getPropertyNames() {
+		return new String[] {"width","color"};
+	}
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.Effect#getProperty(java.lang.String)
+	 */
+	public String getProperty(String key) {
+		if (key.equals("width")) {
+			return ""+width;
+		}
+		if (key.equals("color")) {
+			return Integer.toHexString(col.getRGB());
+		}
+		
+		return null;
 	}
 }

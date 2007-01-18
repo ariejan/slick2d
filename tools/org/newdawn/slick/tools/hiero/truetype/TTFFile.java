@@ -527,7 +527,7 @@ public class TTFFile {
         readOS2(in);
         determineAscDesc();
         readIndexToLocation(in);
-        readGlyf(in);
+        //readGlyf(in);
         readName(in);
         boolean pcltFound = readPCLT(in);
         // Read cmap table and fill in ansiwidths
@@ -536,11 +536,11 @@ public class TTFFile {
             return false;
         }
         // Create cmaps for bfentries
-        createCMaps();
+        //createCMaps();
         // print_max_min();
 
         readKerning(in);
-        guessVerticalMetricsFromGlyphBBox();
+        //guessVerticalMetricsFromGlyphBBox();
         return true;
     }
 

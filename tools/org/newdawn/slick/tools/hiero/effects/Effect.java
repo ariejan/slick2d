@@ -49,4 +49,19 @@ public interface Effect {
 	 * @param value The value identifying the property
 	 */
 	public void setProperty(String key, String value);
+	
+	/**
+	 * Get the value of a given property
+	 * 
+	 * @param key The key associated with the property to read
+	 * @return The value for the property
+	 */
+	public String getProperty(String key);
+	
+	/**
+	 * Get the properties that can be configured on this effect
+	 * 
+	 * @return The properties supported by this effect
+	 */
+	public String[] getPropertyNames();
 }

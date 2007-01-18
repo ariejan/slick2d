@@ -154,7 +154,11 @@ public class FontTextureGenerator implements DrawingContext {
 
         rects = new ArrayList();
         
-        for (int i=set.getStart();i<=set.getEnd();i++) {    
+        for (int i=0;i<256;i++) {
+        	if (!set.includes((char) i)) {
+        		continue;
+        	}
+        	
             g.setColor(Color.white);       
             char first = (char) i;
             String text = ""+first;
@@ -399,7 +403,11 @@ public class FontTextureGenerator implements DrawingContext {
 			int[] kerns = new int[1000];
 			int[] ks = new int[100];
 
-			for (int j = set.getStart(); j <= set.getEnd(); j++) {
+			for (int j = 0; j < 256; j++) {
+	        	if (!set.includes((char) j)) {
+	        		continue;
+	        	}
+	        	
 				char second = (char) j;
 
 				int kerning = getKerning(c, second);

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.Box;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -62,11 +63,15 @@ public class Hiero extends JFrame {
     /** Indicator for italic fonts */
     private JCheckBox italic;
     /** The chooser for everything */
-    private JFileChooser chooser = new JFileChooser();
+    private JFileChooser chooser = new JFileChooser(".");
     /** The width of the texture to generate */
     private int textureWidth = 512;
     /** The height of the texture to generate */
     private int textureHeight = 512;
+    /** The charsets combo */
+    private final JComboBox charsets; 
+    /** The list of character sets */
+    private DefaultComboBoxModel types = new DefaultComboBoxModel();
     
     /**
      * Create a new instance of the tool
@@ -78,6 +83,13 @@ public class Hiero extends JFrame {
         JMenu file = new JMenu("File");
         bar.add(file);
         setJMenuBar(bar);
+
+        JMenuItem cset = new JMenuItem("Edit Character Set");
+        cset.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		editChars();
+        	}
+        });
         
         JMenuItem save = new JMenuItem("Save Bitmap Font");
         save.addActionListener(new ActionListener() {
@@ -100,6 +112,7 @@ public class Hiero extends JFrame {
         
         file.add(addDir);
         file.addSeparator();
+        file.add(cset);
         file.add(save);
         file.addSeparator();
         file.add(quit);
@@ -178,15 +191,12 @@ public class Hiero extends JFrame {
         label.setBounds(5,330,165,25);
         controls.add(label);
         
-        Vector types = new Vector();
-        types.addElement(SET_ASCII);
-        types.addElement(SET_NEHE);
+        charsets = new JComboBox(types);
+        charsets.setBounds(5,355,165,25);
+        controls.add(charsets);
+        updateSets("");
+        charsets.setSelectedItem(SET_NEHE);
         
-        final JComboBox type = new JComboBox(types);
-        type.setBounds(5,355,165,25);
-        controls.add(type);
-        type.setSelectedItem(SET_NEHE);
-
         label = new JLabel("Width");
         label.setBounds(5,380,165,25);
         controls.add(label);
@@ -212,9 +222,9 @@ public class Hiero extends JFrame {
         controls.add(height);
         height.setSelectedItem("512");
         
-        type.addActionListener(new ActionListener() {
+        charsets.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		fontPanel.setCharSet((CharSet) type.getSelectedItem());
+        		fontPanel.setCharSet((CharSet) charsets.getSelectedItem());
         	}
         });
         width.addActionListener(new ActionListener() {
@@ -302,6 +312,54 @@ public class Hiero extends JFrame {
         });
         
         size.setValue(new Integer(32));
+    }
+    
+    /**
+     * Update all the characters sets
+     * 
+     * @param name The name of the set recently added
+     * @return The character set representing the named one
+     */
+    private CharSet updateSets(String name) {
+    	types.removeAllElements();
+        
+        types.addElement(SET_ASCII);
+        types.addElement(SET_NEHE);
+    
+        CharSet loadedSet = null;
+        File[] sets = HieroConfig.listFiles(".set");
+        
+        for (int i=0;i<sets.length;i++) {
+        	try {
+        		CharSet nSet = new CharSet(sets[i]);
+        		types.addElement(nSet);
+        		
+        		if (nSet.getName().equals(name)) {
+        			loadedSet = nSet;
+        		}
+        	} catch (IOException e) {
+        		System.err.println("Unable to red character set: "+sets[i].getName());
+        	}
+        }
+        
+        return loadedSet;
+    }
+    
+    /**
+     * Edit the currently selected char set
+     */
+    private void editChars() {
+    	CharSet set = (CharSet) charsets.getSelectedItem();
+    	CharSetDialog dialog = new CharSetDialog(this, set);
+
+		dialog.setVisible(true);
+		if (dialog.getNewSet() != null) {
+			String newName = dialog.getNewSet();
+			CharSet s = updateSets(newName);
+			if (s != null) {
+		        charsets.setSelectedItem(s);
+			}
+		}
     }
     
     /**
