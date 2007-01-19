@@ -1,6 +1,5 @@
 package org.newdawn.slick.tools.hiero.effects;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,15 +14,15 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 /**
- * An effect to create a black outline around the glyphs
+ * The distance the shadow falls
  *
  * @author kevin
  */
-public class OutlineEffect implements Effect {
-	/** The line width */
-	private float width = 1;
+public class ShadowEffect implements Effect {
+	/** The shadow distance */
+	private float distance = 1;
 	/** The color of the outline */
-	private Color col = new Color(0,0,0);
+	private Color col = new Color(0,0,0,0.5f);
 	/** The configuration panel for this effect */
 	private ConfigPanel confPanel = new ConfigPanel();
 	
@@ -31,10 +30,6 @@ public class OutlineEffect implements Effect {
 	 * @see org.newdawn.slick.tools.hiero.effects.Effect#postGlyphRender(java.awt.Graphics2D, org.newdawn.slick.tools.hiero.effects.DrawingContext, org.newdawn.slick.tools.hiero.effects.Glyph)
 	 */
 	public void postGlyphRender(Graphics2D g, DrawingContext context, Glyph glyph) {
-		g.setStroke(new BasicStroke(width));
-		g.setColor(col);
-		g.translate(glyph.getDrawX(), glyph.getDrawY());
-		g.draw(glyph.getOutlineShape());
 	}
 
 	/**
@@ -47,6 +42,12 @@ public class OutlineEffect implements Effect {
 	 * @see org.newdawn.slick.tools.hiero.effects.Effect#preGlyphRender(java.awt.Graphics2D, org.newdawn.slick.tools.hiero.effects.DrawingContext, org.newdawn.slick.tools.hiero.effects.Glyph)
 	 */
 	public void preGlyphRender(Graphics2D g, DrawingContext context, Glyph glyph) {
+		Color original = g.getColor();
+		g.setColor(col);
+		g.translate(glyph.getDrawX()+distance, glyph.getDrawY()+distance);
+		g.fill(glyph.getOutlineShape());
+		g.translate(-(glyph.getDrawX()+distance), -(glyph.getDrawY()+distance));
+		g.setColor(original);
 	}
 
 	/**
@@ -68,14 +69,14 @@ public class OutlineEffect implements Effect {
 	 * @see org.newdawn.slick.tools.hiero.effects.Effect#getEffectName()
 	 */
 	public String getEffectName() {
-		return "OutlineEffect";
+		return "ShadowEffect";
 	}
 
 	/**
 	 * @see org.newdawn.slick.tools.hiero.effects.Effect#getInstance()
 	 */
 	public Effect getInstance() {
-		return new OutlineEffect();
+		return new ShadowEffect();
 	}
 
 	/**
@@ -83,14 +84,15 @@ public class OutlineEffect implements Effect {
 	 */
 	public void setConfigurationFromPanel(JPanel panel) {
 		col = confPanel.newCol;
-		width = ((Integer) confPanel.spinner.getValue()).intValue();
+		col = new Color(col.getRed(), col.getGreen(), col.getBlue(), 128);
+		distance = ((Integer) confPanel.spinner.getValue()).intValue();
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "Outline ("+width+")";
+		return "Shadow ("+distance+")";
 	}
 	
 	/**
@@ -112,7 +114,7 @@ public class OutlineEffect implements Effect {
 		public ConfigPanel() {
 			setLayout(null);
 			
-			JLabel label = new JLabel("Width");
+			JLabel label = new JLabel("Distance");
 			label.setBounds(5,5,200,25);
 			add(label);
 			spinner.setBounds(5,30,200,25);
@@ -125,7 +127,7 @@ public class OutlineEffect implements Effect {
 			
 			colButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					newCol = JColorChooser.showDialog(ConfigPanel.this, "Choose Outline Color", newCol);
+					newCol = JColorChooser.showDialog(ConfigPanel.this, "Choose Shadow Color", newCol);
 				}
 			});
 			

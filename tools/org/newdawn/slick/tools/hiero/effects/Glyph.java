@@ -9,18 +9,32 @@ import java.awt.Shape;
  */
 public interface Glyph {
 	/** 
+	 * Get the x position of the bounding box
+	 * 
+	 * @return The position of the bounding box
+ 	 */
+	public int getX();
+
+	/** 
+	 * Get the y position of the bounding box
+	 * 
+	 * @return The position of the bounding box
+ 	 */
+	public int getY();
+	
+	/** 
 	 * Get the x position the glyph was rendered at 
 	 * 
 	 * @return The position the glyph was rendered at
  	 */
-	public int getX();
+	public int getDrawX();
 
 	/** 
 	 * Get the y position the glyph was rendered at 
 	 * 
 	 * @return The position the glyph was rendered at
  	 */
-	public int getY();
+	public int getDrawY();
 
 	/** 
 	 * Get the width of the glyph rendered
@@ -29,6 +43,13 @@ public interface Glyph {
  	 */
 	public int getWidth();
 
+	/**
+	 * Get the offset on the y-axis this glyph should be rendered at
+	 * 
+	 * @return The offset on the y-axis this glyph should be rendered at
+	 */
+	public int getYOffset();
+	
 	/** 
 	 * Get the height of the glyph rendered
 	 * 

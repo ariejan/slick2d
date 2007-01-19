@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -52,9 +53,11 @@ public class FontPanel extends JPanel {
     /** The genrator used to produce the image */
     private FontTextureGenerator gen;
     /** The padding to apply */
-    private int[] padding = new int[5];
+    private int[] padding = new int[6];
 	/** The background paint */
 	private Paint background;
+	/** The list of effects to apply */
+	private ArrayList effects = new ArrayList();
 	
     /**
      * Create a new font panel
@@ -84,7 +87,18 @@ public class FontPanel extends JPanel {
         generate();
     }
     
-    /**=
+    /**
+     * Set the list of effects to apply
+     * 
+     * @param effects The list of effects to apply
+     */
+    public void setEffects(ArrayList effects) {
+    	this.effects = effects;
+    	generate();
+        repaint(0);
+    }
+    
+    /**
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
     public void paintComponent(Graphics g1d) { 
@@ -140,7 +154,7 @@ public class FontPanel extends JPanel {
     		return;
     	}
     	
-    	gen.generate(font, width, height, set, padding);
+    	gen.generate(font, width, height, set, padding, effects);
     	image = gen.getImage();
     	overlay = gen.getOverlay();
     	data = gen.getDataSet();

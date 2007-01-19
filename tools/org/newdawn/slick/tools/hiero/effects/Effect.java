@@ -2,6 +2,8 @@ package org.newdawn.slick.tools.hiero.effects;
 
 import java.awt.Graphics2D;
 
+import javax.swing.JPanel;
+
 /**
  * An effect to render text in some exciting manner
  *
@@ -43,25 +45,31 @@ public interface Effect {
 	public void postPageRender(Graphics2D g, DrawingContext context);
 	
 	/**
-	 * Set a configuration property
+	 * Get a panel that can be used to configure this effect
 	 * 
-	 * @param key The key identifing the property
-	 * @param value The value identifying the property
+	 * @return A panel that can be used to configure this effect
 	 */
-	public void setProperty(String key, String value);
+	public JPanel getConfigurationPanel();
 	
 	/**
-	 * Get the value of a given property
+	 * Set the configuration of the effect
 	 * 
-	 * @param key The key associated with the property to read
-	 * @return The value for the property
+	 * @param panel The panel that was used to setup the configuration. This is guaranteed to 
+	 * be the same type that was supplied from {@link #getConfigurationPanel()}
 	 */
-	public String getProperty(String key);
+	public void setConfigurationFromPanel(JPanel panel);
 	
 	/**
-	 * Get the properties that can be configured on this effect
+	 * Get the name to use to describe this effect
 	 * 
-	 * @return The properties supported by this effect
+	 * @return The name of the effect
 	 */
-	public String[] getPropertyNames();
+	public String getEffectName();
+
+	/**
+	 * Get a new instance of this effect
+	 * 
+	 * @return The new instance of this effect
+	 */
+	public Effect getInstance();
 }

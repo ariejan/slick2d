@@ -1,6 +1,5 @@
 package org.newdawn.slick.tools.hiero.effects;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,19 +10,15 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 
 /**
- * An effect to create a black outline around the glyphs
- *
+ * An effect to change the color of the text
+ * 
  * @author kevin
  */
-public class OutlineEffect implements Effect {
-	/** The line width */
-	private float width = 1;
+public class ColorEffect implements Effect {
 	/** The color of the outline */
-	private Color col = new Color(0,0,0);
+	private Color col = new Color(0,0,255);
 	/** The configuration panel for this effect */
 	private ConfigPanel confPanel = new ConfigPanel();
 	
@@ -31,10 +26,6 @@ public class OutlineEffect implements Effect {
 	 * @see org.newdawn.slick.tools.hiero.effects.Effect#postGlyphRender(java.awt.Graphics2D, org.newdawn.slick.tools.hiero.effects.DrawingContext, org.newdawn.slick.tools.hiero.effects.Glyph)
 	 */
 	public void postGlyphRender(Graphics2D g, DrawingContext context, Glyph glyph) {
-		g.setStroke(new BasicStroke(width));
-		g.setColor(col);
-		g.translate(glyph.getDrawX(), glyph.getDrawY());
-		g.draw(glyph.getOutlineShape());
 	}
 
 	/**
@@ -47,6 +38,7 @@ public class OutlineEffect implements Effect {
 	 * @see org.newdawn.slick.tools.hiero.effects.Effect#preGlyphRender(java.awt.Graphics2D, org.newdawn.slick.tools.hiero.effects.DrawingContext, org.newdawn.slick.tools.hiero.effects.Glyph)
 	 */
 	public void preGlyphRender(Graphics2D g, DrawingContext context, Glyph glyph) {
+		g.setColor(col);
 	}
 
 	/**
@@ -68,14 +60,14 @@ public class OutlineEffect implements Effect {
 	 * @see org.newdawn.slick.tools.hiero.effects.Effect#getEffectName()
 	 */
 	public String getEffectName() {
-		return "OutlineEffect";
+		return "Colour Effect";
 	}
 
 	/**
 	 * @see org.newdawn.slick.tools.hiero.effects.Effect#getInstance()
 	 */
 	public Effect getInstance() {
-		return new OutlineEffect();
+		return new ColorEffect();
 	}
 
 	/**
@@ -83,14 +75,13 @@ public class OutlineEffect implements Effect {
 	 */
 	public void setConfigurationFromPanel(JPanel panel) {
 		col = confPanel.newCol;
-		width = ((Integer) confPanel.spinner.getValue()).intValue();
 	}
 
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		return "Outline ("+width+")";
+		return "Color ("+col.getRed()+" "+col.getGreen()+" "+col.getBlue()+")";
 	}
 	
 	/**
@@ -99,8 +90,6 @@ public class OutlineEffect implements Effect {
 	 * @author kevin
 	 */
 	private class ConfigPanel extends JPanel {
-		/** The width information */
-		private JSpinner spinner = new JSpinner(new SpinnerNumberModel(1,1,10,1));
 		/** The button to change the color */
 		private JButton colButton = new JButton("Set..");
 		/** The color */
@@ -112,20 +101,15 @@ public class OutlineEffect implements Effect {
 		public ConfigPanel() {
 			setLayout(null);
 			
-			JLabel label = new JLabel("Width");
-			label.setBounds(5,5,200,25);
-			add(label);
-			spinner.setBounds(5,30,200,25);
-			add(spinner);
-			label = new JLabel("Color");
-			label.setBounds(5,55,200,25);
+			JLabel label = new JLabel("Color");
+			label.setBounds(5,30,200,25);
 			add(label);
 			colButton.setBounds(5,80,150,25);
 			add(colButton);
 			
 			colButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					newCol = JColorChooser.showDialog(ConfigPanel.this, "Choose Outline Color", newCol);
+					newCol = JColorChooser.showDialog(ConfigPanel.this, "Choose Color", newCol);
 				}
 			});
 			

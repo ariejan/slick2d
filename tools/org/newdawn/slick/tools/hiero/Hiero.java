@@ -35,6 +35,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.newdawn.slick.tools.hiero.effects.EffectsDialog;
 import org.newdawn.slick.tools.hiero.truetype.FontData;
 
 /**
@@ -72,6 +73,8 @@ public class Hiero extends JFrame {
     private final JComboBox charsets; 
     /** The list of character sets */
     private DefaultComboBoxModel types = new DefaultComboBoxModel();
+    /** The dialog for effects configuration */
+    private EffectsDialog effectsDialog;
     
     /**
      * Create a new instance of the tool
@@ -79,6 +82,8 @@ public class Hiero extends JFrame {
     public Hiero() {
         super("Hiero Bitmap Font Tool");
    
+        effectsDialog = new EffectsDialog(this);
+        
         JMenuBar bar = new JMenuBar();
         JMenu file = new JMenu("File");
         bar.add(file);
@@ -88,6 +93,13 @@ public class Hiero extends JFrame {
         cset.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		editChars();
+        	}
+        });
+        
+        JMenuItem ef = new JMenuItem("Show/Hide Effects Dialog");
+        ef.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		effectsDialog.setVisible(!effectsDialog.isVisible());
         	}
         });
         
@@ -112,6 +124,7 @@ public class Hiero extends JFrame {
         
         file.add(addDir);
         file.addSeparator();
+        file.add(ef);
         file.add(cset);
         file.add(save);
         file.addSeparator();
@@ -247,7 +260,7 @@ public class Hiero extends JFrame {
         final JSpinner paddingLeft = new JSpinner(new SpinnerNumberModel(0,0,100,1));
         final JSpinner paddingRight = new JSpinner(new SpinnerNumberModel(0,0,100,1));
         final JSpinner paddingBottom = new JSpinner(new SpinnerNumberModel(0,0,100,1));
-        final JSpinner paddingAdvance = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+        final JSpinner paddingAdvance = new JSpinner(new SpinnerNumberModel(0,-100,100,1));
         
         paddingTop.setBounds(60,495,50,25);
         controls.add(paddingTop);
@@ -312,6 +325,13 @@ public class Hiero extends JFrame {
         });
         
         size.setValue(new Integer(32));
+    }
+    
+    /**
+     * Apply the effects defined against the font
+     */
+    public void applyEffects() {
+    	fontPanel.setEffects(effectsDialog.getEffects());
     }
     
     /**

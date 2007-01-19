@@ -19,4 +19,11 @@ public interface DrawingContext {
 	 * @return The height of the texture being rendered
 	 */
 	public int getTextureHeight();
+	
+	/**
+	 * Get the maximum glyph height
+	 * 
+	 * @return Get the maximum glyph height
+	 */
+	public int getMaxGlyphHeight();
 }

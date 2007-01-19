@@ -32,7 +32,7 @@ public class FontTextureGenerator implements DrawingContext {
 	/** Idenitfier for the bottom padding */
 	public static final int BOTTOM = 4;
 	/** Idenitfier for the advance padding */
-	public static final int ADVANCE = 4;
+	public static final int ADVANCE = 5;
 	
 	/** The generated image */
 	private BufferedImage image;
@@ -50,15 +50,14 @@ public class FontTextureGenerator implements DrawingContext {
 	private CharSet set;
 	/** The list of glyph bounds */
 	private ArrayList rects;
-	/** The effects in use */
-	private ArrayList effects = new ArrayList();
+	/** The maximum character height */
+	private int maxHeight;
 	
 	/**
 	 * Create a new generator
 	 * 
 	 */
 	public FontTextureGenerator() {
-		//effects.add(new OutlineEffect());
 	}
 
 	/**
@@ -121,8 +120,9 @@ public class FontTextureGenerator implements DrawingContext {
 	 *            The set to be generated
 	 * @param padding 
 	 *            The padding information
+	 * @param effects The list of effects to apply
 	 */
-	public void generate(FontData font, int width, int height, CharSet set, int[] padding) {
+	public void generate(FontData font, int width, int height, CharSet set, int[] padding, ArrayList effects) {
 		this.font = font;
         int xp = 0;
         int yp = 0;
@@ -149,7 +149,8 @@ public class FontTextureGenerator implements DrawingContext {
         int des = g.getFontMetrics().getMaxDescent();
         int lineHeight = des + g.getFontMetrics().getMaxAscent() + padding[BOTTOM] + padding[TOP];
         yp += lineHeight-des;
-
+        maxHeight = lineHeight;
+        
         data = new DataSet(font.getName(), (int) font.getSize(), lineHeight, width, height, set.getName(), "font.png");
 
         rects = new ArrayList();
@@ -189,13 +190,15 @@ public class FontTextureGenerator implements DrawingContext {
             rect.c = first;
             rect.x = xp;
             rect.y = yp+yoffset;
-            rect.xDrawOffset = xoffset + padding[LEFT];
-            rect.yDrawOffset = -1 + padding[TOP];
+            rect.xDrawOffset = xoffset + padding[LEFT] + 1;
+            rect.yDrawOffset = padding[TOP];
             rect.width = fontWidth;
-            rect.height = fontHeight;
+            rect.height = fontHeight + 1;
             rect.yoffset = yoffset;
             rect.advance = advance;
             rect.glyph = vector;
+            
+            maxHeight = Math.max(fontHeight, maxHeight);
             
             rects.add(rect);
             xp += fontWidth;
@@ -218,7 +221,7 @@ public class FontTextureGenerator implements DrawingContext {
 
         for (int i=0;i<effects.size();i++) {
         	Effect effect = (Effect) effects.get(i);
-        	effect.prePageRender((Graphics2D) g.create(), this);
+        	effect.prePageRender(g, this);
         }
         for (int i=0;i<rects.size();i++) {
         	GlyphRect rect = (GlyphRect) rects.get(i);
@@ -240,7 +243,7 @@ public class FontTextureGenerator implements DrawingContext {
 
             for (int j=0;j<effects.size();j++) {
             	Effect effect = (Effect) effects.get(j);
-            	effect.preGlyphRender((Graphics2D) g.create(), this, rect);
+            	effect.preGlyphRender(g, this, rect);
             }
         	rect.drawGlyph(g);
             for (int j=0;j<effects.size();j++) {
@@ -494,14 +497,21 @@ public class FontTextureGenerator implements DrawingContext {
 		 * @see org.newdawn.slick.tools.hiero.effects.Glyph#getX()
 		 */
 		public int getX() {
-			return getDrawX();
+			return x;
 		}
 
 		/**
 		 * @see org.newdawn.slick.tools.hiero.effects.Glyph#getY()
 		 */
 		public int getY() {
-			return getDrawY();
+			return y;
+		}
+
+		/**
+		 * @see org.newdawn.slick.tools.hiero.effects.Glyph#getYOffset()
+		 */
+		public int getYOffset() {
+			return yoffset;
 		}
 	}
 
@@ -517,5 +527,12 @@ public class FontTextureGenerator implements DrawingContext {
 	 */
 	public int getTextureWidth() {
 		return image.getWidth();
+	}
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.DrawingContext#getMaxGlyphHeight()
+	 */
+	public int getMaxGlyphHeight() {
+		return maxHeight;
 	}
 }
