@@ -49,7 +49,7 @@ public class EffectsRegistry {
 						
 						String clazz = element.getAttribute("class");
 						System.out.println("Loading Effect: "+clazz);
-						Effect effect = (Effect) Class.forName(clazz).newInstance();
+						Effect effect = (Effect) loader.loadClass(clazz).newInstance();
 						registerEffect(effect);
 					}
 				} else {
@@ -57,6 +57,9 @@ public class EffectsRegistry {
 				}
 			} catch (Exception e) {
 				System.err.println("Failure loading effect: "+files[i].getName());
+				System.err.println("=== start ====");
+				e.printStackTrace();
+				System.err.println("=== end ====");
 			}
 		}
 	}
