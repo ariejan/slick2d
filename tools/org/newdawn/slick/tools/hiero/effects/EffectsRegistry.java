@@ -34,7 +34,8 @@ public class EffectsRegistry {
 		for (int i=0;i<files.length;i++) {
 			try {
 				System.out.println("Loading Effect JAR: "+files[i].getName());
-				URLClassLoader loader = new URLClassLoader(new URL[] {files[i].toURL()});
+				URLClassLoader loader = new URLClassLoader(new URL[] {files[i].toURL()}, 
+														   EffectsRegistry.class.getClassLoader());
 				InputStream in = loader.getResourceAsStream("META-INF/effects.xml");
 				if (in == null) {
 					in = loader.getResourceAsStream("effects.xml");
@@ -55,7 +56,7 @@ public class EffectsRegistry {
 				} else {
 					System.err.println("No effects xml found");
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				System.err.println("Failure loading effect: "+files[i].getName());
 				System.err.println("=== start ====");
 				e.printStackTrace();
