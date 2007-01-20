@@ -391,7 +391,7 @@
 <!--
  Upload everything, i.e. create a complete update to the Slick stuff.
 -->
-<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree">
+<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero">
 </target>
 
 <!--
