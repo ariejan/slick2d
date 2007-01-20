@@ -51,6 +51,7 @@
 	      <pathelement path="lib/jnlp.jar"/>
 	      <pathelement path="lib/jogg-0.0.7.jar"/>
 	      <pathelement path="lib/jorbis-0.0.15.jar"/>
+	      <pathelement path="lib/tinylinepp.jar"/>
 	    </classpath>
 	</javac>
 	<jar destfile="lib/slick.jar" 
@@ -124,6 +125,7 @@
 	      <pathelement path="lib/ibxm.jar"/>
 	      <pathelement path="lib/jogg-0.0.7.jar"/>
 	      <pathelement path="lib/jorbis-0.0.15.jar"/>
+	      <pathelement path="lib/tinylinepp.jar"/>
 	    </classpath>
 	    <doctitle><![CDATA[<h1>Slick</h1>]]></doctitle>
 	    <bottom><![CDATA[<i>Copyright &#169; 2006 New Dawn Software. All Rights Reserved.</i>]]></bottom>
@@ -316,6 +318,8 @@
 	<createdemojnlp name="spritesheetfonttest" title="Slick2D Sprite Sheet Font Test" mainclass="org.newdawn.slick.tests.SpriteSheetFontTest"/>
 	<createdemojnlp name="transparentcolortest" title="Slick2D Transparent Color Test" mainclass="org.newdawn.slick.tests.TransparentColorTest"/>
 	<createdemojnlp name="polygontest" title="Slick2D Polygon Point Test" mainclass="org.newdawn.slick.tests.PolygonTest"/>
+
+	<createdemojnlp name="purefonttest" title="Slick2D Pure Font Test" mainclass="org.newdawn.slick.tests.PureFontTest"/>
 
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
