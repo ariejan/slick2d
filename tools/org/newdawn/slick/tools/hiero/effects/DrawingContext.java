@@ -26,4 +26,11 @@ public interface DrawingContext {
 	 * @return Get the maximum glyph height
 	 */
 	public int getMaxGlyphHeight();
+	
+	/**
+	 * Get the maximum glyph decent
+	 * 
+	 * @return Get the maximum glyph decent
+	 */
+	public int getMaxGlyphDecent();
 }

@@ -52,6 +52,8 @@ public class FontTextureGenerator implements DrawingContext {
 	private ArrayList rects;
 	/** The maximum character height */
 	private int maxHeight;
+	/** The maximum character decent */
+	private int maxDec;
 	
 	/**
 	 * Create a new generator
@@ -136,7 +138,7 @@ public class FontTextureGenerator implements DrawingContext {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
-       overlay = new BufferedImage(width+1, height+1, BufferedImage.TYPE_INT_ARGB);
+        overlay = new BufferedImage(width+1, height+1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D og = (Graphics2D) overlay.getGraphics();
 
         g.setFont(font.getJavaFont());
@@ -149,7 +151,8 @@ public class FontTextureGenerator implements DrawingContext {
         int des = g.getFontMetrics().getMaxDescent();
         int lineHeight = des + g.getFontMetrics().getMaxAscent() + padding[BOTTOM] + padding[TOP];
         yp += lineHeight-des;
-        maxHeight = lineHeight;
+        maxHeight = g.getFontMetrics().getMaxAscent();
+        maxDec = des;
         
         data = new DataSet(font.getName(), (int) font.getSize(), lineHeight, width, height, set.getName(), "font.png");
 
@@ -534,5 +537,12 @@ public class FontTextureGenerator implements DrawingContext {
 	 */
 	public int getMaxGlyphHeight() {
 		return maxHeight;
+	}
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.DrawingContext#getMaxGlyphDecent()
+	 */
+	public int getMaxGlyphDecent() {
+		return maxDec;
 	}
 }

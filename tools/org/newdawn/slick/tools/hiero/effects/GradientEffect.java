@@ -42,7 +42,7 @@ public class GradientEffect implements Effect {
 	 */
 	public void preGlyphRender(Graphics2D g, DrawingContext context, Glyph glyph) {
 		int top = -context.getMaxGlyphHeight();
-		int bottom = context.getMaxGlyphHeight();
+		int bottom = context.getMaxGlyphDecent();
 		
 		GradientPaint paint = new GradientPaint(glyph.getX(), top, this.top, glyph.getX(), bottom, this.bottom);
 		g.setPaint(paint);
