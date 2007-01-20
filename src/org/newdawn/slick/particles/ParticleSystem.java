@@ -48,7 +48,7 @@ public class ParticleSystem {
 		public Particle[] particles;
 		/** The list of particles left to be used, if this size() == 0 then the particle engine was too small for the effect */
 		public ArrayList available;
-
+		
 		/**
 		 * Create a new particle pool contiaining a set of particles
 		 * 
@@ -57,12 +57,27 @@ public class ParticleSystem {
 		 */
 		public ParticlePool( ParticleSystem system, int maxParticles )
 		{
-			particles= new Particle[ maxParticles ];
-			available= new ArrayList();
+			particles = new Particle[ maxParticles ];
+			available = new ArrayList();
 			
 			for( int i=0; i<particles.length; i++ )
 			{
 				particles[i] = createParticle( system );
+			}
+			
+			reset(system);
+		}
+		
+		/**
+		 * Rest the list of particles
+		 * 
+		 * @param system The system in which the particle belong
+		 */
+		public void reset(ParticleSystem system) {
+			available.clear();
+			
+			for( int i=0; i<particles.length; i++ )
+			{
 				available.add(particles[i]);
 			}
 		}
@@ -119,6 +134,17 @@ public class ParticleSystem {
 	 */
 	public ParticleSystem(String defaultSpriteRef) {
 		this(defaultSpriteRef, DEFAULT_PARTICLES);
+	}
+	
+	/**
+	 * Reset the state of the system
+	 */
+	public void reset() {
+		Iterator pools = particlesByEmitter.values().iterator();
+		while (pools.hasNext()) {
+			ParticlePool pool = (ParticlePool) pools.next();
+			pool.reset(this);
+		}
 	}
 	
 	/**
@@ -376,6 +402,15 @@ public class ParticleSystem {
 	 * @param delta The amount of time thats passed since last update in milliseconds
 	 */
 	public void update(int delta) {
+		if ((sprite == null) && (defaultImageName != null)) {
+			try {
+				sprite = new Image(defaultImageName);
+			} catch (SlickException e) {
+				Log.error(e);
+				defaultImageName = null;
+			}
+		}
+		
 		ArrayList removeMe = new ArrayList();
 		for (int i=0;i<emitters.size();i++) {
 			ParticleEmitter emitter = (ParticleEmitter) emitters.get(i);

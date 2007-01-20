@@ -143,16 +143,16 @@ public class AngelCodeFont implements Font {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.Font#drawString(int, int, java.lang.String)
+	 * @see org.newdawn.slick.Font#drawString(float, float, java.lang.String)
 	 */
-	public void drawString(int x, int y, String text) {
+	public void drawString(float x, float y, String text) {
 		drawString(x,y,text,Color.white);
 	}
 
 	/**
-	 * @see org.newdawn.slick.Font#drawString(int, int, java.lang.String, org.newdawn.slick.Color)
+	 * @see org.newdawn.slick.Font#drawString(float, float, java.lang.String, org.newdawn.slick.Color)
 	 */
-	public void drawString(int x, int y, String text, Color col) {
+	public void drawString(float x, float y, String text, Color col) {
 		col.bind();
 		
 		for (int i=0;i<text.length();i++) {

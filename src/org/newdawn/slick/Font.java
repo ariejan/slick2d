@@ -30,7 +30,7 @@ public interface Font {
 	 * @param y The y location at which to draw the string
 	 * @param text The text to be displayed
 	 */
-	public abstract void drawString(int x, int y, String text);
+	public abstract void drawString(float x, float y, String text);
 
 	/**
 	 * Draw a string to the screen
@@ -40,5 +40,5 @@ public interface Font {
 	 * @param text The text to be displayed
 	 * @param col The colour to draw with
 	 */
-	public abstract void drawString(int x, int y, String text, Color col);
+	public abstract void drawString(float x, float y, String text, Color col);
 }

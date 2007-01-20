@@ -165,7 +165,7 @@ public class Graphics {
  	 * @param x2 The x coordinate of the end point
 	 * @param y2 The y coordinate of the end point
 	 */
-	public void drawLine(int x1, int y1, int x2, int y2) {
+	public void drawLine(float x1, float y1, float x2, float y2) {
 		currentColor.bind();
 		Texture.bindNone();
 
@@ -261,7 +261,7 @@ public class Graphics {
 	 * @param width The width of the rectangle to draw
 	 * @param height The height of the rectangle to draw
 	 */
-	public void drawRect(int x1,int y1,int width,int height) {
+	public void drawRect(float x1,float y1,float width,float height) {
 		Texture.bindNone();
 		currentColor.bind();
 		
@@ -305,7 +305,7 @@ public class Graphics {
 	 * @param pattern The image to pattern across the rectangle
 	 * @param scale The scale to use on the texture
 	 */
-	public void fillRect(int x1,int y1,int width,int height, Image pattern, float scale) {
+	public void fillRect(float x1,float y1,float width,float height, Image pattern, float scale) {
 		pattern.bind();
 		currentColor.bind();
 		
@@ -329,7 +329,7 @@ public class Graphics {
 	 * @param width The width of the rectangle to fill
 	 * @param height The height of the rectangle to fill
 	 */
-	public void fillRect(int x1,int y1,int width,int height) {
+	public void fillRect(float x1,float y1,float width,float height) {
 		Texture.bindNone();
 		currentColor.bind();
 		
@@ -349,7 +349,7 @@ public class Graphics {
 	 * @param width The width of the oval
 	 * @param height The height of the oval
 	 */
-	public void drawOval(int x1, int y1, int width, int height) {
+	public void drawOval(float x1, float y1, float width, float height) {
 		drawOval(x1,y1,width,height,DEFAULT_SEGMENTS);
 	}
 
@@ -362,7 +362,7 @@ public class Graphics {
 	 * @param height The height of the oval
 	 * @param segments The number of line segments to use when drawing the oval
 	 */
-	public void drawOval(int x1, int y1, int width, int height,int segments) {
+	public void drawOval(float x1, float y1, float width, float height,int segments) {
 		Texture.bindNone();
 		currentColor.bind();
 		
@@ -389,7 +389,7 @@ public class Graphics {
 	 * @param width The width of the oval
 	 * @param height The height of the oval
 	 */
-	public void fillOval(int x1, int y1, int width, int height) {
+	public void fillOval(float x1, float y1, float width, float height) {
 		fillOval(x1,y1,width,height,DEFAULT_SEGMENTS);
 	}
 
@@ -402,7 +402,7 @@ public class Graphics {
 	 * @param height The height of the oval
 	 * @param segments The number of line segments to use when filling the oval
 	 */
-	public void fillOval(int x1, int y1, int width, int height,int segments) {
+	public void fillOval(float x1, float y1, float width, float height,int segments) {
 		Texture.bindNone();
 		currentColor.bind();
 		
@@ -461,7 +461,7 @@ public class Graphics {
 	 * @param x The x coordinate to draw the string at
 	 * @param y The y coordinate to draw the string at
 	 */
-	public void drawString(String str,int x,int y) {
+	public void drawString(String str,float x,float y) {
 		font.drawString(x, y, str, currentColor);
 	}
 
@@ -473,7 +473,7 @@ public class Graphics {
 	 * @param y The y location at which to draw the image
 	 * @param col The color to apply to the image as a filter
 	 */
-	public void drawImage(Image image, int x, int y, Color col) {
+	public void drawImage(Image image, float x, float y, Color col) {
 		image.draw(x,y,col);
 		currentColor.bind();
 	}
@@ -485,7 +485,7 @@ public class Graphics {
 	 * @param x The x location at which to draw the image
 	 * @param y The y location at which to draw the image
 	 */
-	public void drawImage(Image image, int x, int y) {
+	public void drawImage(Image image, float x, float y) {
 		drawImage(image, x, y, Color.white);
 		currentColor.bind();
 	}

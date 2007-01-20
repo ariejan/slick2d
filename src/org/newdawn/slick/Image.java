@@ -244,7 +244,7 @@ public class Image {
 	 * @param x The x location to draw the image at
 	 * @param y The y location to draw the image at
 	 */
-	public void draw(int x, int y) {
+	public void draw(float x, float y) {
 		draw(x,y,width,height);
 	}
 	
@@ -255,7 +255,7 @@ public class Image {
 	 * @param y The y location to draw the image at
 	 * @param filter The color to filter with when drawing
 	 */
-	public void draw(int x, int y, Color filter) {
+	public void draw(float x, float y, Color filter) {
 		draw(x,y,width,height, filter);
 	}
 
@@ -267,7 +267,7 @@ public class Image {
 	 * @param width The width to render the image at
 	 * @param height The height to render the image at
 	 */
-	public void drawEmbedded(int x,int y,int width,int height) {
+	public void drawEmbedded(float x,float y,float width,float height) {
 		init();
 		
 	    GL11.glTexCoord2f(textureOffsetX, textureOffsetY);
@@ -293,7 +293,7 @@ public class Image {
 	 * @param height
 	 *            The height to render the image at
 	 */
-	public void draw(int x,int y,int width,int height) {
+	public void draw(float x,float y,float width,float height) {
 		draw(x,y,width,height,Color.white);
 	}
 	
@@ -306,7 +306,7 @@ public class Image {
 	 * @param height The height to render the image at
 	 * @param filter The color to filter with while drawing
 	 */
-	public void draw(int x,int y,int width,int height,Color filter) {
+	public void draw(float x,float y,float width,float height,Color filter) {
 		if (filter != null) {
 			filter.bind();
 		} 
@@ -326,7 +326,7 @@ public class Image {
 	 * @param width The width to render the image at
 	 * @param height The height to render the image at
 	 */
-	public void drawFlash(int x,int y,int width,int height) {
+	public void drawFlash(float x,float y,float width,float height) {
 		init();
 		
 		Color.white.bind();
@@ -355,7 +355,7 @@ public class Image {
 	 * @param x The x location to draw the image at
 	 * @param y The y location to draw the image at
 	 */
-	public void drawFlash(int x,int y) {
+	public void drawFlash(float x,float y) {
 		drawFlash(x,y,getWidth(),getHeight());
 	}
 	
