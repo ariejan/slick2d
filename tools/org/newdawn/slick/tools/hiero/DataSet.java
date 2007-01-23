@@ -6,8 +6,22 @@
  */ 
 package org.newdawn.slick.tools.hiero;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * The data set generated from the font rendering
@@ -68,7 +82,7 @@ public class DataSet
      * 
      * @param out The output stream to write to
      */
-	public void toAngelCode(PrintStream out) {
+	public void toAngelCodeText(PrintStream out) {
 		out.println("info face=\""+fontName+"\" size="+size+" bold=0 italic=0 charset=\""+setName+"\" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1");
 		out.println("common lineHeight="+lineHeight+" base=26 scaleW="+width+" scaleH="+height+" pages=1 packed=0");
 		out.println("page id=0 file=\""+imageName+"\"");
@@ -82,6 +96,98 @@ public class DataSet
 		for (int i=0;i<kerning.size();i++) {
 			KerningData k = (KerningData) kerning.get(i);
 			out.println("kerning first="+k.first+"  second="+k.second+"  amount="+k.offset);
+		}
+	}
+	
+	/**
+	 * Output this data set as an angle code XML data file
+	 * 
+	 * @param out The output stream to write to
+	 * @throws IOException Indicates a failure to build the XML
+	 */
+	public void toAngelCodeXML(PrintStream out) throws IOException {
+		try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document document = builder.newDocument();
+			Element root = document.createElement("font");
+			document.appendChild(root);
+			
+			Element info = document.createElement("info");
+			info.setAttribute("face",fontName);
+			info.setAttribute("size",""+size);
+			info.setAttribute("bold","0");
+			info.setAttribute("italic","0");
+			info.setAttribute("charSet",setName);
+			info.setAttribute("unicode",""+0);
+			info.setAttribute("stretchH",""+100);
+			info.setAttribute("smooth",""+0);
+			info.setAttribute("aa",""+0);
+			info.setAttribute("padding","0,0,0,0");
+			info.setAttribute("spacing","0,0");
+			root.appendChild(info);
+			Element common = document.createElement("common");
+			common.setAttribute("lineHeight",""+lineHeight);
+			common.setAttribute("base","0");
+			common.setAttribute("scaleW",""+width);
+			common.setAttribute("scaleH",""+height);
+			common.setAttribute("pages","1");
+			common.setAttribute("packed","0");
+			root.appendChild(common);
+			Element pages = document.createElement("pages");
+			Element page = document.createElement("page");
+			page.setAttribute("id","0");
+			page.setAttribute("file",imageName);
+			root.appendChild(pages);
+			pages.appendChild(page);
+			
+			Element charsElement = document.createElement("chars");
+			charsElement.setAttribute("count",""+chars.size());
+			root.appendChild(charsElement);
+			for (int i=0;i<chars.size();i++) {
+				CharData c = (CharData) chars.get(i);
+				Element charElement = document.createElement("char");
+				
+				charElement.setAttribute("id", ""+c.getID());
+				charElement.setAttribute("x", ""+c.getX());
+				charElement.setAttribute("y", ""+c.getY());
+				charElement.setAttribute("width", ""+c.getWidth());
+				charElement.setAttribute("height", ""+c.getHeight());
+				charElement.setAttribute("xoffset", "0");
+				charElement.setAttribute("yoffset", ""+c.getYOffset());
+				charElement.setAttribute("xadvance", ""+c.getXAdvance());
+				charElement.setAttribute("page", "0");
+				charElement.setAttribute("chnl", "0");
+				charsElement.appendChild(charElement);
+			}
+			
+			Element kernsElement = document.createElement("kernings");
+			kernsElement.setAttribute("count",""+kerning.size());
+			root.appendChild(kernsElement);
+			for (int i=0;i<kerning.size();i++) {
+				KerningData k = (KerningData) kerning.get(i);
+				Element kernElement = document.createElement("kerning");
+				
+				kernElement.setAttribute("first", ""+k.first);
+				kernElement.setAttribute("second", ""+k.second);
+				kernElement.setAttribute("amount", ""+k.offset);
+				kernsElement.appendChild(kernElement);
+			}
+			
+			Result result = new StreamResult(new OutputStreamWriter(out,
+					"utf-8"));
+			DOMSource source = new DOMSource(document);
+			TransformerFactory factory = TransformerFactory.newInstance();
+			factory.setAttribute("indent-number", new Integer(2));
+			Transformer xformer = factory.newTransformer();
+			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			
+			xformer.transform(source, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			IOException x = new IOException();
+			x.initCause(e);
+			
+			throw x;
 		}
 	}
 	

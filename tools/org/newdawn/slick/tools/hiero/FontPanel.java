@@ -164,15 +164,21 @@ public class FontPanel extends JPanel {
      * Save the image and font file out
      * 
      * @param ref The reference to save out to
+     * @param type The type of file to save as (@see {@link Hiero#TEXT} and @see {@link Hiero#XML})
      * @throws IOException Indicates a failure to write to the file
      */
-    public void save(String ref) throws IOException {
+    public void save(String ref, int type) throws IOException {
     	FileOutputStream fout = new FileOutputStream(ref+".png");
     	ImageIO.write(image, "PNG", fout);
     	fout.close();
     	
     	fout = new FileOutputStream(ref+".fnt");
-    	data.toAngelCode(new PrintStream(fout));
+    	if (type == Hiero.XML) {
+    		data.toAngelCodeXML(new PrintStream(fout));
+    	} else {
+    		data.toAngelCodeText(new PrintStream(fout));
+    	}
+    	
     	fout.close();
     }
     

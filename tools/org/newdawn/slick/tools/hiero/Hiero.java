@@ -44,6 +44,11 @@ import org.newdawn.slick.tools.hiero.truetype.FontData;
  * @author kevin
  */
 public class Hiero extends JFrame {
+	/** Save the bitmap font as an XML file */
+	public static final int XML = 1;
+	/** Save the bitmap font as an TEXT file */
+	public static final int TEXT = 2;
+	
 	/** The character set for all ascii characters */
     public static final CharSet SET_ASCII = new CharSet(32, 255,"ASCII");
     /** The subset for NEHE style fonts */
@@ -103,10 +108,16 @@ public class Hiero extends JFrame {
         	}
         });
         
-        JMenuItem save = new JMenuItem("Save Bitmap Font");
-        save.addActionListener(new ActionListener() {
+        JMenuItem saveText = new JMenuItem("Save As BMFont Text File..");
+        saveText.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		saveFont();
+        		saveFont(TEXT);
+        	}
+        });
+        JMenuItem saveXML = new JMenuItem("Save As BMFont XML File..");
+        saveXML.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		saveFont(XML);
         	}
         });
         JMenuItem quit = new JMenuItem("Exit");
@@ -126,7 +137,9 @@ public class Hiero extends JFrame {
         file.addSeparator();
         file.add(ef);
         file.add(cset);
-        file.add(save);
+        file.addSeparator();
+        file.add(saveText);
+        file.add(saveXML);
         file.addSeparator();
         file.add(quit);
         
@@ -310,7 +323,6 @@ public class Hiero extends JFrame {
         	}
         });
         
-        //setResizable(false);
         setContentPane(panel);
     	setSize(750,700);
     	
@@ -384,8 +396,10 @@ public class Hiero extends JFrame {
     
     /**
      * Save the font out to the data file and image
+     * 
+     * @param type The type of file to save as
      */
-    private void saveFont() {
+    private void saveFont(int type) {
     	int resp = chooser.showSaveDialog(this);
     	if (resp == JFileChooser.APPROVE_OPTION) {
     		String path = chooser.getSelectedFile().getAbsolutePath();
@@ -395,7 +409,7 @@ public class Hiero extends JFrame {
     		
     		try {
                 fontPanel.generateData();
-    			fontPanel.save(path);
+    			fontPanel.save(path, type);
     		} catch (IOException e) {
     			e.printStackTrace();
     			JOptionPane.showMessageDialog(this, "Failed to save font, given reason: "+e.getMessage());
