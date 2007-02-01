@@ -279,6 +279,18 @@ public class Animation {
 	}
 
 	/**
+	 * Draw the animation at a specific location
+	 * 
+	 * @param x The x position to draw the animation at
+	 * @param y The y position to draw the animation at
+	 * @param filter The filter to apply
+	 */
+	public void draw(int x,int y, Color filter) {
+		draw(x,y,((Frame) frames.get(currentFrame)).image.getWidth(),
+				 ((Frame) frames.get(currentFrame)).image.getHeight(), filter);
+	}
+	
+	/**
 	 * Draw the animation
 	 * 
 	 * @param x The x position to draw the animation at
