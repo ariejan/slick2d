@@ -1,5 +1,7 @@
 package org.newdawn.slick.particles;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -338,12 +340,7 @@ public class ParticleSystem {
 	 */
 	public void render() {
 		if ((sprite == null) && (defaultImageName != null)) {
-			try {
-				sprite = new Image(defaultImageName);
-			} catch (SlickException e) {
-				Log.error(e);
-				defaultImageName = null;
-			}
+			loadSystemParticleImage();
 		}
 		
 		if (!visible) {
@@ -397,18 +394,30 @@ public class ParticleSystem {
 	}
 	
 	/**
+	 * Load the system particle image as the extension permissions
+	 */
+	private void loadSystemParticleImage() {
+		AccessController.doPrivileged(new PrivilegedAction() {
+            public Object run() {
+        		try {
+        			sprite = new Image(defaultImageName);
+        		} catch (SlickException e) {
+        			Log.error(e);
+        			defaultImageName = null;
+        		}
+                return null; // nothing to return
+            }
+        });
+	}
+	
+	/**
 	 * Update the system, request the assigned emitters update the particles
 	 * 
 	 * @param delta The amount of time thats passed since last update in milliseconds
 	 */
 	public void update(int delta) {
 		if ((sprite == null) && (defaultImageName != null)) {
-			try {
-				sprite = new Image(defaultImageName);
-			} catch (SlickException e) {
-				Log.error(e);
-				defaultImageName = null;
-			}
+			loadSystemParticleImage();
 		}
 		
 		ArrayList removeMe = new ArrayList();
