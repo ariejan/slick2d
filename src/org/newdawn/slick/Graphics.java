@@ -302,12 +302,58 @@ public class Graphics {
 	}
 
 	/**
+	 * Set the clipping to apply to the drawing. Note that this clipping takes no
+	 * note of the transforms that have been applied to the context and is always
+	 * in absolute screen space coordinates.
+	 * 
+	 * @param rect The rectangle describing the clipped area in screen coordinates
+	 */
+	public void setClip(Rectangle rect) {
+		if (rect == null) {
+			clearClip();
+			return;
+		}
+		
+		setClip((int) rect.x, (int) rect.y, (int) rect.width, (int) rect.height);
+	}
+	
+	/**
 	 * Return the currently applied clipping rectangle
 	 * 
 	 * @return The current applied clipping rectangle or null if no clipping is applied
 	 */
 	public Rectangle getClip() {
 		return clip;
+	}
+	
+	/**
+	 * Tile a rectangle with a pattern specifing the offset from the top corner that one tile
+	 * should match
+	 * 
+	 * @param x The x coordinate of the rectangle
+	 * @param y The y coordinate of the rectangle
+	 * @param width The width of the rectangle
+	 * @param height The height of the rectangle
+	 * @param pattern The image to tile across the rectangle
+	 * @param offX The offset on the x axis from the top left corner
+	 * @param offY The offset on the y axis from the top left corner
+	 */
+	private void fillRect(float x, float y, float width, float height, Image pattern, float offX, float offY) {
+		int cols = ((int) Math.ceil(width / pattern.getWidth())) + 2;
+		int rows = ((int) Math.ceil(height / pattern.getHeight())) + 2;
+
+		Rectangle preClip = getClip();
+		setClip((int) x, (int) y, (int) width, (int) height);
+
+		// Draw all the quads we need
+		for (int c = 0; c < cols; c++) {
+			for (int r = 0; r < rows; r++) {
+				pattern.draw(c * pattern.getWidth() + x - offX, r
+						* pattern.getHeight() + y - offY);
+			}
+		}
+
+		setClip(preClip);
 	}
 	
 	/**
