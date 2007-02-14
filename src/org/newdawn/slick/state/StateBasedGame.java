@@ -59,6 +59,24 @@ public abstract class StateBasedGame implements Game {
 	}
 
 	/**
+	 * Get the ID of the state the game is currently in
+	 * 
+	 * @return The ID of the state the game is currently in
+	 */
+	public int getCurrentStateID() {
+		return currentState.getID();
+	}
+	
+	/**
+	 * Get the state the game is currently in
+	 * 
+	 * @return The state the game is currently in
+	 */
+	public GameState getCurrentState() {
+		return currentState;
+	}
+	
+	/**
 	 * @see org.newdawn.slick.InputListener#setInput(org.newdawn.slick.Input)
 	 */
 	public void setInput(Input input) {
@@ -105,6 +123,12 @@ public abstract class StateBasedGame implements Game {
 	 * @param enter The transition to use when entering the new state
 	 */
 	public void enterState(int id, Transition leave, Transition enter) {
+		if (leave == null) {
+			leave = new EmptyTransition();
+		}
+		if (enter == null) {
+			enter = new EmptyTransition();
+		}
 		leaveTransition = leave;
 		enterTransition = enter;
 		

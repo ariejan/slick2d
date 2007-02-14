@@ -19,7 +19,7 @@ import org.lwjgl.BufferUtils;
  * 
  * @author Kevin Glass
  */
-public class TGAImageData implements ImageData {
+public class TGAImageData implements LoadableImageData {
 	/** The width of the texture that needs to be generated */
 	private int texWidth;
 	/** The height of the texture that needs to be generated */
@@ -84,21 +84,21 @@ public class TGAImageData implements ImageData {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream)
+	 * @see org.newdawn.slick.opengl.LoadableImageData#loadImage(java.io.InputStream)
 	 */
 	public ByteBuffer loadImage(InputStream fis) throws IOException {
 		return loadImage(fis,true, null);
 	}
 	
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, int[])
+	 * @see org.newdawn.slick.opengl.LoadableImageData#loadImage(java.io.InputStream, boolean, int[])
 	 */
 	public ByteBuffer loadImage(InputStream fis, boolean flipped, int[] transparent) throws IOException {
 		return loadImage(fis, flipped, false, transparent);
 	}
 	
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean, int[])
+	 * @see org.newdawn.slick.opengl.LoadableImageData#loadImage(java.io.InputStream, boolean, boolean, int[])
 	 */
 	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha, int[] transparent) throws IOException {
 		if (transparent != null) { 

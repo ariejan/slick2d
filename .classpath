@@ -11,5 +11,6 @@
 	<classpathentry exported="true" kind="lib" path="applet/lwjgl_applet.jar"/>
 	<classpathentry exported="true" kind="lib" path="applet/lwjgl_util_applet.jar"/>
 	<classpathentry kind="lib" path="lib/jnlp.jar"/>
+	<classpathentry kind="lib" path="lib/tinylinepp.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

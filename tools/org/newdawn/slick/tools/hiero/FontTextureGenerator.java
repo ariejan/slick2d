@@ -171,7 +171,7 @@ public class FontTextureGenerator implements DrawingContext {
             int xoffset = 0;
             int lsb = getGlyphLSB(g, vector);
             int rsb = getGlyphRSB(g, vector);
-            int fontWidth = getGlyphAdvanceX(g, vector) + padding[LEFT] + padding[RIGHT];
+            int fontWidth = getGlyphAdvanceX(g, vector) + padding[LEFT] + padding[RIGHT] + 1;
             int fontHeight = getGlyphHeight(g, vector)+2 + padding[TOP] + padding[BOTTOM];
             int yoffset = getGlyphYOffset(g, vector)-1;
             int advance = getGlyphAdvanceX(g, vector) + padding[ADVANCE];

@@ -306,6 +306,16 @@ public class ParticleSystem {
 	}
 	
 	/**
+	 * Remove all the emitters from the system
+	 */
+	public void removeAllEmitters() {
+		for (int i=0;i<emitters.size();i++) {
+			removeEmitter((ParticleEmitter) emitters.get(i));
+			i--;
+		}
+	}
+	
+	/**
 	 * Get the x coordiante of the position of the system
 	 * 
 	 * @return The x coordinate of the position of the system

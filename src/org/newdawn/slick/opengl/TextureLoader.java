@@ -251,7 +251,7 @@ public class TextureLoader {
         
         boolean hasAlpha;
         
-        ImageData imageData = null;
+        LoadableImageData imageData = null;
         if (resourceName.endsWith(".tga")) {
         	imageData = new TGAImageData();
         } else {

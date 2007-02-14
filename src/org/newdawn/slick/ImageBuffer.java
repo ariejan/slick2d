@@ -1,7 +1,5 @@
 package org.newdawn.slick;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -84,20 +82,6 @@ public class ImageBuffer implements ImageData {
 	}
 
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream)
-	 */
-	public ByteBuffer loadImage(InputStream fis) throws IOException {
-		throw new IOException("WriteableImageSource doesn't support loading");
-	}
-
-	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, int[])
-	 */
-	public ByteBuffer loadImage(InputStream fis, boolean flipped, int[] transparent) throws IOException {
-		throw new IOException("WriteableImageSource doesn't support loading");
-	}
-
-	/**
 	 * @see org.newdawn.slick.opengl.ImageData#getImageBufferData()
 	 */
 	public ByteBuffer getImageBufferData() {
@@ -170,12 +154,5 @@ public class ImageBuffer implements ImageData {
         }
         return ret;
     }
-
-	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean, int[])
-	 */
-	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha, int[] transparent) throws IOException {
-		throw new IOException("WriteableImageSource doesn't support loading");
-	}
 	
 }

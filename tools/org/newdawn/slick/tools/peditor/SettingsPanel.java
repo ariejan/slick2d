@@ -107,8 +107,10 @@ public class SettingsPanel extends ControlPanel {
 	protected void linkEmitterToFields(ConfigurableEmitter emitter) {
 		name.setText(emitter.name);
 		String value = emitter.getImageName();
-		value = value.substring(value.lastIndexOf(File.separatorChar)+1);	
-		imageName.setText(value);
+		if (value != null) {
+			value = value.substring(value.lastIndexOf(File.separatorChar)+1);	
+			imageName.setText(value);
+		}
 		
 		link(emitter.gravityFactor, "gravity");
 		link(emitter.windFactor, "wind");

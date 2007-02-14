@@ -29,6 +29,8 @@ public class Graphics {
 	private int screenHeight;
 	/** True if the matrix has been pushed to the stack */
 	private boolean pushed;
+	/** The graphics context clipping */
+	private Rectangle clip;
 	
 	/**
 	 * Create a new graphics context. Only the container should
@@ -279,11 +281,14 @@ public class Graphics {
 	 * be drawn anywhere on the screen
 	 */
 	public void clearClip() {
+		clip = null;
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
 	
 	/**
-	 * Set the clipping to apply to the drawing
+	 * Set the clipping to apply to the drawing. Note that this clipping takes no
+	 * note of the transforms that have been applied to the context and is always
+	 * in absolute screen space coordinates.
 	 * 
 	 * @param x The x coordinate of the top left cornder of the allowed area
 	 * @param y The y coordinate of the top left cornder of the allowed area
@@ -292,9 +297,19 @@ public class Graphics {
 	 */
 	public void setClip(int x,int y,int width,int height) {
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		clip = new Rectangle(x,y,width,height);
 		GL11.glScissor(x,screenHeight-y-height,width,height);
 	}
 
+	/**
+	 * Return the currently applied clipping rectangle
+	 * 
+	 * @return The current applied clipping rectangle or null if no clipping is applied
+	 */
+	public Rectangle getClip() {
+		return clip;
+	}
+	
 	/**
 	 * Fill a rectangle with the given image used as a pattern
 	 * 
@@ -363,8 +378,41 @@ public class Graphics {
 	 * @param segments The number of line segments to use when drawing the oval
 	 */
 	public void drawOval(float x1, float y1, float width, float height,int segments) {
+		drawArc(x1,y1,width,height,segments,0,360);
+	}
+
+	/**
+	 * Draw an oval to the canvas
+	 * 
+	 * @param x1 The x coordinate of the top left corner of a box containing the arc
+	 * @param y1 The y coordinate of the top left corner of a box containing the arc
+	 * @param width The width of the arc
+	 * @param height The height of the arc
+	 * @param start The angle the arc starts at
+	 * @param end The angle the arc ends at
+	 */
+	public void drawArc(float x1, float y1, float width, float height,float start,float end) {
+		drawArc(x1,y1,width,height,DEFAULT_SEGMENTS,start,end);
+	}
+	
+	/**
+	 * Draw an oval to the canvas
+	 * 
+	 * @param x1 The x coordinate of the top left corner of a box containing the arc
+	 * @param y1 The y coordinate of the top left corner of a box containing the arc
+	 * @param width The width of the arc
+	 * @param height The height of the arc
+	 * @param segments The number of line segments to use when drawing the arc
+	 * @param start The angle the arc starts at
+	 * @param end The angle the arc ends at
+	 */
+	public void drawArc(float x1, float y1, float width, float height,int segments,float start,float end) {
 		Texture.bindNone();
 		currentColor.bind();
+		
+		while (end < start) {
+			end += 360;
+		}
 		
 		float cx = x1 + (width/2.0f);
 		float cy = y1 + (height/2.0f);
@@ -372,9 +420,13 @@ public class Graphics {
 		GL11.glBegin(GL11.GL_LINE_STRIP);
 			int step = 360 / segments;
 			
-			for (int a=0;a<360+step;a+=step) {
-				float x = (float) (cx+(FastTrig.cos(Math.toRadians(a))*width/2.0f));
-				float y = (float) (cy+(FastTrig.sin(Math.toRadians(a))*height/2.0f));
+			for (int a=(int) start;a<(int) (end+step);a+=step) {
+				float ang = a;
+				if (ang > end) {
+					ang = end;
+				}
+				float x = (float) (cx+(FastTrig.cos(Math.toRadians(ang))*width/2.0f));
+				float y = (float) (cy+(FastTrig.sin(Math.toRadians(ang))*height/2.0f));
 				
 				GL11.glVertex2f(x,y);
 			}
@@ -403,8 +455,41 @@ public class Graphics {
 	 * @param segments The number of line segments to use when filling the oval
 	 */
 	public void fillOval(float x1, float y1, float width, float height,int segments) {
+		fillArc(x1,y1,width,height,segments,0,360);
+	}
+
+	/**
+	 * Fill an arc to the canvas (a wedge)
+	 * 
+	 * @param x1 The x coordinate of the top left corner of a box containing the arc
+	 * @param y1 The y coordinate of the top left corner of a box containing the arc
+	 * @param width The width of the arc
+	 * @param height The height of the arc
+	 * @param start The angle the arc starts at
+	 * @param end The angle the arc ends at
+	 */
+	public void fillArc(float x1, float y1, float width, float height,float start,float end) {
+		fillArc(x1,y1,width,height,DEFAULT_SEGMENTS,start,end);
+	}
+	
+	/**
+	 * Fill an arc to the canvas (a wedge)
+	 * 
+	 * @param x1 The x coordinate of the top left corner of a box containing the arc
+	 * @param y1 The y coordinate of the top left corner of a box containing the arc
+	 * @param width The width of the arc
+	 * @param height The height of the arc
+	 * @param segments The number of line segments to use when filling the arc
+	 * @param start The angle the arc starts at
+	 * @param end The angle the arc ends at
+	 */
+	public void fillArc(float x1, float y1, float width, float height,int segments,float start,float end) {
 		Texture.bindNone();
 		currentColor.bind();
+		
+		while (end < start) {
+			end += 360;
+		}
 		
 		float cx = x1 + (width/2.0f);
 		float cy = y1 + (height/2.0f);
@@ -414,9 +499,14 @@ public class Graphics {
 			
 			GL11.glVertex2f(cx,cy);
 			
-			for (int a=0;a<360+step;a+=step) {
-				float x = (float) (cx+(FastTrig.cos(Math.toRadians(a))*width/2.0f));
-				float y = (float) (cy+(FastTrig.sin(Math.toRadians(a))*height/2.0f));
+			for (int a=(int) start;a<(int) (end+step);a+=step) {
+				float ang = a;
+				if (ang > end) {
+					ang = end;
+				}
+				
+				float x = (float) (cx+(FastTrig.cos(Math.toRadians(ang))*width/2.0f));
+				float y = (float) (cy+(FastTrig.sin(Math.toRadians(ang))*height/2.0f));
 				
 				GL11.glVertex2f(x,y);
 			}

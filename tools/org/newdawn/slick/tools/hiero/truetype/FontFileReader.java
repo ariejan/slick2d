@@ -44,6 +44,9 @@ public class FontFileReader {
     private void init(InputStream in) throws java.io.IOException {
         this.file = IOUtils.toByteArray(in);
         this.fsize = this.file.length;
+        if (fsize > 2000000) {
+        	throw new IOException("Font too big");
+        }
         this.current = 0;
     }
 

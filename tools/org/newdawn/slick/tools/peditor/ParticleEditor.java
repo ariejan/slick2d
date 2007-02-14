@@ -596,6 +596,7 @@ public class ParticleEditor extends JFrame {
 			whiskasPanel.setEnabled(true);
 			
 			emissionControls.setTarget(emitter);
+			settingsPanel.setTarget(emitter);
 			positionControls.setTarget(emitter);
 			settingsPanel.setTarget(emitter);
 			colorPanel.setTarget(emitter);
@@ -627,7 +628,7 @@ public class ParticleEditor extends JFrame {
 		
 			new ParticleEditor();
 		} catch (Exception e) {
-			Log.warn(e.getMessage());
+			Log.error(e);
 		}
 	}
 }

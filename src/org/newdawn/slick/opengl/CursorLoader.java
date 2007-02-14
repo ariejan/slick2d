@@ -47,7 +47,7 @@ public class CursorLoader {
 	 * @throws LWJGLException Indicates a failure to create the hardware cursor
 	 */
 	public Cursor getCursor(String ref,int x,int y) throws IOException, LWJGLException {
-		ImageData imageData = null;
+		LoadableImageData imageData = null;
 		
 		if (ref.endsWith(".tga")) {
 			imageData = new TGAImageData();
@@ -56,6 +56,42 @@ public class CursorLoader {
 		}
 		
 		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false, true, null);
+		for (int i=0;i<buf.limit();i+=4) {
+			byte red = buf.get(i);
+			byte green = buf.get(i+1);
+			byte blue = buf.get(i+2);
+			byte alpha = buf.get(i+3);
+			
+			buf.put(i+2, red);
+			buf.put(i+1, green);
+			buf.put(i, blue);
+			buf.put(i+3, alpha);
+		}
+		
+		try {
+			int yspot = imageData.getHeight() - y - 1;
+			if (yspot < 0) {
+				yspot = 0;
+			}
+			return new Cursor(imageData.getTexWidth(), imageData.getTexHeight(), x, yspot, 1, buf.asIntBuffer(), null);
+		} catch (Throwable e) {
+			Log.info("Chances are you cursor is too small for this platform");
+			throw new LWJGLException(e);
+		}
+	}
+	
+	/**
+	 * Get a cursor based on a set of image data
+	 * 
+	 * @param imageData The data from which the cursor can read it's contents
+	 * @param x The x-coordinate of the cursor hotspot (left -> right)
+	 * @param y The y-coordinate of the cursor hotspot (bottom -> top)
+	 * @return The create cursor
+	 * @throws IOException Indicates a failure to load the image
+	 * @throws LWJGLException Indicates a failure to create the hardware cursor
+	 */
+	public Cursor getCursor(ImageData imageData,int x,int y) throws IOException, LWJGLException {
+		ByteBuffer buf = imageData.getImageBufferData();
 		for (int i=0;i<buf.limit();i+=4) {
 			byte red = buf.get(i);
 			byte green = buf.get(i+1);
@@ -103,7 +139,7 @@ public class CursorLoader {
 		}
 		cursorDelaysBuffer.flip();
 
-		ImageData imageData = new TGAImageData();
+		LoadableImageData imageData = new TGAImageData();
 		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false, null);
 					
 		return new Cursor(width, height, x, y, cursorDelays.length, buf.asIntBuffer(), cursorDelaysBuffer);

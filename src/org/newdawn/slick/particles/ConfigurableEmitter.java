@@ -95,7 +95,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	/** The name attribute */
 	public String name;
 	/** The name of the image in use */
-	public String imageName;
+	public String imageName = "";
 	/** The image being used for the particles */
 	private Image image;
 	/** True if the image needs updating */

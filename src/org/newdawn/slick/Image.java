@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.lwjgl.opengl.EXTSecondaryColor;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
+import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
@@ -173,8 +174,27 @@ public class Image {
 	 * @param filter The filter to use when scaling this image
 	 */
 	Image(ImageBuffer buffer, int filter) {
+		this((ImageData) buffer, filter);
+	}
+
+	/**
+	 * Create an image from a image data source
+	 * 
+	 * @param data The buffer to use to create the image
+	 */
+	public Image(ImageData data) {
+		this(data, FILTER_LINEAR);
+	}
+	
+	/**
+	 * Create an image from a image data source. Note that this method uses 
+	 * 
+	 * @param data The buffer to use to create the image
+	 * @param filter The filter to use when scaling this image
+	 */
+	public Image(ImageData data, int filter) {
 		try {
-			texture = TextureLoader.get().getTexture(buffer, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST);
+			texture = TextureLoader.get().getTexture(data, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST);
 			ref = texture.toString();
 		} catch (IOException e) {
 			Log.error(e);

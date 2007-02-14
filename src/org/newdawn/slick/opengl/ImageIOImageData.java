@@ -25,7 +25,7 @@ import javax.imageio.ImageIO;
  *
  * @author kevin
  */
-public class ImageIOImageData implements ImageData {
+public class ImageIOImageData implements LoadableImageData {
 	/** The colour model including alpha for the GL image */
     private static final ColorModel glAlphaColorModel = 
     		new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_sRGB),
@@ -91,21 +91,21 @@ public class ImageIOImageData implements ImageData {
 	}
 
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream)
+	 * @see org.newdawn.slick.opengl.LoadableImageData#loadImage(java.io.InputStream)
 	 */
 	public ByteBuffer loadImage(InputStream fis) throws IOException {
 		return loadImage(fis, true, null);
 	}
 
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, int[])
+	 * @see org.newdawn.slick.opengl.LoadableImageData#loadImage(java.io.InputStream, boolean, int[])
 	 */
 	public ByteBuffer loadImage(InputStream fis, boolean flipped, int[] transparent) throws IOException {
 		return loadImage(fis, flipped, false, transparent);
 	}
 
 	/**
-	 * @see org.newdawn.slick.opengl.ImageData#loadImage(java.io.InputStream, boolean, boolean, int[])
+	 * @see org.newdawn.slick.opengl.LoadableImageData#loadImage(java.io.InputStream, boolean, boolean, int[])
 	 */
 	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha, int[] transparent) throws IOException {
 		if (transparent != null) {

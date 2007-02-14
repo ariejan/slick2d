@@ -320,6 +320,7 @@
 	<createdemojnlp name="polygontest" title="Slick2D Polygon Point Test" mainclass="org.newdawn.slick.tests.PolygonTest"/>
 
 	<createdemojnlp name="purefonttest" title="Slick2D Pure Font Test" mainclass="org.newdawn.slick.tests.PureFontTest"/>
+	<createdemojnlp name="canvastest" title="Slick2D Canvas Container Test" mainclass="org.newdawn.slick.tests.CanvasContainerTest"/>
 
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>

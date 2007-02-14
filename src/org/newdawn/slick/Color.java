@@ -22,7 +22,17 @@ public class Color {
 	public static final Color black = new Color(0,0,0,1.0f);
 	/** The fixed colour gray */
 	public static final Color gray = new Color(0.5f,0.5f,0.5f,1.0f);
-	
+	/** The fixed colour cyan */
+	public static final Color cyan = new Color(0,1.0f,1.0f,1.0f);
+	/** The fixed colour dark gray */
+	public static final Color darkGray = new Color(0.3f,0.3f,0.3f,1.0f);
+	/** The fixed colour dark pink */
+    public final static Color pink      = new Color(255, 175, 175);
+	/** The fixed colour dark orange */
+    public final static Color orange 	= new Color(255, 200, 0);
+	/** The fixed colour dark magenta */
+    public final static Color magenta	= new Color(255, 0, 255);
+    
 	/** The red component of the colour */
 	public float r;
 	/** The green component of the colour */
@@ -67,10 +77,10 @@ public class Color {
 	 * @param a The alpha component of the colour (0.0 -> 1.0)
 	 */
 	public Color(float r,float g,float b,float a) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		this.a = a;
+		this.r = Math.min(r, 1);
+		this.g = Math.min(g, 1);
+		this.b = Math.min(b, 1);
+		this.a = Math.min(a, 1);
 	}
 
 	/**
@@ -124,6 +134,17 @@ public class Color {
 	}
 	
 	/**
+	 * Decode a number in a string and process it as a colour
+	 * reference.
+	 * 
+	 * @param nm The number string to decode
+	 * @return The color generated from the number read
+	 */
+	public static Color decode(String nm) {
+		return new Color(Integer.decode(nm).intValue());
+	}
+	
+	/**
 	 * Bind this colour to the GL context
 	 */
 	public void bind() {
@@ -155,14 +176,45 @@ public class Color {
 	public String toString() {
 		return "Color ("+r+","+g+","+b+","+a+")";
 	}
+
+	/**
+	 * Make a darker instance of this colour
+	 * 
+	 * @return The darker version of this colour
+	 */
+	public Color darker() {
+		return darker(0.5f);
+	}
 	
 	/**
 	 * Make a darker instance of this colour
 	 * 
-	 * @return The darkver version of this colour
+	 * @param scale The scale down of RGB
+	 * @return The darker version of this colour
 	 */
-	public Color darker() {
-		Color temp = new Color(r * 0.5f,g * 0.5f,b * 0.5f,a);
+	public Color darker(float scale) {
+		Color temp = new Color(r * scale,g * scale,b * scale,a);
+		
+		return temp;
+	}
+
+	/**
+	 * Make a brighter instance of this colour
+	 * 
+	 * @return The brighter version of this colour
+	 */
+	public Color brighter() {
+		return brighter(1.2f);
+	}
+	
+	/**
+	 * Make a brighter instance of this colour
+	 * 
+	 * @param scale The scale up of RGB
+	 * @return The brighter version of this colour
+	 */
+	public Color brighter(float scale) {
+		Color temp = new Color(r * scale,g * scale,b * scale,a);
 		
 		return temp;
 	}

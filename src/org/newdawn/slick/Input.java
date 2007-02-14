@@ -9,6 +9,7 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -306,6 +307,9 @@ public class Input {
 	private int wheel;
 	/** The height of the display */
 	private int height;
+	
+	/** True if the display is active */
+	private boolean displayActive = true;
 	
 	/**
 	 * Create a new input with the height of the screen
@@ -737,19 +741,24 @@ public class Input {
 			}
 		}
 		
-		if ((lastMouseX != getMouseX()) || (lastMouseY != getMouseY())) {
-			consumed = false;
-			for (int i=0;i<listeners.size();i++) {
-				InputListener listener = (InputListener) listeners.get(i);
-				if (listener.isAcceptingInput()) {
-					listener.mouseMoved(lastMouseX,  lastMouseY, getMouseX(), getMouseY());
-					if (consumed) {
-						break;
-					}
-				}
-			}
+		if (!displayActive) {
 			lastMouseX = getMouseX();
 			lastMouseY = getMouseY();
+		} else {
+			if ((lastMouseX != getMouseX()) || (lastMouseY != getMouseY())) {
+				consumed = false;
+				for (int i=0;i<listeners.size();i++) {
+					InputListener listener = (InputListener) listeners.get(i);
+					if (listener.isAcceptingInput()) {
+						listener.mouseMoved(lastMouseX,  lastMouseY, getMouseX(), getMouseY());
+						if (consumed) {
+							break;
+						}
+					}
+				}
+				lastMouseX = getMouseX();
+				lastMouseY = getMouseY();
+			}
 		}
 		
 		if (controllersInited) {
@@ -769,6 +778,10 @@ public class Input {
 		for (int i=0;i<listeners.size();i++) {
 			InputListener listener = (InputListener) listeners.get(i);
 			listener.inputEnded();
+		}
+		
+		if (Display.isCreated()) {
+			displayActive = Display.isActive();
 		}
 	}
 	

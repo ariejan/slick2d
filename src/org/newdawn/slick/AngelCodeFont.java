@@ -154,7 +154,7 @@ public class AngelCodeFont implements Font {
 	 */
 	public void drawString(float x, float y, String text, Color col) {
 		col.bind();
-		
+
 		for (int i=0;i<text.length();i++) {
 			int id = text.charAt(i);
 			if (chars[id] == null) {
@@ -170,6 +170,26 @@ public class AngelCodeFont implements Font {
 	}
 
 	/**
+	 * Get the offset from the draw location the font will place
+	 * glyphs
+	 * 
+	 * @param text The text that is to be tested
+	 * @return The yoffset from the y draw location at which text will start
+	 */
+	public int getYOffset(String text) {
+		int minYOffset = 10000;
+		for (int i=0;i<text.length();i++) {
+			int id = text.charAt(i);
+			if (chars[id] == null) {
+				continue;
+			}
+			minYOffset = Math.min(chars[id].yoffset,minYOffset);
+		}
+		
+		return minYOffset;
+	}
+	
+	/**
 	 * @see org.newdawn.slick.Font#getHeight(java.lang.String)
 	 */
 	public int getHeight(String text) {
@@ -178,7 +198,7 @@ public class AngelCodeFont implements Font {
 		for (int i=0;i<text.length();i++) {
 			int id = text.charAt(i);
 			
-			maxHeight = Math.max(chars[id].height, maxHeight);
+			maxHeight = Math.max(chars[id].height+chars[id].yoffset, maxHeight);
 		}
 		
 		return maxHeight;
@@ -192,6 +212,9 @@ public class AngelCodeFont implements Font {
 		
 		for (int i=0;i<text.length();i++) {
 			int id = text.charAt(i);
+			if (chars[id] == null) {
+				continue;
+			}
 			width += chars[id].xadvance;
 			
 			if (i < text.length()-1) {

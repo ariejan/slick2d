@@ -17,6 +17,7 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.CursorLoader;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.ImageIOImageData;
+import org.newdawn.slick.opengl.LoadableImageData;
 import org.newdawn.slick.opengl.TGAImageData;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
@@ -45,7 +46,6 @@ public class AppGameContainer extends GameContainer {
 	private DisplayMode originalDisplayMode;
 	/** The display mode we're going to try and use */
 	private DisplayMode targetDisplayMode;
-	
 	
 	/**
 	 * Create a new container wrapping a game
@@ -174,7 +174,30 @@ public class AppGameContainer extends GameContainer {
 			Log.error("Failed to load and apply cursor.", e);
 		}
 	}
-
+	
+	/**
+	 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.opengl.ImageData, int, int)
+	 */
+	public void setMouseCursor(ImageData data, int hotSpotX, int hotSpotY) throws SlickException {
+		try {
+			Cursor cursor = CursorLoader.get().getCursor(data, hotSpotX, hotSpotY);
+			Mouse.setNativeCursor(cursor);
+		} catch (Exception e) {
+			Log.error("Failed to load and apply cursor.", e);
+		}
+	}
+	
+	/**
+	 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.lwjgl.input.Cursor, int, int)
+	 */
+	public void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY) throws SlickException {
+		try {
+			Mouse.setNativeCursor(cursor);
+		} catch (Exception e) {
+			Log.error("Failed to load and apply cursor.", e);
+		}
+	}
+	
 	/**
 	 * @see org.newdawn.slick.GameContainer#reinit()
 	 */
@@ -334,7 +357,7 @@ public class AppGameContainer extends GameContainer {
 	public void setIcons(String[] refs) throws SlickException {
 		ByteBuffer[] bufs = new ByteBuffer[refs.length];
 		for (int i=0;i<refs.length;i++) {
-			ImageData data;
+			LoadableImageData data;
 			boolean flip = false;
 			
 			if (refs[i].endsWith(".tga")) {

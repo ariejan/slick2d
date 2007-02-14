@@ -4,7 +4,6 @@ import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -19,9 +18,9 @@ import org.newdawn.slick.util.Log;
  */
 public class FontTest extends BasicGame {
 	/** The font we're going to use to render */
-	private Font font;
+	private AngelCodeFont font;
 	/** The font we're going to use to render */
-	private Font font2;
+	private AngelCodeFont font2;
 	/** The image of the font to compare against */
 	private Image image;
 	
@@ -50,11 +49,19 @@ public class FontTest extends BasicGame {
 		font.drawString(100, 36 + font.getHeight("We Here is a more complete line that hopefully"), 
 				             "will show some kerning.");
 		
-		font2.drawString(80, 105, "A Font Example", Color.red);
+		font2.drawString(80, 85, "A Font Example", Color.red);
 		font2.drawString(100, 132, "We - AV - Here is a more complete line that hopefully");
 		font2.drawString(100, 136 + font2.getHeight("We - Here is a more complete line that hopefully"), 
 				             "will show some kerning.");
 		image.draw(100,400);
+		
+		String testStr = "Testing Font";
+		font2.drawString(100, 300, testStr);
+		g.setColor(Color.white);
+		g.drawRect(100,300+font2.getYOffset(testStr),font2.getWidth(testStr),font2.getHeight(testStr)-font2.getYOffset(testStr));
+		font.drawString(500, 300, testStr);
+		g.setColor(Color.white);
+		g.drawRect(500,300+font.getYOffset(testStr),font.getWidth(testStr),font.getHeight(testStr)-font.getYOffset(testStr));
 	}
 
 	/**

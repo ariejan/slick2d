@@ -112,7 +112,7 @@ public class GradientEditor extends JPanel {
 			}
 		});
 	}
-
+	
 	/**
 	 * @see javax.swing.JComponent#setEnabled(boolean)
 	 */
