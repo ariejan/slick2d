@@ -195,7 +195,11 @@ public class TextureLoader {
         	hash = texturesNearest;
         }
         
-    	Texture tex = (Texture) hash.get(resourceName+":"+transparent);
+        String resName = resourceName;
+        if (transparent != null) {
+        	resName += ":"+transparent[0]+":"+transparent[1]+":"+transparent[2]+":"+transparent[3];
+        }
+    	Texture tex = (Texture) hash.get(resName);
         if (tex != null) {
         	return tex;
         }
@@ -212,7 +216,7 @@ public class TextureLoader {
                          filter, 
                          filter, flipped, transparent);
         
-        hash.put(resourceName,tex);
+        hash.put(resName,tex);
         
         return tex;
     }
