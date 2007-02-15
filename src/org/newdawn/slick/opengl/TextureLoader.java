@@ -197,7 +197,7 @@ public class TextureLoader {
         
         String resName = resourceName;
         if (transparent != null) {
-        	resName += ":"+transparent[0]+":"+transparent[1]+":"+transparent[2]+":"+transparent[3];
+        	resName += ":"+transparent[0]+":"+transparent[1]+":"+transparent[2];
         }
     	Texture tex = (Texture) hash.get(resName);
         if (tex != null) {
