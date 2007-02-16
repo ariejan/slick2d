@@ -302,6 +302,29 @@ public class Image {
 	}
 
 	/**
+	 * Draw the image with a given scale
+	 * 
+	 * @param x The x position to draw the image at
+	 * @param y The y position to draw the image at
+	 * @param scale The scaling to apply
+	 */
+	public void draw(float x,float y,float scale) {
+		draw(x,y,width*scale,height*scale,Color.white);
+	}
+	
+	/**
+	 * Draw the image with a given scale
+	 * 
+	 * @param x The x position to draw the image at
+	 * @param y The y position to draw the image at
+	 * @param scale The scaling to apply
+	 * @param filter The colour filter to adapt the image with
+	 */
+	public void draw(float x,float y,float scale,Color filter) {
+		draw(x,y,width*scale,height*scale,filter);
+	}
+	
+	/**
 	 * Draw this image at a specified location and size
 	 * 
 	 * @param x
@@ -440,6 +463,16 @@ public class Image {
 	public Image copy() {
 		init();
 		return getSubImage(0,0,width,height);
+	}
+
+	/**
+	 * Get a scaled copy of this image with a uniform scale
+	 * 
+	 * @param scale The scale to apply
+	 * @return The new scaled image
+	 */
+	public Image getScaledCopy(float scale) {
+		return getScaledCopy((int) (width*scale),(int) (height*scale));
 	}
 	
 	/**

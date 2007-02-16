@@ -75,6 +75,15 @@ public class AppGameContainer extends GameContainer {
 	}
 	
 	/**
+	 * Set the title of the window
+	 * 
+	 * @param title The title to set on the window
+	 */
+	public void setTitle(String title) {
+		Display.setTitle(title);
+	}
+	
+	/**
 	 * Set the display mode to be used 
 	 * 
 	 * @param width The width of the display required

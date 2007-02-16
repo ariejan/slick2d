@@ -49,13 +49,16 @@ public class CursorLoader {
 	public Cursor getCursor(String ref,int x,int y) throws IOException, LWJGLException {
 		LoadableImageData imageData = null;
 		
+		boolean flipped = false;
+		
 		if (ref.endsWith(".tga")) {
 			imageData = new TGAImageData();
 		} else {
 			imageData = new ImageIOImageData();
+			flipped = true;
 		}
 		
-		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false, true, null);
+		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), false, flipped, null);
 		for (int i=0;i<buf.limit();i+=4) {
 			byte red = buf.get(i);
 			byte green = buf.get(i+1);

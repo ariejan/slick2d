@@ -63,7 +63,7 @@ public class CanvasGameContainer extends AWTGLCanvas {
 	 * Dispose the container and any resources it holds
 	 */
 	public void dispose() {
-		container.stopApplet();
+		container.stopRendering();
 		
 		Log.info("Clear up");
 		AWTInputAdapter.destroy();
@@ -73,21 +73,9 @@ public class CanvasGameContainer extends AWTGLCanvas {
 	}
 	
 	/**
-	 * @see java.applet.Applet#start()
-	 */
-	public void start() {
-	}
-
-	/**
-	 * @see java.applet.Applet#stop()
-	 */
-	public void stop() {
-	}
-	
-	/**
-	 * Get the GameContainer providing this applet
+	 * Get the GameContainer providing this canvas
 	 * 
-	 * @return The game container providing this applet
+	 * @return The game container providing this canvas
 	 */
 	public GameContainer getContainer() {
 		return container;
@@ -108,7 +96,7 @@ public class CanvasGameContainer extends AWTGLCanvas {
 			container.initLocal();
 		} catch (Exception e) {
 			Log.error(e);
-			container.stopApplet();
+			container.stopRendering();
 		}
 	}
 
@@ -127,10 +115,10 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		Controllers.poll();
 		
 		try {
-			container.pollApplet(isVisible());
+			container.pollContainer(isVisible());
 		} catch (SlickException e) {
 			Log.error(e);
-			container.stopApplet();
+			container.stopRendering();
 		}
 		
 		try {
@@ -144,7 +132,7 @@ public class CanvasGameContainer extends AWTGLCanvas {
 	}
 	
 	/**
-	 * A game container to provide the applet context
+	 * A game container to provide the canvas context
 	 *
 	 * @author kevin
 	 */
@@ -192,19 +180,19 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		}
 		
 		/**
-		 * Stop the applet play back
+		 * Stop the canvas play back
 		 */
-		public void stopApplet() {
+		public void stopRendering() {
 			running = false;
 		}
 		
 		/**
-		 * Poll the applets update and render loops
+		 * Poll the canvas update and render loops
 		 * 
-		 * @param visible True if the applet is currently visible
+		 * @param visible True if the canvas is currently visible
 		 * @throws SlickException Indicates a failure the internal game
 		 */
-		public void pollApplet(boolean visible) throws SlickException {
+		public void pollContainer(boolean visible) throws SlickException {
 			if (!running) {
 				return;
 			}
@@ -259,42 +247,42 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		 * @see org.newdawn.slick.GameContainer#setIcon(java.lang.String)
 		 */
 		public void setIcon(String ref) throws SlickException {
-			// unsupported in an applet
+			// unsupported in an canvas
 		}
 
 		/**
 		 * @see org.newdawn.slick.GameContainer#setMouseGrabbed(boolean)
 		 */
 		public void setMouseGrabbed(boolean grabbed) {
-			// unsupported in an applet
+			// unsupported in an canvas
 		}
 
 		/**
 		 * @see org.newdawn.slick.GameContainer#setMouseCursor(java.lang.String, int, int)
 		 */
 		public void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException {
-			// unsupported in an applet
+			// unsupported in an canvas
 		}
 
 		/**
 		 * @see org.newdawn.slick.GameContainer#setIcons(java.lang.String[])
 		 */
 		public void setIcons(String[] refs) throws SlickException {
-			// unsupported in an applet
+			// unsupported in an canvas
 		}
 
 		/**
 		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.opengl.ImageData, int, int)
 		 */
 		public void setMouseCursor(ImageData data, int hotSpotX, int hotSpotY) throws SlickException {
-			// unsupported in an applet
+			// unsupported in an canvas
 		}
 
 		/**
 		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.lwjgl.input.Cursor, int, int)
 		 */
 		public void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY) throws SlickException {
-			// unsupported in an applet
+			// unsupported in an canvas
 		}
 		
 	}
