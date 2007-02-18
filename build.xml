@@ -321,6 +321,7 @@
 
 	<createdemojnlp name="purefonttest" title="Slick2D Pure Font Test" mainclass="org.newdawn.slick.tests.PureFontTest"/>
 	<createdemojnlp name="canvastest" title="Slick2D Canvas Container Test" mainclass="org.newdawn.slick.tests.CanvasContainerTest"/>
+	<createdemojnlp name="antialiastest" title="Slick2D Anti-Alias Test" mainclass="org.newdawn.slick.tests.AntiAliasTest"/>
 
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
