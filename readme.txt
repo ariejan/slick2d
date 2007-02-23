@@ -14,4 +14,6 @@ AngelCode bitmap font tool - seems to be the best around at the moment and provi
 TilED tile map tool        - Java alternative to Mappy (which just seems borked to me). Available
 	  						 from http://www.mapeditor.org.
 ImagePacker				   - ImagePacker (http://homepage.ntlworld.com/config/imagepacker/index.htm) packs
-							 single images into large images for efficent rendering and memory usage.					 
+							 single images into large images for efficent rendering and memory usage.	
+Pedigree 				   - Particle Editor written as part of the Slick Project (Java)
+Hiero					   - Bitmap Font tool with effects written as part fo the Slick Project (Java)							 				 
