@@ -28,6 +28,9 @@ import org.w3c.dom.NodeList;
  * @author kevin
  */
 public class FontData {
+	/** The maximum font file size that will be read */
+	private static long MAX_FILE_SIZE = 1000000;
+	
 	/** The user's home directory for locating fonts */
 	private static String userhome = System.getProperty("user.home");
 	
@@ -64,6 +67,9 @@ public class FontData {
 	/** Set the status listener */
 	private static StatusListener statusListener;
 
+	/** The list of processed directories */
+	private static ArrayList processed = new ArrayList();
+	
 	/**
 	 * Set the the status listener that will be notified of font loading progress
 	 * 
@@ -166,6 +172,10 @@ public class FontData {
 		if (!dir.exists()) {
 			return;
 		}
+		if (processed.contains(dir)) {
+			return;
+		}
+		processed.add(dir);
 		
 		File[] sources = dir.listFiles();
 		if (sources == null) {
@@ -345,6 +355,10 @@ public class FontData {
 	 */
 	private FontData(InputStream ttf, float size) throws IOException {
 		byte[] data = IOUtils.toByteArray(ttf);
+		if (data.length > MAX_FILE_SIZE) {
+			throw new IOException("Can't load font - too big");
+		}
+		
 		this.size = size;
 		try {
 			javaFont = Font.createFont(Font.TRUETYPE_FONT, new ByteArrayInputStream(data));
