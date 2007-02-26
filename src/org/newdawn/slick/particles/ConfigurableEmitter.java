@@ -1,5 +1,8 @@
 package org.newdawn.slick.particles;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
@@ -434,6 +437,25 @@ public class ConfigurableEmitter implements ParticleEmitter {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Create a duplicate of this emitter.
+	 * The duplicate should be added to a ParticleSystem to be used.
+	 * @return a copy if no IOException occurred, null otherwise
+	 */
+	public ConfigurableEmitter duplicate() {
+		ConfigurableEmitter theCopy = null;
+		try {
+			ByteArrayOutputStream bout = new ByteArrayOutputStream();
+			ParticleIO.saveEmitter(bout, this);
+			ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
+			theCopy = ParticleIO.loadEmitter(bin);
+		} catch (IOException e) {
+			Log.error("Slick: ConfigurableEmitter.duplicate(): caught exception " + e.toString());
+			return null;
+		}
+		return theCopy;
 	}
 
 	/**
