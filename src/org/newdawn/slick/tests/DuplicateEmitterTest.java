@@ -31,7 +31,11 @@ public class DuplicateEmitterTest extends BasicGame {
 		super("DuplicateEmitterTest");
 	}
 	
-	
+	/**
+	 * load ressources (the particle system) and create our duplicate emitters
+	 * and place them nicely on the screen
+	 * @param container The surrounding game container
+	 */
 	public void init(GameContainer container) throws SlickException {
 		this.container = container;
 		

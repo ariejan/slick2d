@@ -304,6 +304,7 @@
 	<createdemojnlp name="tilemaptest" title="Slick2D TileMap Test" mainclass="org.newdawn.slick.tests.TileMapTest"/>
 	
 	<createdemojnlp name="particletest" title="Slick2D Particle Test" mainclass="org.newdawn.slick.tests.ParticleTest"/>
+	<createdemojnlp name="duplicateemittertest" title="Slick2D Duplicate Emitter Test" mainclass="org.newdawn.slick.tests.DuplicateEmitterTest"/>
 	<createdemojnlp name="transformtest" title="Slick2D Transform Test" mainclass="org.newdawn.slick.tests.TransformTest"/>	
 	<createdemojnlp name="statebasedtest" title="Slick2D StateBasedGame Test" mainclass="org.newdawn.slick.tests.StateBasedTest"/>
 
