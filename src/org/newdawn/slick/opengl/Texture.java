@@ -74,6 +74,15 @@ public class Texture {
     }
     
     /**
+     * Check if the texture has alpha
+     * 
+     * @return True if the texture has alpha
+     */
+    public boolean hasAlpha() {
+    	return alpha;
+    }
+    
+    /**
      * Get the reference from which this texture was loaded
      * 
      * @return The reference from which this texture was loaded

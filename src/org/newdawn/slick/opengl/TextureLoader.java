@@ -279,6 +279,7 @@ public class TextureLoader {
         
         texture.setWidth(width);
         texture.setHeight(height);
+        texture.setAlpha(hasAlpha);
         
         GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, minFilter); 
         GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter); 
@@ -303,6 +304,46 @@ public class TextureLoader {
         
         return texture; 
     } 
+    
+    /**
+     * Create an empty texture
+     * 
+     * @param width The width of the new texture
+     * @param height The height of the new texture
+     * @return The created empty texture
+     * @throws IOException Indicates a failure to create the texture on the graphics hardware
+     */
+    public Texture createTexture(final int width, final int height) throws IOException {
+    	ImageData ds = new ImageData() {
+
+			public int getDepth() {
+				return 32;
+			}
+
+			public int getHeight() {
+				return height;
+			}
+
+			public ByteBuffer getImageBufferData() {
+				return BufferUtils.createByteBuffer(getTexWidth() * getTexHeight() * 4);
+			}
+
+			public int getTexHeight() {
+				return get2Fold(height);
+			}
+
+			public int getTexWidth() {
+				return get2Fold(width);
+			}
+
+			public int getWidth() {
+				return width;
+			}
+    		
+    	};
+    	
+    	return getTexture(ds, GL11.GL_NEAREST);
+    }
     
     /**
      * Get a texture from a image file
@@ -351,6 +392,7 @@ public class TextureLoader {
         
         texture.setWidth(width);
         texture.setHeight(height);
+        texture.setAlpha(hasAlpha);
         
         IntBuffer temp = BufferUtils.createIntBuffer(16);
         GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE, temp);

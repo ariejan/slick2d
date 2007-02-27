@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -134,6 +135,26 @@ public class Image {
 	}
 	
 	/**
+	 * Create an empty image
+	 * 
+	 * @param width The width of the image
+	 * @param height The height of the image
+	 * @throws SlickException Indicates a failure to create the underlying resource
+	 */
+	public Image(int width, int height) throws SlickException {
+		ref = super.toString();
+		
+		try {
+			texture = TextureLoader.get().createTexture(width, height);
+		} catch (IOException e) {
+			Log.error(e);
+			throw new SlickException("Failed to create empty image "+width+"x"+height);
+		}
+		
+		init();
+	}
+	
+	/**
 	 * Create an image based on a file at the specified location
 	 * 
 	 * @param in The input stream to read the image from
@@ -202,6 +223,16 @@ public class Image {
 	}
 	
 	/**
+	 * Get a graphics context that can be used to draw to this image
+	 * 
+	 * @return The graphics context used to render to this image
+	 * @throws SlickException Indicates a failure to create a graphics context
+	 */
+	public Graphics getGraphics() throws SlickException {
+		return GraphicsFactory.getGraphicsForImage(this);
+	}
+	
+	/**
 	 * Load the image
 	 * 
 	 * @param in The input stream to read the image from
@@ -265,6 +296,7 @@ public class Image {
 	 * @param y The y location to draw the image at
 	 */
 	public void draw(float x, float y) {
+		init();
 		draw(x,y,width,height);
 	}
 	
@@ -276,6 +308,7 @@ public class Image {
 	 * @param filter The color to filter with when drawing
 	 */
 	public void draw(float x, float y, Color filter) {
+		init();
 		draw(x,y,width,height, filter);
 	}
 
@@ -309,6 +342,7 @@ public class Image {
 	 * @param scale The scaling to apply
 	 */
 	public void draw(float x,float y,float scale) {
+		init();
 		draw(x,y,width*scale,height*scale,Color.white);
 	}
 	
@@ -321,6 +355,7 @@ public class Image {
 	 * @param filter The colour filter to adapt the image with
 	 */
 	public void draw(float x,float y,float scale,Color filter) {
+		init();
 		draw(x,y,width*scale,height*scale,filter);
 	}
 	
@@ -337,6 +372,7 @@ public class Image {
 	 *            The height to render the image at
 	 */
 	public void draw(float x,float y,float width,float height) {
+		init();
 		draw(x,y,width,height,Color.white);
 	}
 	
@@ -492,6 +528,16 @@ public class Image {
 	}
 	
 	/**
+	 * Make sure the texture cordinates are inverse on the y axis
+	 */
+	public void ensureInverted() {
+		if (textureHeight > 0) {
+			textureOffsetY = textureOffsetY + textureHeight;
+			textureHeight = -textureHeight;
+		}
+	}
+	
+	/**
 	 * Get a copy image flipped on potentially two axis
 	 * 
 	 * @param flipHorizontal True if we want to flip the image horizontally
@@ -555,4 +601,12 @@ public class Image {
 		return "[Image "+ref+" "+width+"x"+height+"  "+textureOffsetX+","+textureOffsetY+","+textureWidth+","+textureHeight+"]";
 	}
 	
+	/**
+	 * Get the OpenGL texture holding this image
+	 * 
+	 * @return The OpenGL texture holding this image
+	 */
+	public Texture getTexture() {
+		return texture;
+	}
 }

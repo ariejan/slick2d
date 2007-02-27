@@ -1,11 +1,15 @@
 package org.newdawn.slick;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.FastTrig;
+import org.newdawn.slick.util.Log;
 
 /**
  * A graphics context that can be used to render primatives to the accelerated 
@@ -16,6 +20,8 @@ import org.newdawn.slick.util.FastTrig;
 public class Graphics {
 	/** The default number of segments that will be used when drawing an oval */
 	private static final int DEFAULT_SEGMENTS = 50;
+	/** The last graphics context in use */
+	protected static Graphics currentGraphics = null;
 	
 	/** The font in use */
 	private Font font;
@@ -24,9 +30,9 @@ public class Graphics {
 	/** The current color */
 	private Color currentColor = Color.white;
 	/** The width of the screen */
-	private int screenWidth;
+	protected int screenWidth;
 	/** The height of the screen */
-	private int screenHeight;
+	protected int screenHeight;
 	/** True if the matrix has been pushed to the stack */
 	private boolean pushed;
 	/** The graphics context clipping */
@@ -36,14 +42,68 @@ public class Graphics {
 	 * Create a new graphics context. Only the container should
 	 * be doing this really
 	 * 
-	 * @param font The default font to use in this context
 	 * @param width The width of the screen for this context
 	 * @param height The height of the screen for this context
 	 */
-	public Graphics(Font font, int width, int height) {		
-		defaultFont = this.font = font;
+	public Graphics(int width, int height) {	
+		AccessController.doPrivileged(new PrivilegedAction() {
+            public Object run() {
+            	try {
+	        		defaultFont = new AngelCodeFont("org/newdawn/slick/data/default.fnt",
+		   			"org/newdawn/slick/data/default_00.tga");
+            	} catch (SlickException e) {
+            		Log.error(e);
+            	}
+                return null; // nothing to return
+            }
+        });
+			
+		this.font = defaultFont;
 		screenWidth = width;
 		screenHeight = height;
+	}
+	
+	/**
+	 * Must be called before all OpenGL operations to maintain
+	 * context for dynamic images
+	 */
+	private void predraw() {
+		if (currentGraphics != this) {
+			if (currentGraphics != null) {
+				currentGraphics.disable();
+			}
+			currentGraphics = this;
+			currentGraphics.enable();
+		}
+	}
+
+	/**
+	 * Must be called after all OpenGL operations to maintain
+	 * context for dynamic images
+	 */
+	private void postdraw() {
+	}
+	
+	/**
+	 * Enable rendering to this graphics context
+	 */
+	protected void enable() {
+	}
+	
+	/**
+	 * Flush this graphics context to the underlying rendering context
+	 */
+	public void flush() {
+		if (currentGraphics == this) {
+			currentGraphics.disable();
+			currentGraphics = null;
+		}
+	}
+	
+	/**
+	 * Disable rendering to this graphics context
+	 */
+	protected void disable() {
 	}
 	
 	/**
@@ -61,7 +121,18 @@ public class Graphics {
 	 * @param color The background color of the graphics context
  	 */
 	public void setBackground(Color color) {
-		GL11.glClearColor(color.r, color.g, color.b, 1);       
+		predraw();
+		GL11.glClearColor(color.r, color.g, color.b, 1);     
+		postdraw();  
+	}
+	
+	/**
+	 * Clear the graphics context
+	 */
+	public void clear() {
+		predraw();
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		postdraw();  
 	}
 	
 	/**
@@ -69,8 +140,10 @@ public class Graphics {
 	 */
 	public void resetTransform() {	
 		if (pushed) {
+			predraw();
 			GL11.glPopMatrix();
 			pushed = false;
+			postdraw();  
 		}
 	}
 
@@ -80,8 +153,10 @@ public class Graphics {
 	 */
 	private void checkPush() {
 		if (!pushed) {
+			predraw();
 			GL11.glPushMatrix();
 			pushed = true;
+			postdraw();  
 		}
 	}
 	
@@ -93,8 +168,10 @@ public class Graphics {
 	 */
 	public void scale(float sx, float sy) {
 		checkPush();
-		
+
+		predraw();
 		GL11.glScalef(sx,sy,0);
+		postdraw();  
 	}
 	
 	/**
@@ -106,10 +183,12 @@ public class Graphics {
 	 */
 	public void rotate(float rx, float ry, float ang) {
 		checkPush();
-		
+
+		predraw();
 		translate(rx,ry);
 		GL11.glRotatef(ang,0,0,1);
 		translate(-rx,-ry);
+		postdraw();  
 	}
 	
 	/**
@@ -120,8 +199,10 @@ public class Graphics {
 	 */
 	public void translate(float x, float y) {
 		checkPush();
-		
+
+		predraw();
 		GL11.glTranslatef(x,y,0);
+		postdraw();  
 	}
 	
 	/**
@@ -147,7 +228,9 @@ public class Graphics {
 	 */
 	public void setColor(Color color) {
 		currentColor = color;
+		predraw();
 		color.bind();
+		postdraw();  
 	}
 	
 	/**
@@ -168,6 +251,7 @@ public class Graphics {
 	 * @param y2 The y coordinate of the end point
 	 */
 	public void drawLine(float x1, float y1, float x2, float y2) {
+		predraw();
 		currentColor.bind();
 		Texture.bindNone();
 
@@ -175,6 +259,7 @@ public class Graphics {
 			GL11.glVertex2f(x1,y1);
 			GL11.glVertex2f(x2,y2);
 		GL11.glEnd();
+		postdraw();
 	}
 	
 	/**
@@ -187,9 +272,11 @@ public class Graphics {
 			return;
 		}
 
+		predraw();
 		currentColor.bind();
 		Texture.bindNone();
 		poly.fill(this);
+		postdraw();
 	}
 
 	/**
@@ -202,6 +289,7 @@ public class Graphics {
 			return;
 		}
 
+		predraw();
 		currentColor.bind();
 		Texture.bindNone();
 		GL11.glBegin(GL11.GL_LINE_STRIP);
@@ -215,6 +303,7 @@ public class Graphics {
 		GL11.glVertex2f(pt[0],pt[1]);
 		
 		GL11.glEnd();
+		postdraw();
 	}
 	
 	/**
@@ -264,6 +353,7 @@ public class Graphics {
 	 * @param height The height of the rectangle to draw
 	 */
 	public void drawRect(float x1,float y1,float width,float height) {
+		predraw();
 		Texture.bindNone();
 		currentColor.bind();
 		
@@ -274,6 +364,7 @@ public class Graphics {
 			GL11.glVertex2f(x1,y1+height);
 			GL11.glVertex2f(x1,y1);
 		GL11.glEnd();
+		postdraw();
 	}
 	
 	/**
@@ -282,7 +373,9 @@ public class Graphics {
 	 */
 	public void clearClip() {
 		clip = null;
+		predraw();
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		postdraw();
 	}
 	
 	/**
@@ -296,9 +389,11 @@ public class Graphics {
 	 * @param height The height of the allowed area
 	 */
 	public void setClip(int x,int y,int width,int height) {
+		predraw();
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		clip = new Rectangle(x,y,width,height);
 		GL11.glScissor(x,screenHeight-y-height,width,height);
+		postdraw();
 	}
 
 	/**
@@ -313,7 +408,7 @@ public class Graphics {
 			clearClip();
 			return;
 		}
-		
+
 		setClip((int) rect.x, (int) rect.y, (int) rect.width, (int) rect.height);
 	}
 	
@@ -345,6 +440,7 @@ public class Graphics {
 		Rectangle preClip = getClip();
 		setClip((int) x, (int) y, (int) width, (int) height);
 
+		predraw();
 		// Draw all the quads we need
 		for (int c = 0; c < cols; c++) {
 			for (int r = 0; r < rows; r++) {
@@ -352,7 +448,8 @@ public class Graphics {
 						* pattern.getHeight() + y - offY);
 			}
 		}
-
+		postdraw();
+		
 		setClip(preClip);
 	}
 	
@@ -367,6 +464,7 @@ public class Graphics {
 	 * @param scale The scale to use on the texture
 	 */
 	public void fillRect(float x1,float y1,float width,float height, Image pattern, float scale) {
+		predraw();
 		pattern.bind();
 		currentColor.bind();
 		
@@ -380,6 +478,7 @@ public class Graphics {
 			GL11.glTexCoord2f(x1*scale,(y1+height)*scale);
 			GL11.glVertex2f(x1,y1+height);
 		GL11.glEnd();
+		postdraw();
 	}
 	
 	/**
@@ -391,6 +490,7 @@ public class Graphics {
 	 * @param height The height of the rectangle to fill
 	 */
 	public void fillRect(float x1,float y1,float width,float height) {
+		predraw();
 		Texture.bindNone();
 		currentColor.bind();
 		
@@ -400,6 +500,7 @@ public class Graphics {
 			GL11.glVertex2f(x1+width,y1+height);
 			GL11.glVertex2f(x1,y1+height);
 		GL11.glEnd();
+		postdraw();
 	}
 
 	/**
@@ -453,6 +554,7 @@ public class Graphics {
 	 * @param end The angle the arc ends at
 	 */
 	public void drawArc(float x1, float y1, float width, float height,int segments,float start,float end) {
+		predraw();
 		Texture.bindNone();
 		currentColor.bind();
 		
@@ -477,6 +579,7 @@ public class Graphics {
 				GL11.glVertex2f(x,y);
 			}
 		GL11.glEnd();
+		postdraw();
 	}
 
 	/**
@@ -530,6 +633,7 @@ public class Graphics {
 	 * @param end The angle the arc ends at
 	 */
 	public void fillArc(float x1, float y1, float width, float height,int segments,float start,float end) {
+		predraw();
 		Texture.bindNone();
 		currentColor.bind();
 		
@@ -557,6 +661,7 @@ public class Graphics {
 				GL11.glVertex2f(x,y);
 			}
 		GL11.glEnd();
+		postdraw();
 	}
 	
 	/**
@@ -565,14 +670,18 @@ public class Graphics {
 	 * @param width The width of the line to be used when drawing line based primitives
 	 */
 	public void setLineWidth(float width) {
+		predraw();
 		GL11.glLineWidth(width);
+		postdraw();
 	}
 	
 	/**
 	 * Reset the line width in use to the default for this graphics context
 	 */
 	public void resetLineWidth() {
+		predraw();
 		GL11.glLineWidth(1.0f);
+		postdraw();
 	}
 	
 	/**
@@ -581,6 +690,7 @@ public class Graphics {
 	 * @param anti True if we should antialias
 	 */
 	public void setAntiAlias(boolean anti) {
+		predraw();
 		if (anti) {
 			GL11.glEnable(GL11.GL_LINE_SMOOTH);
 			GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
@@ -588,8 +698,9 @@ public class Graphics {
 			GL11.glDisable(GL11.GL_LINE_SMOOTH);
 			GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
 		}
+		postdraw();
 	}
-	
+
 	/**
 	 * Draw a string to the screen using the current font
 	 * 
@@ -598,7 +709,9 @@ public class Graphics {
 	 * @param y The y coordinate to draw the string at
 	 */
 	public void drawString(String str,float x,float y) {
+		predraw();
 		font.drawString(x, y, str, currentColor);
+		postdraw();
 	}
 
 	/**
@@ -610,10 +723,12 @@ public class Graphics {
 	 * @param col The color to apply to the image as a filter
 	 */
 	public void drawImage(Image image, float x, float y, Color col) {
+		predraw();
 		image.draw(x,y,col);
 		currentColor.bind();
+		postdraw();
 	}
-
+	
 	/**
 	 * Draw an image to the screen
 	 * 
@@ -622,7 +737,26 @@ public class Graphics {
 	 * @param y The y location at which to draw the image
 	 */
 	public void drawImage(Image image, float x, float y) {
+		predraw();
 		drawImage(image, x, y, Color.white);
 		currentColor.bind();
+		postdraw();
+	}
+	
+	/**
+	 * Copy an area of the rendered screen into an image. The width and height of the area 
+	 * are assumed to match that of the image
+	 * 
+	 * @param target The target image
+	 * @param x The x position to copy from
+	 * @param y The y position to copy from
+	 */
+	public void copyArea(Image target, int x, int y) {
+		int format = target.getTexture().hasAlpha() ? GL11.GL_RGBA : GL11.GL_RGB;
+		target.bind();
+		GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, format, x, screenHeight-(y+target.getHeight()), 
+							  target.getTexture().getTextureWidth(),
+							  target.getTexture().getTextureHeight(), 0);
+		target.ensureInverted();
 	}
 }

@@ -1,7 +1,5 @@
 package org.newdawn.slick;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.Properties;
 
 import org.lwjgl.Sys;
@@ -413,19 +411,8 @@ public abstract class GameContainer {
 	protected void initSystem() throws SlickException {
 		initGL();
 		
-		AccessController.doPrivileged(new PrivilegedAction() {
-            public Object run() {
-            	try {
-	        		defaultFont = new AngelCodeFont("org/newdawn/slick/data/default.fnt",
-		   			"org/newdawn/slick/data/default_00.tga");
-            	} catch (SlickException e) {
-            		Log.error(e);
-            	}
-                return null; // nothing to return
-            }
-        });
-		
-		graphics = new Graphics(defaultFont, width, height);
+		graphics = new Graphics(width, height);
+		defaultFont = graphics.getFont();
 	}
 	
 	/**
