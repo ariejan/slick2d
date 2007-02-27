@@ -609,4 +609,13 @@ public class Image {
 	public Texture getTexture() {
 		return texture;
 	}
+	
+	/**
+	 * Set the texture used by this image
+	 * 
+	 * @param texture The texture used by this image
+	 */
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
 }

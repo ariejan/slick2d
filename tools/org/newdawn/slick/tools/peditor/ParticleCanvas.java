@@ -1,7 +1,5 @@
 package org.newdawn.slick.tools.peditor;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
@@ -9,11 +7,9 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleEmitter;
 import org.newdawn.slick.particles.ParticleSystem;
@@ -180,19 +176,8 @@ public class ParticleCanvas extends AWTGLCanvas {
 		waiting.clear();
 		lastTime = ((Sys.getTime() * 1000) / Sys.getTimerResolution());
 
-		AccessController.doPrivileged(new PrivilegedAction() {
-            public Object run() {
-            	try {
-	        		defaultFont = new AngelCodeFont("org/newdawn/slick/data/default.fnt",
-		   			"org/newdawn/slick/data/default_00.tga");
-            	} catch (SlickException e) {
-            		Log.error(e);
-            	}
-                return null; // nothing to return
-            }
-        });
-		
-		graphics = new Graphics(defaultFont, width, height);
+		graphics = new Graphics(width, height);
+		defaultFont = graphics.getFont();
 	}
 
 	/**

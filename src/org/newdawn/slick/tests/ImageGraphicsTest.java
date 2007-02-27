@@ -17,12 +17,16 @@ import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
  * @author kevin
  */
 public class ImageGraphicsTest extends BasicGame {
+	/** The image loaded and then rendered to */
+	private Image preloaded;
 	/** The image rendered to */
 	private Image target;
 	/** The image cut from the screen */
 	private Image cut;
 	/** The offscreen graphics */
 	private Graphics offscreen;
+	/** The offscreen graphics */
+	private Graphics offscreen2;
 	/** The image loaded */
 	private Image testImage;
 	/** The font loaded */
@@ -44,16 +48,27 @@ public class ImageGraphicsTest extends BasicGame {
 	 */
 	public void init(GameContainer container) throws SlickException {
 		testImage = new Image("testdata/logo.png");
+		preloaded = new Image("testdata/logo.png");
 		testFont = new AngelCodeFont("testdata/hiero.fnt","testdata/hiero.png");
 		target = new Image(400,300);
 		cut = new Image(100,100);
 		offscreen = target.getGraphics();
+		offscreen2 = preloaded.getGraphics();
 		
 		if (GraphicsFactory.usingFBO()) {
 			using = "FBO (Frame Buffer Objects)";
 		} else if (GraphicsFactory.usingPBuffer()) {
 			using = "Pbuffer (Pixel Buffers)";
 		}
+
+		offscreen2.drawString("Drawing over a loaded image", 5, 15);
+		offscreen2.setLineWidth(5);
+		offscreen2.setAntiAlias(true);
+		offscreen2.setColor(Color.blue.brighter());
+		offscreen2.drawOval(200, 30, 50, 50);
+		offscreen2.setColor(Color.white);
+		offscreen2.drawRect(190,20,70,70);
+		offscreen2.flush();
 	}
 	
 	/**
@@ -96,6 +111,10 @@ public class ImageGraphicsTest extends BasicGame {
 		g.drawRect(30, 250, cut.getWidth(), cut.getHeight());
 		g.setColor(Color.gray);
 		g.drawRect(xp, 50, cut.getWidth(), cut.getHeight());
+		
+		preloaded.draw(2,400);
+		g.setColor(Color.blue);
+		g.drawRect(2,400,preloaded.getWidth(),preloaded.getHeight());
 	}
 
 	/**

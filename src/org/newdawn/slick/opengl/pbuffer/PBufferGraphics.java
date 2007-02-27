@@ -10,6 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -48,6 +49,8 @@ public class PBufferGraphics extends Graphics {
 	 */
 	private void init() throws SlickException {
 		try {
+			Texture tex = TextureLoader.get().createTexture(image.getWidth(), image.getHeight());
+			
 			final RenderTexture rt = new RenderTexture(true, false, false, false, RenderTexture.RENDER_TEXTURE_2D, 0);
 			pbuffer = new Pbuffer(screenWidth, screenHeight, new PixelFormat(16, 0, 0, 0, 0), rt, null);
 
@@ -55,10 +58,13 @@ public class PBufferGraphics extends Graphics {
 			pbuffer.makeCurrent();
 
 			initGL();
-			clear();
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureID());
+			pbuffer.releaseTexImage(Pbuffer.FRONT_LEFT_BUFFER);
+			image.draw(0,0);
+			image.setTexture(tex);
 			
 			Display.makeCurrent();
-		} catch (LWJGLException e) {
+		} catch (Exception e) {
 			throw new SlickException("Failed to create PBuffer for dynamic image. OpenGL driver failure?");
 		}
 	}

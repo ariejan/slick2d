@@ -95,26 +95,21 @@ public class FBOGraphics extends Graphics {
 		try {
 			Texture tex = TextureLoader.get().createTexture(image.getWidth(), image.getHeight());
 			
-			buffer = BufferUtils.createIntBuffer(1); 
-			buffer.put(image.getTexture().getTextureID());
-			buffer.flip();
-			GL11.glDeleteTextures(buffer);
+			EXTFramebufferObject.glBindFramebufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, FBO);
+			EXTFramebufferObject.glFramebufferTexture2DEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, 
+														   EXTFramebufferObject.GL_COLOR_ATTACHMENT0_EXT,
+														   GL11.GL_TEXTURE_2D, tex.getTextureID(), 0);
 			
-			image.getTexture().setTextureID(tex.getTextureID());
+			
+			completeCheck();
+			unbind();
+			
+			// keep hold of the original content
+			drawImage(image, 0, 0);
+			image.setTexture(tex);
 		} catch (Exception e) {
 			throw new SlickException("Failed to create new texture for FBO");
 		}
-		EXTFramebufferObject.glBindFramebufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, FBO);
-		EXTFramebufferObject.glFramebufferTexture2DEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, 
-													   EXTFramebufferObject.GL_COLOR_ATTACHMENT0_EXT,
-													   GL11.GL_TEXTURE_2D, image.getTexture().getTextureID(), 0);
-		
-		completeCheck();
-		unbind();
-		
-		enable();
-		clear();
-		disable();
 	}
 
 	/**
