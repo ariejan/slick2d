@@ -28,6 +28,7 @@
 	
 	<delete dir="${build.dir}"/>
 	<mkdir dir="${build.dir}/classes"/>
+	<mkdir dir="${build.dir}/example-classes"/>
 	<delete dir="${dist}"/>
 	<mkdir dir="${dist}"/>
 	<delete dir="webstart"/>
@@ -98,6 +99,26 @@
 		 basedir="tools" includes="org/newdawn/slick/tools/hiero/resources/*"/>
 </target>
 
+<!-- build the examples -->
+<target name="build-examples" depends="init">
+	<delete dir="lib/slick-examples.jar"/>
+	<javac includes="org/newdawn/slick/**" debug="true" srcdir="examples" destdir="${build.dir}/example-classes" target="1.4" source="1.4">
+	 	<classpath>
+	      <pathelement path="lib/slick.jar"/>
+	      <pathelement path="lib/lwjgl.jar"/>
+	      <pathelement path="applet/lwjgl_util_applet.jar"/>
+	      <pathelement path="lib/ibxm.jar"/>
+	      <pathelement path="lib/jnlp.jar"/>
+	      <pathelement path="lib/jogg-0.0.7.jar"/>
+	      <pathelement path="lib/jorbis-0.0.15.jar"/>
+	      <pathelement path="lib/tinylinepp.jar"/>
+	    </classpath>
+	</javac>
+	<jar destfile="lib/slick-examples.jar" 
+		 basedir="${build.dir}/example-classes" includes="org/newdawn/slick/**">
+	</jar>
+</target>
+
 <!--
  Generate the javadoc from the Slick sources
 -->
@@ -135,7 +156,7 @@
 <!--
  Build and package the complete Slick distribution and demo game
 -->
-<target name="dist" depends="build-slick, javadoc, build-test-webstarts">
+<target name="dist" depends="build-slick, build-examples, javadoc, build-test-webstarts">
 	<zip destfile="${dist}/slick.zip">
 	    <fileset dir="." includes="applet/applet.html"/>
 	    <fileset dir="." includes="applet/jinput.jar"/>
@@ -254,7 +275,7 @@
 <!--
  Package and sign the libraries require for a webstart distribution of Slick
 -->
-<target name="build-webstart-libs" depends="build-slick">
+<target name="build-webstart-libs" depends="build-slick, build-examples">
 	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
@@ -267,6 +288,7 @@
 	<copyandsign jar="natives-win32.jar"/>
 	<copyandsign jar="natives-mac.jar"/>
 	<copyandsign jar="slick.jar"/>
+	<copyandsign jar="slick-examples.jar"/>
 </target>
 
 <!--
@@ -288,7 +310,7 @@
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
 	<jar destfile="webstart/testdata.jar" 
-		 basedir="." includes="testdata/*"/>
+		 basedir="." includes="testdata/**"/>
 	<copy file="webstart/testdata.jar" toDir="applet"/>
 	<signjar jar="webstart/testdata.jar" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/> 
 	
@@ -326,6 +348,9 @@
 
 	<createdemojnlp name="offscreen" title="Slick2D Offscreen Rendering Test" mainclass="org.newdawn.slick.tests.ImageGraphicsTest"/>
 
+	<!-- Examples under here please -->
+	<createdemojnlp template="slickexample.jnlp" name="scroller" title="Slick2D TileMap Scroll Example" mainclass="org.newdawn.slick.examples.scroller.Scroller"/>
+
 	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
 </target>
 
@@ -360,6 +385,11 @@
 	
 	<scp todir="${username}:${password}@${host}:${demos}" 
 		 file="webstart/slick.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/slick-examples.jar"
 		 trust="true"
 		 port="122"
 		 verbose="true"/>
