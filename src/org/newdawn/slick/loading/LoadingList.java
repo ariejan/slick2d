@@ -54,7 +54,6 @@ public class LoadingList {
 	 * @param resource The resource to be added
 	 */
 	public void add(DeferredResource resource) {
-		Log.info("Deferring loading of: "+resource.getDescription());
 		total++;
 		deferred.add(resource);
 	}
