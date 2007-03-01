@@ -13,6 +13,20 @@ public final class Log {
 	public static PrintStream out = System.out;
 	/** True if we're doing verbose logging INFO and DEBUG */
 	private static boolean verbose = true;
+	/** true if activated by the system property "org.newdawn.slick.forceVerboseLog" */
+	private static boolean forcedVerbose = false;
+	
+	/**
+	 * The debug property which can be set via JNLP or startup parameter to switch
+	 * logging mode to verbose for games that were released without verbose logging
+	 * value must be "true"
+	 */
+	public static final String forceVerboseProperty = "org.newdawn.slick.forceVerboseLog";
+	
+	/**
+	 * the verbose property must be set to "true" to switch on verbose logging
+	 */
+	public static final String forceVerbosePropertyOnValue = "true";
 	
 	/**
 	 * The log is a simple static utility, no construction
@@ -22,12 +36,26 @@ public final class Log {
 	}
 	
 	/**
-	 * Indicate that we want verbose logging
+	 * Indicate that we want verbose logging.
+	 * The call is ignored if verbose logging is forced by the system property
+	 * "org.newdawn.slick.forceVerboseLog"
 	 * 
 	 * @param v True if we want verbose logging (INFO and DEBUG)
 	 */
 	public static void setVerbose(boolean v) {
+		if (forcedVerbose)
+			return;
 		verbose = v;
+	}
+	
+	/**
+	 * Indicate that we want verbose logging, even if switched off in game code.
+	 * Only be called when system property "org.newdawn.slick.forceVerboseLog" is set to true.
+	 * You must not call this method directly.
+	 */
+	public static void setForcedVerboseOn() {
+		forcedVerbose = true;
+		verbose = true;
 	}
 	
 	/**
@@ -75,7 +103,7 @@ public final class Log {
 	 * @param message The message describing the infomation
 	 */
 	public static void info(String message) {
-		if (verbose) {
+		if (verbose || forcedVerbose) {
 			out.println(new Date()+" INFO:" +message);
 		}
 	}
@@ -86,7 +114,7 @@ public final class Log {
 	 * @param message The message describing the debug
 	 */
 	public static void debug(String message) {
-		if (verbose) {
+		if (verbose || forcedVerbose) {
 			out.println(new Date()+" DEBUG:" +message);
 		}
 	}
