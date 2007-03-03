@@ -17,6 +17,27 @@ public class TileMapTest extends BasicGame {
 	/** The tile map we're going to load and render */
 	private TiledMap map;
 	
+	/** the name of the map, read from map properties, specified by TilED */
+	private String mapName;
+	
+	/** how hard are the monsters, read from layer properties, specified by TilED */
+	private String monsterDifficulty;
+	
+	/** we try to read a property from the map which doesn't exist so we expect the default value */
+	private String nonExistingMapProperty;
+	
+	/** we try to read a property from the layer which doesn't exist so we expect the default value */
+	private String nonExistingLayerProperty;
+	
+	/** how long did we wait already until next update */
+	private int updateCounter = 0;
+	
+	/** changing some tile of the map every UPDATE_TIME milliseconds */
+	private static int UPDATE_TIME = 1000;
+	
+	/** we want to store the originalTileID before we set a new one */
+	private int originalTileID = 0;
+	
 	/**
 	 * Create our tile map test
 	 */
@@ -29,6 +50,14 @@ public class TileMapTest extends BasicGame {
 	 */
 	public void init(GameContainer container) throws SlickException {
 		map = new TiledMap("testdata/testmap.tmx","testdata");
+		// read some properties from map and layer
+		mapName = map.getMapProperty("name", "Unknown map name");
+		monsterDifficulty = map.getLayerProperty(0, "monsters", "easy peasy");
+		nonExistingMapProperty = map.getMapProperty("zaphod", "What?");
+		nonExistingLayerProperty = map.getLayerProperty(0, "beeblebrox", "Huh?");
+		
+		// store the original tileid of layer 0 at 10, 10
+		originalTileID = map.getTileId(10, 10, 0);
 	}
 
 	/**
@@ -40,12 +69,28 @@ public class TileMapTest extends BasicGame {
 		g.scale(0.35f,0.35f);
 		map.render(1400, 0);
 		g.resetTransform();
+		
+		g.drawString("map name: " + mapName, 10, 500);
+		g.drawString("monster difficulty: " + monsterDifficulty, 10, 550);
+		
+		g.drawString("non existing map property: " + nonExistingMapProperty, 10, 525);
+		g.drawString("non existing layer property: " + nonExistingLayerProperty, 10, 575);
 	}
 
 	/**
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(GameContainer container, int delta) {
+		updateCounter += delta;
+		if (updateCounter > UPDATE_TIME) {
+			// swap the tile every second
+			updateCounter -= UPDATE_TIME;
+			int currentTileID = map.getTileId(10, 10, 0);
+			if (currentTileID != originalTileID)
+				map.setTileId(10, 10, 0, originalTileID);
+			else
+				map.setTileId(10, 10, 0, 1);
+		}
 	}
 
 	/**

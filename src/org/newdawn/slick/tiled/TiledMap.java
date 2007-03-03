@@ -61,6 +61,9 @@ public class TiledMap {
 	/** The location prefix where we can find tileset images */
 	protected String tilesLocation;
 	
+	/** the properties of the map */
+	protected Properties props;
+	
 	/** The list of tilesets defined in the map */
 	protected ArrayList tileSets = new ArrayList();
 	/** The list of layers defined in the map */
@@ -162,6 +165,55 @@ public class TiledMap {
 	}
 	
 	/**
+	 * Set the global ID of a tile at specified location in the map
+	 * @param x
+	 *            The x location of the tile
+	 * @param y
+	 *            The y location of the tile
+	 * @param layerIndex
+	 *            The index of the layer to set the new tileid
+	 * @param tileid
+	 *            The tileid to be set
+	 */
+	public void setTileId(int x, int y, int layerIndex, int tileid) {
+		Layer layer = (Layer) layers.get(layerIndex);
+		layer.setTileID(x, y, tileid);
+	}
+	
+	/**
+	 * Get a property given to the map. Note that this method will
+	 * not perform well and should not be used as part of the default code
+	 * path in the game loop.
+	 * 
+	 * @param propertyName The name of the property of the map to retrieve
+	 * @param def The default value to return
+	 * @return The value assigned to the property on the map (or the default value if none is supplied)
+	 */
+	public String getMapProperty(String propertyName, String def) {
+		if (props == null)
+			return def;
+		return props.getProperty(propertyName, def);
+	}
+	
+	/**
+	 * Get a property given to a particular layer. Note that this method will
+	 * not perform well and should not be used as part of the default code
+	 * path in the game loop.
+	 * 
+	 * @param layerIndex The index of the layer to retrieve
+	 * @param propertyName The name of the property of this layer to retrieve
+	 * @param def The default value to return
+	 * @return The value assigned to the property on the layer (or the default value if none is supplied)
+	 */
+	public String getLayerProperty(int layerIndex, String propertyName, String def) {
+		Layer layer = (Layer) layers.get(layerIndex);
+		if (layer == null || layer.props == null)
+			return def;
+		return layer.props.getProperty(propertyName, def);
+	}
+	
+	
+	/**
 	 * Get a propety given to a particular tile. Note that this method will
 	 * not perform well and should not be used as part of the default code
 	 * path in the game loop.
@@ -254,6 +306,20 @@ public class TiledMap {
 			height = Integer.parseInt(docElement.getAttribute("height"));
 			tileWidth = Integer.parseInt(docElement.getAttribute("tilewidth"));
 			tileHeight = Integer.parseInt(docElement.getAttribute("tileheight"));
+			
+			// now read the map properties
+			Element propsElement = (Element) docElement.getElementsByTagName("properties").item(0);
+			NodeList properties = propsElement.getElementsByTagName("property");
+			if (properties != null) {
+				props = new Properties();
+				for (int p = 0; p < properties.getLength();p++) {
+					Element propElement = (Element) properties.item(p);
+					
+					String name = propElement.getAttribute("name");
+					String value = propElement.getAttribute("value");		
+					props.setProperty(name, value);
+				}
+			}
 			
 			TileSet tileSet = null;
 			TileSet lastSet = null;
@@ -471,6 +537,9 @@ public class TiledMap {
 		/** The height of this layer */
 		public int height;
 		
+		/** the properties of this layer */
+		
+		public Properties props;
 		/**
 		 * Create a new layer based on the XML definition
 		 * 
@@ -482,6 +551,20 @@ public class TiledMap {
 			width = Integer.parseInt(element.getAttribute("width"));
 			height = Integer.parseInt(element.getAttribute("height"));
 			data = new int[width][height][3];
+
+			// now read the layer properties
+			Element propsElement = (Element) element.getElementsByTagName("properties").item(0);
+			NodeList properties = propsElement.getElementsByTagName("property");
+			if (properties != null) {
+				props = new Properties();
+				for (int p = 0; p < properties.getLength();p++) {
+					Element propElement = (Element) properties.item(p);
+					
+					String name = propElement.getAttribute("name");
+					String value = propElement.getAttribute("value");		
+					props.setProperty(name, value);
+				}
+			}
 
 			Element dataNode = (Element) element.getElementsByTagName("data").item(0);
 			String encoding = dataNode.getAttribute("encoding");
