@@ -146,16 +146,31 @@ public class TGAImageData implements LoadableImageData {
 		}
 		
 		if (pixelDepth == 24) {
-			for (int i = height-1; i >= 0; i--) {
-				for (int j = 0; j < width; j++) {
-					blue = dis.readByte();
-					green = dis.readByte();
-					red = dis.readByte();
-					
-					int ofs = ((j + (i * texWidth)) * 3);
-					rawData[ofs] = red;
-					rawData[ofs + 1] = green;
-					rawData[ofs + 2] = blue;
+			if (flipped) {
+				for (int i = height-1; i >= 0; i--) {
+					for (int j = 0; j < width; j++) {
+						blue = dis.readByte();
+						green = dis.readByte();
+						red = dis.readByte();
+						
+						int ofs = ((j + (i * texWidth)) * 3);
+						rawData[ofs] = red;
+						rawData[ofs + 1] = green;
+						rawData[ofs + 2] = blue;
+					}
+				}
+			} else {
+				for (int i = 0; i < height; i++) {
+					for (int j = 0; j < width; j++) {
+						blue = dis.readByte();
+						green = dis.readByte();
+						red = dis.readByte();
+						
+						int ofs = ((j + (i * texWidth)) * 3);
+						rawData[ofs] = red;
+						rawData[ofs + 1] = green;
+						rawData[ofs + 2] = blue;
+					}
 				}
 			}
 		} else if (pixelDepth == 32) {
