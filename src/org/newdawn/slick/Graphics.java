@@ -1,8 +1,10 @@
 package org.newdawn.slick;
 
+import java.nio.FloatBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Polygon;
@@ -124,6 +126,20 @@ public class Graphics {
 		predraw();
 		GL11.glClearColor(color.r, color.g, color.b, 1);     
 		postdraw();  
+	}
+	
+	/**
+	 * Get the current graphics context background color 
+	 * 
+	 * @return The background color of this graphics context
+	 */
+	public Color getBackground() {
+		predraw();
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+		GL11.glGetFloat(GL11.GL_COLOR_CLEAR_VALUE, buffer);
+		postdraw();
+		
+		return new Color(buffer);
 	}
 	
 	/**

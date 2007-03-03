@@ -1,5 +1,7 @@
 package org.newdawn.slick;
 
+import java.nio.FloatBuffer;
+
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -52,6 +54,18 @@ public class Color {
 		g = color.g;
 		b = color.b;
 		a = color.a;
+	}
+
+	/**
+	 * Create a component based on the first 4 elements of a float buffer
+	 * 
+	 * @param buffer The buffer to read the color from
+	 */
+	public Color(FloatBuffer buffer) {
+		this.r = buffer.get();
+		this.g = buffer.get();
+		this.b = buffer.get();
+		this.a = buffer.get();
 	}
 	
 	/**
