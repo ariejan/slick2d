@@ -205,7 +205,7 @@ public abstract class StateBasedGame implements Game {
 				nextState = null;
 				leaveTransition = null;
 				if (enterTransition == null) {
-					nextState.enter(container, this);
+					currentState.enter(container, this);
 				}
 			} else {
 				return;
