@@ -53,8 +53,8 @@ public class TileMapTest extends BasicGame {
 		// read some properties from map and layer
 		mapName = map.getMapProperty("name", "Unknown map name");
 		monsterDifficulty = map.getLayerProperty(0, "monsters", "easy peasy");
-		nonExistingMapProperty = map.getMapProperty("zaphod", "What?");
-		nonExistingLayerProperty = map.getLayerProperty(0, "beeblebrox", "Huh?");
+		nonExistingMapProperty = map.getMapProperty("zaphod", "Undefined map property");
+		nonExistingLayerProperty = map.getLayerProperty(1, "beeblebrox", "Undefined layer property");
 		
 		// store the original tileid of layer 0 at 10, 10
 		originalTileID = map.getTileId(10, 10, 0);

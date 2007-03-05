@@ -309,15 +309,17 @@ public class TiledMap {
 			
 			// now read the map properties
 			Element propsElement = (Element) docElement.getElementsByTagName("properties").item(0);
-			NodeList properties = propsElement.getElementsByTagName("property");
-			if (properties != null) {
-				props = new Properties();
-				for (int p = 0; p < properties.getLength();p++) {
-					Element propElement = (Element) properties.item(p);
-					
-					String name = propElement.getAttribute("name");
-					String value = propElement.getAttribute("value");		
-					props.setProperty(name, value);
+			if (propsElement != null) {
+				NodeList properties = propsElement.getElementsByTagName("property");
+				if (properties != null) {
+					props = new Properties();
+					for (int p = 0; p < properties.getLength();p++) {
+						Element propElement = (Element) properties.item(p);
+						
+						String name = propElement.getAttribute("name");
+						String value = propElement.getAttribute("value");		
+						props.setProperty(name, value);
+					}
 				}
 			}
 			
@@ -554,15 +556,17 @@ public class TiledMap {
 
 			// now read the layer properties
 			Element propsElement = (Element) element.getElementsByTagName("properties").item(0);
-			NodeList properties = propsElement.getElementsByTagName("property");
-			if (properties != null) {
-				props = new Properties();
-				for (int p = 0; p < properties.getLength();p++) {
-					Element propElement = (Element) properties.item(p);
-					
-					String name = propElement.getAttribute("name");
-					String value = propElement.getAttribute("value");		
-					props.setProperty(name, value);
+			if (propsElement != null) {
+				NodeList properties = propsElement.getElementsByTagName("property");
+				if (properties != null) {
+					props = new Properties();
+					for (int p = 0; p < properties.getLength();p++) {
+						Element propElement = (Element) properties.item(p);
+						
+						String name = propElement.getAttribute("name");
+						String value = propElement.getAttribute("value");		
+						props.setProperty(name, value);
+					}
 				}
 			}
 
