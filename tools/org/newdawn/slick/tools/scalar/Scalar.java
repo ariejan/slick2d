@@ -211,8 +211,7 @@ public class Scalar extends JFrame {
 	 * Scale the current image using scale 3X
 	 */
 	public void scale3x() {
-		// TODO: Replace when I get access to the source - damn internet
-		//imagePanel.setImage(new ImageScale3x(imagePanel.getImage()).getScaledImage());
+		imagePanel.setImage(new ImageScale3x(imagePanel.getImage()).getScaledImage());
 	}
 	
 	/**
