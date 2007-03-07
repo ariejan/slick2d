@@ -7,6 +7,7 @@ import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.Pbuffer;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -86,7 +87,8 @@ public class FBOGraphics extends Graphics {
 	 * @throws SlickException
 	 */
 	private void init() throws SlickException {
-		IntBuffer buffer = BufferUtils.createIntBuffer(1); 
+		IntBuffer buffer = BufferUtils.createIntBuffer(1);
+		Log.info("Buffer size:" + buffer.capacity());
 		EXTFramebufferObject.glGenFramebuffersEXT(buffer); 
 		FBO = buffer.get();
 
@@ -104,9 +106,14 @@ public class FBOGraphics extends Graphics {
 			completeCheck();
 			unbind();
 			
+			// Clear our destination area before using it
+			clear();
+			flush();
+			
 			// keep hold of the original content
 			drawImage(image, 0, 0);
 			image.setTexture(tex);
+			
 		} catch (Exception e) {
 			throw new SlickException("Failed to create new texture for FBO");
 		}

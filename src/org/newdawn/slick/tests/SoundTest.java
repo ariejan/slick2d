@@ -2,6 +2,7 @@ package org.newdawn.slick.tests;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -13,6 +14,7 @@ import org.newdawn.slick.SlickException;
  * A test for the sound system of the library
  * 
  * @author kevin
+ * @author aaron
  */
 public class SoundTest extends BasicGame {
 	/** The sound to be played */
@@ -29,6 +31,8 @@ public class SoundTest extends BasicGame {
 	private Music musicb;
 	/** The sound to be played */
 	private Sound engine;
+	/** The Volume of the playing music */
+	private int volume = 1;
 	
 	/**
 	 * Create a new test for sounds
@@ -47,7 +51,6 @@ public class SoundTest extends BasicGame {
 		music = musica = new Music("testdata/SMB-X.XM");
 		musicb = new Music("testdata/testloop.ogg");
 		burp = new Sound("testdata/burp.aif");
-		//musica.loop(1.0f,0.5f);
 	}
 
 	/**
@@ -60,6 +63,9 @@ public class SoundTest extends BasicGame {
 		g.drawString("Press enter for charlie (WAV)",100,160);
 		g.drawString("Press C to change music",100,210);
 		g.drawString("Press B to burp (AIF)",100,240);
+		g.drawString("Press + or - to change volume of music", 100, 270);
+		g.setColor(Color.blue);
+		g.drawString("Music Volume Level: " + volume / 10.0f, 150, 300);
 	}
 
 	/**
@@ -113,6 +119,31 @@ public class SoundTest extends BasicGame {
 				engine.loop();
 			}
 		}
+		
+		if (c == '+') {
+			volume += 1;
+			setVolume();
+		}
+		
+		if (c == '-') {
+			volume -= 1;
+			setVolume();
+		}
+
+	}
+	
+	/**
+	 *  Convenience routine to set volume of current music 
+	 */
+	private void setVolume() {
+		// Do bounds checking
+		if(volume > 10) {
+			volume = 10;
+		} else if(volume < 0) {
+			volume = 0;
+		}
+		
+		music.setVolume(volume / 10.0f);
 	}
 	
 	/**

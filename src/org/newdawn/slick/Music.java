@@ -34,8 +34,10 @@ public class Music {
 				sound = SoundStore.get().getWAV(ref);
 			} else if (ref.toLowerCase().endsWith(".xm") || ref.toLowerCase().endsWith(".mod")) {
 				sound = SoundStore.get().getMOD(ref);
+			} else if (ref.toLowerCase().endsWith(".aif") || ref.toLowerCase().endsWith(".aiff")) {
+				sound = SoundStore.get().getAIF(ref);
 			} else {
-				throw new SlickException("Only .xm, .mod and .ogg are currently supported.");
+				throw new SlickException("Only .xm, .mod, .ogg, and .aif/f are currently supported.");
 			}
 		} catch (Exception e) {
 			Log.error(e);
@@ -120,5 +122,24 @@ public class Music {
 	 */
 	public boolean playing() {
 		return (currentMusic == this) && (playing);
+	}
+	
+	/**
+	 * Set the volume of the music
+	 * 
+	 * @param volume The volume to play music at. 0 - 1, 1 is Max
+	 */
+	public void setVolume(float volume) {
+			
+			// Bounds check
+			if(volume > 1) {
+				volume = 1;
+			} else if(volume < 0) {
+				volume = 0;
+			}
+			
+			// This sound is being played as music
+			SoundStore.get().setMusicVolume(volume);
+			
 	}
 }

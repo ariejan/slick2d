@@ -24,9 +24,9 @@ public class ImageGraphicsTest extends BasicGame {
 	/** The image cut from the screen */
 	private Image cut;
 	/** The offscreen graphics */
-	private Graphics offscreen;
+	private Graphics gTarget;
 	/** The offscreen graphics */
-	private Graphics offscreen2;
+	private Graphics offscreenPreload;
 	/** The image loaded */
 	private Image testImage;
 	/** The font loaded */
@@ -52,8 +52,8 @@ public class ImageGraphicsTest extends BasicGame {
 		testFont = new AngelCodeFont("testdata/hiero.fnt","testdata/hiero.png");
 		target = new Image(400,300);
 		cut = new Image(100,100);
-		offscreen = target.getGraphics();
-		offscreen2 = preloaded.getGraphics();
+		gTarget = target.getGraphics();
+		offscreenPreload = preloaded.getGraphics();
 		
 		if (GraphicsFactory.usingFBO()) {
 			using = "FBO (Frame Buffer Objects)";
@@ -61,41 +61,45 @@ public class ImageGraphicsTest extends BasicGame {
 			using = "Pbuffer (Pixel Buffers)";
 		}
 
-		offscreen2.drawString("Drawing over a loaded image", 5, 15);
-		offscreen2.setLineWidth(5);
-		offscreen2.setAntiAlias(true);
-		offscreen2.setColor(Color.blue.brighter());
-		offscreen2.drawOval(200, 30, 50, 50);
-		offscreen2.setColor(Color.white);
-		offscreen2.drawRect(190,20,70,70);
-		offscreen2.flush();
+		offscreenPreload.drawString("Drawing over a loaded image", 5, 15);
+		offscreenPreload.setLineWidth(5);
+		offscreenPreload.setAntiAlias(true);
+		offscreenPreload.setColor(Color.blue.brighter());
+		offscreenPreload.drawOval(200, 30, 50, 50);
+		offscreenPreload.setColor(Color.white);
+		offscreenPreload.drawRect(190,20,70,70);
+		offscreenPreload.flush();
 	}
 	
 	/**
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) throws SlickException {
-		offscreen.clear();
-		offscreen.rotate(200,160,ang);
-		offscreen.setFont(testFont);
-		offscreen.fillRect(10, 10, 50, 50);
-		offscreen.drawString("HELLO WORLD",10,10);
+		
+		// RENDERING TO AN IMAGE AND THEN DRAWING IT TO THE DISPLAY
+		// Draw graphics and text onto our graphics context from the Image target
+		gTarget.clear();
+		gTarget.rotate(200,160,ang);
+		gTarget.setFont(testFont);
+		gTarget.fillRect(10, 10, 50, 50);
+		gTarget.drawString("HELLO WORLD",10,10);
 
-		offscreen.drawImage(testImage,100,150);
-		offscreen.drawImage(testImage,100,50);
-		offscreen.drawImage(testImage,50,75);
-		offscreen.flush();
+		gTarget.drawImage(testImage,100,150);
+		gTarget.drawImage(testImage,100,50);
+		gTarget.drawImage(testImage,50,75);
 		
-		g.setColor(Color.white);
-		g.drawString("Testing Font On Back Buffer", 10, 100);
-		g.drawString("Using: "+using, 10, 580);
-		g.setColor(Color.red);
-		g.fillRect(10,120,200,5);
-		
+		// Note we started by clearing the offscreen graphics area and then end
+		// by calling flush
+		gTarget.flush(); 
+
+		// The image has been updated using its graphics context, so now draw the image
+		// to the screen a few times
 		target.draw(300,100);
 		target.draw(300,410,200,150);
 		target.draw(505,410,100,75);
 		
+		// Draw some text on the screen to indicate what we did and put some
+		// nice boxes around the three areas
 		g.setColor(Color.white);
 		g.drawString("Testing On Offscreen Buffer", 300, 80);
 		g.setColor(Color.green);
@@ -103,15 +107,30 @@ public class ImageGraphicsTest extends BasicGame {
 		g.drawRect(300, 410, target.getWidth()/2, target.getHeight()/2);
 		g.drawRect(505, 410, target.getWidth()/4, target.getHeight()/4);
 		
+		// SCREEN COPY EXAMPLE
+		// Put some text and simple graphics on the screen to test copying
+		// from the screen to a target image
+		g.setColor(Color.white);
+		g.drawString("Testing Font On Back Buffer", 10, 100);
+		g.drawString("Using: "+using, 10, 580);
+		g.setColor(Color.red);
+		g.fillRect(10,120,200,5);
+		
+		// Copy the screen area into a destination image
 		int xp = (int) (60 + (Math.sin(ang / 60) * 50));
 		g.copyArea(cut,xp,50);
 		
+		// Draw the copied image to the screen and put some nice
+		// boxes around the source and the destination
 		cut.draw(30,250);
 		g.setColor(Color.white);
 		g.drawRect(30, 250, cut.getWidth(), cut.getHeight());
 		g.setColor(Color.gray);
 		g.drawRect(xp, 50, cut.getWidth(), cut.getHeight());
 		
+		// ALTERING A LOADED IMAGE EXAMPLE
+		// Draw the image we loaded in the init method and then modified
+		// by drawing some text and simple geometry on it
 		preloaded.draw(2,400);
 		g.setColor(Color.blue);
 		g.drawRect(2,400,preloaded.getWidth(),preloaded.getHeight());
