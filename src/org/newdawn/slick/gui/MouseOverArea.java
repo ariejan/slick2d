@@ -180,11 +180,16 @@ public class MouseOverArea extends BasicComponent {
 	public void renderImpl(GameContainer container, Graphics g) {
 		mouseDown = input.isMouseButtonDown(0);
 		updateImage(rect.contains(input.getMouseX(), input.getMouseY()));
-		
-		int xp = (int) (rect.x +((rect.width - currentImage.getWidth()) / 2));
-		int yp = (int) (rect.y +((rect.height - currentImage.getHeight()) / 2));
-		
-		currentImage.draw(xp,yp,currentColor);
+
+        if (currentImage != null) {
+			int xp = (int) (rect.x +((rect.width - currentImage.getWidth()) / 2));
+			int yp = (int) (rect.y +((rect.height - currentImage.getHeight()) / 2));
+			
+			currentImage.draw(xp,yp,currentColor);
+        } else {
+        	g.setColor(currentColor);
+            g.fillRect(rect.x, rect.y, rect.width, rect.height);
+        } 
 	}
 
 	/**
