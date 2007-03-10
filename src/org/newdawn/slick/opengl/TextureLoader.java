@@ -255,13 +255,7 @@ public class TextureLoader {
         
         boolean hasAlpha;
         
-        LoadableImageData imageData = null;
-        if (resourceName.endsWith(".tga")) {
-        	imageData = new TGAImageData();
-        } else {
-        	imageData = new ImageIOImageData();
-        }
-        
+        LoadableImageData imageData = ImageDataFactory.getImageDataFor(resourceName);
     	textureBuffer = imageData.loadImage(new BufferedInputStream(in), flipped, transparent);
     	
     	width = imageData.getWidth();
