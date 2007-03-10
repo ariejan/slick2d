@@ -449,7 +449,7 @@ public class Graphics {
 	 * @param offX The offset on the x axis from the top left corner
 	 * @param offY The offset on the y axis from the top left corner
 	 */
-	private void fillRect(float x, float y, float width, float height, Image pattern, float offX, float offY) {
+	public void fillRect(float x, float y, float width, float height, Image pattern, float offX, float offY) {
 		int cols = ((int) Math.ceil(width / pattern.getWidth())) + 2;
 		int rows = ((int) Math.ceil(height / pattern.getHeight())) + 2;
 
@@ -467,34 +467,6 @@ public class Graphics {
 		postdraw();
 		
 		setClip(preClip);
-	}
-	
-	/**
-	 * Fill a rectangle with the given image used as a pattern
-	 * 
-	 * @param x1 The x coordinate of the top left corner
-	 * @param y1 The y coordinate of the top left corner
-	 * @param width The width of the rectangle to fill
-	 * @param height The height of the rectangle to fill
-	 * @param pattern The image to pattern across the rectangle
-	 * @param scale The scale to use on the texture (based on the size of the rectangle being filled)
-	 */
-	public void fillRect(float x1,float y1,float width,float height, Image pattern, float scale) {
-		predraw();
-		pattern.bind();
-		currentColor.bind();
-		
-		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glTexCoord2f(x1*scale,y1*scale);
-			GL11.glVertex2f(x1,y1);
-			GL11.glTexCoord2f((x1+width)*scale,y1*scale);
-			GL11.glVertex2f(x1+width,y1);
-			GL11.glTexCoord2f((x1+width)*scale,(y1+height)*scale);
-			GL11.glVertex2f(x1+width,y1+height);
-			GL11.glTexCoord2f(x1*scale,(y1+height)*scale);
-			GL11.glVertex2f(x1,y1+height);
-		GL11.glEnd();
-		postdraw();
 	}
 	
 	/**
