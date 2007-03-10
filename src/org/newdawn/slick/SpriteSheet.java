@@ -92,18 +92,16 @@ public class SpriteSheet extends Image {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.Image#init()
+	 * @see org.newdawn.slick.Image#initImpl()
 	 */
-	protected void init() {
-		super.init();
-		
+	protected void initImpl() {
 		if (subImages != null) {
 			return;
 		}
 		
-		subImages = new Image[(width/(tw+spacing))][(height/(th+spacing))];
-		for (int x=0;x<width/(tw+spacing);x++) {
-			for (int y=0;y<height/(th+spacing);y++) {
+		subImages = new Image[(getWidth()/(tw+spacing))][(getHeight()/(th+spacing))];
+		for (int x=0;x<getWidth()/(tw+spacing);x++) {
+			for (int y=0;y<getHeight()/(th+spacing);y++) {
 				subImages[x][y] = getSprite(x,y);
 			}
 		}

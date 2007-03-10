@@ -1,6 +1,8 @@
 package org.newdawn.slick.util;
 
 import java.io.PrintStream;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Date;
 
 /**
@@ -21,12 +23,12 @@ public final class Log {
 	 * logging mode to verbose for games that were released without verbose logging
 	 * value must be "true"
 	 */
-	public static final String forceVerboseProperty = "org.newdawn.slick.forceVerboseLog";
+	private static final String forceVerboseProperty = "org.newdawn.slick.forceVerboseLog";
 	
 	/**
 	 * the verbose property must be set to "true" to switch on verbose logging
 	 */
-	public static final String forceVerbosePropertyOnValue = "true";
+	private static final String forceVerbosePropertyOnValue = "true";
 	
 	/**
 	 * The log is a simple static utility, no construction
@@ -46,6 +48,23 @@ public final class Log {
 		if (forcedVerbose)
 			return;
 		verbose = v;
+	}
+
+	/**
+	 * Check if the system property org.newdawn.slick.verboseLog is set to true.
+	 * If this is the case we activate the verbose logging mode
+	 */
+	public static void checkVerboseLogSetting() {
+		AccessController.doPrivileged(new PrivilegedAction() {
+            public Object run() {
+				String val = System.getProperty(Log.forceVerboseProperty);
+				if ((val != null) && (val.equalsIgnoreCase(Log.forceVerbosePropertyOnValue))) {
+					Log.setForcedVerboseOn();
+				}
+				
+				return null;
+            }
+		});
 	}
 	
 	/**

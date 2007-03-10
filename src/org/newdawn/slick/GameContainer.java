@@ -66,7 +66,7 @@ public abstract class GameContainer {
 		lastFrame = getTime();
 		
 		getBuildVersion();
-		checkVerboseLogSetting();
+		Log.checkVerboseLogSetting();
 	}
 	
 	/**
@@ -95,16 +95,6 @@ public abstract class GameContainer {
 			Log.error("Unable to determine Slick build number");
 			return -1;
 		}
-	}
-	
-	/**
-	 * Check if the system property org.newdawn.slick.verboseLog is set to true.
-	 * If this is the case we activate the verbose logging mode
-	 */
-	public static void checkVerboseLogSetting() {
-		String val = System.getProperty(Log.forceVerboseProperty);
-		if (val != null && val.equalsIgnoreCase(Log.forceVerbosePropertyOnValue))
-			Log.setForcedVerboseOn();
 	}
 	
 	/**

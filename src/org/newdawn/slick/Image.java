@@ -26,11 +26,11 @@ public class Image {
 	public static final int FILTER_NEAREST = 2;
 	
 	/** The OpenGL texture for this image */
-	protected Texture texture;
+	private Texture texture;
 	/** The width of the image */
-	protected int width;
+	private int width;
 	/** The height of the image */
-	protected int height;
+	private int height;
 	/** The texture coordinate width to use to find our image */
 	private float textureWidth;
 	/** The texture coordinate height to use to find our image */
@@ -41,6 +41,8 @@ public class Image {
 	private float textureOffsetY;
 	/** The name given for the image */
 	private String ref;
+	/** True if this image's state has been initialised */
+	private boolean inited = false;
 	
 	/**
 	 * Create a texture as a copy of another
@@ -265,21 +267,39 @@ public class Image {
 	public void bind() {
 		texture.bind();
 	}
+
+	/**
+	 * Reinitialise internal data
+	 */
+	protected void reinit() {
+		inited = false;
+		init();
+	}
 	
 	/**
 	 * Initialise internal data
 	 */
-	protected void init() {
-		if (width != 0) {
+	protected final void init() {
+		if (inited) {
 			return;
 		}
 		
+		inited = true;
 		width = texture.getImageWidth();
 		height = texture.getImageHeight();
 		textureOffsetX = 0;
 		textureOffsetY = 0;
 		textureWidth = texture.getWidth();
 		textureHeight = texture.getHeight();
+		
+		initImpl();
+	}
+
+	/**
+	 * Hook for subclasses to perform initialisation
+	 */
+	protected void initImpl() {
+		
 	}
 	
 	/**
@@ -457,6 +477,7 @@ public class Image {
 		float newTextureHeight = ((height / (float) this.height) * textureHeight);
 		
 		Image sub = new Image();
+		sub.inited = true;
 		sub.texture = this.texture;
 		sub.textureOffsetX = newTextureOffsetX;
 		sub.textureOffsetY = newTextureOffsetY;
@@ -617,5 +638,6 @@ public class Image {
 	 */
 	public void setTexture(Texture texture) {
 		this.texture = texture;
+		reinit();
 	}
 }
