@@ -477,7 +477,7 @@ public class Graphics {
 	 * @param width The width of the rectangle to fill
 	 * @param height The height of the rectangle to fill
 	 * @param pattern The image to pattern across the rectangle
-	 * @param scale The scale to use on the texture
+	 * @param scale The scale to use on the texture (based on the size of the rectangle being filled)
 	 */
 	public void fillRect(float x1,float y1,float width,float height, Image pattern, float scale) {
 		predraw();
