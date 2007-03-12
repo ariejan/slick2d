@@ -197,6 +197,9 @@ public class AngelCodeFont implements Font {
 		
 		for (int i=0;i<text.length();i++) {
 			int id = text.charAt(i);
+			if (chars[id] == null) {
+				continue;
+			}
 			
 			maxHeight = Math.max(chars[id].height+chars[id].yoffset, maxHeight);
 		}
