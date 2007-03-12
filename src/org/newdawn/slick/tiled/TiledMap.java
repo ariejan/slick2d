@@ -260,6 +260,26 @@ public class TiledMap {
 	public void render(int x,int y,int sx,int sy,int width,int height) {
 		render(x,y,sx,sy,width,height,false);
 	}
+
+	/**
+	 * Render a section of the tile map
+	 * 
+	 * @param x The x location to render at
+	 * @param y The y location to render at
+	 * @param sx The x tile location to start rendering
+	 * @param sy The y tile location to start rendering
+	 * @param width The width of the section to render (in tiles)
+	 * @param height The height of the secton to render (in tiles)
+	 * @param l The index of the layer to render
+	 * @param lineByLine True if we should render line by line, i.e. giving us a chance
+	 * to render something else between lines (@see {@link #renderedLine(int, int, int)}
+	 */
+	public void render(int x,int y,int sx,int sy,int width,int height,int l,boolean lineByLine) {
+		Layer layer = (Layer) layers.get(l);
+		for (int ty=0;ty<height;ty++) {
+			layer.render(x,y,sx,sy,width,ty,lineByLine);
+		}
+	}
 	
 	/**
 	 * Render a section of the tile map
@@ -280,6 +300,15 @@ public class TiledMap {
 				layer.render(x,y,sx,sy,width, ty,lineByLine);
 			}
 		}
+	}
+	
+	/**
+	 * Retrieve a count of the number of layers available
+	 * 
+	 * @return The number of layers available in this map
+	 */
+	public int getLayerCount() {
+		return layers.size();
 	}
 	
 	/**
