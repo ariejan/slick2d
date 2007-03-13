@@ -27,7 +27,9 @@ public class AngelCodeFont implements Font {
 	private CharDef[] chars = new CharDef[1000];
 	/** The kerning information */
 	private int[][] kerning = new int[1000][1000];
-
+	/** The height of a line */
+	private int lineHeight;
+	
 	/**
 	 * Create a new font based on a font definition from AngelCode's tool and the font
 	 * image generated from the tool.
@@ -138,7 +140,8 @@ public class AngelCodeFont implements Font {
 		def.xadvance = Integer.parseInt(tokens.nextToken()); // xadvance
 		
 		def.init();
-		
+
+		lineHeight = Math.max(def.height+def.yoffset, lineHeight);
 		return def;
 	}
 	
@@ -206,7 +209,7 @@ public class AngelCodeFont implements Font {
 		
 		return maxHeight;
 	}
-
+	
 	/**
 	 * @see org.newdawn.slick.Font#getWidth(java.lang.String)
 	 */
@@ -267,5 +270,12 @@ public class AngelCodeFont implements Font {
 		public String toString() {
 			return "[CharDef id="+id+" x="+x+" y="+y+"]";
 		}
+	}
+
+	/**
+	 * @see org.newdawn.slick.Font#getLineHeight()
+	 */
+	public int getLineHeight() {
+		return lineHeight;
 	}
 }

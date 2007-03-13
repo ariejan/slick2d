@@ -24,6 +24,13 @@ public interface Font {
 	public abstract int getHeight(String str);
 	
 	/**
+	 * Get the maximum height of any line drawn by this font
+	 * 
+	 * @return The maxium height of any line drawn by this font
+	 */
+	public int getLineHeight();
+	
+	/**
 	 * Draw a string to the screen
 	 * 
 	 * @param x The x location at which to draw the string
