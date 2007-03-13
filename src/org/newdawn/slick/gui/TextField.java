@@ -58,7 +58,7 @@ public class TextField extends BasicComponent {
 	 * @param height The height of the text field
 	 * @param listener The listener to be notified when the text is entered into the field
 	 */
-	public TextField(GameContainer container, Font font, int x, int y, int width, int height, ComponentListener listener) {
+	public TextField(GUIContext container, Font font, int x, int y, int width, int height, ComponentListener listener) {
 		super(container);
 		
 		this.listener = listener;

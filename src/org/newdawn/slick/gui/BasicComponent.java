@@ -17,14 +17,14 @@ public abstract class BasicComponent implements InputListener {
 	/** True if the component is current acceptingInput */
 	protected boolean acceptingInput;
 	/** The game container */
-	protected GameContainer container;
+	protected GUIContext container;
 	
 	/**
 	 * Create a new component
 	 * 
 	 * @param container The container displaying this component
 	 */
-	public BasicComponent(GameContainer container) {
+	public BasicComponent(GUIContext container) {
 		this.container = container;
 		
 		input = container.getInput();

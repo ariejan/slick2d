@@ -67,7 +67,7 @@ public class MouseOverArea extends BasicComponent {
 	 * @param y the position of the area
 	 * @param listener The listener to notify of events
 	 */
-	public MouseOverArea(GameContainer container, Image image, int x, int y, ComponentListener listener) {
+	public MouseOverArea(GUIContext container, Image image, int x, int y, ComponentListener listener) {
 		this(container, image, x, y, image.getWidth(), image.getHeight(), listener);
 	}
 	
@@ -82,7 +82,7 @@ public class MouseOverArea extends BasicComponent {
 	 * @param height The height of the area
 	 * @param listener The listener to notify of events
 	 */
-	public MouseOverArea(GameContainer container, Image image, int x, int y, int width, int height, ComponentListener listener) {
+	public MouseOverArea(GUIContext container, Image image, int x, int y, int width, int height, ComponentListener listener) {
 		super(container);
 		
 		normalImage = image;
