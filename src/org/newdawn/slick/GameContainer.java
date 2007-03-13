@@ -6,6 +6,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.util.Log;
@@ -17,7 +18,7 @@ import org.newdawn.slick.util.ResourceLoader;
  *
  * @author kevin
  */
-public abstract class GameContainer {
+public abstract class GameContainer implements GUIContext {
 	/** The time the last frame was rendered */
 	private long lastFrame;
 	/** The last time the FPS recorded */
