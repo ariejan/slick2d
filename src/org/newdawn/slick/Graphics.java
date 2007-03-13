@@ -1,5 +1,6 @@
 package org.newdawn.slick;
 
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -39,6 +40,8 @@ public class Graphics {
 	private boolean pushed;
 	/** The graphics context clipping */
 	private Rectangle clip;
+	/** Buffer used for setting the world clip */
+	private DoubleBuffer worldClip = BufferUtils.createDoubleBuffer(4);
 	
 	/**
 	 * Create a new graphics context. Only the container should
@@ -395,12 +398,50 @@ public class Graphics {
 	}
 	
 	/**
+	 * Set clipping that controls which areas of the world will
+	 * be drawn to. Note that world clip is different from standard
+	 * screen clip in that it's defined in the space of the current
+	 * world coordinate - i.e. it's affected by translate, rotate, scale
+	 * etc.
+	 * 
+	 * @param x The x coordinate of the top left corner of the allowed area
+	 * @param y The y coordinate of the top left corner of the allowed area
+	 * @param width The width of the allowed area
+	 * @param height The height of the allowed area
+	 */
+	public void setWorldClip(int x,int y,int width,int height) {
+		GL11.glEnable(GL11.GL_CLIP_PLANE0);
+		worldClip.put(1).put(0).put(0).put(-x).flip();
+		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, worldClip);
+		GL11.glEnable(GL11.GL_CLIP_PLANE1);
+		worldClip.put(-1).put(0).put(0).put(x+width).flip();
+		GL11.glClipPlane(GL11.GL_CLIP_PLANE1, worldClip);
+		
+		GL11.glEnable(GL11.GL_CLIP_PLANE2);
+		worldClip.put(0).put(1).put(0).put(-y).flip();
+		GL11.glClipPlane(GL11.GL_CLIP_PLANE2, worldClip);
+		GL11.glEnable(GL11.GL_CLIP_PLANE3);
+		worldClip.put(0).put(-1).put(0).put(y+height).flip();
+		GL11.glClipPlane(GL11.GL_CLIP_PLANE3, worldClip);
+	}
+	
+	/**
+	 * Clear world clipping setup. This does not effect screen clipping
+	 */
+	public void clearWorldClip() {
+		GL11.glDisable(GL11.GL_CLIP_PLANE0);
+		GL11.glDisable(GL11.GL_CLIP_PLANE1);
+		GL11.glDisable(GL11.GL_CLIP_PLANE2);
+		GL11.glDisable(GL11.GL_CLIP_PLANE3);
+	}
+	
+	/**
 	 * Set the clipping to apply to the drawing. Note that this clipping takes no
 	 * note of the transforms that have been applied to the context and is always
 	 * in absolute screen space coordinates.
 	 * 
-	 * @param x The x coordinate of the top left cornder of the allowed area
-	 * @param y The y coordinate of the top left cornder of the allowed area
+	 * @param x The x coordinate of the top left corner of the allowed area
+	 * @param y The y coordinate of the top left corner of the allowed area
 	 * @param width The width of the allowed area
 	 * @param height The height of the allowed area
 	 */
