@@ -347,6 +347,7 @@
 	<createdemojnlp name="antialiastest" title="Slick2D Anti-Alias Test" mainclass="org.newdawn.slick.tests.AntiAliasTest"/>
 
 	<createdemojnlp name="offscreen" title="Slick2D Offscreen Rendering Test" mainclass="org.newdawn.slick.tests.ImageGraphicsTest"/>
+	<createdemojnlp name="clip" title="Slick2D Clipping Test" mainclass="org.newdawn.slick.tests.ClipTest"/>
 
 	<!-- Examples under here please -->
 	<createdemojnlp template="slickexample.jnlp" name="scroller" title="Slick2D TileMap Scroll Example" mainclass="org.newdawn.slick.examples.scroller.Scroller"/>
