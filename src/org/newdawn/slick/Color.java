@@ -28,6 +28,8 @@ public class Color {
 	public static final Color cyan = new Color(0,1.0f,1.0f,1.0f);
 	/** The fixed colour dark gray */
 	public static final Color darkGray = new Color(0.3f,0.3f,0.3f,1.0f);
+	/** The fixed colour light gray */
+	public static final Color lightGray = new Color(0.7f,0.7f,0.7f,1.0f);
 	/** The fixed colour dark pink */
     public final static Color pink      = new Color(255, 175, 175);
 	/** The fixed colour dark orange */
