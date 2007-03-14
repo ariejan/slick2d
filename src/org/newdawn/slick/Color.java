@@ -205,10 +205,11 @@ public class Color {
 	/**
 	 * Make a darker instance of this colour
 	 * 
-	 * @param scale The scale down of RGB
+	 * @param scale The scale down of RGB (i.e. if you supply 0.03 the colour will be darkened by 3%)
 	 * @return The darker version of this colour
 	 */
 	public Color darker(float scale) {
+        scale = 1 - scale;
 		Color temp = new Color(r * scale,g * scale,b * scale,a);
 		
 		return temp;
@@ -220,16 +221,17 @@ public class Color {
 	 * @return The brighter version of this colour
 	 */
 	public Color brighter() {
-		return brighter(1.2f);
+		return brighter(0.2f);
 	}
 	
 	/**
 	 * Make a brighter instance of this colour
 	 * 
-	 * @param scale The scale up of RGB
+	 * @param scale The scale up of RGB (i.e. if you supply 0.03 the colour will be brightened by 3%)
 	 * @return The brighter version of this colour
 	 */
 	public Color brighter(float scale) {
+        scale += 1;
 		Color temp = new Color(r * scale,g * scale,b * scale,a);
 		
 		return temp;
