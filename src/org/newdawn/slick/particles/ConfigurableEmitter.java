@@ -31,6 +31,9 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 *            The path from which images should be loaded
 	 */
 	public static void setRelativePath(String path) {
+		if (!path.endsWith("/")) {
+			path += "/";
+		}
 		relativePath = path;
 	}
 
@@ -250,7 +253,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 		if (updateImage) {
 			updateImage = false;
 			try {
-				image = new Image(relativePath + "/" + imageName);
+				image = new Image(relativePath + imageName);
 			} catch (SlickException e) {
 				image = null;
 				Log.error(e);
