@@ -103,9 +103,9 @@ public class TextField extends BasicComponent {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.gui.BasicComponent#renderImpl(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.gui.BasicComponent#renderImpl(org.newdawn.slick.gui.GUIContext, org.newdawn.slick.Graphics)
 	 */
-	public void renderImpl(GameContainer container, Graphics g) {
+	public void renderImpl(GUIContext container, Graphics g) {
 		g.setClip((int) area.x, (int) area.y-1, (int) area.width+1, (int) area.height+1);
 		if (background != null) {
 			g.setColor(background);

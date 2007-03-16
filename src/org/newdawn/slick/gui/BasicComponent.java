@@ -44,7 +44,7 @@ public abstract class BasicComponent implements InputListener {
 	 * @param container The container displaying this component
 	 * @param g The graphics context used to render to the display
 	 */
-	public final void render(GameContainer container, Graphics g) {
+	public final void render(GUIContext container, Graphics g) {
 		acceptingInput = true;
 		renderImpl(container, g);
 	}
@@ -55,7 +55,7 @@ public abstract class BasicComponent implements InputListener {
 	 * @param container The container displaying this component
 	 * @param g The graphics context used to render to the display
 	 */
-	public abstract void renderImpl(GameContainer container, Graphics g);
+	public abstract void renderImpl(GUIContext container, Graphics g);
 	
 	/**
 	 * Indicate that this component has consumed the last reported event

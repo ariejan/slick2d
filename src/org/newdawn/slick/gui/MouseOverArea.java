@@ -175,9 +175,9 @@ public class MouseOverArea extends BasicComponent {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.gui.BasicComponent#renderImpl(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
+	 * @see org.newdawn.slick.gui.BasicComponent#renderImpl(org.newdawn.slick.gui.GUIContext, org.newdawn.slick.Graphics)
 	 */
-	public void renderImpl(GameContainer container, Graphics g) {
+	public void renderImpl(GUIContext container, Graphics g) {
 		mouseDown = input.isMouseButtonDown(0);
 		updateImage(rect.contains(input.getMouseX(), input.getMouseY()));
 
