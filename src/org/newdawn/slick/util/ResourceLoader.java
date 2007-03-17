@@ -22,7 +22,8 @@ public class ResourceLoader {
 	 * @return A stream from which the resource can be read
 	 */
 	public static InputStream getResourceAsStream(String ref) {
-		InputStream in = ResourceLoader.class.getClassLoader().getResourceAsStream(ref);
+		String cpRef = ref.replace('\\', '/');
+		InputStream in = ResourceLoader.class.getClassLoader().getResourceAsStream(cpRef);
 		
 		if (in == null) {
 			File file = new File(ref);
@@ -50,7 +51,8 @@ public class ResourceLoader {
 	 * @return A stream from which the resource can be read
 	 */
 	public static URL getResource(String ref) {
-		URL url = ResourceLoader.class.getClassLoader().getResource(ref);
+		String cpRef = ref.replace('\\', '/');
+		URL url = ResourceLoader.class.getClassLoader().getResource(cpRef);
 		
 		if (url == null) {
 			File file = new File(ref);
