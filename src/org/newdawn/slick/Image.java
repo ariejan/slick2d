@@ -43,6 +43,8 @@ public class Image {
 	private String ref;
 	/** True if this image's state has been initialised */
 	private boolean inited = false;
+	/** A pixelData holding the pixel data if it's been read for this texture */
+	private byte[] pixelData;
 	
 	/**
 	 * Create a texture as a copy of another
@@ -182,18 +184,18 @@ public class Image {
 	}
 	
 	/**
-	 * Create an image from a buffer of pixels
+	 * Create an image from a pixelData of pixels
 	 * 
-	 * @param buffer The buffer to use to create the image
+	 * @param buffer The pixelData to use to create the image
 	 */
 	Image(ImageBuffer buffer) {
 		this(buffer, FILTER_LINEAR);
 	}
 	
 	/**
-	 * Create an image from a buffer of pixels
+	 * Create an image from a pixelData of pixels
 	 * 
-	 * @param buffer The buffer to use to create the image
+	 * @param buffer The pixelData to use to create the image
 	 * @param filter The filter to use when scaling this image
 	 */
 	Image(ImageBuffer buffer, int filter) {
@@ -203,7 +205,7 @@ public class Image {
 	/**
 	 * Create an image from a image data source
 	 * 
-	 * @param data The buffer to use to create the image
+	 * @param data The pixelData to use to create the image
 	 */
 	public Image(ImageData data) {
 		this(data, FILTER_LINEAR);
@@ -212,7 +214,7 @@ public class Image {
 	/**
 	 * Create an image from a image data source. Note that this method uses 
 	 * 
-	 * @param data The buffer to use to create the image
+	 * @param data The pixelData to use to create the image
 	 * @param filter The filter to use when scaling this image
 	 */
 	public Image(ImageData data, int filter) {
@@ -639,5 +641,43 @@ public class Image {
 	public void setTexture(Texture texture) {
 		this.texture = texture;
 		reinit();
+	}
+
+	/**
+	 * Translate an unsigned int into a signed integer
+	 * 
+	 * @param b The byte to convert
+	 * @return The integer value represented by the byte
+	 */
+	private int translate(byte b) {
+		if (b < 0) {
+			return 256 + b;
+		}
+		
+		return b;
+	}
+	
+	/**
+	 * Get the colour of a pixel at a specified location in this image
+	 * 
+	 * @param x The x coordinate of the pixel
+	 * @param y The y coordinate of the pixel
+	 * @return The Color of the pixel at the specified location
+	 */
+	public Color getColor(int x, int y) {
+		if (pixelData == null) {
+			pixelData = texture.getTextureData();
+		}
+		
+		int offset = x + (y * texture.getTextureWidth());
+		offset *= texture.hasAlpha() ? 4 : 3;
+		
+		if (texture.hasAlpha()) {
+			return new Color(translate(pixelData[offset]),translate(pixelData[offset+1]),
+							 translate(pixelData[offset+2]),translate(pixelData[offset+3]));
+		} else {
+			return new Color(translate(pixelData[offset]),translate(pixelData[offset+1]),
+					 	     translate(pixelData[offset+2]));
+		}
 	}
 }

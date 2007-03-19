@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -284,4 +285,20 @@ public class Texture {
 
       return temp.asIntBuffer();
     }    
+    
+    /**
+     * Get the pixel data from the card for this texture
+     * 
+     * @return The texture data from the card for this texture
+     */
+    public byte[] getTextureData() {
+    	ByteBuffer buffer = BufferUtils.createByteBuffer((hasAlpha() ? 4 : 3) * texWidth * texHeight);
+    	GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, hasAlpha() ? GL11.GL_RGBA : GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, 
+    					   buffer);
+    	byte[] data = new byte[buffer.limit()];
+    	buffer.get(data);
+    	buffer.clear();
+    	
+    	return data;
+    }
 }

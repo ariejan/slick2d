@@ -1,5 +1,6 @@
 package org.newdawn.slick;
 
+import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.security.AccessController;
@@ -42,6 +43,8 @@ public class Graphics {
 	private Rectangle clip;
 	/** Buffer used for setting the world clip */
 	private DoubleBuffer worldClip = BufferUtils.createDoubleBuffer(4);
+	/** The buffer used to read a screen pixel */
+	private ByteBuffer readBuffer = BufferUtils.createByteBuffer(4);
 	
 	/**
 	 * Create a new graphics context. Only the container should
@@ -787,5 +790,35 @@ public class Graphics {
 							  target.getTexture().getTextureWidth(),
 							  target.getTexture().getTextureHeight(), 0);
 		target.ensureInverted();
+	}
+
+	/**
+	 * Translate an unsigned int into a signed integer
+	 * 
+	 * @param b The byte to convert
+	 * @return The integer value represented by the byte
+	 */
+	private int translate(byte b) {
+		if (b < 0) {
+			return 256 + b;
+		}
+		
+		return b;
+	}
+	
+	/**
+	 * Get the colour of a single pixel in this graphics context
+	 * 
+	 * @param x The x coordinate of the pixel to read
+	 * @param y The y coordinate of the pixel to read
+	 * @return The colour of the pixel at the specified location
+	 */
+	public Color getPixel(int x, int y) {
+		GL11.glReadPixels(x,screenHeight-y,1,1,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,readBuffer);
+		
+		return new Color(translate(readBuffer.get(0)),
+						 translate(readBuffer.get(1)),
+						 translate(readBuffer.get(2)),
+						 translate(readBuffer.get(3)));
 	}
 }
