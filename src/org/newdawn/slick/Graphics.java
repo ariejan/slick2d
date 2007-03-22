@@ -45,6 +45,8 @@ public class Graphics {
 	private DoubleBuffer worldClip = BufferUtils.createDoubleBuffer(4);
 	/** The buffer used to read a screen pixel */
 	private ByteBuffer readBuffer = BufferUtils.createByteBuffer(4);
+	/** True if we're antialias */
+	private boolean antialias;
 	
 	/**
 	 * Create a new graphics context. Only the container should
@@ -693,6 +695,28 @@ public class Graphics {
 				GL11.glVertex2f(x,y);
 			}
 		GL11.glEnd();
+		
+		if (antialias) {
+			GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+				GL11.glVertex2f(cx,cy);
+				if (end != 360) {
+					end -= 10;
+				}
+				
+				for (int a=(int) start;a<(int) (end+step);a+=step) {
+					float ang = a;
+					if (ang > end) {
+						ang = end;
+					}
+					
+					float x = (float) (cx+(FastTrig.cos(Math.toRadians(ang+10))*width/2.0f));
+					float y = (float) (cy+(FastTrig.sin(Math.toRadians(ang+10))*height/2.0f));
+					
+					GL11.glVertex2f(x,y);
+				}
+			GL11.glEnd();
+		}
+		
 		postdraw();
 	}
 	
@@ -723,6 +747,7 @@ public class Graphics {
 	 */
 	public void setAntiAlias(boolean anti) {
 		predraw();
+		antialias = anti;
 		if (anti) {
 			GL11.glEnable(GL11.GL_LINE_SMOOTH);
 			GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
