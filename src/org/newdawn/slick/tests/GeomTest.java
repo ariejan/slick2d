@@ -9,6 +9,10 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.renderable.Ellipse;
+import org.newdawn.slick.geom.renderable.Polygon;
+import org.newdawn.slick.geom.renderable.Shape;
+import org.newdawn.slick.geom.renderable.Transform;
 
 /**
  * A geomertry test
@@ -32,6 +36,16 @@ public class GeomTest extends BasicGame {
 	private Circle circle3 = new Circle(510,150,70);
 	/** The circle tested */
 	private Circle circle4 = new Circle(510,350,30);
+    /** Ellipse for scaling and translation */
+    private Ellipse ellipse1 = new Ellipse(250.0f, 250.0f, 70.0f, 120.0f);
+    /** Ellipse for scaling and translation */
+    private Shape ellipse2 = new Ellipse(0, 0, 70, 120, 360).transform(
+            Transform.createRotateTransform(45)).transform(Transform.createTranslateTransform(100, 200));
+    /** Polygon for scaling and translation */
+    private Polygon polygon1 = new Polygon(400, 300, 50, 120);
+    /** Polygon for scaling and translation */
+    private Shape polygon2 = new Polygon(0, 0, 120, 120).transform(
+            Transform.createRotateTransform(25)).transform(Transform.createTranslateTransform(600, 250));
 	
 	/**
 	 * Create a new test of graphics context rendering
@@ -52,7 +66,8 @@ public class GeomTest extends BasicGame {
 	public void render(GameContainer container, Graphics g) {
 		g.setColor(Color.white);
 		g.drawString("Red indicates a collision, green indicates no collision", 50, 420);
-		g.drawString("White are the targets", 50, 435);
+        g.drawString("White are the targets", 50, 435);
+        g.drawString("Orange are shapes that have had a transformation applied", 50, 450);
 		
 		g.setColor(Color.white);
 		g.draw(rect);
@@ -70,6 +85,12 @@ public class GeomTest extends BasicGame {
 		g.draw(circle3);
 		g.setColor(circle4.intersects(circle) ? Color.red : Color.green);
 		g.draw(circle4);
+        
+        g.setColor(Color.orange);
+        g.draw(ellipse1);
+        g.draw(ellipse2);
+        g.draw(polygon1);
+        g.fill(polygon2);
 	}
 
 	/**
