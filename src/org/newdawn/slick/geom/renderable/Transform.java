@@ -3,10 +3,9 @@ package org.newdawn.slick.geom.renderable;
 import org.newdawn.slick.util.FastTrig;
 
 /**
- * 2 dimensional transformation class.
+ * A 2 dimensional transformation that can be applied to <code>Shape</code> implemenations.
  * 
  * @author Mark
- *
  */
 public class Transform {
     /**
@@ -25,6 +24,7 @@ public class Transform {
     public Transform() {
         matrixPosition = new float[]{1, 0, 0, 0, 1, 0, 0, 0, 1};
     }
+    
     /**
      * Create a transform for the given positions
      * 
@@ -39,6 +39,7 @@ public class Transform {
                 matrixPosition[3], matrixPosition[4], matrixPosition[5], 
                 0, 0, 1};
     }
+    
     /**
      * Create a transform for the given positions
      * 
@@ -80,6 +81,7 @@ public class Transform {
             destination[i + destOffset + 1] = result[i + 1];
         }
     }
+    
     /**
      * Update this Transform by concatenating the given Transform to this one.
      * 
@@ -114,6 +116,7 @@ public class Transform {
     public float[] getMatrixPosition() {
         return matrixPosition;
     }
+    
     /**
      * Create a new rotation Transform
      * 

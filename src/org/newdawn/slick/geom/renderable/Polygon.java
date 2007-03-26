@@ -3,8 +3,9 @@ package org.newdawn.slick.geom.renderable;
 import org.newdawn.slick.SlickException;
 
 /**
+ * A polygon implementation meeting the <code>Shape</code> contract. 
+ * 
  * @author Mark
- *
  */
 public class Polygon implements Shape {
     /**
@@ -15,6 +16,7 @@ public class Polygon implements Shape {
      * Center point of the polygon.
      */
     private float center[];
+    
     /**
      * Convenience constructor to make a square or a rectangle.
      *  

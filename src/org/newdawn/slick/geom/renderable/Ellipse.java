@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.util.FastTrig;
 
-
 /**
+ * An ellipse meeting the <code>Shape</code> contract. The ellipse is actually an approximation using 
+ * a series of points generated around the contour of the ellipse.
+ * 
  * @author Mark
- *
  */
 public class Ellipse implements Shape {
     /**

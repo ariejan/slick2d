@@ -2,10 +2,10 @@ package org.newdawn.slick.geom.renderable;
 
 
 /**
- * The shape interface to allow applying common operations to all shapes
+ * The description of any 2D shape that can be transformed. The points provided approximate the intent
+ * of the shape. 
  * 
  * @author Mark
- *
  */
 public interface Shape {
     /**
