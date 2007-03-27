@@ -47,19 +47,14 @@ public class Polygon implements Shape {
     }
     
     /**
-     * Construct a new polygon with 3 or more points.
+     * Construct a new polygon with 3 or more points. 
+     * This constructor will take the first set of points and copy them after
+     * the last set of points to create a closed shape.
      * 
      * @param points An array of points in x, y order.
-     * @throws SlickException If the number of points is less than 3 or the number of array elements is odd.
      */
-    public Polygon(float points[]) throws SlickException {
+    public Polygon(float points[]) {
         int length = points.length;
-        if(length < 6) {
-            throw new SlickException("A polygon requires three or more points to create.");
-        }
-        if(length % 2 != 0) {
-            throw new SlickException("The points should be in x,y pairs.");
-        }
         
         this.points = new float[length + 2];
         
@@ -67,8 +62,8 @@ public class Polygon implements Shape {
             this.points[i] = points[i];
         }
         
-        this.points[length - 2] = points[length - 2];
-        this.points[length - 1] = points[length - 1];
+        this.points[length] = points[0];
+        this.points[length + 1] = points[1];
         findCenter();
     }
     /**
@@ -82,6 +77,13 @@ public class Polygon implements Shape {
      */
     private void findCenter() {
         center = new float[]{0, 0};
+        int length = points.length;
+        for(int i=0;i<length;i+=2) {
+            center[0] += points[i];
+            center[1] += points[i + 1];
+        }
+        center[0] /= (length / 2);
+        center[1] /= (length / 2);
     }
     /**
      * Get the point closet to the center of all the points in this Shape

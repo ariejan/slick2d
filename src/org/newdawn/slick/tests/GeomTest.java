@@ -40,12 +40,18 @@ public class GeomTest extends BasicGame {
     private Ellipse ellipse1 = new Ellipse(250.0f, 250.0f, 70.0f, 120.0f);
     /** Ellipse for scaling and translation */
     private Shape ellipse2 = new Ellipse(0, 0, 70, 120, 360).transform(
-            Transform.createRotateTransform(45)).transform(Transform.createTranslateTransform(100, 200));
+            Transform.createRotateTransform(45)).transform(Transform.createTranslateTransform(100, 300));
     /** Polygon for scaling and translation */
     private Polygon polygon1 = new Polygon(400, 300, 50, 120);
     /** Polygon for scaling and translation */
     private Shape polygon2 = new Polygon(0, 0, 120, 120).transform(
             Transform.createRotateTransform(25)).transform(Transform.createTranslateTransform(600, 250));
+    /** Polygon for scaling and translation */
+    private Polygon polygon3 = new Polygon(new float[]{30,30,80,20,150,100,120,200,70,220,30,130});
+    /** Polygon for scaling and translation */
+    private Shape polygon4 = polygon3.transform(
+                    Transform.createRotateTransform(65, polygon3.getCenter()[0], 
+                            polygon3.getCenter()[1]));
 	
 	/**
 	 * Create a new test of graphics context rendering
@@ -88,9 +94,11 @@ public class GeomTest extends BasicGame {
         
         g.setColor(Color.orange);
         g.draw(ellipse1);
-        g.draw(ellipse2);
+        g.fill(ellipse2);
         g.draw(polygon1);
         g.fill(polygon2);
+        g.draw(polygon3);
+        g.fill(polygon4);
 	}
 
 	/**

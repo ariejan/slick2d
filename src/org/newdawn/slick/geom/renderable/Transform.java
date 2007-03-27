@@ -137,7 +137,10 @@ public class Transform {
      */
     public static Transform createRotateTransform(float angle, float x, float y) {
         //TODO do the point rotation
-        return new Transform((float)FastTrig.cos(angle), -(float)FastTrig.sin(angle), 0, (float)FastTrig.sin(angle), (float)FastTrig.cos(angle), 0);
+        Transform temp = Transform.createTranslateTransform(-x, -y);
+        temp.concatenate(Transform.createRotateTransform(angle));
+        temp.concatenate(Transform.createTranslateTransform(x, y));
+        return temp;
     }
     
     /**

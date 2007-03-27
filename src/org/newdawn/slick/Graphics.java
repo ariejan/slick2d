@@ -355,6 +355,7 @@ public class Graphics {
      * @param shape The shape to draw.
      */
     public void draw(Shape shape) {
+        predraw();
         float points[] = shape.getPoints();
         Texture.bindNone();
         currentColor.bind();
@@ -364,6 +365,7 @@ public class Graphics {
             GL11.glVertex2f(points[i], points[i + 1]);
         }
         GL11.glEnd();
+        postdraw();
     }
     /**
      * Draw the the given shape filled in.
@@ -371,6 +373,7 @@ public class Graphics {
      * @param shape The shape to draw.
      */
     public void fill(Shape shape) {
+        predraw();
         float points[] = shape.getPoints();
         Texture.bindNone();
         currentColor.bind();
@@ -383,6 +386,7 @@ public class Graphics {
             GL11.glVertex2f(points[i], points[i + 1]);
         }
         GL11.glEnd();
+        postdraw();
     }
 	/**
 	 * Draw a circle to the screen
