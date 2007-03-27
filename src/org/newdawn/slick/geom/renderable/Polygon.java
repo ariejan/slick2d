@@ -1,7 +1,5 @@
 package org.newdawn.slick.geom.renderable;
 
-import org.newdawn.slick.SlickException;
-
 /**
  * A polygon implementation meeting the <code>Shape</code> contract. 
  * 
