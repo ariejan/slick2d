@@ -128,7 +128,7 @@ public class PackedSpriteSheet {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceLoader.getResourceAsStream(def)));
 	
 		try {
-			image = new Image(basePath+reader.readLine(), true, filter, trans);
+			image = new Image(basePath+reader.readLine(), false, filter, trans);
 			while (reader.ready()) {
 				if (reader.readLine() == null) {
 					break;

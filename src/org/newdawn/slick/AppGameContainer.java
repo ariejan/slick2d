@@ -367,17 +367,16 @@ public class AppGameContainer extends GameContainer {
 		ByteBuffer[] bufs = new ByteBuffer[refs.length];
 		for (int i=0;i<refs.length;i++) {
 			LoadableImageData data;
-			boolean flip = false;
+			boolean flip = true;
 			
 			if (refs[i].endsWith(".tga")) {
 				data = new TGAImageData();
 			} else {
 				data = new ImageIOImageData();
-				flip = true;
 			}
 			
 			try {
-				bufs[i] = data.loadImage(ResourceLoader.getResourceAsStream(refs[i]), flip, true, null);
+				bufs[i] = data.loadImage(ResourceLoader.getResourceAsStream(refs[i]), flip, false, null);
 			} catch (Exception e) {
 				Log.error(e);
 				throw new SlickException("Failed to set the icon");

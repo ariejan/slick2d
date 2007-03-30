@@ -75,7 +75,7 @@ public class Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public Image(String ref) throws SlickException  {
-		this(ref, true);
+		this(ref, false);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public Image(String ref, Color trans) throws SlickException  {
-		this(ref, true, FILTER_LINEAR, trans);
+		this(ref, false, FILTER_LINEAR, trans);
 	}
 	
 	/**

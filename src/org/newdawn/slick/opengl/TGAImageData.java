@@ -130,6 +130,10 @@ public class TGAImageData implements LoadableImageData {
 		texHeight = get2Fold(height);
 		
 		short imageDescriptor = (short) dis.read();
+		if ((imageDescriptor & 0x0020) == 0) {
+		   flipped = !flipped;
+		} 
+		
 		// Skip image ID
 		if (idLength > 0) {
 			bis.skip(idLength);

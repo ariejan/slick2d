@@ -43,7 +43,7 @@ public class GUITest extends BasicGame implements ComponentListener {
 	 * Create a new test of GUI  rendering
 	 */
 	public GUITest() {
-		super("gui Test");
+		super("GUI Test");
 	}
 	
 	/**
@@ -52,6 +52,7 @@ public class GUITest extends BasicGame implements ComponentListener {
 	public void init(GameContainer container) throws SlickException {
 		if (container instanceof AppGameContainer) {
 			app = (AppGameContainer) container;
+			app.setIcon("testdata/icon.tga");
 		}
 		
 		font = new AngelCodeFont("testdata/demo2.fnt","testdata/demo2_00.tga");
@@ -59,7 +60,7 @@ public class GUITest extends BasicGame implements ComponentListener {
 		
 		this.container = container;
 		
-		image = new Image("testdata/logo.tga", true);
+		image = new Image("testdata/logo.tga");
 		background = new Image("testdata/dungeontiles.gif", true);
 		container.setMouseCursor("testdata/cursor.tga", 0, 0);
 		
