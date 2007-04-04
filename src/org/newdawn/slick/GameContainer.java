@@ -434,6 +434,15 @@ public abstract class GameContainer implements GUIContext {
 	}
 	
 	/**
+	 * Check if the FPS is currently showing
+	 * 
+	 * @return True if the FPS is showing
+	 */
+	public boolean isShowingFPS() {
+		return showFPS;
+	}
+	
+	/**
 	 * Set the target fps we're hoping to get
 	 * 
 	 * @param fps The target fps we're hoping to get
