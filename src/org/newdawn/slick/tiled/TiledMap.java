@@ -473,7 +473,7 @@ public class TiledMap {
 				trans = new Color(c);
 			}
 			
-			Image image = new Image(tilesLocation+"/"+ref,true,Image.FILTER_NEAREST,trans);
+			Image image = new Image(tilesLocation+"/"+ref,false,Image.FILTER_NEAREST,trans);
 			tiles = new SpriteSheet(image , tileWidth, tileHeight, spacing);
 			tilesAcross = tiles.getWidth() / (tileWidth + spacing);
 			tilesDown = tiles.getHeight() / (tileHeight + spacing);

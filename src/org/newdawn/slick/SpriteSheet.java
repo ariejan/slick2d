@@ -69,7 +69,7 @@ public class SpriteSheet extends Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public SpriteSheet(String ref,int tw,int th, Color col) throws SlickException {
-		super(ref, true, FILTER_NEAREST, col);
+		super(ref, false, FILTER_NEAREST, col);
 		
 		this.tw = tw;
 		this.th = th;
@@ -85,7 +85,7 @@ public class SpriteSheet extends Image {
 	 * @throws SlickException Indicates a failure to load the image
 	 */
 	public SpriteSheet(String name, InputStream ref,int tw,int th) throws SlickException {
-		super(ref,name,true);
+		super(ref,name,false);
 		
 		this.tw = tw;
 		this.th = th;

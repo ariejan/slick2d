@@ -151,7 +151,7 @@ public class ImageIOImageData implements LoadableImageData {
         Graphics2D g = (Graphics2D) texImage.getGraphics();
         g.setColor(new Color(0f,0f,0f,0f));
         g.fillRect(0,0,texWidth,texHeight);
-        if (!flipped) {
+        if (flipped) {
         	g.scale(1,-1);
         	g.drawImage(bufferedImage,0,-height,null);
         } else {

@@ -39,7 +39,7 @@ public class AngelCodeFont implements Font {
 	 * @throws SlickException Indicates a failure to load either file
 	 */
 	public AngelCodeFont(String fntFile, String imgFile) throws SlickException {
-		font = new Image(imgFile, !imgFile.endsWith(".tga"));
+		font = new Image(imgFile);
 	
 		parseFnt(ResourceLoader.getResourceAsStream(fntFile));
 	}
@@ -51,11 +51,10 @@ public class AngelCodeFont implements Font {
 	 * @param name The name to assign to the font image in the image store
 	 * @param fntFile The stream of the font defnition file
 	 * @param imgFile The stream of the font image
-	 * @param isPng True if the image is a PNG and hence is flipped by the AngelCode (?)
 	 * @throws SlickException Indicates a failure to load either file
 	 */
-	public AngelCodeFont(String name, InputStream fntFile, InputStream imgFile, boolean isPng) throws SlickException {
-		font = new Image(imgFile, name, isPng);
+	public AngelCodeFont(String name, InputStream fntFile, InputStream imgFile) throws SlickException {
+		font = new Image(imgFile, name, false);
 	
 		parseFnt(fntFile);
 	}

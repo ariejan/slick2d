@@ -55,12 +55,6 @@ public class ImageGraphicsTest extends BasicGame {
 		gTarget = target.getGraphics();
 		offscreenPreload = preloaded.getGraphics();
 		
-		if (GraphicsFactory.usingFBO()) {
-			using = "FBO (Frame Buffer Objects)";
-		} else if (GraphicsFactory.usingPBuffer()) {
-			using = "Pbuffer (Pixel Buffers)";
-		}
-
 		offscreenPreload.drawString("Drawing over a loaded image", 5, 15);
 		offscreenPreload.setLineWidth(5);
 		offscreenPreload.setAntiAlias(true);
@@ -69,6 +63,13 @@ public class ImageGraphicsTest extends BasicGame {
 		offscreenPreload.setColor(Color.white);
 		offscreenPreload.drawRect(190,20,70,70);
 		offscreenPreload.flush();
+		
+		if (GraphicsFactory.usingFBO()) {
+			using = "FBO (Frame Buffer Objects)";
+		} else if (GraphicsFactory.usingPBuffer()) {
+			using = "Pbuffer (Pixel Buffers)";
+		}
+
 	}
 	
 	/**

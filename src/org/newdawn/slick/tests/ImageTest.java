@@ -40,7 +40,7 @@ public class ImageTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
-		image = tga = new Image("testdata/logo.tga");
+		image = tga = new Image("testdata/logo.png");
 		scaleMe = new Image("testdata/logo.tga", true, Image.FILTER_NEAREST);
 		gif = new Image("testdata/logo.gif");
 		scaled = gif.getScaledCopy(120, 120);
@@ -52,6 +52,7 @@ public class ImageTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) {
+		g.drawRect(0,0,image.getWidth(),image.getHeight());
 		image.draw(0,0);
 		image.draw(500,0,200,100);
 		scaleMe.draw(500,100,200,100);
