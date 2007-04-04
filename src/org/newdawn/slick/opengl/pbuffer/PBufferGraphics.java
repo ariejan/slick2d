@@ -51,8 +51,8 @@ public class PBufferGraphics extends Graphics {
 		try {
 			Texture tex = TextureLoader.get().createTexture(image.getWidth(), image.getHeight());
 			
-			final RenderTexture rt = new RenderTexture(true, false, false, false, RenderTexture.RENDER_TEXTURE_2D, 0);
-			pbuffer = new Pbuffer(screenWidth, screenHeight, new PixelFormat(16, 0, 0, 0, 0), rt, null);
+			final RenderTexture rt = new RenderTexture(false, true, false, false, RenderTexture.RENDER_TEXTURE_2D, 0);
+			pbuffer = new Pbuffer(screenWidth, screenHeight, new PixelFormat(8, 0, 0), rt, null);
 
 			// Initialise state of the pbuffer context.
 			pbuffer.makeCurrent();

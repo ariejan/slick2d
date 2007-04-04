@@ -133,7 +133,7 @@ public class Graphics {
  	 */
 	public void setBackground(Color color) {
 		predraw();
-		GL11.glClearColor(color.r, color.g, color.b, 1);     
+		GL11.glClearColor(color.r, color.g, color.b, color.a);     
 		postdraw();  
 	}
 	

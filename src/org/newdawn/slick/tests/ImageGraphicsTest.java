@@ -76,9 +76,10 @@ public class ImageGraphicsTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) throws SlickException {
-		
+
 		// RENDERING TO AN IMAGE AND THEN DRAWING IT TO THE DISPLAY
 		// Draw graphics and text onto our graphics context from the Image target
+		gTarget.setBackground(new Color(0,0,0,0));
 		gTarget.clear();
 		gTarget.rotate(200,160,ang);
 		gTarget.setFont(testFont);
@@ -93,6 +94,8 @@ public class ImageGraphicsTest extends BasicGame {
 		// by calling flush
 		gTarget.flush(); 
 
+		g.setColor(Color.red);
+		g.fillRect(250, 50, 200, 200);
 		// The image has been updated using its graphics context, so now draw the image
 		// to the screen a few times
 		target.draw(300,100);
