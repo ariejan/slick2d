@@ -42,7 +42,7 @@ public class GraphicsTest extends BasicGame {
 		this.container = container;
 		
 		image = new Image("testdata/logo.tga", true);
-		container.setMouseCursor("testdata/cross.png", 0, 0);
+		container.setMouseCursor("testdata/palette_tool.png", 0, 0);
 		
 		container.setTargetFrameRate(100);
 		
