@@ -363,6 +363,16 @@ public class Input {
 	}
 	
 	/**
+	 * Get the character representation of the key identified by the specified code
+	 * 
+	 * @param code The key code of the key to retrieve the name of
+	 * @return The name or character representation of the key requested
+	 */
+	public String getKeyName(int code) {
+		return Keyboard.getKeyName(code);
+	}
+	
+	/**
 	 * Check if a particular key is down
 	 * 
 	 * @param code The key code of the key to check
