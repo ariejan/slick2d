@@ -360,7 +360,6 @@ public class Input {
 		this.height = height;
 		lastMouseX = getMouseX();
 		lastMouseY = getMouseY();
-		listeners.clear();
 	}
 	
 	/**
