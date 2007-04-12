@@ -48,6 +48,8 @@ public class Graphics {
 	private ByteBuffer readBuffer = BufferUtils.createByteBuffer(4);
 	/** True if we're antialias */
 	private boolean antialias;
+	/** The world clip recorded since last set */
+	private Rectangle worldClipRecord;
 	
 	/**
 	 * Create a new graphics context. Only the container should
@@ -454,7 +456,8 @@ public class Graphics {
 	 * @param width The width of the allowed area
 	 * @param height The height of the allowed area
 	 */
-	public void setWorldClip(int x,int y,int width,int height) {
+	public void setWorldClip(float x,float y,float width,float height) {
+		worldClipRecord = new Rectangle(x,y,width,height);
 		GL11.glEnable(GL11.GL_CLIP_PLANE0);
 		worldClip.put(1).put(0).put(0).put(-x).flip();
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, worldClip);
@@ -474,10 +477,34 @@ public class Graphics {
 	 * Clear world clipping setup. This does not effect screen clipping
 	 */
 	public void clearWorldClip() {
+		worldClipRecord = null;
 		GL11.glDisable(GL11.GL_CLIP_PLANE0);
 		GL11.glDisable(GL11.GL_CLIP_PLANE1);
 		GL11.glDisable(GL11.GL_CLIP_PLANE2);
 		GL11.glDisable(GL11.GL_CLIP_PLANE3);
+	}
+	
+	/**
+	 * Set the world clip to be applied
+	 * 
+	 * @see #setWorldClip(float, float, float, float)
+	 * @param clip The area still visible
+	 */
+	public void setWorldClip(Rectangle clip) {
+		if (clip == null) {
+			clearWorldClip();
+		} else {
+			setWorldClip(clip.x,clip.y,clip.height,clip.width);
+		}
+	}
+	
+	/**
+	 * Get the last set world clip or null of the world clip isn't set
+	 * 
+	 * @return The last set world clip rectangle
+	 */
+	public Rectangle getWorldClip() {
+		return worldClipRecord;
 	}
 	
 	/**
@@ -539,8 +566,8 @@ public class Graphics {
 		int cols = ((int) Math.ceil(width / pattern.getWidth())) + 2;
 		int rows = ((int) Math.ceil(height / pattern.getHeight())) + 2;
 
-		Rectangle preClip = getClip();
-		setClip((int) x, (int) y, (int) width, (int) height);
+		Rectangle preClip = getWorldClip();
+		setWorldClip(x,y,width,height);
 
 		predraw();
 		// Draw all the quads we need
