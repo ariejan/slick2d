@@ -371,7 +371,7 @@ public abstract class GameContainer implements GUIContext {
 		}
 		
 		if (targetFPS != -1) {
-			Display.sync2(targetFPS);
+			Display.sync(targetFPS);
 		}
 	}
 	
