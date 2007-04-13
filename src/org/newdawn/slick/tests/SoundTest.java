@@ -49,7 +49,7 @@ public class SoundTest extends BasicGame {
 		charlie = new Sound("testdata/cbrown01.wav");
 		engine = new Sound("testdata/engine.wav");
 		music = musica = new Music("testdata/SMB-X.XM");
-		musicb = new Music("testdata/testloop.ogg");
+		musicb = new Music("testdata/bongos.ogg", true);
 		burp = new Sound("testdata/burp.aif");
 	}
 
@@ -57,6 +57,8 @@ public class SoundTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) {
+		g.setColor(Color.white);
+		g.drawString("The OGG loop is now streaming from the file, woot.",100,60);
 		g.drawString("Press space for sound effect (OGG)",100,100);
 		g.drawString("Press P to pause/resume music (XM)",100,130);
 		g.drawString("Press E to pause/resume engine sound (WAV)",100,190);

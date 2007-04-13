@@ -45,6 +45,8 @@ public class SoundStore {
 	private boolean inited = false;
 	/** The MODSound to be updated */
 	private MODSound mod;
+	/** The stream to be updated */
+	private OpenALStreamPlayer stream;
 	
 	/** The global music volume setting */
 	private float musicVolume = 1.0f;
@@ -467,6 +469,17 @@ public class SoundStore {
 	}
 	
 	/**
+	 * Check if the supplied player is currently being polled by this
+	 * sound store.
+	 * 
+	 * @param player The player to check
+	 * @return True if this player is currently in use by this sound store
+	 */
+	boolean isPlaying(OpenALStreamPlayer player) {
+		return stream == player;
+	}
+	
+	/**
 	 * Get a MOD sound (mod/xm etc)
 	 * 
 	 * @param ref The refernece to the mod to load
@@ -587,6 +600,31 @@ public class SoundStore {
 		
 		return new InternalSound(this, buffer);
 	}
+
+	/**
+	 * Get the Sound based on a specified OGG file
+	 * 
+	 * @param ref The reference to the OGG file in the classpath
+	 * @return The Sound read from the OGG file
+	 * @throws IOException Indicates a failure to load the OGG
+	 */
+	public StreamSound getOggStream(String ref) throws IOException {
+		setMOD(null);
+		setStream(null);
+		
+		if (soundWorks) {
+			if (currentMusic != -1) {
+				AL10.alSourceStop(sources.get(0));
+			}
+			
+			getMusicSource();
+			currentMusic = sources.get(0);
+			
+			return new StreamSound(new OpenALStreamPlayer(currentMusic, ref));
+		}
+		
+		return new StreamSound(new OpenALStreamPlayer(0, ref));
+	}
 	
 	/**
 	 * Get the Sound based on a specified OGG file
@@ -603,7 +641,6 @@ public class SoundStore {
 			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
 		}
 		if (deferred) {
-			System.out.println("Return deferred for: "+ref);
 			return new DeferredSound(ref, DeferredSound.OGG);
 		}
 		
@@ -653,6 +690,27 @@ public class SoundStore {
 		
 		currentMusic = sources.get(0);
 		this.mod = sound;
+		if (sound != null) {
+			this.stream = null;
+		}
+		paused = false;
+	}
+
+	/**
+	 * Set the stream being played
+	 * 
+	 * @param stream The stream being streamed
+	 */
+	void setStream(OpenALStreamPlayer stream) {
+		if (!soundWorks) {
+			return;
+		}
+		
+		currentMusic = sources.get(0);
+		this.stream = stream;
+		if (stream != null) {
+			this.mod = null;
+		}
 		paused = false;
 	}
 	
@@ -673,6 +731,15 @@ public class SoundStore {
 			if (mod != null) {
 				try {
 					mod.poll();
+				} catch (OpenALException e) {
+					Log.error("Error with OpenGL MOD Player on this this platform");
+					Log.error(e);
+					mod = null;
+				}
+			}
+			if (stream != null) {
+				try {
+					stream.update();
 				} catch (OpenALException e) {
 					Log.error("Error with OpenGL MOD Player on this this platform");
 					Log.error(e);
