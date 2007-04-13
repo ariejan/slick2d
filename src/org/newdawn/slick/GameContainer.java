@@ -213,7 +213,7 @@ public abstract class GameContainer implements GUIContext {
 	public void sleep(int milliseconds) {
 		long target = getTime()+milliseconds;
 		while (getTime() < target) {
-			Thread.yield();
+			try { Thread.sleep(1); } catch (Exception e) {}
 		}
 	}
 	
