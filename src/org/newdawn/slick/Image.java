@@ -492,6 +492,68 @@ public class Image {
 		
 		return sub;
 	}
+
+	/**
+	 * Draw a section of this image at a particular location and scale on the screen
+	 * 
+	 * @param x The x position to draw the image
+	 * @param y The y position to draw the image
+	 * @param srcx The x position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy The y position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcx2 The x position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy2 The t position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 */
+	public void draw(float x, float y, float srcx, float srcy, float srcx2, float srcy2) {
+		draw(x,y,x+width,y+height,srcx,srcy,srcx2,srcy2);
+	}
+	
+	/**
+	 * Draw a section of this image at a particular location and scale on the screen
+	 * 
+	 * @param x The x position to draw the image
+	 * @param y The y position to draw the image
+	 * @param x2 The x position of the bottom right corner of the drawn image
+	 * @param y2 The y position of the bottom right corner of the drawn image
+	 * @param srcx The x position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy The y position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcx2 The x position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy2 The t position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 */
+	public void draw(float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2) {
+		init();
+
+		Color.white.bind();
+		texture.bind();
+
+		float mywidth = x2 - x;
+		float myheight = y2 - y;
+		float texwidth = srcx2 - srcx;
+		float texheight = srcy2 - srcy;
+
+		float newTextureOffsetX = (((srcx) / (width)) * textureWidth)
+				+ textureOffsetX;
+		float newTextureOffsetY = (((srcy) / (height)) * textureHeight)
+				+ textureOffsetY;
+		float newTextureWidth = ((texwidth) / (width))
+				* textureWidth;
+		float newTextureHeight = ((texheight) / (height))
+				* textureHeight;
+
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(newTextureOffsetX, newTextureOffsetY);
+		GL11.glVertex3f(x,y, 0.0f);
+		GL11.glTexCoord2f(newTextureOffsetX, newTextureOffsetY
+				+ newTextureHeight);
+		GL11.glVertex3f(x,(y + myheight), 0.0f);
+		GL11.glTexCoord2f(newTextureOffsetX + newTextureWidth,
+				newTextureOffsetY + newTextureHeight);
+		GL11.glVertex3f((x + mywidth),(y + myheight), 0.0f);
+		GL11.glTexCoord2f(newTextureOffsetX + newTextureWidth,
+				newTextureOffsetY);
+		GL11.glVertex3f((x + mywidth),y, 0.0f);
+		GL11.glEnd();
+	}
+
 	
 	/**
 	 * Get the width of this image

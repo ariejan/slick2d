@@ -866,6 +866,41 @@ public class Graphics {
 		currentColor.bind();
 		postdraw();
 	}
+
+	/**
+	 * Draw a section of an image at a particular location and scale on the screen
+	 * 
+	 * @param image The image to draw a section of
+	 * @param x The x position to draw the image
+	 * @param y The y position to draw the image
+	 * @param x2 The x position of the bottom right corner of the drawn image
+	 * @param y2 The y position of the bottom right corner of the drawn image
+	 * @param srcx The x position of the rectangle to draw from this image (i.e. relative to the image)
+	 * @param srcy The y position of the rectangle to draw from this image (i.e. relative to the image)
+	 * @param srcx2 The x position of the bottom right cornder of rectangle to draw from this image (i.e. relative to the image)
+	 * @param srcy2 The t position of the bottom right cornder of rectangle to draw from this image (i.e. relative to the image)
+	 */
+	public void drawImage(Image image, float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2) {
+		predraw();
+		image.draw(x,y,x2,y2,srcx,srcy,srcx2,srcy2);
+		currentColor.bind();
+		postdraw();
+	}
+
+	/**
+	 * Draw a section of an image at a particular location and scale on the screen
+	 * 
+	 * @param image The image to draw a section of
+	 * @param x The x position to draw the image
+	 * @param y The y position to draw the image
+	 * @param srcx The x position of the rectangle to draw from this image (i.e. relative to the image)
+	 * @param srcy The y position of the rectangle to draw from this image (i.e. relative to the image)
+	 * @param srcx2 The x position of the bottom right cornder of rectangle to draw from this image (i.e. relative to the image)
+	 * @param srcy2 The t position of the bottom right cornder of rectangle to draw from this image (i.e. relative to the image)
+	 */
+	public void drawImage(Image image, float x, float y, float srcx, float srcy, float srcx2, float srcy2) {
+		drawImage(image, x, y, x+image.getWidth(), y+image.getHeight(), srcx, srcy, srcx2, srcy2);
+	}
 	
 	/**
 	 * Copy an area of the rendered screen into an image. The width and height of the area 
