@@ -579,7 +579,7 @@ public class Graphics {
 		}
 		postdraw();
 		
-		setClip(preClip);
+		setWorldClip(preClip);
 	}
 	
 	/**
