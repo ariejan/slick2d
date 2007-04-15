@@ -37,6 +37,15 @@ public class LoadingList {
 		SoundStore.get().setDeferredLoading(loading);
 	}
 	
+	/**
+	 * Check if we're using deferred loading 
+	 * 
+	 * @return True if we're using deferred loading
+	 */
+	public static boolean isDeferredLoading() {
+		return TextureLoader.get().isDeferredLoading();
+	}
+	
 	/** The list of deferred resources to load */
 	private ArrayList deferred = new ArrayList();
 	/** The total number of elements that have been added - does not go down as elements are removed */
