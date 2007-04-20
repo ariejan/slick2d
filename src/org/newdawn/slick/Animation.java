@@ -36,6 +36,8 @@ public class Animation {
 	private int direction = 1;
 	/** True if the animation in ping ponging back and forth */
 	private boolean pingPong;
+	/** True if the animation should loop (default) */
+	private boolean loop = true;
 	
 	/**
 	 * Create an empty animation
@@ -386,6 +388,9 @@ public class Animation {
 		nextChange -= delta;
 		
 		while (nextChange < 0 && (currentFrame != stopAt)) {
+			if ((currentFrame == frames.size() - 1) && (!loop)) {
+				break;
+			}
 			currentFrame = (currentFrame + direction) % frames.size();
 			
 			if (pingPong) {
@@ -400,6 +405,15 @@ public class Animation {
 		if (currentFrame == stopAt) {
 			stopped = true;
 		}
+	}
+	
+	/**
+	 * Indicate if this animation should loop or stop at the last frame
+	 * 
+	 * @param loop True if this animation should loop (true = default)
+	 */
+	public void setLooping(boolean loop) {
+		this.loop = loop;
 	}
 	
 	/**
