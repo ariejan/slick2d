@@ -99,6 +99,19 @@
 		 basedir="tools" includes="org/newdawn/slick/tools/hiero/resources/*"/>
 </target>
 
+<!-- build the scalar tool -->
+<target name="build-scalar" depends="init">
+	<delete dir="lib/scalar.jar"/>
+	<javac includes="org/newdawn/slick/tools/scalar/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
+	</javac>
+	<jar destfile="lib/scalar.jar" 
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/scalar/**">
+		<manifest>
+	      <attribute name="Main-Class" value="org.newdawn.slick.tools.scalar.Scalar"/>
+	    </manifest>
+	</jar>
+</target>
+
 <!-- build the examples -->
 <target name="build-examples" depends="init">
 	<delete dir="lib/slick-examples.jar"/>
@@ -248,6 +261,39 @@
 		 verbose="true"/>
 	<scp todir="${username}:${password}@${host}:${demos}" 
 		 file="webstart/hiero.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+</target>
+
+
+<!--
+  Build scalar distribution 
+-->
+<target name="dist-scalar" depends="build-scalar">
+	<zip destfile="${dist}/scalar.zip">
+	    <fileset dir="lib" includes="scalar.jar"/>
+	</zip>
+</target>
+
+<target name="build-webstart-scalar" depends="build-scalar">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	
+	<copyandsign jar="scalar.jar"/>
+	<createdemojnlp name="scalar" title="Slick2D Scalar Scale2/3X Tool" mainclass="org.newdawn.slick.tools.scalar.Scalar"/>
+</target>
+
+<target name="upload-scalar" depends="build-webstart-scalar, dist-scalar">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="dist/scalar.zip"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/scalar.jar"
 		 trust="true"
 		 port="122"
 		 verbose="true"/>
@@ -432,7 +478,7 @@
 <!--
  Upload everything, i.e. create a complete update to the Slick stuff.
 -->
-<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero">
+<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero, upload-scalar">
 </target>
 
 <!--
