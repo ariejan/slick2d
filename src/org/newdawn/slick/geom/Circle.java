@@ -5,7 +5,7 @@ package org.newdawn.slick.geom;
  * 
  * @author Kevin Glass
  */
-public strictfp class Circle {
+public strictfp class Circle extends Ellipse {
 	/** The radius of the circle */
 	public float radius;
 	/** The x position of the center of this circle */
@@ -21,6 +21,7 @@ public strictfp class Circle {
 	 * @param radius The radius of the circle
 	 */
 	public Circle(float x, float y, float radius) {
+        super(x, y, radius);
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
@@ -33,6 +34,7 @@ public strictfp class Circle {
 	 */
 	public void setRadius(float radius) {
 		this.radius = radius;
+        setRadii(radius, radius);
 	}
 	
 	/**
@@ -41,6 +43,7 @@ public strictfp class Circle {
 	 * @param x The x location of the center of this circle
 	 */
 	public void setX(float x) {
+        super.setX(x);
 		this.x = x;
 	}
 
@@ -50,25 +53,8 @@ public strictfp class Circle {
 	 * @param y The y location of the center of this circle
 	 */
 	public void setY(float y) {
+        super.setY(y);
 		this.y = y;
-	}
-	
-	/**
-	 * Get the x location of the center of this circle
-	 * 
-	 * @return The x location of the center of this circle
-	 */
-	public float getX() {
-		return x;
-	}
-
-	/**
-	 * Get the y location of the center of this circle
-	 * 
-	 * @return The y location of the center of this circle
-	 */
-	public float getY() {
-		return y;
 	}
 	
 	/**
@@ -82,25 +68,34 @@ public strictfp class Circle {
 	/**
 	 * Check if this circle touches another
 	 * 
-	 * @param other The other circle
+	 * @param shape The other circle
 	 * @return True if they touch
 	 */
-	public boolean intersects(Circle other) {
-		float totalRad2 = getRadius() + other.getRadius();
-		
-		if (Math.abs(other.x - x) > totalRad2) {
-			return false;
-		}
-		if (Math.abs(other.y - y) > totalRad2) {
-			return false;
-		}
-		
-		totalRad2 *= totalRad2;
-		
-		float dx = Math.abs(other.x - x);
-		float dy = Math.abs(other.y - y);
-		
-		return totalRad2 >= ((dx*dx) + (dy*dy));
+	public boolean intersects(Shape shape) {
+        if(shape instanceof Circle) {
+            Circle other = (Circle)shape;
+    		float totalRad2 = getRadius() + other.getRadius();
+    		
+    		if (Math.abs(other.x - x) > totalRad2) {
+    			return false;
+    		}
+    		if (Math.abs(other.y - y) > totalRad2) {
+    			return false;
+    		}
+    		
+    		totalRad2 *= totalRad2;
+    		
+    		float dx = Math.abs(other.x - x);
+    		float dy = Math.abs(other.y - y);
+    		
+    		return totalRad2 >= ((dx*dx) + (dy*dy));
+        }
+        else if(shape instanceof Rectangle) {
+            return intersects((Rectangle)shape);
+        }
+        else {
+            return super.intersects(shape);
+        }
 	}
 	
 	/**
@@ -120,7 +115,7 @@ public strictfp class Circle {
 	 * @param other The rectangle to check against
 	 * @return True if they touch
 	 */
-	public boolean intersects(Rectangle other) {
+	private boolean intersects(Rectangle other) {
 		Rectangle box = other;
 		Circle circle = this;
 		
@@ -152,4 +147,14 @@ public strictfp class Circle {
 		
 		return false;
 	}
+
+    public Shape transform(Transform transform) {
+        float oldPoints[] = {x, y, x + radius, y};
+        float result[] = new float[4];
+        transform.transform(oldPoints, 0, result, 0, 2);
+        float newRadius = (float)Math.sqrt(((result[2] - result[0]) * (result[2] - result[0])) + ((result[3] - result[1]) * (result[3] - result[1])));
+        Shape newShape = new Circle(result[0], result[1], newRadius);
+        return newShape;
+    }
+    
 }

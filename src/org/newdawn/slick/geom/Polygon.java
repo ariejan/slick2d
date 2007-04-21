@@ -2,262 +2,131 @@ package org.newdawn.slick.geom;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.opengl.Texture;
-
 /**
- * A polygon to be draw to the graphcis context
- *
- * @author kevin
+ * A polygon implementation meeting the <code>Shape</code> contract. 
+ * 
+ * @author Mark
  */
-public class Polygon {
-	/** The triagulator holding the triangles for this polygon */
-	private Triangulator tris = new Triangulator();
-	/** True if the points have been updated since last render */
-	private boolean updated;
-	/** The points */
-	private ArrayList points = new ArrayList();
-	
-	/**
-	 * Create an empty polygon
-	 */
-	public Polygon() {
-		
-	}
-	
-	/**
-	 * Create a polygon from a set of points
-	 * 
-	 * @param xpoints The x coordinates of the points
-	 * @param ypoints The y coordinates of the points
-	 */
-	public Polygon(float[] xpoints, float[] ypoints) {
-		if (xpoints.length == ypoints.length) {
-			for (int i=0;i<xpoints.length;i++) {
-				addPoint(xpoints[i], ypoints[i]);
-			}
-		} else {
-			throw new RuntimeException("xpoints array must be the same length as ypoints array");
-		}
-	}
-	
-	/**
-	 * Create a polygon from a set of points
-	 * 
-	 * @param points The points for the coordinates (points[n][2])
-	 */
-	public Polygon(float[][] points) {
-		for (int i=0;i<points.length;i++) {
-			addPoint(points[i][0], points[i][1]);
-		}
-	}
-	
-	/**
-	 * Add a point to the polygon
-	 * 
-	 * @param x The x coordinate of the point
- 	 * @param y The y coordinate of the point
-	 */
-	public void addPoint(float x, float y) {
-		points.add(new float[] {x,y});
-		tris.addPolyPoint(x, y);
-		updated = true;
-	}
-	
-	/**
-	 * Check if a particular location is a vertex of this polygon
-	 * 
-	 * @param x The x coordinate to check
-	 * @param y The y coordinate to check
-	 * @return True if the cordinates supplied are a vertex of this polygon
-	 */
-	public boolean hasVertex(float x, float y) {
-		for (int i=0;i<points.size();i++) {
-			float[] pt = (float[]) points.get(i);
-			
-			if ((pt[0] == x) && (pt[1] == y)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Get a polygon based on this one 
-	 * 
-	 * @param offset The offset from the current points to form the new one
-	 * @return The newly created polygon
-	 */
-	public Polygon getScaled(float offset) {
-		Polygon result = new Polygon();
-		
-		float[] p1 = (float []) points.get(0);
-		float[] p2 = (float []) points.get(1);
-		boolean clockwise = (p2[0] > p1[0]) || (p1[1] > p2[1]);
-		
-		for (int i=0;i<points.size();i++) {
-			int pi = i-1 < 0 ? points.size() - 1 : i - 1;
-			int ni = i+1 > points.size() - 1 ? 0 : i + 1;
+public class Polygon extends Shape {
+    /**
+     * Convenience constructor to make a square or a rectangle.
+     *  
+     * @param x Left side
+     * @param y Top side
+     * @param width The width
+     * @param height The height
+     */
+    public Polygon(float x, float y, float width, float height) {
+        points = new float[8];
+        
+        points[0] = x;
+        points[1] = y;
+        
+        points[2] = x + width;
+        points[3] = y;
+        
+        points[4] = x + width;
+        points[5] = y + height;
+        
+        points[6] = x;
+        points[7] = y + height;
+        
+        findCenter();
+        calculateRadius();
+    }
+    
+    /**
+     * Construct a new polygon with 3 or more points. 
+     * This constructor will take the first set of points and copy them after
+     * the last set of points to create a closed shape.
+     * 
+     * @param points An array of points in x, y order.
+     */
+    public Polygon(float points[]) {
+        int length = points.length;
+        
+        this.points = new float[length];
+        
+        for(int i=0;i<length;i++) {
+            this.points[i] = points[i];
+        }
+        
+        findCenter();
+        calculateRadius();
+    }
+    /**
+     * Create an empty polygon
+     *
+     */
+    public Polygon(){
+        points = new float[0];
+    }
 
-			float[] p = (float[]) points.get(pi);
-			float[] c = (float[]) points.get(i);
-			float[] n = (float[]) points.get(ni);
-			
-			// first line
-			float dx1 = c[0] - p[0];
-			float dy1 = c[1] - p[1];
-			float l1 = (float) Math.sqrt((dx1*dx1)+(dy1*dy1));
-			dx1 /= l1;
-			dy1 /= l1;
-			// second line
-			float dx2 = (n[0] - c[0]);
-			float dy2 = (n[1] - c[1]);
-			float l2 = (float) Math.sqrt((dx2*dx2)+(dy2*dy2));
-			dx2 /= l2;
-			dy2 /= l2;
-			
-			float dx = (dx1 + dx2);
-			float dy = (dy1 + dy2);
-			float l = (float) Math.sqrt((dx*dx)+(dy*dy));
-			dx /= l;
-			dy /= l;
-			
-			float px = c[0]-(dy*offset);
-			float py = c[1]+(dx*offset);
-			if ((offset < 0) && (!contains(px,py))) {
-				px = c[0]+(dy*offset);
-				py = c[1]-(dx*offset);
-			}
-			if ((offset > 0) && (contains(px,py))) {
-				px = c[0]+(dy*offset);
-				py = c[1]-(dx*offset);
-			}
-			result.addPoint(px,py);
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * Get the number of points in this polygon
-	 * 
-	 * @return The number of points in this polygon
-	 */
-	public int getPointCount() {
-		return points.size();
-	}
-	
-	/**
-	 * Get a single point in this polygon
-	 * 
-	 * @param index The index of the point to retrieve
-	 * @return The point's coordinates
-	 */
-	public float[] getPoint(int index) {
-		return (float[]) points.get(index);
-	}
-	
-	/**
-	 * Render the polygon 
-	 * 
-	 * @param g The graphics context on which to render 
-	 */
-	public void fill(Graphics g) {
-		if (updated) {
-			tris.triangulate();
-			updated = false;
-		}
-		
-		float[] pt;
-		
-		Texture.bindNone();
-		GL11.glBegin(GL11.GL_TRIANGLES);
-			int count = tris.getTriangleCount();
-			for (int i=0;i<count;i++) {
-				pt = tris.getTrianglePoint(i, 0);
-				GL11.glVertex3f(pt[0],pt[1],0);
-				pt = tris.getTrianglePoint(i, 1);
-				GL11.glVertex3f(pt[0],pt[1],0);
-				pt = tris.getTrianglePoint(i, 2);
-				GL11.glVertex3f(pt[0],pt[1],0);
-			}
-		GL11.glEnd();
-	}
-	
-	/**
-	 * Render the polygon with an image
-	 * 
-	 * @param g The graphics context on which to render 
-	 * @param image The image to use to texture this polygon - note image bounding will not
-	 * be taken into account so subimages will use the full image.
-	 * @param scale The scaling to apply to the image
-	 */
-	public void texture(Graphics g, Image image, float scale) {
-		if (updated) {
-			tris.triangulate();
-			updated = false;
-		}
-		
-		image.bind();
-		GL11.glBegin(GL11.GL_TRIANGLES);
-			int count = tris.getTriangleCount();
-			for (int i=0;i<count;i++) {
-				float[] pt = tris.getTrianglePoint(i, 0);
-				GL11.glTexCoord2f(pt[0] * scale,pt[1] * scale);
-				GL11.glVertex3f(pt[0],pt[1],0);
-				pt = tris.getTrianglePoint(i, 1);
-				GL11.glTexCoord2f(pt[0] * scale,pt[1] * scale);
-				GL11.glVertex3f(pt[0],pt[1],0);
-				pt = tris.getTrianglePoint(i, 2);
-				GL11.glTexCoord2f(pt[0] * scale,pt[1] * scale);
-				GL11.glVertex3f(pt[0],pt[1],0);
-			}
-		GL11.glEnd();
-	}
-	
-	/**
-	 * Check if this polygon contains the given point
-	 * 
-	 * @param x The x position of the point to check
-	 * @param y The y position of the point to check
-	 * @return True if the point is contained in the polygon
-	 */
-	public boolean contains(float x, float y) {
-		if (updated) {
-			tris.triangulate();
-			updated = false;
-		}
-		
-		int count = tris.getTriangleCount();
-		for (int i=0;i<count;i++) {
-			if (inTriangle(i, x, y)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * Check if a point lies within a triangle
-	 * 
-	 * @param triangle The index of the triangle to check
-	 * @param x The x position of the point
-	 * @param y The y position of the point
-	 * @return True if the point lies within the triangle
-	 */
-	private boolean inTriangle(int triangle, float x, float y) {
-		float[] a = tris.getTrianglePoint(triangle, 0);
-		float[] b = tris.getTrianglePoint(triangle, 1);
-		float[] c = tris.getTrianglePoint(triangle, 2);
-		
-		boolean sideA = ((b[1]-a[1])*(x-a[0])-(b[0]-a[0])*(y-a[1])) > 0.0f;
-		boolean sideB = ((c[1]-b[1])*(x-b[0])-(c[0]-b[0])*(y-b[1])) > 0.0f;
-		if (sideA != sideB) return false;
-		boolean sideC = ((a[1]-c[1])*(x-c[0])-(a[0]-c[0])*(y-c[1])) > 0.0f;
-		return (sideA == sideC);
-	}
+    /**
+     * Set the x position of this box
+     * 
+     * @param x The new x position of this box
+     */
+    public void setX(float x) {
+        float diff = center[0] - x;
+        super.setX(x);
+        for(int i=0;i<points.length;i+=2) {
+            points[i] += diff;
+        }
+    }
+    
+    /**
+     * Set the y position of this box
+     * 
+     * @param y The new y position of this box
+     */
+    public void setY(float y) {
+        float diff = center[1] - y;
+        super.setY(y);
+        for(int i=1;i<points.length;i+=2) {
+            points[i] += diff;
+        }
+    }
+    /**
+     * Add a point to the polygon
+     * 
+     * @param x The x coordinate of the point
+     * @param y The y coordinate of the point
+     */
+    public void addPoint(float x, float y) {
+        ArrayList tempPoints = new ArrayList();
+        for(int i=0;i<points.length;i++) {
+            tempPoints.add(new Float(points[i]));
+        }
+        tempPoints.add(new Float(x));
+        tempPoints.add(new Float(y));
+        int length = tempPoints.size();
+        points = new float[length];
+        for(int i=0;i<length;i++) {
+            points[i] = ((Float)tempPoints.get(i)).floatValue();
+        }
+        findCenter();
+        calculateRadius();
+    }
+
+
+    /**
+     * Apply a transformation and return a new shape.  This will not alter the current shape but will 
+     * return the transformed shape.
+     * 
+     * @param transform The transform to be applied
+     * @return The transformed shape.
+     */
+    public Shape transform(Transform transform) {
+        Polygon resultPolygon = new Polygon();
+        
+        float result[] = new float[points.length];
+        transform.transform(points, 0, result, 0, points.length / 2);
+        resultPolygon.points = result;
+        result = new float[]{center[0], center[1]};
+        transform.transform(result, 0, result, 0, 1);
+        resultPolygon.center = result;
+
+        return resultPolygon;
+    }
 }

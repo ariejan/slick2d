@@ -1,4 +1,4 @@
-package org.newdawn.slick.geom.renderable;
+package org.newdawn.slick.geom;
 
 import java.util.ArrayList;
 
@@ -10,24 +10,16 @@ import org.newdawn.slick.util.FastTrig;
  * 
  * @author Mark
  */
-public class Ellipse implements Shape {
+public class Ellipse extends Shape {
     /**
      * Default number of segments to draw this ellipse with
      */
     private static final int DEFAULT_SEGMENT_COUNT = 50;
+    
     /**
-     * List containing all the points in x, y order.
-     * Points are floating point format.
+     * The number of segments for graphical representation.
      */
-    private float points[]; 
-    /**
-     * x center of the ellipse
-     */
-    private float centerPointX;
-    /**
-     * y center of the ellipse
-     */
-    private float centerPointY;
+    private int segmentCount;
     /**
      * horizontal radius
      */
@@ -56,14 +48,16 @@ public class Ellipse implements Shape {
      * @param centerPointY y coordinate of the center of the ellipse
      * @param radius1 horizontal radius
      * @param radius2 vertical radius
-     * @param numberOfSegments how fine to make the ellipse.
+     * @param segmentCount how fine to make the ellipse.
      */
-    public Ellipse(float centerPointX, float centerPointY, float radius1, float radius2, int numberOfSegments) {
-        this.centerPointX = centerPointX;
-        this.centerPointY = centerPointY;
+    public Ellipse(float centerPointX, float centerPointY, float radius1, float radius2, int segmentCount) {
+        center = new float[2];
+        this.center[0] = centerPointX;
+        this.center[1] = centerPointY;
         this.radius1 = radius1;
         this.radius2 = radius2;
-        createPoints(numberOfSegments);
+        this.segmentCount = segmentCount;
+        createPoints(segmentCount);
     }
 
     /**
@@ -83,17 +77,44 @@ public class Ellipse implements Shape {
      * @param centerPointX x coordinate of the center of the ellipse
      * @param centerPointY y coordinate of the center of the ellipse
      * @param radius horizontal and vertical radius to make a circle
-     * @param numberOfSegments How fine to make the ellipse.
+     * @param segmentCount How fine to make the ellipse.
      */
-    public Ellipse(float centerPointX, float centerPointY, float radius, int numberOfSegments) {
-        this(centerPointX, centerPointY, radius, radius, numberOfSegments);
+    public Ellipse(float centerPointX, float centerPointY, float radius, int segmentCount) {
+        this(centerPointX, centerPointY, radius, radius, segmentCount);
     }
 
     /**
      * Private constructor used when a transformation is applied.
      *
      */
-    private Ellipse() {}
+    public Ellipse() {
+        this(0, 0, 0);
+    }
+    /**
+     * Set the x position of this box
+     * 
+     * @param x The new x position of this box
+     */
+    public void setX(float x) {
+        float diff = center[0] - x;
+        super.setX(x);
+        for(int i=0;i<points.length;i+=2) {
+            points[i] += diff;
+        }
+    }
+    
+    /**
+     * Set the y position of this box
+     * 
+     * @param y The new y position of this box
+     */
+    public void setY(float y) {
+        float diff = center[1] - y;
+        super.setY(y);
+        for(int i=1;i<points.length;i+=2) {
+            points[i] += diff;
+        }
+    }
     /**
      * Apply a transformation and return a new shape.  This will not alter the current shape but will 
      * return the transformed shape.
@@ -107,17 +128,17 @@ public class Ellipse implements Shape {
         float result[] = new float[points.length];
         transform.transform(points, 0, result, 0, points.length / 2);
         resultEllipse.points = result;
-        result = new float[]{centerPointX, centerPointY};
+        result = new float[]{center[0], center[1]};
         transform.transform(result, 0, result, 0, 1);
-        resultEllipse.centerPointX = result[0];
-        resultEllipse.centerPointY = result[1];
+        resultEllipse.center[0] = result[0];
+        resultEllipse.center[1] = result[1];
         
         float maxRadius = Float.MIN_VALUE;
         float minRadius = Float.MAX_VALUE;
         for(int i=0;i>points.length;i+=2) {
             float radius = (float)Math.sqrt(
-                    ((centerPointX - points[i]) * (centerPointX - points[i])) + 
-                    ((centerPointY - points[i + 1]) * (centerPointY - points[i + 1]))
+                    ((center[0] - points[i]) * (center[0] - points[i])) + 
+                    ((center[1] - points[i + 1]) * (center[1] - points[i + 1]))
                     );
             if(radius > maxRadius) {
                 maxRadius = radius;
@@ -134,21 +155,24 @@ public class Ellipse implements Shape {
     }
 
     /**
-     * Get the points that outline this shape.  Use CW winding rule
+     * Get the radius of a circle that can completely enclose this shape.
      * 
-     * @return an array of x,y points
+     * @return The radius of the circle.
      */
-    public float[] getPoints() {
-        return points;
+    public float getBoundingCircleRadius() {
+        return (radius1 > radius2) ? radius1 : radius2;
     }
-    
+
     /**
-     * Get the point closet to the center of all the points in this Shape
+     * Change the shape of this Ellipse
      * 
-     * @return The x,y coordinates of the center.
+     * @param radius1 horizontal radius
+     * @param radius2 vertical radius
      */
-    public float[] getCenter() {
-        return new float[]{centerPointX, centerPointY};
+    public void setRadii(float radius1, float radius2) {
+        this.radius1 = radius1;
+        this.radius2 = radius2;
+        createPoints(segmentCount);
     }
     /**
      * Generate the points to outline this ellipse.
@@ -161,8 +185,8 @@ public class Ellipse implements Shape {
         float start = 0;
         float end = 360;
         
-        float cx = centerPointX;
-        float cy = centerPointY;
+        float cx = center[0];
+        float cy = center[1];
         
         int step = 360 / numberOfSegments;
         
