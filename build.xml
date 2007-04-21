@@ -395,6 +395,7 @@
 	<createdemojnlp name="offscreen" title="Slick2D Offscreen Rendering Test" mainclass="org.newdawn.slick.tests.ImageGraphicsTest"/>
 	<createdemojnlp name="clip" title="Slick2D Clipping Test" mainclass="org.newdawn.slick.tests.ClipTest"/>
 	<createdemojnlp name="imagereadtest" title="Slick2D Image Read Test" mainclass="org.newdawn.slick.tests.ImageReadTest"/>
+	<createdemojnlp name="bigimagetest" title="Slick2D Big Image Test" mainclass="org.newdawn.slick.tests.BigImageTest"/>
 
 	<!-- Examples under here please -->
 	<createdemojnlp template="slickexample.jnlp" name="scroller" title="Slick2D TileMap Scroll Example" mainclass="org.newdawn.slick.examples.scroller.Scroller"/>

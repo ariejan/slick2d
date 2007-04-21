@@ -28,9 +28,9 @@ public class Image {
 	/** The OpenGL texture for this image */
 	private Texture texture;
 	/** The width of the image */
-	private int width;
+	protected int width;
 	/** The height of the image */
-	private int height;
+	protected int height;
 	/** The texture coordinate width to use to find our image */
 	private float textureWidth;
 	/** The texture coordinate height to use to find our image */
@@ -42,7 +42,7 @@ public class Image {
 	/** The name given for the image */
 	private String ref;
 	/** True if this image's state has been initialised */
-	private boolean inited = false;
+	protected boolean inited = false;
 	/** A pixelData holding the pixel data if it's been read for this texture */
 	private byte[] pixelData;
 	
@@ -65,7 +65,7 @@ public class Image {
 	/**
 	 * Cloning constructor - only used internally.
 	 */
-	private Image() {
+	protected Image() {
 	}
 
 	/**
@@ -520,9 +520,26 @@ public class Image {
 	 * @param srcy2 The t position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
 	 */
 	public void draw(float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2) {
+		draw(x,y,x2,y2,srcx,srcy,srcx2,srcy2,Color.white);
+	}
+	
+	/**
+	 * Draw a section of this image at a particular location and scale on the screen
+	 * 
+	 * @param x The x position to draw the image
+	 * @param y The y position to draw the image
+	 * @param x2 The x position of the bottom right corner of the drawn image
+	 * @param y2 The y position of the bottom right corner of the drawn image
+	 * @param srcx The x position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy The y position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcx2 The x position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy2 The t position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 * @param filter The colour filter to apply when drawing
+	 */
+	public void draw(float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2, Color filter) {
 		init();
 
-		Color.white.bind();
+		filter.bind();
 		texture.bind();
 
 		float mywidth = x2 - x;
