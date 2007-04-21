@@ -8,11 +8,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Ellipse;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.renderable.Ellipse;
-import org.newdawn.slick.geom.renderable.Polygon;
-import org.newdawn.slick.geom.renderable.Shape;
-import org.newdawn.slick.geom.renderable.Transform;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
 
 /**
  * A geomertry test
@@ -21,37 +21,25 @@ import org.newdawn.slick.geom.renderable.Transform;
  */
 public class GeomTest extends BasicGame {
 	/** The rectangle drawn */
-	private Rectangle rect = new Rectangle(100,100,100,100);
+	private Shape rect = new Rectangle(100,100,100,100);
 	/** The rectangle drawn */
-	private Circle circle = new Circle(500,200,50);
+	private Shape circle = new Circle(500,200,50);
 	/** The rectangle tested */
-	private Rectangle rect1 = new Rectangle(200,170,50,100);
+	private Shape rect1 = new Polygon(150,120,50,100).transform(Transform.createTranslateTransform(50, 50));
 	/** The rectangle tested */
-	private Rectangle rect2 = new Rectangle(310,210,50,100);
+	private Shape rect2 = new Polygon(310,210,50,100).transform(
+            Transform.createRotateTransform((float)Math.toRadians(45), 335, 260));
 	/** The circle tested */
-	private Circle circle1 = new Circle(150,90,30);
+	private Shape circle1 = new Circle(150,90,30);
 	/** The circle tested */
-	private Circle circle2 = new Circle(310,110,70);
+	private Shape circle2 = new Circle(310,110,70);
 	/** The circle tested */
-	private Circle circle3 = new Circle(510,150,70);
+	private Shape circle3 = new Ellipse(510,150,70);
 	/** The circle tested */
-	private Circle circle4 = new Circle(510,350,30);
-    /** Ellipse for scaling and translation */
-    private Ellipse ellipse1 = new Ellipse(250.0f, 250.0f, 70.0f, 120.0f);
-    /** Ellipse for scaling and translation */
-    private Shape ellipse2 = new Ellipse(0, 0, 70, 120, 360).transform(
-            Transform.createRotateTransform(45)).transform(Transform.createTranslateTransform(100, 300));
-    /** Polygon for scaling and translation */
-    private Polygon polygon1 = new Polygon(400, 300, 50, 120);
-    /** Polygon for scaling and translation */
-    private Shape polygon2 = new Polygon(0, 0, 120, 120).transform(
-            Transform.createRotateTransform(25)).transform(Transform.createTranslateTransform(600, 250));
-    /** Polygon for scaling and translation */
-    private Polygon polygon3 = new Polygon(new float[]{30,30,80,20,150,100,120,200,70,220,30,130});
-    /** Polygon for scaling and translation */
-    private Shape polygon4 = polygon3.transform(
-                    Transform.createRotateTransform(65, polygon3.getCenter()[0], 
-                            polygon3.getCenter()[1]));
+	private Shape circle4 = new Ellipse(510,350,30).transform(
+            Transform.createTranslateTransform(-510, -350)).transform(
+                    Transform.createScaleTransform(2, 2)).transform(
+                            Transform.createTranslateTransform(510, 350));
 	
 	/**
 	 * Create a new test of graphics context rendering
@@ -73,7 +61,6 @@ public class GeomTest extends BasicGame {
 		g.setColor(Color.white);
 		g.drawString("Red indicates a collision, green indicates no collision", 50, 420);
         g.drawString("White are the targets", 50, 435);
-        g.drawString("Orange are shapes that have had a transformation applied", 50, 450);
 		
 		g.setColor(Color.white);
 		g.draw(rect);
@@ -91,14 +78,6 @@ public class GeomTest extends BasicGame {
 		g.draw(circle3);
 		g.setColor(circle4.intersects(circle) ? Color.red : Color.green);
 		g.draw(circle4);
-        
-        g.setColor(Color.orange);
-        g.draw(ellipse1);
-        g.fill(ellipse2);
-        g.draw(polygon1);
-        g.fill(polygon2);
-        g.draw(polygon3);
-        g.fill(polygon4);
 	}
 
 	/**
