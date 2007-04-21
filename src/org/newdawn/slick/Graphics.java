@@ -8,10 +8,8 @@ import java.security.PrivilegedAction;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.renderable.Shape;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.FastTrig;
 import org.newdawn.slick.util.Log;
@@ -289,67 +287,67 @@ public class Graphics {
 		postdraw();
 	}
 	
-	/**
-	 * Fill a polygon to the graphics context
-	 * 
-	 * @param poly The polygon to fill
-	 */
-	public void fill(Polygon poly) {
-		if (poly.getPointCount() < 3) {
-			return;
-		}
-
-		predraw();
-		currentColor.bind();
-		Texture.bindNone();
-		poly.fill(this);
-		postdraw();
-	}
-
-	/**
-	 * Draw a polygon to the graphics context
-	 * 
-	 * @param poly The polygon to draw
-	 */
-	public void draw(Polygon poly) {
-		if (poly.getPointCount() < 3) {
-			return;
-		}
-
-		predraw();
-		currentColor.bind();
-		Texture.bindNone();
-		GL11.glBegin(GL11.GL_LINE_STRIP);
-		
-		for (int i=0;i<poly.getPointCount();i++) {
-			float[] pt = poly.getPoint(i);
-			GL11.glVertex2f(pt[0],pt[1]);
-		}
-		
-		float[] pt = poly.getPoint(0);
-		GL11.glVertex2f(pt[0],pt[1]);
-		
-		GL11.glEnd();
-		postdraw();
-	}
-	
-	/**
-	 * Draw a rectangle to the screen
-	 * 
-	 * @param rect The rectangle to draw
-	 */
-	public void draw(Rectangle rect) {
-		drawRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
-	}
-	
-	/**
-	 * Fill a rectangle on the screen
-	 * 
-	 * @param rect The rectangle to fill
-	 */
-	public void fill(Rectangle rect) {
-		fillRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
-	}
+//	/**
+//	 * Fill a polygon to the graphics context
+//	 * 
+//	 * @param poly The polygon to fill
+//	 */
+//	public void fill(OldPolygon poly) {
+//		if (poly.getPointCount() < 3) {
+//			return;
+//		}
+//
+//		predraw();
+//		currentColor.bind();
+//		Texture.bindNone();
+//		poly.fill(this);
+//		postdraw();
+//	}
+//
+//	/**
+//	 * Draw a polygon to the graphics context
+//	 * 
+//	 * @param poly The polygon to draw
+//	 */
+//	public void draw(OldPolygon poly) {
+//		if (poly.getPointCount() < 3) {
+//			return;
+//		}
+//
+//		predraw();
+//		currentColor.bind();
+//		Texture.bindNone();
+//		GL11.glBegin(GL11.GL_LINE_STRIP);
+//		
+//		for (int i=0;i<poly.getPointCount();i++) {
+//			float[] pt = poly.getPoint(i);
+//			GL11.glVertex2f(pt[0],pt[1]);
+//		}
+//		
+//		float[] pt = poly.getPoint(0);
+//		GL11.glVertex2f(pt[0],pt[1]);
+//		
+//		GL11.glEnd();
+//		postdraw();
+//	}
+//	
+//	/**
+//	 * Draw a rectangle to the screen
+//	 * 
+//	 * @param rect The rectangle to draw
+//	 */
+//	public void draw(Rectangle rect) {
+//		drawRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
+//	}
+//	
+//	/**
+//	 * Fill a rectangle on the screen
+//	 * 
+//	 * @param rect The rectangle to fill
+//	 */
+//	public void fill(Rectangle rect) {
+//		fillRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
+//	}
 
     /**
      * Draw the outline of the given shape.
@@ -366,6 +364,7 @@ public class Graphics {
         for(int i=0;i<points.length;i+=2) {
             GL11.glVertex2f(points[i], points[i + 1]);
         }
+        GL11.glVertex2f(points[0], points[1]);
         GL11.glEnd();
         postdraw();
     }
@@ -387,28 +386,29 @@ public class Graphics {
         for(int i=0;i<points.length;i+=2) {
             GL11.glVertex2f(points[i], points[i + 1]);
         }
+        GL11.glVertex2f(points[0], points[1]);
         GL11.glEnd();
         postdraw();
     }
-	/**
-	 * Draw a circle to the screen
-	 * 
-	 * @param circle The circle to draw
-	 */
-	public void draw(Circle circle) {
-		drawOval((int) (circle.getX() - circle.getRadius()), (int) (circle.getY() - circle.getRadius()),
-				 (int) (circle.getRadius() * 2), (int) (circle.getRadius() * 2));
-	}
-	
-	/**
-	 * Fill a circle on the screen
-	 * 
-	 * @param circle The circle to fill
-	 */
-	public void fill(Circle circle) {
-		fillOval((int) (circle.getX() - circle.getRadius()), (int) (circle.getY() - circle.getRadius()),
-				 (int) (circle.getRadius() * 2), (int) (circle.getRadius() * 2));
-	}
+//	/**
+//	 * Draw a circle to the screen
+//	 * 
+//	 * @param circle The circle to draw
+//	 */
+//	public void draw(Circle circle) {
+//		drawOval((int) (circle.getX() - circle.getRadius()), (int) (circle.getY() - circle.getRadius()),
+//				 (int) (circle.getRadius() * 2), (int) (circle.getRadius() * 2));
+//	}
+//	
+//	/**
+//	 * Fill a circle on the screen
+//	 * 
+//	 * @param circle The circle to fill
+//	 */
+//	public void fill(Circle circle) {
+//		fillOval((int) (circle.getX() - circle.getRadius()), (int) (circle.getY() - circle.getRadius()),
+//				 (int) (circle.getRadius() * 2), (int) (circle.getRadius() * 2));
+//	}
 	
 	/**
 	 * Draw a rectangle to the canvas in the current colour
