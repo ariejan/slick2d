@@ -195,8 +195,8 @@ public class Ellipse extends Shape {
             if (ang > end) {
                 ang = end;
             }
-            float x = (float) (cx + (FastTrig.cos(Math.toRadians(ang)) * radius1 / 2.0f));
-            float y = (float) (cy + (FastTrig.sin(Math.toRadians(ang)) * radius2 / 2.0f));
+            float x = (float) (cx + (FastTrig.cos(Math.toRadians(ang)) * radius1));
+            float y = (float) (cy + (FastTrig.sin(Math.toRadians(ang)) * radius2));
             
             tempPoints.add(new Float(x));
             tempPoints.add(new Float(y));

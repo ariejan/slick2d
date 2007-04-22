@@ -78,6 +78,10 @@ public class GeomTest extends BasicGame {
 		g.draw(circle3);
 		g.setColor(circle4.intersects(circle) ? Color.red : Color.green);
 		g.draw(circle4);
+		
+		g.setColor(Color.blue);
+		g.draw(new Circle(100,100,50));
+		g.drawRect(50,50,100,100);
 	}
 
 	/**
