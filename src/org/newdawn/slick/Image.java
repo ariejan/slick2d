@@ -287,12 +287,14 @@ public class Image {
 		}
 		
 		inited = true;
-		width = texture.getImageWidth();
-		height = texture.getImageHeight();
-		textureOffsetX = 0;
-		textureOffsetY = 0;
-		textureWidth = texture.getWidth();
-		textureHeight = texture.getHeight();
+		if (texture != null) {
+			width = texture.getImageWidth();
+			height = texture.getImageHeight();
+			textureOffsetX = 0;
+			textureOffsetY = 0;
+			textureWidth = texture.getWidth();
+			textureHeight = texture.getHeight();
+		}
 		
 		initImpl();
 	}

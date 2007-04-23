@@ -9,6 +9,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 /**
  * A test for basic image rendering
@@ -34,6 +35,8 @@ public class BigImageTest extends BasicGame {
 	private float y;
 	/** The angle to draw the rortating sub part at */
 	private float ang = 30f;
+	/** A sprite sheet made from the big image */
+	private SpriteSheet bigSheet;
 	
 	/**
 	 * Create a new image rendering test
@@ -53,6 +56,8 @@ public class BigImageTest extends BasicGame {
 		image = image.getScaledCopy(0.3f);
 		imageX = image.getFlippedCopy(true, false);
 		imageY = imageX.getFlippedCopy(true, true);
+		
+		bigSheet = new SpriteSheet(original, 64, 64);
 	}
 
 	/**
@@ -65,6 +70,9 @@ public class BigImageTest extends BasicGame {
 		imageY.draw(x,y+300);
 		scaledSub.draw(x+300,y+300);
 		
+		bigSheet.getSprite(7, 5).draw(50,10);
+		g.setColor(Color.white);
+		g.drawRect(50,10,64,64);
 		g.rotate(x+400, y+165, ang);
 		g.drawImage(sub, x+300, y+100);
 	}
