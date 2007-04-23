@@ -16,6 +16,8 @@ public class SpriteSheet extends Image {
 	private Image[][] subImages;
 	/** The spacing between tiles */
 	private int spacing;
+	/** The target image for this sheet */
+	private Image target;
 	
 	/**
 	 * Create a new sprite sheet based on a image location
@@ -27,6 +29,7 @@ public class SpriteSheet extends Image {
 	public SpriteSheet(Image image,int tw,int th) {
 		super(image);
 		
+		this.target = image;
 		this.tw = tw;
 		this.th = th;
 	}
@@ -42,6 +45,7 @@ public class SpriteSheet extends Image {
 	public SpriteSheet(Image image,int tw,int th,int spacing) {
 		super(image);
 		
+		this.target = image;
 		this.tw = tw;
 		this.th = th;
 		this.spacing = spacing;
@@ -70,7 +74,8 @@ public class SpriteSheet extends Image {
 	 */
 	public SpriteSheet(String ref,int tw,int th, Color col) throws SlickException {
 		super(ref, false, FILTER_NEAREST, col);
-		
+
+		this.target = this;
 		this.tw = tw;
 		this.th = th;
 	}
@@ -86,7 +91,8 @@ public class SpriteSheet extends Image {
 	 */
 	public SpriteSheet(String name, InputStream ref,int tw,int th) throws SlickException {
 		super(ref,name,false);
-		
+
+		this.target = this;
 		this.tw = tw;
 		this.th = th;
 	}
@@ -115,9 +121,10 @@ public class SpriteSheet extends Image {
 	 * @return The single image from the sprite sheet
 	 */
 	public Image getSprite(int x, int y) {
-		init();
+		target.init();
+		initImpl();
 		
-		return getSubImage(x*(tw+spacing),y*(th+spacing),tw,th);
+		return target.getSubImage(x*(tw+spacing),y*(th+spacing),tw,th);
 	}
 	
 	/**
@@ -126,7 +133,8 @@ public class SpriteSheet extends Image {
 	 * @return The number of sprites across the sheet
 	 */
 	public int getHorizontalCount() {
-		init();
+		target.init();
+		initImpl();
 		
 		return subImages.length;
 	}
@@ -137,7 +145,8 @@ public class SpriteSheet extends Image {
 	 * @return The number of sprite down the sheet
 	 */
 	public int getVerticalCount() {
-		init();
+		target.init();
+		initImpl();
 		
 		return subImages[0].length;
 	}
