@@ -32,6 +32,8 @@ public class GUITest extends BasicGame implements ComponentListener {
 	private String message = "Demo Menu System with stock images";
 	/** The text field */
 	private TextField field;
+	/** The text field */
+	private TextField field2;
 	/** The background image */
 	private Image background;
 	/** The font used to render */
@@ -56,7 +58,18 @@ public class GUITest extends BasicGame implements ComponentListener {
 		}
 		
 		font = new AngelCodeFont("testdata/demo2.fnt","testdata/demo2_00.tga");
-		field = new TextField(container, font, 150,20,500,35, this);
+		field = new TextField(container, font, 150,20,500,35, new ComponentListener() {
+			public void componentActivated(BasicComponent source) {
+				message = "Entered1: "+field.getText();
+				field2.setFocus(true);
+			}
+		});
+		field2 = new TextField(container, font, 150,50,500,35,new ComponentListener() {
+			public void componentActivated(BasicComponent source) {
+				message = "Entered2: "+field2.getText();
+				field.setFocus(true);
+			}
+		});
 		
 		this.container = container;
 		
@@ -81,6 +94,7 @@ public class GUITest extends BasicGame implements ComponentListener {
 			areas[i].render(container, g);
 		}
 		field.render(container, g);
+		field2.render(container, g);
 		
 		g.setFont(font);
 		g.drawString(message, 200, 550);
@@ -129,13 +143,13 @@ public class GUITest extends BasicGame implements ComponentListener {
 	 * @see org.newdawn.slick.gui.ComponentListener#componentActivated(org.newdawn.slick.gui.BasicComponent)
 	 */
 	public void componentActivated(BasicComponent source) {
+		System.out.println("ACTIVL : "+source);
 		for (int i=0;i<4;i++) {
 			if (source == areas[i]) {
 				message = "Option "+(i+1)+" pressed!";
 			}
 		}
-		if (source == field) {
-			message = "Entered: "+field.getText();
+		if (source == field2) {
 		}
 	}
 }

@@ -16,7 +16,9 @@ public class TextField extends BasicComponent {
 	private static final int REPEAT_TIMER = 50;
 	/** The initial pause before key repeat kicks in */
 	private static final int INITIAL_PAUSE = 500;
-	
+
+	/** The TextField that currently has focus */
+	private static TextField currentFocus = null;
 	/** The maximum number of characters allowed to be input */
 	private int maxCharacter = 10000;
 	/** The value stored in the text field */
@@ -72,6 +74,16 @@ public class TextField extends BasicComponent {
 	 */
 	public void setFocus(boolean focus) {
 		this.focus = focus;
+		if (focus == true) {
+			if (currentFocus != null) {
+				currentFocus.setFocus(false);
+			}
+			currentFocus = this;
+		} else {
+			if (currentFocus == this) {
+				currentFocus = null;
+			}
+		}
 	}
 	
 	/**
@@ -259,6 +271,7 @@ public class TextField extends BasicComponent {
 			if (key == Input.KEY_RETURN) {
 				listener.componentActivated(this);
 			}
+			consumeEvent();
 		}
 	}
 
