@@ -87,6 +87,16 @@ public class TextField extends BasicComponent {
 	}
 	
 	/**
+	 * Check if this field currently has text focus
+	 * 
+	 * @return True if this field currently has text focus
+	 */
+	public boolean hasFocus() 
+	{
+		return false;
+	}
+	
+	/**
 	 * Set the background color. Set to null to disable the background
 	 * 
 	 * @param color The color to use for the background
