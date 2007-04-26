@@ -73,7 +73,6 @@ public class TextField extends BasicComponent {
 	 * @param focus True if the component should be focused
 	 */
 	public void setFocus(boolean focus) {
-		this.focus = focus;
 		if (focus == true) {
 			if (currentFocus != null) {
 				currentFocus.setFocus(false);
@@ -84,6 +83,7 @@ public class TextField extends BasicComponent {
 				currentFocus = null;
 			}
 		}
+		this.focus = focus;
 	}
 	
 	/**
