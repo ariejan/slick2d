@@ -454,8 +454,14 @@ public class TiledMap {
 					throw new SlickException("Unable to load or parse sourced tileset: "+tilesLocation+"/"+source);
 				}
 			}
-			tileWidth = Integer.parseInt(element.getAttribute("tilewidth"));
-			tileHeight = Integer.parseInt(element.getAttribute("tileheight"));
+            String tileWidthString = element.getAttribute("tilewidth");
+            String tileHeightString = element.getAttribute("tileheight");
+            if(tileWidthString.length() == 0 || tileHeightString.length() == 0) {
+                throw new SlickException("TiledMap requires that the map be created with tilesets that use a " +
+                        "single image.  Check the WiKi for more complete information.");
+            }
+			tileWidth = Integer.parseInt(tileWidthString);
+			tileHeight = Integer.parseInt(tileHeightString);
 			int spacing = 0;
 			String sv = element.getAttribute("spacing");
 			if ((sv != null) && (!sv.equals(""))) {
