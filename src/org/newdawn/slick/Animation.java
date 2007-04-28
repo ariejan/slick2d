@@ -334,6 +334,34 @@ public class Animation {
 	}
 
 	/**
+	 * Draw the animation
+	 * 
+	 * @param x The x position to draw the animation at
+	 * @param y The y position to draw the animation at
+	 * @param width The width to draw the animation at
+	 * @param height The height to draw the animation at
+	 */
+	public void drawFlash(int x,int y,int width,int height) {
+		if (frames.size() == 0) {
+			return;
+		}
+		
+		if (autoUpdate) {
+			long now = getTime();
+			long delta = now - lastUpdate;
+			if (firstUpdate) {
+				delta = 0;
+				firstUpdate = false;
+			}
+			lastUpdate = now;
+			nextFrame(delta);
+		}
+		
+		Frame frame = (Frame) frames.get(currentFrame);
+		frame.image.drawFlash(x,y,width,height);
+	}
+	
+	/**
 	 * Update the animation cycle without draw the image, useful
 	 * for keeping two animations in sync
 	 * 
