@@ -420,7 +420,7 @@ public class Image {
 			drawEmbedded(x,y,width,height);
 		GL11.glEnd();
 	}
-	
+
 	/**
 	 * Draw this image at a specified location and size as a silohette
 	 * 
@@ -430,6 +430,19 @@ public class Image {
 	 * @param height The height to render the image at
 	 */
 	public void drawFlash(float x,float y,float width,float height) {
+		drawFlash(x,y,width,height,Color.white);
+	}
+	
+	/**
+	 * Draw this image at a specified location and size as a silohette
+	 * 
+	 * @param x The x location to draw the image at
+	 * @param y The y location to draw the image at
+	 * @param width The width to render the image at
+	 * @param height The height to render the image at
+	 * @param col The color for the sillohette
+	 */
+	public void drawFlash(float x,float y,float width,float height, Color col) {
 		init();
 		
 		Color.white.bind();
@@ -437,9 +450,9 @@ public class Image {
 
 		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
 			GL11.glEnable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
-			EXTSecondaryColor.glSecondaryColor3ubEXT((byte)255, 
-													 (byte)255, 
-													 (byte)255);
+			EXTSecondaryColor.glSecondaryColor3ubEXT((byte)(col.r * 255), 
+													 (byte)(col.g * 255), 
+													 (byte)(col.b * 255));
 		}
 		
 		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
