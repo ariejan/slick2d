@@ -10,6 +10,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.ShapeRenderer;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.util.FastTrig;
 import org.newdawn.slick.util.Log;
@@ -294,39 +295,25 @@ public class Graphics {
      */
     public void draw(Shape shape) {
         predraw();
-        float points[] = shape.getPoints();
         Texture.bindNone();
         currentColor.bind();
-        
-        GL11.glBegin(GL11.GL_LINE_STRIP);
-        for(int i=0;i<points.length;i+=2) {
-            GL11.glVertex2f(points[i], points[i + 1]);
-        }
-        GL11.glVertex2f(points[0], points[1]);
-        GL11.glEnd();
+
+        ShapeRenderer.draw(shape);
+
         postdraw();
     }
-    
     /**
      * Draw the the given shape filled in.
      * 
-     * @param shape The shape to draw.
+     * @param shape The shape to fill.
      */
     public void fill(Shape shape) {
         predraw();
-        float points[] = shape.getPoints();
         Texture.bindNone();
         currentColor.bind();
         
-        GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-        float center[] = shape.getCenter();
-        GL11.glVertex2f(center[0], center[1]);
-
-        for(int i=0;i<points.length;i+=2) {
-            GL11.glVertex2f(points[i], points[i + 1]);
-        }
-        GL11.glVertex2f(points[0], points[1]);
-        GL11.glEnd();
+        ShapeRenderer.fill(shape);
+        
         postdraw();
     }
 	
