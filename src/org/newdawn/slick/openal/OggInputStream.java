@@ -322,6 +322,7 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 
 									pipeOut.write(convbuffer, 0, 2 * oggInfo.channels * bout);
 									pipeOut.flush();
+									synchronized (this) { try { this.wait(100); } catch (InterruptedException e) {}}
 									
 									vd.synthesis_read(bout); // tell libvorbis how
 									// many samples we
@@ -379,8 +380,13 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 		if (endOfStream) {
 			throw new IOException("End of Stream!");
 		}
-		
+
+		synchronized (this) { this.notify(); }
 		int value = pipeIn.read();
+		if (value == -1) {
+			endOfStream = true;
+			throw new IOException("End of Stream!");
+		}
 		return value;
 	}
 

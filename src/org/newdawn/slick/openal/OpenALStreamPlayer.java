@@ -188,8 +188,13 @@ public class OpenALStreamPlayer {
 				AL10.alBufferData(bufferId, audio.getChannels() > 1 ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16, 
 											bufferData, audio.getRate());
 			} else {
-				initStreams();
-				stream(bufferId);
+				if (loop) {
+					initStreams();
+					stream(bufferId);
+				} else {
+					done = true;
+					return false;
+				}
 			}
 			
 			return true;
