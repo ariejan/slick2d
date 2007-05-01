@@ -3,6 +3,7 @@ package org.newdawn.slick;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
@@ -296,6 +297,8 @@ public class Input {
 	private int lastMouseY;
 	/** The character values representing the pressed keys */
 	private char[] keys = new char[1024];
+	/** True if the key has been pressed since last queries */
+	private boolean[] pressed = new boolean[1024];
 	
 	/** The control states from the controllers */
 	private boolean[][] controls = new boolean[10][8];
@@ -370,6 +373,31 @@ public class Input {
 	 */
 	public String getKeyName(int code) {
 		return Keyboard.getKeyName(code);
+	}
+	
+	/**
+	 * Check if a particular key has been pressed since this method 
+	 * was last called for the specified key
+	 * 
+	 * @param code The key code of the key to check
+	 * @return True if the key has been pressed
+	 */
+	public boolean isKeyPressed(int code) {
+		if (pressed[code]) {
+			pressed[code] = false;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Clear the state for the <code>isKeyPressed</code> method. This will
+	 * resort in all keys returning that they haven't been pressed, until
+	 * they are pressed again
+	 */
+	public void clearKeyPressedRecord() {
+		Arrays.fill(pressed, false);
 	}
 	
 	/**
@@ -666,6 +694,7 @@ public class Input {
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				keys[Keyboard.getEventKey()] = Keyboard.getEventCharacter();
+				pressed[Keyboard.getEventKey()] = true;
 				
 				consumed = false;
 				for (int i=0;i<listeners.size();i++) {
