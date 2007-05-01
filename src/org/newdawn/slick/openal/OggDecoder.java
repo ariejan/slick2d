@@ -33,8 +33,8 @@ public class OggDecoder {
 		if (input == null) {
 			throw new IOException("Failed to read OGG, source does not exist?");
 		}
-//		ByteArrayOutputStream dataout = new ByteArrayOutputStream();
-//		
+		ByteArrayOutputStream dataout = new ByteArrayOutputStream();
+		
 //		SyncState oy = new SyncState(); // sync and verify incoming physical bitstream
 //		StreamState os = new StreamState(); // take physical pages, weld into a logical stream of packets
 //		Page og = new Page(); // one Ogg bitstream page.  Vorbis packets are inside
@@ -304,15 +304,17 @@ public class OggDecoder {
 //
 //		// OK, clean up the framer
 //		oy.clear();
+//		OggData ogg = new OggData();
+//		ogg.channels = vi.channels;
+//		ogg.rate = vi.rate;
 
-		ByteArrayOutputStream dataout = new ByteArrayOutputStream();
 		OggInputStream oggInput = new OggInputStream(input);
 		
 		boolean done = false;
 		while (!oggInput.atEnd()) {
 			dataout.write(oggInput.read());
 		}
-		
+	
 		OggData ogg = new OggData();
 		ogg.channels = oggInput.getChannels();
 		ogg.rate = oggInput.getRate();

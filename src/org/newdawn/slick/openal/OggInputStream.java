@@ -2,10 +2,10 @@ package org.newdawn.slick.openal;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import org.lwjgl.BufferUtils;
 import org.newdawn.slick.util.Log;
 
 import com.jcraft.jogg.Packet;
@@ -35,10 +35,38 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	private Info oggInfo = new Info(); // struct that stores all the static vorbis bitstream settings
 	/** True if we're at the end of the available data */
 	private boolean endOfStream;
-	/** The stream we'll have the decoder write into */
-	private PipedOutputStream pipeOut;
-	/** The stream we'll read data from to pass back to the client of this class */
-	private PipedInputStream pipeIn;
+
+	/** The Vorbis SyncState used to decode the OGG */
+	private SyncState syncState = new SyncState(); // sync and verify incoming physical bitstream
+	/** The Vorbis Stream State used to decode the OGG */
+	private StreamState streamState = new StreamState(); // take physical pages, weld into a logical stream of packets
+	/** The current OGG page */
+	private Page page = new Page(); // one Ogg bitstream page.  Vorbis packets are inside
+	/** The current packet page */
+	private Packet packet = new Packet(); // one raw packet of data for decode
+
+	/** The comment read from the OGG file */
+	private Comment comment = new Comment(); // struct that stores all the bitstream user comments
+	/** The Vorbis DSP stat eused to decode the OGG */
+	private DspState dspState = new DspState(); // central working state for the packet->PCM decoder
+	/** The OGG block we're currently working with to convert PCM */
+	private Block vorbisBlock = new Block(dspState); // local working space for packet->PCM decode
+	
+	/** Temporary scratch buffer */
+	byte[] buffer;
+	/** The number of bytes read */
+	int bytes = 0;
+	/** The true if we should be reading big endian */
+	boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
+	/** True if we're reached the end of the current bit stream */
+	boolean endOfBitStream = true;
+	/** True if we're initialise the OGG info block */
+	boolean inited = false;
+	
+	/** The index into the byte array we currently read from */
+	private int readIndex;
+	/** The byte array store used to hold the data read from the ogg */
+	private ByteBuffer pcmBuffer = BufferUtils.createByteBuffer(4096 * 100);
 	
 	/**
 	 * Create a new stream to decode OGG data
@@ -72,20 +100,22 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	 * @throws IOException Indicates a failure to link up the streams
 	 */
 	private void init() throws IOException {
-		pipeOut = new PipedOutputStream();
-		pipeIn = new PipedInputStream();
-		pipeOut.connect(pipeIn);
-		
-		Thread readingThread = new Thread() {
-			public void run() {
-				try {
-					readOgg();
-				} catch (IOException e) {
-					endOfStream = true;
-				}
-			}
-		};
-		readingThread.start();
+		initVorbis();
+		readPCM();
+	
+//		Thread readingThread = new Thread() {
+//			public void run() {
+//				try {
+//					initVorbis();
+//					while (!endOfStream) {
+//						readOgg();
+//					}
+//				} catch (IOException e) {
+//					endOfStream = true;
+//				}
+//			}
+//		};
+//		readingThread.start();
 	}
 		
 	/**
@@ -96,183 +126,193 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	}
 	
 	/**
+	 * Initialise the vorbis decoding
+	 */
+	private void initVorbis() {
+		syncState.init();
+	}
+	
+	/**
+	 * Get a page and packet from that page
+	 *
+	 * @return True if there was a page available
+	 */
+	private boolean getPageAndPacket() {
+		// grab some data at the head of the stream.  We want the first page
+		// (which is guaranteed to be small and only contain the Vorbis
+		// stream initial header) We need the first page to get the stream
+		// serialno.
+
+		// submit a 4k block to libvorbis' Ogg layer
+		int index = syncState.buffer(4096);
+		
+		buffer = syncState.data;
+		try {
+			bytes = input.read(buffer, index, 4096);
+		} catch (Exception e) {
+			Log.error("Failure reading in vorbis");
+			Log.error(e);
+			endOfStream = true;
+			return false;
+		}
+		syncState.wrote(bytes);
+
+		// Get the first page.
+		if (syncState.pageout(page) != 1) {
+			// have we simply run out of data?  If so, we're done.
+			if (bytes < 4096)
+				return false;
+
+			// error case.  Must not be Vorbis data
+			Log.error("Input does not appear to be an Ogg bitstream.");
+			endOfStream = true;
+			return false;
+		}
+
+		// Get the serial number and set up the rest of decode.
+		// serialno first; use it to set up a logical stream
+		streamState.init(page.serialno());
+
+		// extract the initial header from the first page and verify that the
+		// Ogg bitstream is in fact Vorbis data
+
+		// I handle the initial header first instead of just having the code
+		// read all three Vorbis headers at once because reading the initial
+		// header is an easy way to identify a Vorbis bitstream and it's
+		// useful to see that functionality seperated out.
+
+		oggInfo.init();
+		comment.init();
+		if (streamState.pagein(page) < 0) {
+			// error; stream version mismatch perhaps
+			Log.error("Error reading first page of Ogg bitstream data.");
+			endOfStream = true;
+			return false;
+		}
+
+		if (streamState.packetout(packet) != 1) {
+			// no page? must not be vorbis
+			Log.error("Error reading initial header packet.");
+			endOfStream = true;
+			return false;
+		}
+
+		if (oggInfo.synthesis_headerin(comment, packet) < 0) {
+			// error case; not a vorbis header
+			Log.error("This Ogg bitstream does not contain Vorbis audio data.");
+			endOfStream = true;
+			return false;
+		}
+
+		// At this point, we're sure we're Vorbis.  We've set up the logical
+		// (Ogg) bitstream decoder.  Get the comment and codebook headers and
+		// set up the Vorbis decoder
+
+		// The next two packets in order are the comment and codebook headers.
+		// They're likely large and may span multiple pages.  Thus we reead
+		// and submit data until we get our two pacakets, watching that no
+		// pages are missing.  If a page is missing, error out; losing a
+		// header page is the only place where missing data is fatal. */
+
+		int i = 0;
+		while (i < 2) {
+			while (i < 2) {
+
+				int result = syncState.pageout(page);
+				if (result == 0)
+					break; // Need more data
+				// Don't complain about missing or corrupt data yet.  We'll
+				// catch it at the packet output phase
+
+				if (result == 1) {
+					streamState.pagein(page); // we can ignore any errors here
+					// as they'll also become apparent
+					// at packetout
+					while (i < 2) {
+						result = streamState.packetout(packet);
+						if (result == 0)
+							break;
+						if (result == -1) {
+							// Uh oh; data at some point was corrupted or missing!
+							// We can't tolerate that in a header.  Die.
+							Log.error("Corrupt secondary header.  Exiting.");
+							endOfStream = true;
+							return false;
+						}
+						oggInfo.synthesis_headerin(comment, packet);
+						i++;
+					}
+				}
+			}
+			// no harm in not checking before adding more
+			index = syncState.buffer(4096);
+			buffer = syncState.data;
+			try {
+				bytes = input.read(buffer, index, 4096);
+			} catch (Exception e) {
+				Log.error("Failed to read Vorbis: ");
+				Log.error(e);
+				endOfStream = true;
+				return false;
+			}
+			if (bytes == 0 && i < 2) {
+				Log.error("End of file before finding all Vorbis headers!");
+				endOfStream = true;
+				return false;
+			}
+			syncState.wrote(bytes);
+		}
+
+		convsize = 4096 / oggInfo.channels;
+
+		// OK, got and parsed all three headers. Initialize the Vorbis
+		//  packet->PCM decoder.
+		dspState.synthesis_init(oggInfo); // central decode state
+		vorbisBlock.init(dspState); // local state for most of the decode
+		// so multiple block decodes can
+		// proceed in parallel.  We could init
+		// multiple vorbis_block structures
+		// for vd here
+		
+		return true;
+	}
+	
+	/**
 	 * Decode the OGG file as shown in the jogg/jorbis examples
 	 * 
 	 * @throws IOException Indicates a failure to read from the supplied stream
 	 */
-	private void readOgg() throws IOException {
-		SyncState oy = new SyncState(); // sync and verify incoming physical bitstream
-		StreamState os = new StreamState(); // take physical pages, weld into a logical stream of packets
-		Page og = new Page(); // one Ogg bitstream page.  Vorbis packets are inside
-		Packet op = new Packet(); // one raw packet of data for decode
-
-		Comment vc = new Comment(); // struct that stores all the bitstream user comments
-		DspState vd = new DspState(); // central working state for the packet->PCM decoder
-		Block vb = new Block(vd); // local working space for packet->PCM decode
-
-		byte[] buffer;
-		int bytes = 0;
-
-		boolean bigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
-		// Decode setup
-
-		oy.init(); // Now we can read pages
-
+	private void readPCM() throws IOException {
+		boolean wrote = false;
+		
 		while (true) { // we repeat if the bitstream is chained
-			int eos = 0;
-
-			// grab some data at the head of the stream.  We want the first page
-			// (which is guaranteed to be small and only contain the Vorbis
-			// stream initial header) We need the first page to get the stream
-			// serialno.
-
-			// submit a 4k block to libvorbis' Ogg layer
-			int index = oy.buffer(4096);
-			
-			buffer = oy.data;
-			try {
-				bytes = input.read(buffer, index, 4096);
-			} catch (Exception e) {
-				Log.error("Failure reading in vorbis");
-				Log.error(e);
-				endOfStream = true;
-				return;
-			}
-			oy.wrote(bytes);
-
-			// Get the first page.
-			if (oy.pageout(og) != 1) {
-				// have we simply run out of data?  If so, we're done.
-				if (bytes < 4096)
+			if (endOfBitStream) {
+				if (!getPageAndPacket()) {
 					break;
-
-				// error case.  Must not be Vorbis data
-				Log.error("Input does not appear to be an Ogg bitstream.");
-				endOfStream = true;
-				return;
-			}
-
-			// Get the serial number and set up the rest of decode.
-			// serialno first; use it to set up a logical stream
-			os.init(og.serialno());
-
-			// extract the initial header from the first page and verify that the
-			// Ogg bitstream is in fact Vorbis data
-
-			// I handle the initial header first instead of just having the code
-			// read all three Vorbis headers at once because reading the initial
-			// header is an easy way to identify a Vorbis bitstream and it's
-			// useful to see that functionality seperated out.
-
-			oggInfo.init();
-			vc.init();
-			if (os.pagein(og) < 0) {
-				// error; stream version mismatch perhaps
-				Log.error("Error reading first page of Ogg bitstream data.");
-				endOfStream = true;
-				return;
-			}
-
-			if (os.packetout(op) != 1) {
-				// no page? must not be vorbis
-				Log.error("Error reading initial header packet.");
-				endOfStream = true;
-				return;
-			}
-
-			if (oggInfo.synthesis_headerin(vc, op) < 0) {
-				// error case; not a vorbis header
-				Log.error("This Ogg bitstream does not contain Vorbis audio data.");
-				endOfStream = true;
-				return;
-			}
-
-			// At this point, we're sure we're Vorbis.  We've set up the logical
-			// (Ogg) bitstream decoder.  Get the comment and codebook headers and
-			// set up the Vorbis decoder
-
-			// The next two packets in order are the comment and codebook headers.
-			// They're likely large and may span multiple pages.  Thus we reead
-			// and submit data until we get our two pacakets, watching that no
-			// pages are missing.  If a page is missing, error out; losing a
-			// header page is the only place where missing data is fatal. */
-
-			int i = 0;
-			while (i < 2) {
-				while (i < 2) {
-
-					int result = oy.pageout(og);
-					if (result == 0)
-						break; // Need more data
-					// Don't complain about missing or corrupt data yet.  We'll
-					// catch it at the packet output phase
-
-					if (result == 1) {
-						os.pagein(og); // we can ignore any errors here
-						// as they'll also become apparent
-						// at packetout
-						while (i < 2) {
-							result = os.packetout(op);
-							if (result == 0)
-								break;
-							if (result == -1) {
-								// Uh oh; data at some point was corrupted or missing!
-								// We can't tolerate that in a header.  Die.
-								Log.error("Corrupt secondary header.  Exiting.");
-								endOfStream = true;
-								return;
-							}
-							oggInfo.synthesis_headerin(vc, op);
-							i++;
-						}
-					}
 				}
-				// no harm in not checking before adding more
-				index = oy.buffer(4096);
-				buffer = oy.data;
-				try {
-					bytes = input.read(buffer, index, 4096);
-				} catch (Exception e) {
-					Log.error("Failed to read Vorbis: ");
-					Log.error(e);
-					endOfStream = true;
-					return;
-				}
-				if (bytes == 0 && i < 2) {
-					Log.error("End of file before finding all Vorbis headers!");
-					endOfStream = true;
-					return;
-				}
-				oy.wrote(bytes);
+				endOfBitStream = false;
 			}
 
-			convsize = 4096 / oggInfo.channels;
-
-			// OK, got and parsed all three headers. Initialize the Vorbis
-			//  packet->PCM decoder.
-			vd.synthesis_init(oggInfo); // central decode state
-			vb.init(vd); // local state for most of the decode
-			// so multiple block decodes can
-			// proceed in parallel.  We could init
-			// multiple vorbis_block structures
-			// for vd here
-
+			if (!inited) {
+				inited = true;
+				return;
+			}
+			
 			float[][][] _pcm = new float[1][][];
 			int[] _index = new int[oggInfo.channels];
 			// The rest is just a straight decode loop until end of stream
-			while (eos == 0) {
-				while (eos == 0) {
-
-					int result = oy.pageout(og);
+			while (!endOfBitStream) {
+				while (!endOfBitStream) {
+					int result = syncState.pageout(page);
 					if (result == 0)
 						break; // need more data
 					if (result == -1) { // missing or corrupt data at this page position
 						Log.error("Corrupt or missing data in bitstream; continuing...");
 					} else {
-						os.pagein(og); // can safely ignore errors at
+						streamState.pagein(page); // can safely ignore errors at
 						// this point
 						while (true) {
-							result = os.packetout(op);
+							result = streamState.packetout(packet);
 
 							if (result == 0)
 								break; // need more data
@@ -281,8 +321,8 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 							} else {
 								// we have a packet.  Decode it
 								int samples;
-								if (vb.synthesis(op) == 0) { // test for success!
-									vd.synthesis_blockin(vb);
+								if (vorbisBlock.synthesis(packet) == 0) { // test for success!
+									dspState.synthesis_blockin(vorbisBlock);
 								}
 
 								// **pcm is a multichannel float vector.  In stereo, for
@@ -290,7 +330,7 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 								// the size of each channel.  Convert the float values
 								// (-1.<=range<=1.) to whatever PCM format and write it out
 
-								while ((samples = vd.synthesis_pcmout(_pcm,
+								while ((samples = dspState.synthesis_pcmout(_pcm,
 										_index)) > 0) {
 									float[][] pcm = _pcm[0];
 									//boolean clipflag = false;
@@ -299,7 +339,7 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 
 									// convert floats to 16 bit signed ints (host order) and
 									// interleave
-									for (i = 0; i < oggInfo.channels; i++) {
+									for (int i = 0; i < oggInfo.channels; i++) {
 										int ptr = i * 2;
 										//int ptr=i;
 										int mono = _index[i];
@@ -320,24 +360,29 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 										}
 									}
 
-									pipeOut.write(convbuffer, 0, 2 * oggInfo.channels * bout);
-									pipeOut.flush();
-									synchronized (this) { try { this.wait(100); } catch (InterruptedException e) {}}
-									
-									vd.synthesis_read(bout); // tell libvorbis how
+									int bytesToWrite = 2 * oggInfo.channels * bout;
+									pcmBuffer.put(convbuffer, 0, bytesToWrite);
+									wrote = true;
+									dspState.synthesis_read(bout); // tell libvorbis how
 									// many samples we
 									// actually consumed
 								}
 							}
 						}
-						if (og.eos() != 0)
-							eos = 1;
+						if (page.eos() != 0) {
+							endOfBitStream = true;
+						} 
+						
+						if ((!endOfBitStream) && (wrote)) {
+							return;
+						}
 					}
 				}
-				if (eos == 0) {
-					index = oy.buffer(4096);
+
+				if (!endOfBitStream) {
+					int index = syncState.buffer(4096);
 					if (index >= 0) {
-						buffer = oy.data;
+						buffer = syncState.data;
 						try {
 							bytes = input.read(buffer, index, 4096);
 						} catch (Exception e) {
@@ -349,27 +394,28 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 					} else {
 						bytes = 0;
 					}
-					oy.wrote(bytes);
-					if (bytes == 0)
-						eos = 1;
+					syncState.wrote(bytes);
+					if (bytes == 0) {
+						endOfBitStream = true;
+					}
 				}
 			}
 
 			// clean up this logical bitstream; before exit we see if we're
 			// followed by another [chained]
 
-			os.clear();
+			streamState.clear();
 
 			// ogg_page and ogg_packet structs always point to storage in
 			// libvorbis.  They're never freed or manipulated directly
 
-			vb.clear();
-			vd.clear();
+			vorbisBlock.clear();
+			dspState.clear();
 			oggInfo.clear(); // must be called last
 		}
 
 		// OK, clean up the framer
-		oy.clear();
+		syncState.clear();
 		endOfStream = true;
 	}
 	
@@ -377,16 +423,18 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	 * @see java.io.InputStream#read()
 	 */
 	public int read() throws IOException {
-		if (endOfStream) {
-			throw new IOException("End of Stream!");
+		if (readIndex >= pcmBuffer.position()) {
+			pcmBuffer.clear();
+			readPCM();
+			readIndex = 0;
+		}
+		if (readIndex >= pcmBuffer.position()) {
+			return -1;
 		}
 
-		synchronized (this) { this.notify(); }
-		int value = pipeIn.read();
-		if (value == -1) {
-			endOfStream = true;
-			throw new IOException("End of Stream!");
-		}
+		int value = pcmBuffer.get(readIndex);
+		readIndex++;
+		
 		return value;
 	}
 
@@ -394,17 +442,13 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	 * @see org.newdawn.slick.openal.AudioInputStream#atEnd()
 	 */
 	public boolean atEnd() {
-		return endOfStream;
+		return endOfStream && (readIndex >= pcmBuffer.position());
 	}
 
 	/**
 	 * @see java.io.InputStream#read(byte[], int, int)
 	 */
 	public int read(byte[] b, int off, int len) throws IOException {
-		if (endOfStream) {
-			return -1;
-		}
-		
 		for (int i=0;i<len;i++) {
 			try {
 				b[i] = (byte) read();
@@ -427,7 +471,5 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	 * @see java.io.InputStream#close()
 	 */
 	public void close() throws IOException {
-		pipeIn.close();
-		pipeOut.close();
 	}
 }
