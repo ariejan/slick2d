@@ -87,7 +87,6 @@ public class OpenALStreamPlayer {
 	 */
 	public void play(boolean loop) throws IOException {
 		this.loop = loop;
-		
 		initStreams();
 		
 		done = false;

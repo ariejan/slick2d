@@ -102,20 +102,6 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	private void init() throws IOException {
 		initVorbis();
 		readPCM();
-	
-//		Thread readingThread = new Thread() {
-//			public void run() {
-//				try {
-//					initVorbis();
-//					while (!endOfStream) {
-//						readOgg();
-//					}
-//				} catch (IOException e) {
-//					endOfStream = true;
-//				}
-//			}
-//		};
-//		readingThread.start();
 	}
 		
 	/**
@@ -147,6 +133,11 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 		int index = syncState.buffer(4096);
 		
 		buffer = syncState.data;
+		if (buffer == null) {
+			endOfStream = true;
+			return false;
+		}
+		
 		try {
 			bytes = input.read(buffer, index, 4096);
 		} catch (Exception e) {
@@ -451,7 +442,15 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	public int read(byte[] b, int off, int len) throws IOException {
 		for (int i=0;i<len;i++) {
 			try {
-				b[i] = (byte) read();
+				int value = read();
+				b[i] = (byte) value;
+				if (readIndex >= pcmBuffer.position()) {
+					if (i == 0) {
+						return -1;
+					} else {
+						return i;
+					}
+				}
 			} catch (IOException e) {
 				return i;
 			}
