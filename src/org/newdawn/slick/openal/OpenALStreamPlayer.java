@@ -49,6 +49,9 @@ public class OpenALStreamPlayer {
 	public OpenALStreamPlayer(int source, String ref) {
 		this.source = source;
 		this.ref = ref;
+		
+		bufferNames = BufferUtils.createIntBuffer(2);
+		AL10.alGenBuffers(bufferNames);
 	}
 	
 	/**
@@ -93,13 +96,8 @@ public class OpenALStreamPlayer {
 
 		AL10.alSourceStop(source);
 		removeBuffers();
-		if (bufferNames != null) {
-			bufferNames.flip();
-			AL10.alDeleteBuffers(bufferNames);
-		}
+	    AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_FALSE);
 		
-		bufferNames = BufferUtils.createIntBuffer(2);
-		AL10.alGenBuffers(bufferNames);
 		remainingBufferCount = 2;
 	
 		for (int i=0;i<2;i++) {
@@ -143,7 +141,6 @@ public class OpenALStreamPlayer {
 		}
 		
 		int processed = AL10.alGetSourcei(source, AL10.AL_BUFFERS_PROCESSED);
-		
 		while (processed > 0) {
 			unqueued.clear();
 			

@@ -49,7 +49,7 @@ public class SoundTest extends BasicGame {
 		charlie = new Sound("testdata/cbrown01.wav");
 		engine = new Sound("testdata/engine.wav");
 		//music = musica = new Music("testdata/SMB-X.XM");
-		music = musica = new Music("testdata/restart.ogg", true);
+		music = musica = new Music("testdata/restart.ogg", false);
 		musicb = new Music("testdata/kirby.ogg", false);
 		burp = new Sound("testdata/burp.aif");
 	}

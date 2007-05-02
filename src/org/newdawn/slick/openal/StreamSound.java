@@ -35,8 +35,8 @@ public class StreamSound extends InternalSound {
 	 */
 	public void playAsMusic(float pitch, float gain, boolean loop) {
 		try {
-			player.play(loop);
 			player.setup(pitch, gain);
+			player.play(loop);
 			SoundStore.get().setStream(player);
 		} catch (IOException e) {
 			Log.error("Failed to read OGG source");
