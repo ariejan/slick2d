@@ -444,6 +444,12 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 			try {
 				int value = read();
 				b[i] = (byte) value;
+				
+				if (readIndex >= pcmBuffer.position()) {
+					pcmBuffer.clear();
+					readPCM();
+					readIndex = 0;
+				}
 				if (readIndex >= pcmBuffer.position()) {
 					if (i == 0) {
 						return -1;
