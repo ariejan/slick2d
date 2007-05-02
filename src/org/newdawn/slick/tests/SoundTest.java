@@ -48,8 +48,9 @@ public class SoundTest extends BasicGame {
 		sound = new Sound("testdata/restart.ogg");
 		charlie = new Sound("testdata/cbrown01.wav");
 		engine = new Sound("testdata/engine.wav");
-		music = musica = new Music("testdata/SMB-X.XM");
-		musicb = new Music("testdata/kirby.ogg", true);
+		//music = musica = new Music("testdata/SMB-X.XM");
+		music = musica = new Music("testdata/restart.ogg", false);
+		musicb = new Music("testdata/kirby.ogg", false);
 		burp = new Sound("testdata/burp.aif");
 	}
 
@@ -102,10 +103,11 @@ public class SoundTest extends BasicGame {
 			if (music.playing()) {
 				music.pause();
 			} else {
-				music.loop();
+				music.resume();
 			}
 		}
 		if (key == Input.KEY_C) {
+			music.stop();
 			if (music == musica) {
 				music = musicb;
 			} else {
