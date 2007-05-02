@@ -91,9 +91,9 @@ public class OpenALStreamPlayer {
 		
 		done = false;
 
+		AL10.alSourceStop(source);
+		removeBuffers();
 		if (bufferNames != null) {
-			AL10.alSourceStop(source);
-			removeBuffers();
 			bufferNames.flip();
 			AL10.alDeleteBuffers(bufferNames);
 		}

@@ -119,7 +119,7 @@ public class Music {
 	 * Stop the music playing
 	 */
 	public void stop() {
-		pause();
+		sound.stop();
 	}
 	
 	/**

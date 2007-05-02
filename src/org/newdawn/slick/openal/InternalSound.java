@@ -88,6 +88,7 @@ public class InternalSound {
 	 */
 	public void playAsMusic(float pitch, float gain, boolean loop) {
 		store.playAsMusic(buffer, pitch, gain, loop);
+		index = 0;
 	}
 	
 	/**
