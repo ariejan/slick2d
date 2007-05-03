@@ -42,6 +42,7 @@
 	<propertyfile file="src/version">
 		<entry key="build" type="int" operation="+" value="1"/>
     </propertyfile>
+    <property file="src/version" prefix="version"/>
     
 	<delete dir="lib/slick.jar"/>
 	<javac includes="org/newdawn/slick/**" debug="true" srcdir="src" destdir="${build.dir}/classes" target="1.4" source="1.4">
@@ -334,6 +335,7 @@
 	<copyandsign jar="natives-win32.jar"/>
 	<copyandsign jar="natives-mac.jar"/>
 	<copyandsign jar="slick.jar"/>
+	<copy file="webstart/slick.jar" toFile="webstart/slick-b${version.build}.jar"/>
 	<copyandsign jar="slick-examples.jar"/>
 </target>
 
@@ -396,6 +398,7 @@
 	<createdemojnlp name="clip" title="Slick2D Clipping Test" mainclass="org.newdawn.slick.tests.ClipTest"/>
 	<createdemojnlp name="imagereadtest" title="Slick2D Image Read Test" mainclass="org.newdawn.slick.tests.ImageReadTest"/>
 	<createdemojnlp name="bigimagetest" title="Slick2D Big Image Test" mainclass="org.newdawn.slick.tests.BigImageTest"/>
+	<createdemojnlp name="slickcallable" title="Slick2D Callables" mainclass="org.newdawn.slick.tests.SlickCallableTest"/>
 
 	<!-- Examples under here please -->
 	<createdemojnlp template="slickexample.jnlp" name="scroller" title="Slick2D TileMap Scroll Example" mainclass="org.newdawn.slick.examples.scroller.Scroller"/>
@@ -434,6 +437,11 @@
 	
 	<scp todir="${username}:${password}@${host}:${demos}" 
 		 file="webstart/slick.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/slick-b${version.build}.jar"
 		 trust="true"
 		 port="122"
 		 verbose="true"/>
