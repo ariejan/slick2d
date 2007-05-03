@@ -440,7 +440,7 @@
 		 trust="true"
 		 port="122"
 		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${demos}" 
+	<scp todir="${username}:${password}@${host}:${demos}/versions" 
 		 file="webstart/slick-b${version.build}.jar"
 		 trust="true"
 		 port="122"
