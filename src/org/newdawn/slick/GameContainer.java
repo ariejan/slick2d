@@ -352,7 +352,7 @@ public abstract class GameContainer implements GUIContext {
 			}
 		}
 		
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glLoadIdentity();
 		
 		graphics.resetFont();
