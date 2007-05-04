@@ -332,7 +332,7 @@ public class Graphics {
 		
 		GL11.glBegin(GL11.GL_LINE_STRIP);
 			GL11.glVertex2f(x1,y1);
-			GL11.glVertex2f(x1+width+1,y1);
+			GL11.glVertex2f(x1+width,y1);
 			GL11.glVertex2f(x1+width,y1+height);
 			GL11.glVertex2f(x1,y1+height);
 			GL11.glVertex2f(x1,y1);
