@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+  spec="1.0+"
+  codebase="@codebase@"
+  href="@jnlpname@">
+  <information>
+    <title>@title@</title>
+    <vendor>@vendor@</vendor>
+    <homepage href="@homepage@"/>
+    <description>@title@</description>
+    <description kind="short">@title@</description>
+    <icon href="icon.gif"/>
+  </information> 
+  <resources>
+    <j2se href="http://java.sun.com/products/autodl/j2se" version="1.4+" max-heap-size="128m"/>
+    <jar href="@projectjar@"/>  
+    <extension href="http://slick.cokeandcode.com/demos/slick.jnlp"/>
+  </resources>  
+  <application-desc main-class="@mainclass@"/>
+</jnlp>

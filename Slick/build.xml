@@ -1,0 +1,538 @@
+<!--
+  The Slick2D Build file. It has the following capabilities:
+  
+  dist - Build the complete distribution
+  build-key-store - Build a valid key store for distributing your game
+  sign-a-jar - Sign a JAR file for distribution using a key store generated here
+  
+  javadoc - generate the javadoc for Slick
+-->
+<project name="slick" default="dist" basedir=".">
+	
+<!--
+ Initialise the build script
+-->
+<target name="init">
+	<property name="username" value="kevin"/>
+	<property name="host" value="bob.newdawnsoftware.com"/>
+	<property name="dir" value="/home/kevin/public_html/slick"/>
+	
+	<!-- Need to add versioning stuff here! -->
+	
+	<property name="mode" value="demos"/>
+	<property name="demos" value="/home/kevin/public_html/slick/${mode}"/>
+	<property name="demoscodebase" value="http://slick.cokeandcode.com/${mode}"/>
+	
+	<property name="build.dir" value="target"/>	
+	<property name="dist" value="dist"/>	
+	
+	<delete dir="${build.dir}"/>
+	<mkdir dir="${build.dir}/classes"/>
+	<mkdir dir="${build.dir}/example-classes"/>
+	<delete dir="${dist}"/>
+	<mkdir dir="${dist}"/>
+	<delete dir="webstart"/>
+	<mkdir dir="webstart"/>
+</target>
+	
+<!--
+ Build the java source to the Slick Library
+-->
+<target name="build-slick" depends="init">
+	<propertyfile file="src/version">
+		<entry key="build" type="int" operation="+" value="1"/>
+    </propertyfile>
+    <property file="src/version" prefix="version"/>
+    
+	<delete dir="lib/slick.jar"/>
+	<javac includes="org/newdawn/slick/**" debug="true" srcdir="src" destdir="${build.dir}/classes" target="1.4" source="1.4">
+	    <classpath>
+	      <pathelement path="lib/lwjgl.jar"/>
+	      <pathelement path="applet/lwjgl_util_applet.jar"/>
+	      <pathelement path="lib/ibxm.jar"/>
+	      <pathelement path="lib/jnlp.jar"/>
+	      <pathelement path="lib/jogg-0.0.7.jar"/>
+	      <pathelement path="lib/jorbis-0.0.15.jar"/>
+	      <pathelement path="lib/tinylinepp.jar"/>
+	    </classpath>
+	</javac>
+	<jar destfile="lib/slick.jar" 
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/**"/>
+	<jar update="true" destfile="lib/slick.jar" 
+		 basedir="src" includes="org/newdawn/slick/data/*"/>
+	<jar update="true" destfile="lib/slick.jar" 
+		 basedir="src" includes="version"/>
+	<copy file="lib/slick.jar" toDir="applet"/>
+</target>
+
+<!-- build the pedigree tool -->
+<target name="build-pedigree" depends="build-slick">
+	<delete dir="lib/pedigree.jar"/>
+	<javac includes="org/newdawn/slick/tools/peditor/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
+	    <classpath>
+	      <pathelement path="lib/slick.jar"/>
+	      <pathelement path="lib/lwjgl.jar"/>
+	    </classpath>
+	</javac>
+	<jar destfile="lib/pedigree.jar" 
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/peditor/**">
+		<manifest>
+	      <attribute name="Main-Class" value="org.newdawn.slick.tools.peditor.ParticleEditor"/>
+	      <attribute name="Class-Path" value="slick.jar lwjgl.jar"/>
+	    </manifest>
+	</jar>
+	<jar update="true" destfile="lib/pedigree.jar" 
+		 basedir="tools" includes="org/newdawn/slick/tools/peditor/data/*"/>
+</target>
+
+<!-- build the hiero tool -->
+<target name="build-hiero" depends="init">
+	<delete dir="lib/hiero.jar"/>
+	<javac includes="org/newdawn/slick/tools/hiero/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
+	</javac>
+	<jar destfile="lib/hiero.jar" 
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/hiero/**">
+		<manifest>
+	      <attribute name="Main-Class" value="org.newdawn.slick.tools.hiero.Hiero"/>
+	    </manifest>
+	</jar>
+	<jar update="true" destfile="lib/hiero.jar" 
+		 basedir="tools" includes="org/newdawn/slick/tools/hiero/resources/*"/>
+</target>
+
+<!-- build the scalar tool -->
+<target name="build-scalar" depends="init">
+	<delete dir="lib/scalar.jar"/>
+	<javac includes="org/newdawn/slick/tools/scalar/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
+	</javac>
+	<jar destfile="lib/scalar.jar" 
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/scalar/**">
+		<manifest>
+	      <attribute name="Main-Class" value="org.newdawn.slick.tools.scalar.Scalar"/>
+	    </manifest>
+	</jar>
+</target>
+
+<!-- build the examples -->
+<target name="build-examples" depends="init">
+	<delete dir="lib/slick-examples.jar"/>
+	<javac includes="org/newdawn/slick/**" debug="true" srcdir="examples" destdir="${build.dir}/example-classes" target="1.4" source="1.4">
+	 	<classpath>
+	      <pathelement path="lib/slick.jar"/>
+	      <pathelement path="lib/lwjgl.jar"/>
+	      <pathelement path="applet/lwjgl_util_applet.jar"/>
+	      <pathelement path="lib/ibxm.jar"/>
+	      <pathelement path="lib/jnlp.jar"/>
+	      <pathelement path="lib/jogg-0.0.7.jar"/>
+	      <pathelement path="lib/jorbis-0.0.15.jar"/>
+	      <pathelement path="lib/tinylinepp.jar"/>
+	    </classpath>
+	</javac>
+	<jar destfile="lib/slick-examples.jar" 
+		 basedir="${build.dir}/example-classes" includes="org/newdawn/slick/**">
+	</jar>
+</target>
+
+<!--
+ Generate the javadoc from the Slick sources
+-->
+<target name="javadoc" depends="init">
+	<delete dir="javadoc"/>
+	<mkdir dir="javadoc"/>
+	
+	<javadoc sourcepath="src"
+	           defaultexcludes="yes"
+	           destdir="javadoc"
+	           author="true"
+	           version="true"
+	           use="true"
+	           windowtitle="Slick - The 2D Library">
+		<packageset dir="src" defaultexcludes="yes">
+		      <include name="org/newdawn/slick"/>
+		      <include name="org/newdawn/slick/*"/>
+		      <include name="org/newdawn/slick/state/*"/>
+		</packageset>
+		<classpath>
+		  <pathelement path="lib/slick.jar"/>
+	      <pathelement path="lib/lwjgl.jar"/>
+	      <pathelement path="lib/jnlp.jar"/>
+	      <pathelement path="applet/lwjgl_util_applet.jar"/>
+	      <pathelement path="lib/ibxm.jar"/>
+	      <pathelement path="lib/jogg-0.0.7.jar"/>
+	      <pathelement path="lib/jorbis-0.0.15.jar"/>
+	      <pathelement path="lib/tinylinepp.jar"/>
+	    </classpath>
+	    <doctitle><![CDATA[<h1>Slick</h1>]]></doctitle>
+	    <bottom><![CDATA[<i>Copyright &#169; 2006 New Dawn Software. All Rights Reserved.</i>]]></bottom>
+	  </javadoc>
+</target>
+	
+<!--
+ Build and package the complete Slick distribution and demo game
+-->
+<target name="dist" depends="build-slick, build-examples, javadoc, build-test-webstarts">
+	<zip destfile="${dist}/slick.zip">
+	    <fileset dir="." includes="applet/applet.html"/>
+	    <fileset dir="." includes="applet/jinput.jar"/>
+	    <fileset dir="." includes="applet/lwjgl.jar"/>
+	    <fileset dir="." includes="applet/lwjgl_applet.jar"/>
+	    <fileset dir="." includes="applet/lwjgl_util_applet.jar"/>
+	    <fileset dir="." includes="applet/natives.jar"/>
+	    <fileset dir="." includes="javadoc/**"/>
+	    <fileset dir="." includes="src/org/newdawn/slick/**"/>
+	    <fileset dir="." includes="tools/**"/>
+	    <fileset dir="." includes="lib/**"/>
+	    <fileset dir="." includes="testdata/**"/>
+	    <fileset dir="." includes="scripts/**"/>
+	    <fileset dir="." includes="readme.txt"/>
+	    <fileset dir="." includes="build.xml"/>
+	    <fileset dir="." includes="lwjgl.dll"/>
+	    <fileset dir="." includes="OpenAL32.dll"/>
+	    <fileset dir="." includes="jinput-dx8.dll"/>
+	    <fileset dir="." includes="jinput-raw.dll"/>
+	</zip>
+</target>
+	
+<!--
+  Build pedigree distribution 
+-->
+<target name="dist-pedigree" depends="build-pedigree">
+	<zip destfile="${dist}/pedigree.zip">
+	    <fileset dir="lib" includes="pedigree.jar"/>
+	    <fileset dir="lib" includes="lwjgl.jar"/>
+	    <fileset dir="lib" includes="slick.jar"/>
+	    <zipfileset src="lib/natives-win32.jar"/>
+	    <zipfileset src="lib/natives-linux.jar"/>
+	    <zipfileset src="lib/natives-mac.jar"/>
+	    <fileset dir="." includes="pedigree-readme.xml"/>
+	    <fileset dir="." includes="testdata/flame.xml"/>
+	    <fileset dir="." includes="testdata/smoke.xml"/>
+	    <fileset dir="." includes="testdata/system.xml"/>
+	</zip>
+</target>
+
+<target name="build-webstart-pedigree" depends="build-pedigree">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	
+	<copyandsign jar="pedigree.jar"/>
+	<createdemojnlp name="pedigree" title="Slick2D Pedigree, Whiskas flavoured" mainclass="org.newdawn.slick.tools.peditor.ParticleEditor"/>
+</target>
+
+<target name="upload-pedigree" depends="build-webstart-pedigree, dist-pedigree">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="dist/pedigree.zip"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/pedigree.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	
+</target>
+
+<!--
+  Build hiero distribution 
+-->
+<target name="dist-hiero" depends="build-hiero">
+	<zip destfile="${dist}/hiero.zip">
+	    <fileset dir="lib" includes="hiero.jar"/>
+	</zip>
+</target>
+
+<target name="build-webstart-hiero" depends="build-hiero">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	
+	<copyandsign jar="hiero.jar"/>
+	<createdemojnlp name="hiero" title="Slick2D Hiero Bitmap Font Generator" mainclass="org.newdawn.slick.tools.hiero.Hiero"/>
+</target>
+
+<target name="upload-hiero" depends="build-webstart-hiero, dist-hiero">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="dist/hiero.zip"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/hiero.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+</target>
+
+
+<!--
+  Build scalar distribution 
+-->
+<target name="dist-scalar" depends="build-scalar">
+	<zip destfile="${dist}/scalar.zip">
+	    <fileset dir="lib" includes="scalar.jar"/>
+	</zip>
+</target>
+
+<target name="build-webstart-scalar" depends="build-scalar">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	
+	<copyandsign jar="scalar.jar"/>
+	<createdemojnlp name="scalar" title="Slick2D Scalar Scale2/3X Tool" mainclass="org.newdawn.slick.tools.scalar.Scalar"/>
+</target>
+
+<target name="upload-scalar" depends="build-webstart-scalar, dist-scalar">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="dist/scalar.zip"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/scalar.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+</target>
+
+<!--
+ Create a keystore to use when signing your own games
+-->
+<target name="build-key-store">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	<input message="KeyStore Name, your name:" addproperty="keystore.name"/>
+	<input message="KeyStore Company, your development group or company:" addproperty="keystore.company"/>
+	
+	<genkey keystore="${keystore.alias}.ks" alias="${keystore.alias}" storepass="${keystore.password}" >
+	  <dname>
+	    <param name="CN" value="${keystore.name}"/>
+	    <param name="OU" value="${keystore.company}"/>
+	    <param name="O"  value=""/>
+	    <param name="C"  value=""/>
+	  </dname>
+	</genkey>
+</target>
+
+<!--
+ Package and sign the libraries require for a webstart distribution of Slick
+-->
+<target name="build-webstart-libs" depends="build-slick, build-examples">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	
+	<copyandsign jar="ibxm.jar"/>
+	<copyandsign jar="lwjgl.jar"/>
+	<copyandsign jar="jogg-0.0.7.jar"/>
+	<copyandsign jar="jinput.jar"/>
+	<copyandsign jar="jorbis-0.0.15.jar"/>
+	<copyandsign jar="natives-linux.jar"/>
+	<copyandsign jar="natives-win32.jar"/>
+	<copyandsign jar="natives-mac.jar"/>
+	<copyandsign jar="slick.jar"/>
+	<copy file="webstart/slick.jar" toFile="webstart/slick-b${version.build}.jar"/>
+	<copyandsign jar="slick-examples.jar"/>
+</target>
+
+<!--
+ Sign a single jar - useful for your game specific jars
+-->
+<target name="sign-a-jar">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	<input message="Jar Location" addproperty="jar"/>
+	
+	<signjar jar="${jar}" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/> 
+</target>
+
+<!--
+ Generate and package the JNLP and HTML files for the Slick webstart demos
+-->
+<target name="build-test-webstarts" depends="build-webstart-libs">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	
+	<jar destfile="webstart/testdata.jar" 
+		 basedir="." includes="testdata/**"/>
+	<copy file="webstart/testdata.jar" toDir="applet"/>
+	<signjar jar="webstart/testdata.jar" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/> 
+	
+	<echo file="webstart/demos.txt">VERSION|0.4.8|SUBJECT|Webstart Demos|CONTENT|[html]</echo>	 
+	
+	<createdemojnlp name="imagetest" title="Slick2D Image Test" mainclass="org.newdawn.slick.tests.ImageTest"/>
+	<createdemojnlp name="fonttest" title="Slick2D Font Test" mainclass="org.newdawn.slick.tests.FontTest"/>
+	<createdemojnlp name="inputtest" title="Slick2D Input Test" mainclass="org.newdawn.slick.tests.InputTest"/>
+	<createdemojnlp name="soundtest" title="Slick2D Sound Test" mainclass="org.newdawn.slick.tests.SoundTest"/>
+	<createdemojnlp name="animationtest" title="Slick2D Animation Test" mainclass="org.newdawn.slick.tests.AnimationTest"/>
+	<createdemojnlp name="graphicstest" title="Slick2D Graphics Test" mainclass="org.newdawn.slick.tests.GraphicsTest"/>
+	<createdemojnlp name="geomtest" title="Slick2D Geom Test" mainclass="org.newdawn.slick.tests.GeomTest"/>
+	<createdemojnlp name="tilemaptest" title="Slick2D TileMap Test" mainclass="org.newdawn.slick.tests.TileMapTest"/>
+	
+	<createdemojnlp name="particletest" title="Slick2D Particle Test" mainclass="org.newdawn.slick.tests.ParticleTest"/>
+	<createdemojnlp name="duplicateemittertest" title="Slick2D Duplicate Emitter Test" mainclass="org.newdawn.slick.tests.DuplicateEmitterTest"/>
+	<createdemojnlp name="transformtest" title="Slick2D Transform Test" mainclass="org.newdawn.slick.tests.TransformTest"/>	
+	<createdemojnlp name="statebasedtest" title="Slick2D StateBasedGame Test" mainclass="org.newdawn.slick.tests.StateBasedTest"/>
+
+	<createdemojnlp name="guitest" title="Slick2D GUI Test" mainclass="org.newdawn.slick.tests.GUITest"/>
+	<createdemojnlp name="packedtest" title="Slick2D Packed Sprite Sheet Test" mainclass="org.newdawn.slick.tests.PackedSheetTest"/>
+
+	<createdemojnlp name="storedstatetest" title="Slick2D Stored State Test" mainclass="org.newdawn.slick.tests.SavedStateTest"/>
+	<createdemojnlp name="pedigreetest" title="Slick2D Pedigree Test" mainclass="org.newdawn.slick.tests.PedigreeTest"/>
+	<createdemojnlp name="flashtest" title="Slick2D Flash Test" mainclass="org.newdawn.slick.tests.FlashTest"/>
+	<createdemojnlp name="deferredtest" title="Slick2D Deferred Test" mainclass="org.newdawn.slick.tests.DeferredLoadingTest"/>
+
+	<createdemojnlp name="spritesheetfonttest" title="Slick2D Sprite Sheet Font Test" mainclass="org.newdawn.slick.tests.SpriteSheetFontTest"/>
+	<createdemojnlp name="transparentcolortest" title="Slick2D Transparent Color Test" mainclass="org.newdawn.slick.tests.TransparentColorTest"/>
+	<createdemojnlp name="polygontest" title="Slick2D Polygon Point Test" mainclass="org.newdawn.slick.tests.PolygonTest"/>
+
+	<createdemojnlp name="purefonttest" title="Slick2D Pure Font Test" mainclass="org.newdawn.slick.tests.PureFontTest"/>
+	<createdemojnlp name="canvastest" title="Slick2D Canvas Container Test" mainclass="org.newdawn.slick.tests.CanvasContainerTest"/>
+	<createdemojnlp name="antialiastest" title="Slick2D Anti-Alias Test" mainclass="org.newdawn.slick.tests.AntiAliasTest"/>
+
+	<createdemojnlp name="offscreen" title="Slick2D Offscreen Rendering Test" mainclass="org.newdawn.slick.tests.ImageGraphicsTest"/>
+	<createdemojnlp name="clip" title="Slick2D Clipping Test" mainclass="org.newdawn.slick.tests.ClipTest"/>
+	<createdemojnlp name="imagereadtest" title="Slick2D Image Read Test" mainclass="org.newdawn.slick.tests.ImageReadTest"/>
+	<createdemojnlp name="bigimagetest" title="Slick2D Big Image Test" mainclass="org.newdawn.slick.tests.BigImageTest"/>
+	<createdemojnlp name="slickcallable" title="Slick2D Callables" mainclass="org.newdawn.slick.tests.SlickCallableTest"/>
+
+	<!-- Examples under here please -->
+	<createdemojnlp template="slickexample.jnlp" name="scroller" title="Slick2D TileMap Scroll Example" mainclass="org.newdawn.slick.examples.scroller.Scroller"/>
+
+	<echo file="webstart/demos.txt" append="true">[/html]|DATE|1162965600</echo>	 
+</target>
+
+<!--
+ Upload the distrubtion ZIPs
+-->
+<target name="upload-dist" depends="dist">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="dist/slick.zip"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="lib/slick.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="src/version"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+</target>
+
+<!--
+ Upload the test webstarts to the Slick website
+-->
+<target name="upload-test-webstarts" depends="dist">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/slick.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}/versions" 
+		 file="webstart/slick-b${version.build}.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/slick-examples.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/testdata.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 trust="true"
+		 port="122"
+		 verbose="true">
+		 <fileset dir="webstart">
+      		<include name="*.jnlp"/>
+    	</fileset>
+	</scp>
+	<scp todir="${username}:${password}@${host}:${dir}/content/static" 
+		 file="webstart/demos.txt"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+</target>
+
+<!--
+ Upload the javadoc
+-->
+<target name="upload-javadoc" depends="dist">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}/javadoc" 
+		 trust="true"
+		 port="122"
+		 verbose="true">
+		 <fileset dir="javadoc" includes="**/*"/>
+    </scp>
+</target>
+
+<!--
+ Upload everything, i.e. create a complete update to the Slick stuff.
+-->
+<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero, upload-scalar">
+</target>
+
+<!--
+ A macro to copy and sign a library for webstart distribution
+-->
+<macrodef name="copyandsign">
+   <attribute name="jar" default="NOT SET"/>
+   <sequential>
+		<copy file="lib/@{jar}" toDir="webstart"/>
+   		<signjar jar="webstart/@{jar}" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/> 
+   </sequential>
+</macrodef>
+
+<!--
+ A macro to copy and preprocess the JNLP template for all webstart demos
+-->
+<macrodef name="createdemojnlp">
+   <attribute name="name" default="NOT SET"/>
+   <attribute name="title" default="NOT SET"/>
+   <attribute name="mainclass" default="NOT SET"/>
+   <attribute name="template" default="slickdemo.jnlp"/>
+   <attribute name="datajar" default="testdata.jar"/>
+   <attribute name="projectjar" default=""/>
+   <sequential>
+   		<delete file="webstart/@{name}.jnlp"/>
+		<copy file="scripts/@{template}" toFile="webstart/@{name}.jnlp">
+			<filterchain>
+	           <replacetokens>
+		      		<token key="title" value="@{title}"/>
+		      		<token key="mainclass" value="@{mainclass}"/>
+		      		<token key="jnlpname" value="@{name}.jnlp"/>
+		      		<token key="homepage" value="http://slick.cokeandcode.com"/>
+		      		<token key="datajar" value="@{datajar}"/>
+		      		<token key="projectjar" value="@{projectjar}"/>
+		      		<token key="vendor" value="Slick 2D"/>
+		      		<token key="codebase" value="${demoscodebase}"/>
+	            </replacetokens>
+	        </filterchain>
+    	</copy>
+    	
+		<echo file="webstart/demos.txt" append="true">
+			&lt;a href="http://slick.cokeandcode.com/demos/@{name}.jnlp"&gt; @{title} &lt;/a&gt;
+			&lt;br/&gt;
+		</echo>	 
+   </sequential>
+</macrodef>
+
+</project>
