@@ -96,7 +96,7 @@ public class Ellipse extends Shape {
      * @param x The new x position of this box
      */
     public void setX(float x) {
-        float diff = center[0] - x;
+        float diff = x - center[0];
         super.setX(x);
         for(int i=0;i<points.length;i+=2) {
             points[i] += diff;
@@ -109,7 +109,7 @@ public class Ellipse extends Shape {
      * @param y The new y position of this box
      */
     public void setY(float y) {
-        float diff = center[1] - y;
+        float diff = y - center[1];
         super.setY(y);
         for(int i=1;i<points.length;i+=2) {
             points[i] += diff;
