@@ -299,6 +299,8 @@ public class Input {
 	private char[] keys = new char[1024];
 	/** True if the key has been pressed since last queries */
 	private boolean[] pressed = new boolean[1024];
+	/** The time since the next key repeat to be fired for the key */
+	private long[] nextRepeat = new long[1024];
 	
 	/** The control states from the controllers */
 	private boolean[][] controls = new boolean[10][8];
@@ -313,6 +315,11 @@ public class Input {
 	
 	/** True if the display is active */
 	private boolean displayActive = true;
+	
+	/** True if key repeat is enabled */
+	private boolean keyRepeat;
+	/** The interval of key repeat */
+	private int keyRepeatInterval;
 	
 	/**
 	 * Create a new input with the height of the screen
@@ -695,6 +702,7 @@ public class Input {
 			if (Keyboard.getEventKeyState()) {
 				keys[Keyboard.getEventKey()] = Keyboard.getEventCharacter();
 				pressed[Keyboard.getEventKey()] = true;
+				nextRepeat[Keyboard.getEventKey()] = System.currentTimeMillis() + keyRepeatInterval;
 				
 				consumed = false;
 				for (int i=0;i<listeners.size();i++) {
@@ -708,6 +716,8 @@ public class Input {
 					}
 				}
 			} else {
+				nextRepeat[Keyboard.getEventKey()] = 0;
+				
 				consumed = false;
 				for (int i=0;i<listeners.size();i++) {
 					InputListener listener = (InputListener) listeners.get(i);
@@ -818,9 +828,57 @@ public class Input {
 			listener.inputEnded();
 		}
 		
+		if (keyRepeat) {
+			for (int i=0;i<1024;i++) {
+				if (pressed[i] && (nextRepeat[i] != 0)) {
+					if (System.currentTimeMillis() > nextRepeat[i]) {
+						nextRepeat[Keyboard.getEventKey()] = System.currentTimeMillis() + keyRepeatInterval;
+						consumed = false;
+						for (int j=0;j<listeners.size();j++) {
+							InputListener listener = (InputListener) listeners.get(j);
+							
+							if (listener.isAcceptingInput()) {
+								listener.keyPressed(Keyboard.getEventKey(), Keyboard.getEventCharacter());
+								if (consumed) {
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
 		if (Display.isCreated()) {
 			displayActive = Display.isActive();
 		}
+	}
+	
+	/**
+	 * Enable key repeat for this input context. This will cause keyPressed to get called repeatedly
+	 * at a set interval while the key is pressed
+	 * 
+	 * @param interval The interval between key repeats in ms
+	 */
+	public void enableKeyRepeat(int interval) {
+		keyRepeat = true;
+		keyRepeatInterval = interval;
+	}
+	
+	/**
+	 * Disable key repeat for this input context
+	 */
+	public void disableKeyRepeat() {
+		keyRepeat = false;
+	}
+	
+	/**
+	 * Check if key repeat is enabled
+	 * 
+	 * @return True if key repeat is enabled
+	 */
+	public boolean isKeyRepeatEnabled() {
+		return keyRepeat;
 	}
 	
 	/**
