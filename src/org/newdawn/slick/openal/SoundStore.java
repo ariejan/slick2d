@@ -107,6 +107,7 @@ public class SoundStore {
 			this.music = music;
 			if (music) {
 				restartLoop();
+				setMusicVolume(musicVolume);
 			} else {
 				pauseLoop();
 			}
