@@ -275,7 +275,7 @@ public class Animation {
 	 * @param x The x position to draw the animation at
 	 * @param y The y position to draw the animation at
 	 */
-	public void draw(int x,int y) {
+	public void draw(float x,float y) {
 		draw(x,y,getWidth(),getHeight());
 	}
 
@@ -286,7 +286,7 @@ public class Animation {
 	 * @param y The y position to draw the animation at
 	 * @param filter The filter to apply
 	 */
-	public void draw(int x,int y, Color filter) {
+	public void draw(float x,float y, Color filter) {
 		draw(x,y,getWidth(),getHeight(), filter);
 	}
 	
@@ -298,7 +298,7 @@ public class Animation {
 	 * @param width The width to draw the animation at
 	 * @param height The height to draw the animation at
 	 */
-	public void draw(int x,int y,int width,int height) {
+	public void draw(float x,float y,float width,float height) {
 		draw(x,y,width,height,Color.white);
 	}
 	
@@ -311,7 +311,7 @@ public class Animation {
 	 * @param height The height to draw the animation at
 	 * @param col The colour filter to use
 	 */
-	public void draw(int x,int y,int width,int height, Color col) {
+	public void draw(float x,float y,float width,float height, Color col) {
 		if (frames.size() == 0) {
 			return;
 		}
@@ -357,7 +357,7 @@ public class Animation {
 	 * @param width The width to draw the animation at
 	 * @param height The height to draw the animation at
 	 */
-	public void drawFlash(int x,int y,int width,int height) {
+	public void drawFlash(float x,float y,float width,float height) {
 		drawFlash(x,y,width,height, Color.white);
 	}
 	
@@ -370,7 +370,7 @@ public class Animation {
 	 * @param height The height to draw the animation at
 	 * @param col The colour for the flash
 	 */
-	public void drawFlash(int x,int y,int width,int height, Color col) {
+	public void drawFlash(float x,float y,float width,float height, Color col) {
 		if (frames.size() == 0) {
 			return;
 		}
@@ -427,6 +427,45 @@ public class Animation {
 	 */
 	public int getFrame() {
 		return currentFrame;
+	}
+	
+	/**
+	 * Set the current frame to be rendered
+	 * 
+	 * @param index The index of the frame to rendered
+	 */
+	public void setCurrentFrame(int index) {
+		currentFrame = index;
+	}
+	
+	/**
+	 * Get the image assocaited with a given frame index
+	 * 
+	 * @param index The index of the frame image to retrieve
+	 * @return The image of the specified animation frame
+	 */
+	public Image getImage(int index) {
+		Frame frame = (Frame) frames.get(index);
+		return frame.image;
+	}
+	
+	/**
+	 * Get the number of frames that are in the animation
+	 * 
+	 * @return The number of frames that are in the animation
+	 */
+	public int getFrameCount() {
+		return frames.size();
+	}
+	
+	/**
+	 * Get the image associated with the current animation frame
+	 * 
+	 * @return The image associated with the current animation frame
+	 */
+	public Image getCurrentFrame() {
+		Frame frame = (Frame) frames.get(currentFrame);
+		return frame.image;
 	}
 	
 	/**

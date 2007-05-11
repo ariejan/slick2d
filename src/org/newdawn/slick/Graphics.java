@@ -759,6 +759,32 @@ public class Graphics {
 		currentColor.bind();
 		postdraw();
 	}
+
+	/**
+	 * Draw an animation to this graphics context
+	 * 
+	 * @param anim The animation to be drawn
+	 * @param x The x position to draw the animation at
+	 * @param y The y position to draw the animation at
+	 */
+	public void drawAnimation(Animation anim, float x, float y) {
+		drawAnimation(anim,x,y,Color.white);
+	}
+
+	/**
+	 * Draw an animation to this graphics context
+	 * 
+	 * @param anim The animation to be drawn
+	 * @param x The x position to draw the animation at
+	 * @param y The y position to draw the animation at
+	 * @param col The color to apply to the animation as a filter
+	 */
+	public void drawAnimation(Animation anim, float x, float y, Color col) {
+		predraw();
+		anim.draw(x,y,col);
+		currentColor.bind();
+		postdraw();
+	}
 	
 	/**
 	 * Draw an image to the screen
