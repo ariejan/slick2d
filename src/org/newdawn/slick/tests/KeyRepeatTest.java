@@ -72,7 +72,7 @@ public class KeyRepeatTest extends BasicGame {
 			if (input.isKeyRepeatEnabled()) {
 				input.disableKeyRepeat();
 			} else {
-				input.enableKeyRepeat(100);
+				input.enableKeyRepeat(300,100);
 			}
 		}
 	}
