@@ -352,27 +352,47 @@ public abstract class GameContainer implements GUIContext {
 			}
 		}
 		
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glLoadIdentity();
-		
-		graphics.resetFont();
-		graphics.resetLineWidth();
-		graphics.setAntiAlias(false);
-		try {
-			game.render(this, graphics);
-		} catch (Throwable e) {
-			Log.error(e);
-			throw new SlickException("Game.render() failure - check the game code.");
+		if (hasFocus()) {
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+			GL11.glLoadIdentity();
+			
+			graphics.resetFont();
+			graphics.resetLineWidth();
+			graphics.setAntiAlias(false);
+			try {
+				game.render(this, graphics);
+			} catch (Throwable e) {
+				Log.error(e);
+				throw new SlickException("Game.render() failure - check the game code.");
+			}
+			graphics.resetTransform();
+			
+			if (showFPS) {
+				defaultFont.drawString(10, 10, "FPS: "+recordedFPS);
+			}
+			
+			if (targetFPS != -1) {
+				Display.sync(targetFPS);
+			}
 		}
-		graphics.resetTransform();
-		
-		if (showFPS) {
-			defaultFont.drawString(10, 10, "FPS: "+recordedFPS);
-		}
-		
-		if (targetFPS != -1) {
-			Display.sync(targetFPS);
-		}
+	}
+	
+	/**
+	 * Indicate if the display should update only when the game is visible
+	 * (the default is true)
+	 * 
+	 * @param updateOnlyWhenVisible True if we should updated only when the display is visible
+	 */
+	public void setUpdateOnlyWhenVisible(boolean updateOnlyWhenVisible) {
+	}
+
+	/**
+	 * Check if this game is only updating when visible to the user (default = true)
+	 * 
+	 * @return True if the game is only updated when the display is visible
+	 */
+	public boolean isUpdatingOnlyWhenVisible() {
+		return true;
 	}
 	
 	/**

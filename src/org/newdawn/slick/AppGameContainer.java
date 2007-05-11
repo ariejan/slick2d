@@ -46,6 +46,8 @@ public class AppGameContainer extends GameContainer {
 	private DisplayMode originalDisplayMode;
 	/** The display mode we're going to try and use */
 	private DisplayMode targetDisplayMode;
+	/** True if we should update the game only when the display is visible */
+	private boolean updateOnlyOnVisible = true;
 	
 	/**
 	 * Create a new container wrapping a game
@@ -278,10 +280,9 @@ public class AppGameContainer extends GameContainer {
 			while (running()) {
 				int delta = getDelta();
 				
-				if (!Display.isVisible()) {
+				if (!Display.isVisible() && updateOnlyOnVisible) {
 					try { Thread.sleep(100); } catch (Exception e) {}
 				} else {
-					//Thread.yield();
 					try {
 						updateAndRender(delta);
 					} catch (SlickException e) {
@@ -309,6 +310,20 @@ public class AppGameContainer extends GameContainer {
 		System.exit(0);
 	}
 
+	/**
+	 * @see org.newdawn.slick.GameContainer#setUpdateOnlyWhenVisible(boolean)
+	 */
+	public void setUpdateOnlyWhenVisible(boolean updateOnlyWhenVisible) {
+		updateOnlyOnVisible = updateOnlyWhenVisible;
+	}
+	
+	/**
+	 * @see org.newdawn.slick.GameContainer#isUpdatingOnlyWhenVisible()
+	 */
+	public boolean isUpdatingOnlyWhenVisible() {
+		return updateOnlyOnVisible;
+	}
+	
 	/**
 	 * @see org.newdawn.slick.GameContainer#setIcon(java.lang.String)
 	 */
