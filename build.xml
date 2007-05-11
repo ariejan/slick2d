@@ -399,6 +399,7 @@
 	<createdemojnlp name="imagereadtest" title="Slick2D Image Read Test" mainclass="org.newdawn.slick.tests.ImageReadTest"/>
 	<createdemojnlp name="bigimagetest" title="Slick2D Big Image Test" mainclass="org.newdawn.slick.tests.BigImageTest"/>
 	<createdemojnlp name="slickcallable" title="Slick2D Callables" mainclass="org.newdawn.slick.tests.SlickCallableTest"/>
+	<createdemojnlp name="keyrepeat" title="Slick2D Key Repeat" mainclass="org.newdawn.slick.tests.KeyRepeatTest"/>
 
 	<!-- Examples under here please -->
 	<createdemojnlp template="slickexample.jnlp" name="scroller" title="Slick2D TileMap Scroll Example" mainclass="org.newdawn.slick.examples.scroller.Scroller"/>
