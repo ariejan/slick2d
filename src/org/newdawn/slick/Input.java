@@ -318,6 +318,8 @@ public class Input {
 	
 	/** True if key repeat is enabled */
 	private boolean keyRepeat;
+	/** The initial delay for key repeat starts */
+	private int keyRepeatInitial;
 	/** The interval of key repeat */
 	private int keyRepeatInterval;
 	
@@ -702,7 +704,7 @@ public class Input {
 			if (Keyboard.getEventKeyState()) {
 				keys[Keyboard.getEventKey()] = Keyboard.getEventCharacter();
 				pressed[Keyboard.getEventKey()] = true;
-				nextRepeat[Keyboard.getEventKey()] = System.currentTimeMillis() + keyRepeatInterval;
+				nextRepeat[Keyboard.getEventKey()] = System.currentTimeMillis() + keyRepeatInitial;
 				
 				consumed = false;
 				for (int i=0;i<listeners.size();i++) {
@@ -858,10 +860,12 @@ public class Input {
 	 * Enable key repeat for this input context. This will cause keyPressed to get called repeatedly
 	 * at a set interval while the key is pressed
 	 * 
+	 * @param initial The interval before key repreating starts after a key press
 	 * @param interval The interval between key repeats in ms
 	 */
-	public void enableKeyRepeat(int interval) {
+	public void enableKeyRepeat(int initial, int interval) {
 		keyRepeat = true;
+		keyRepeatInitial = initial;
 		keyRepeatInterval = interval;
 	}
 	
