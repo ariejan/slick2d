@@ -832,13 +832,13 @@ public class Input {
 			for (int i=0;i<1024;i++) {
 				if (pressed[i] && (nextRepeat[i] != 0)) {
 					if (System.currentTimeMillis() > nextRepeat[i]) {
-						nextRepeat[Keyboard.getEventKey()] = System.currentTimeMillis() + keyRepeatInterval;
+						nextRepeat[i] = System.currentTimeMillis() + keyRepeatInterval;
 						consumed = false;
 						for (int j=0;j<listeners.size();j++) {
 							InputListener listener = (InputListener) listeners.get(j);
 							
 							if (listener.isAcceptingInput()) {
-								listener.keyPressed(Keyboard.getEventKey(), Keyboard.getEventCharacter());
+								listener.keyPressed(i, keys[i]);
 								if (consumed) {
 									break;
 								}
