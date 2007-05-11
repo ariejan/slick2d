@@ -30,7 +30,7 @@ public class KeyRepeatTest extends BasicGame {
 	 */
 	public void init(GameContainer container) throws SlickException {
 		input = container.getInput();
-		input.enableKeyRepeat(100);
+		input.enableKeyRepeat(300,100);
 	}
 
 	/**
