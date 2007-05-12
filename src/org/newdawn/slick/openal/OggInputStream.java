@@ -295,8 +295,11 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 			while (!endOfBitStream) {
 				while (!endOfBitStream) {
 					int result = syncState.pageout(page);
-					if (result == 0)
+					
+					if (result == 0) {
 						break; // need more data
+					}
+					
 					if (result == -1) { // missing or corrupt data at this page position
 						Log.error("Corrupt or missing data in bitstream; continuing...");
 					} else {
@@ -337,6 +340,12 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 										for (int j = 0; j < bout; j++) {
 											int val = (int) (pcm[i][mono + j] * 32767.);
 											// might as well guard against clipping
+											if (val > 32767) {
+												val = 32767;
+											}
+											if (val < -32768) {
+												val = -32768;
+											}
 											if (val < 0)
 												val = val | 0x8000;
 				
@@ -371,6 +380,7 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 				}
 
 				if (!endOfBitStream) {
+					bytes = 0;
 					int index = syncState.buffer(4096);
 					if (index >= 0) {
 						buffer = syncState.data;
@@ -394,7 +404,6 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 
 			// clean up this logical bitstream; before exit we see if we're
 			// followed by another [chained]
-
 			streamState.clear();
 
 			// ogg_page and ogg_packet structs always point to storage in
