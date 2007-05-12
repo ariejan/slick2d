@@ -23,11 +23,9 @@ public class Particle {
 	/** The y coordinate of the particle */
 	protected float y;
 	/** The x component of the direction vector of the particle */
-	protected float dirx;
+	protected float velx;
 	/** The y component of the direction vector of the particle */
-	protected float diry;
-	/** The speed of the particle heading into the direction vector */
-	protected float speed;
+	protected float vely;
 	/** The current size in pixels of the particle */
 	protected float size = 10;
 	/** The colour of the particle */
@@ -182,8 +180,8 @@ public class Particle {
 
 		life -= delta;
 		if (life > 0) {
-			x += delta * dirx * speed;
-			y += delta * diry * speed;
+			x += delta * velx;
+			y += delta * vely;
 		} else {
 			engine.release(this);
 		}
@@ -201,8 +199,8 @@ public class Particle {
 		x = 0;
 		this.emitter = emitter;
 		y = 0;
-		dirx = 0;
-		diry = 0;
+		velx = 0;
+		vely = 0;
 		size = 10;
 		type = 0;
 		this.originalLife = this.life = life;
@@ -334,19 +332,31 @@ public class Particle {
 	 *            The speed in the given direction
 	 */
 	public void setVelocity(float dirx, float diry, float speed) {
-		this.dirx = dirx;
-		this.diry = diry;
-		this.speed = speed;
+		this.velx = dirx * speed;
+		this.vely = diry * speed;
 	}
 
 	/**
+	 * Set the current speed of this particle
+	 * 
+	 * @param speed The speed of this particle
+	 */
+	public void setSpeed(float speed) {
+		float currentSpeed = (float) Math.sqrt((velx*velx) + (vely*vely));
+		velx *= speed;
+		vely *= speed;
+		velx /= currentSpeed;
+		vely /= currentSpeed;
+	}
+	
+	/**
 	 * Set the velocity of the particle
 	 * 
-	 * @param dirx The x component of the new velocity
-	 * @param diry The y component of the new velocity
+	 * @param velx The x component of the new velocity
+	 * @param vely The y component of the new velocity
 	 */
-	public void setVelocity(float dirx, float diry) {
-		setVelocity(dirx,diry,1);
+	public void setVelocity(float velx, float vely) {
+		setVelocity(velx,vely,1);
 	}
 	
 	/**
@@ -408,9 +418,9 @@ public class Particle {
 	 * @param dy
 	 *            The amount to adjust the y component by
 	 */
-	public void adjustDirection(float dx, float dy) {
-		dirx += dx;
-		diry += dy;
+	public void adjustVelocity(float dx, float dy) {
+		velx += dx;
+		vely += dy;
 	}
 
 	/**
@@ -427,24 +437,6 @@ public class Particle {
 	 */
 	public String toString() {
 		return super.toString() + " : " + life;
-	}
-
-	/**
-	 * Get the current speed of the particle
-	 * 
-	 * @return The current speed of the particle
-	 */
-	public float getSpeed() {
-		return speed;
-	}
-
-	/**
-	 * Set the speed of the particle
-	 * 
-	 * @param speed The new speed of the particle
-	 */
-	public void setSpeed(float speed) {
-		this.speed = speed;
 	}
 
 	/**
