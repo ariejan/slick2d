@@ -245,6 +245,7 @@ public class EffectsDialog extends JFrame {
 			String name = props.getProperty(prefix+"name");
 			Effect effect = EffectsRegistry.getEffectByName(name);
 			if (effect != null) {
+				effect = effect.getInstance();
 				if (effect instanceof StorableEffect) {
 					StorableEffect storeMe = (StorableEffect) effect;
 					storeMe.load(prefix, props);
