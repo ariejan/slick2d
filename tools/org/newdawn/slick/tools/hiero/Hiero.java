@@ -490,6 +490,7 @@ public class Hiero extends JFrame {
     		FontData.addFontDirectory(dir);
     		updateFontList();
     	}
+        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES); 
     }
     
     /**
