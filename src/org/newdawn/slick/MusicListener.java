@@ -20,7 +20,7 @@ public interface MusicListener {
 	 * for another.
 	 * 
 	 * @param music The music that has been swapped out
-	 * @parma newMusic The new music we're playing
+	 * @param newMusic The new music we're playing
 	 */
 	public void musicSwapped(Music music, Music newMusic);
 }
