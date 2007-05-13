@@ -302,6 +302,7 @@ public class Graphics {
 
         postdraw();
     }
+    
     /**
      * Draw the the given shape filled in.
      * 
@@ -316,7 +317,36 @@ public class Graphics {
         
         postdraw();
     }
-	
+
+    /**
+     * Draw the the given shape filled in with a texture
+     * 
+     * @param shape The shape to texture.
+     * @param image The image to tile across the shape
+     */
+    public void texture(Shape shape, Image image) {
+    	texture(shape,image,1,1);
+    }
+    
+    /**
+     * Draw the the given shape filled in with a texture
+     * 
+     * @param shape The shape to texture.
+     * @param image The image to tile across the shape
+     * @param scaleX The scale to apply on the x axis for texturing
+     * @param scaleY The scale to apply on the y axis for texturing
+     */
+    public void texture(Shape shape, Image image, float scaleX, float scaleY) {
+        predraw();
+        Texture.bindNone();
+        currentColor.bind();
+        
+        ShapeRenderer.texture(shape, image, scaleX, scaleY);
+        
+        postdraw();
+    }
+    
+    
 	/**
 	 * Draw a rectangle to the canvas in the current colour
 	 *  

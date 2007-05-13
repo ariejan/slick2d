@@ -28,6 +28,21 @@ public strictfp class Circle extends Ellipse {
 	}
 
 	/**
+	 * Create a new circle based on its radius
+	 * 
+	 * @param x The x location of the center of the circle
+	 * @param y The y location of the center of the circle
+	 * @param radius The radius of the circle
+	 * @param segmentCount The number of segments to build the circle out of
+	 */
+	public Circle(float x, float y, float radius, int segmentCount) {
+        super(x, y, radius, radius, segmentCount);
+		this.x = x;
+		this.y = y;
+		this.radius = radius;
+	}
+	
+	/**
 	 * Set the radius of this circle
 	 * 
 	 * @param radius The radius of this circle
