@@ -751,6 +751,17 @@ public class SoundStore {
 	}
 	
 	/**
+	 * Check if the music is currently playing
+	 * 
+	 * @return True if the music is playing
+	 */
+	public boolean isMusicPlaying() 
+	{
+		int state = AL10.alGetSourcei(sources.get(0), AL10.AL_SOURCE_STATE);
+		return ((state == AL10.AL_PLAYING) || (state == AL10.AL_PAUSED));
+	}
+	
+	/**
 	 * Get the single instance of this class
 	 * 
 	 * @return The single instnace of this class

@@ -332,7 +332,7 @@ public abstract class GameContainer implements GUIContext {
 		storedDelta += delta;
 		input.poll(width, height);
 		
-		SoundStore.get().poll(delta);
+		Music.poll(delta);
 		if (storedDelta >= minimumLogicInterval) {
 			try {
 				if (maximumLogicInterval != 0) {

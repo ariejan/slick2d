@@ -1,5 +1,7 @@
 package org.newdawn.slick;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.openal.InternalSound;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.Log;
@@ -13,10 +15,30 @@ import org.newdawn.slick.util.Log;
 public class Music {
 	/** The music currently being played or null if none */
 	private static Music currentMusic;
+	
+	/**
+	 * Poll the state of the current music. This causes streaming music
+	 * to stream and checks listeners. Note that if you're using a game container
+	 * this will be auto-magically called for you.
+	 * 
+	 * @param delta The amount of time since last poll
+	 */
+	public static void poll(int delta) {
+		if (currentMusic != null) {
+			SoundStore.get().poll(delta);
+			if (!SoundStore.get().isMusicPlaying()) {
+				currentMusic.fireMusicEnded();
+				currentMusic = null;
+			}
+		}
+	}
+	
 	/** The sound from FECK representing this music */
 	private InternalSound sound;
 	/** True if the music is playing */
 	private boolean playing;
+	/** The list of listeners waiting for notification that the music ended */
+	private ArrayList listeners = new ArrayList();
 	
 	/**
 	 * Create and load a piece of music (either OGG or MOD/XM)
@@ -61,6 +83,45 @@ public class Music {
 	}
 
 	/**
+	 * Add a listener to this music
+	 * 
+	 * @param listener The listener to add
+	 */
+	public void addListener(MusicListener listener) {
+		listeners.add(listener);
+	}
+
+	/**
+	 * Remove a listener from this music
+	 * 
+	 * @param listener The listener to remove
+	 */
+	public void removeListener(MusicListener listener) {
+		listeners.remove(listener);
+	}
+	
+	/**
+	 * Fire notifications that this music ended
+	 */
+	private void fireMusicEnded() {
+		playing = false;
+		for (int i=0;i<listeners.size();i++) {
+			((MusicListener) listeners.get(i)).musicEnded(this);
+		}
+	}
+
+	/**
+	 * Fire notifications that this music was swapped out
+	 * 
+	 * @param newMusic The new music that will be played
+	 */
+	private void fireMusicSwapped(Music newMusic) {
+		playing = false;
+		for (int i=0;i<listeners.size();i++) {
+			((MusicListener) listeners.get(i)).musicSwapped(this, newMusic);
+		}
+	}
+	/**
 	 * Loop the music
 	 */
 	public void loop() {
@@ -82,7 +143,8 @@ public class Music {
 	 */
 	public void play(float pitch, float volume) {
 		if (currentMusic != null) {
-			currentMusic.playing = false;
+			currentMusic.stop();
+			currentMusic.fireMusicSwapped(this);
 		}
 		
 		currentMusic = this;
@@ -99,7 +161,7 @@ public class Music {
 	public void loop(float pitch, float volume) {
 		if (currentMusic != null) {
 			currentMusic.stop();
-			currentMusic.playing = false;
+			currentMusic.fireMusicSwapped(this);
 		}
 		
 		currentMusic = this;
