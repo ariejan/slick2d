@@ -76,6 +76,21 @@ public class EffectsRegistry {
 	}
 	
 	/**
+	 * Get a named effect
+	 * 
+	 * @param name The name of the effect to retrieve
+	 * @return The effect or null if no effect by that name is available
+	 */
+	public static Effect getEffectByName(String name) {
+		for (int i=0;i<effects.size();i++) {
+			if (((Effect) effects.get(i)).getEffectName().equals(name)) {
+				return (Effect) effects.get(i);
+			}
+		}
+		
+		return null;
+	}
+	/**
 	 * Register a new effect
 	 * 
 	 * @param effect The effect to be registered

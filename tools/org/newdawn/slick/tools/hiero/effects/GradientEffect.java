@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -17,7 +18,7 @@ import javax.swing.JPanel;
  * 
  * @author kevin
  */
-public class GradientEffect implements Effect {
+public class GradientEffect implements StorableEffect {
 	/** The color of the top */
 	private Color top = new Color(255,255,0);
 	/** The color of the bottom */
@@ -153,5 +154,32 @@ public class GradientEffect implements Effect {
 			g.setColor(Color.black);
 			g.drawRect(160,85,100,25);
 		}
+	}
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.StorableEffect#load(java.lang.String, java.util.Properties)
+	 */
+	public void load(String prefix, Properties props) {
+		int red = Integer.parseInt(props.getProperty(prefix+"top.red"));
+		int green = Integer.parseInt(props.getProperty(prefix+"top.green"));
+		int blue = Integer.parseInt(props.getProperty(prefix+"top.blue"));
+		top = new Color(red,green,blue);
+		red = Integer.parseInt(props.getProperty(prefix+"bottom.red"));
+		green = Integer.parseInt(props.getProperty(prefix+"bottom.green"));
+		blue = Integer.parseInt(props.getProperty(prefix+"bottom.blue"));
+		bottom = new Color(red,green,blue);
+	}
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.StorableEffect#store(java.lang.String, java.util.Properties)
+	 */
+	public void store(String prefix, Properties props) {
+		props.setProperty(prefix+"top.red", ""+top.getRed());
+		props.setProperty(prefix+"top.green", ""+top.getGreen());
+		props.setProperty(prefix+"top.blue", ""+top.getBlue());
+		props.setProperty(prefix+"bottom.red", ""+bottom.getRed());
+		props.setProperty(prefix+"bottom.green", ""+bottom.getGreen());
+		props.setProperty(prefix+"bottom.blue", ""+bottom.getBlue());
+		
 	}
 }

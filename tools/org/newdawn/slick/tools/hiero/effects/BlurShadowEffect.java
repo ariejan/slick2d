@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -23,7 +24,7 @@ import javax.swing.SpinnerNumberModel;
  * @author kevin
  * @hack jos :f
  */
-public class BlurShadowEffect implements Effect {
+public class BlurShadowEffect implements StorableEffect {
 	/** The numberof kernels to apply */
     public static final int NUM_KERNELS = 16;
     /** The blur kernels applied across the effect */ 
@@ -299,4 +300,32 @@ public class BlurShadowEffect implements Effect {
             g.drawRect(160,225,100,20);
         }
     }
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.StorableEffect#load(java.lang.String, java.util.Properties)
+	 */
+	public void load(String prefix, Properties props) {
+		int red = Integer.parseInt(props.getProperty(prefix+"red"));
+		int green = Integer.parseInt(props.getProperty(prefix+"green"));
+		int blue = Integer.parseInt(props.getProperty(prefix+"blue"));
+		col = new Color(red,green,blue);
+
+		distance = Float.parseFloat(props.getProperty(prefix+"distance"));
+		passes = Float.parseFloat(props.getProperty(prefix+"passes"));
+		opacity = Float.parseFloat(props.getProperty(prefix+"opacity"));
+		kernelsize = Float.parseFloat(props.getProperty(prefix+"kernelsize"));
+	}
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.StorableEffect#store(java.lang.String, java.util.Properties)
+	 */
+	public void store(String prefix, Properties props) {
+		props.setProperty(prefix+"red", ""+col.getRed());
+		props.setProperty(prefix+"green", ""+col.getGreen());
+		props.setProperty(prefix+"blue", ""+col.getBlue());
+		props.setProperty(prefix+"distance", ""+distance);
+		props.setProperty(prefix+"passes", ""+passes);
+		props.setProperty(prefix+"opacity", ""+opacity);
+		props.setProperty(prefix+"kernelsize", ""+kernelsize);
+	}
 }

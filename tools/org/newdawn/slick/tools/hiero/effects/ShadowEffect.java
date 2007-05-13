@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -18,7 +19,7 @@ import javax.swing.SpinnerNumberModel;
  *
  * @author kevin
  */
-public class ShadowEffect implements Effect {
+public class ShadowEffect implements StorableEffect {
 	/** The shadow distance */
 	private float distance = 1;
 	/** The color of the outline */
@@ -145,5 +146,26 @@ public class ShadowEffect implements Effect {
 			g.setColor(Color.black);
 			g.drawRect(160,80,100,25);
 		}
+	}
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.StorableEffect#load(java.lang.String, java.util.Properties)
+	 */
+	public void load(String prefix, Properties props) {
+		int red = Integer.parseInt(props.getProperty(prefix+"red"));
+		int green = Integer.parseInt(props.getProperty(prefix+"green"));
+		int blue = Integer.parseInt(props.getProperty(prefix+"blue"));
+		col = new Color(red,green,blue);
+		distance = Float.parseFloat(props.getProperty(prefix+"distance"));
+	}
+
+	/**
+	 * @see org.newdawn.slick.tools.hiero.effects.StorableEffect#store(java.lang.String, java.util.Properties)
+	 */
+	public void store(String prefix, Properties props) {
+		props.setProperty(prefix+"red", ""+col.getRed());
+		props.setProperty(prefix+"green", ""+col.getGreen());
+		props.setProperty(prefix+"blue", ""+col.getBlue());
+		props.setProperty(prefix+"distance", ""+distance);
 	}
 }

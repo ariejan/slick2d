@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -35,6 +36,8 @@ public class EffectsDialog extends JFrame {
 	private DefaultListModel applied = new DefaultListModel();
 	/** The visual list */
 	private JList appliedList = new JList(applied);
+	/** The hiero instance wi're configuring */
+	private Hiero hiero;
 	
 	/**
 	 * Create a new dialog
@@ -43,6 +46,8 @@ public class EffectsDialog extends JFrame {
 	 */
 	public EffectsDialog(final Hiero hiero) {
 		super("Effects");
+		
+		this.hiero = hiero;
 		
 		JButton add = new JButton("Add >");
 		JButton remove = new JButton("Remove");
@@ -200,6 +205,54 @@ public class EffectsDialog extends JFrame {
 				appliedList.setSelectedIndex(0);
 			}
 		}
+	}
+	
+	/**
+	 * Remove all the effects displayed
+	 */
+	public void removeAllEffects() {
+		applied.removeAllElements();
+	}
+	
+	/**
+	 * Save the current configuration of this dialog to the properties structure provided
+	 * 
+	 * @param props The properties to be configured with the effects here in
+	 */
+	public void saveTo(Properties props) {
+		props.setProperty("effects.count", ""+applied.size());
+		for (int i=0;i<applied.size();i++) {
+			Effect effect = (Effect) applied.get(i);
+			String prefix = "effect"+i+".";
+			props.setProperty(prefix+"name", effect.getEffectName());
+			if (effect instanceof StorableEffect) {
+				StorableEffect storeMe = (StorableEffect) effect;
+				storeMe.store(prefix, props);
+			}
+		}
+	}
+	
+	/**
+	 * Load the an effects configuration from the given properties object
+	 * 
+	 * @param props The properties to load from
+	 */
+	public void loadFrom(Properties props) {
+		removeAllEffects();
+		int count = Integer.parseInt(props.getProperty("effects.count"));
+		for (int i=0;i<count;i++) {
+			String prefix = "effect"+i+".";
+			String name = props.getProperty(prefix+"name");
+			Effect effect = EffectsRegistry.getEffectByName(name);
+			if (effect != null) {
+				if (effect instanceof StorableEffect) {
+					StorableEffect storeMe = (StorableEffect) effect;
+					storeMe.load(prefix, props);
+				}
+				applied.addElement(effect);
+			}
+		}
+		hiero.applyEffects();
 	}
 	
 	/**

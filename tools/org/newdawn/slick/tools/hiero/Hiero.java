@@ -9,7 +9,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.Box;
@@ -37,6 +40,7 @@ import javax.swing.event.ListSelectionListener;
 
 import org.newdawn.slick.tools.hiero.effects.EffectsDialog;
 import org.newdawn.slick.tools.hiero.truetype.FontData;
+import org.newdawn.slick.util.Log;
 
 /**
  * A tool to generate bitmap fonts
@@ -80,6 +84,22 @@ public class Hiero extends JFrame {
     private DefaultComboBoxModel types = new DefaultComboBoxModel();
     /** The dialog for effects configuration */
     private EffectsDialog effectsDialog;
+
+    /** The control showing the top padding */
+    private JSpinner paddingTop = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+    /** The control showing the left padding */
+    private JSpinner paddingLeft = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+    /** The control showing the right padding */
+    private JSpinner paddingRight = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+    /** The control showing the bottom padding */
+    private JSpinner paddingBottom = new JSpinner(new SpinnerNumberModel(0,0,100,1));
+    /** The control showing the advance padding */
+    private JSpinner paddingAdvance = new JSpinner(new SpinnerNumberModel(0,-100,100,1));
+
+    /** The control showing the width of the texture to be generated */
+    private JComboBox width;
+    /** The control showing the height of the texture to be generated */
+    private JComboBox height;
     
     /**
      * Create a new instance of the tool
@@ -94,6 +114,27 @@ public class Hiero extends JFrame {
         bar.add(file);
         setJMenuBar(bar);
 
+        JMenuItem nstate = new JMenuItem("New Settings");
+        nstate.setMnemonic('n');
+        nstate.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		newSettings();
+        	}
+        });
+        JMenuItem lstate = new JMenuItem("Load Settings");
+        nstate.setMnemonic('l');
+        lstate.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		loadSettings();
+        	}
+        });
+        JMenuItem sstate = new JMenuItem("Save Settings");
+        nstate.setMnemonic('s');
+        sstate.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		saveSettings();
+        	}
+        });
         JMenuItem cset = new JMenuItem("Edit Character Set");
         cset.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -132,7 +173,11 @@ public class Hiero extends JFrame {
         		addDirectory();
         	}
         });
-        
+
+        file.add(nstate);
+        file.add(lstate);
+        file.add(sstate);
+        file.addSeparator();
         file.add(addDir);
         file.addSeparator();
         file.add(ef);
@@ -234,7 +279,7 @@ public class Hiero extends JFrame {
         widths.addElement("512");
         widths.addElement("1024");
         
-        final JComboBox width = new JComboBox(widths);
+        width = new JComboBox(widths);
         width.setBounds(5,405,165,25);
         controls.add(width);
         width.setSelectedItem("512");
@@ -242,8 +287,8 @@ public class Hiero extends JFrame {
         label = new JLabel("Height");
         label.setBounds(5,430,165,25);
         controls.add(label);
-        
-        final JComboBox height = new JComboBox(widths);
+
+        height = new JComboBox(widths);
         height.setBounds(5,455,165,25);
         controls.add(height);
         height.setSelectedItem("512");
@@ -269,11 +314,6 @@ public class Hiero extends JFrame {
         label = new JLabel("Padding");
         label.setBounds(5,480,165,25);
         controls.add(label);
-        final JSpinner paddingTop = new JSpinner(new SpinnerNumberModel(0,0,100,1));
-        final JSpinner paddingLeft = new JSpinner(new SpinnerNumberModel(0,0,100,1));
-        final JSpinner paddingRight = new JSpinner(new SpinnerNumberModel(0,0,100,1));
-        final JSpinner paddingBottom = new JSpinner(new SpinnerNumberModel(0,0,100,1));
-        final JSpinner paddingAdvance = new JSpinner(new SpinnerNumberModel(0,-100,100,1));
         
         paddingTop.setBounds(60,495,50,25);
         controls.add(paddingTop);
@@ -337,6 +377,106 @@ public class Hiero extends JFrame {
         });
         
         size.setValue(new Integer(32));
+    }
+    
+    /**
+     * Create a new set of settings for hiero
+     */
+    public void newSettings() {
+        fontList.setSelectedValue("Arial", true);
+        charsets.setSelectedItem(SET_NEHE);
+        bold.setSelected(false);
+        italic.setSelected(false);
+        width.setSelectedItem("512");
+        height.setSelectedItem("512");
+        paddingAdvance.setValue(new Integer(0));
+        paddingLeft.setValue(new Integer(0));
+        paddingRight.setValue(new Integer(0));
+        paddingTop.setValue(new Integer(0));
+        paddingBottom.setValue(new Integer(0));
+    	size.setValue(new Integer(32));
+    	effectsDialog.removeAllEffects();
+    	
+    	applyEffects();
+    }
+
+    /**
+     * Load a set of settings
+     */
+    public void loadSettings() {
+    	Properties props = new Properties();
+    	
+    	int resp = chooser.showOpenDialog(this);
+    	if (resp != JFileChooser.APPROVE_OPTION) {
+    		return;
+    	}
+    	
+    	try {
+    		props.load(new FileInputStream(chooser.getSelectedFile()));
+    	} catch (IOException e) {
+    		JOptionPane.showMessageDialog(this, "Unable to load settings file.");
+    		return;
+    	}
+    	
+    	try {
+	    	fontList.setSelectedValue(props.getProperty("font.name"), true);
+	    	String charSetName = props.getProperty("charset.name");
+	    	for (int i=0;i<types.getSize();i++) {
+	    		if (types.getElementAt(i).toString().equals(charSetName)) {
+	    			charsets.setSelectedIndex(i);
+	    			break;
+	    		}
+	    	}
+	    	bold.setSelected("true".equals(props.getProperty("font.bold")));
+	    	italic.setSelected("true".equals(props.getProperty("font.italic")));
+	    	size.setValue(new Integer(Integer.parseInt(props.getProperty("font.size"))));
+	    	width.setSelectedItem(props.getProperty("texture.width"));
+	    	height.setSelectedItem(props.getProperty("texture.height"));
+	    	paddingAdvance.setValue(new Integer(Integer.parseInt(props.getProperty("padding.advance"))));
+	    	paddingTop.setValue(new Integer(Integer.parseInt(props.getProperty("padding.top"))));
+	    	paddingBottom.setValue(new Integer(Integer.parseInt(props.getProperty("padding.bottom"))));
+	    	paddingLeft.setValue(new Integer(Integer.parseInt(props.getProperty("padding.left"))));
+	    	paddingRight.setValue(new Integer(Integer.parseInt(props.getProperty("padding.right"))));
+	    	
+	    	effectsDialog.loadFrom(props);
+    	} catch (Throwable e) {
+    		Log.error(e);
+    		JOptionPane.showMessageDialog(this, "Invalid format / Missing Effects!");
+    		newSettings();
+    	}
+    }
+    
+    /**
+     * Save a set of settings
+     */
+    public void saveSettings() {
+    	Properties props = new Properties();
+    	props.setProperty("font.name", (String) fontList.getSelectedValue());
+    	props.setProperty("charset.name", ((CharSet) charsets.getSelectedItem()).getName());
+    	props.setProperty("font.bold", ""+bold.isSelected());
+    	props.setProperty("font.italic", ""+italic.isSelected());
+    	props.setProperty("font.size", ""+size.getValue());
+    	props.setProperty("texture.width", ""+width.getSelectedItem());
+    	props.setProperty("texture.height", ""+height.getSelectedItem());
+    	props.setProperty("padding.advance", ""+paddingAdvance.getValue());
+    	props.setProperty("padding.top", ""+paddingTop.getValue());
+    	props.setProperty("padding.bottom", ""+paddingBottom.getValue());
+    	props.setProperty("padding.left", ""+paddingLeft.getValue());
+    	props.setProperty("padding.right", ""+paddingRight.getValue());
+    	
+    	effectsDialog.saveTo(props);
+    	
+    	int resp = chooser.showSaveDialog(this);
+    	if (resp != JFileChooser.APPROVE_OPTION) {
+    		return;
+    	}
+    	
+    	try {
+    		props.store(new FileOutputStream(chooser.getSelectedFile()), "");
+    	} catch (IOException e) {
+    		JOptionPane.showMessageDialog(this, "Unable to load settings file.");
+    		return;
+    	}
     }
     
     /**
