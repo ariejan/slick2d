@@ -1,5 +1,6 @@
 package org.newdawn.slick.tools.hiero;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -19,6 +20,8 @@ import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -112,6 +115,8 @@ public class Hiero extends JFrame {
         JMenuBar bar = new JMenuBar();
         JMenu file = new JMenu("File");
         bar.add(file);
+        JMenu view = new JMenu("View");
+        bar.add(view);
         setJMenuBar(bar);
 
         JMenuItem nstate = new JMenuItem("New Settings");
@@ -187,6 +192,35 @@ public class Hiero extends JFrame {
         file.add(saveXML);
         file.addSeparator();
         file.add(quit);
+        
+        JMenuItem grid = new JCheckBoxMenuItem("Show Grid");
+        grid.setSelected(true);
+        grid.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		fontPanel.toggleOverlay();
+        	}
+        });
+        JMenuItem backg = new JCheckBoxMenuItem("Checked Background");
+        backg.setSelected(true);
+        backg.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		fontPanel.toggleTransparent();
+        	}
+        });
+        JMenuItem setBG = new JMenuItem("Set Background Color");
+        setBG.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+				Color newCol = JColorChooser.showDialog(Hiero.this, "Choose Background Color", fontPanel.getBackgroundColor());
+				if (newCol != null) {
+					fontPanel.setBackgroundColor(newCol);
+				}
+        	}
+        });
+
+        
+        view.add(grid);
+        view.add(backg);
+        view.add(setBG);
         
         Box panel = Box.createHorizontalBox();
         

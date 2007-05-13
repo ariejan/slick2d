@@ -58,6 +58,12 @@ public class FontPanel extends JPanel {
 	private Paint background;
 	/** The list of effects to apply */
 	private ArrayList effects = new ArrayList();
+	/** True if the background should be checked */
+	private boolean transparent = true;
+	/** True if we should show the grid */
+	private boolean showGrid = true;
+	/** The background color */
+	private Color backgroundColor = Color.darkGray;
 	
     /**
      * Create a new font panel
@@ -88,6 +94,41 @@ public class FontPanel extends JPanel {
     }
     
     /**
+     * Toggle the rendering of the overlay
+     */
+    public void toggleOverlay() {
+    	showGrid = !showGrid;
+    	repaint(0);
+    }
+
+    /**
+     * Toggle the rendering of transparent indicator for the background
+     */
+    public void toggleTransparent() {
+    	transparent = !transparent;
+    	repaint(0);
+    }
+    
+    /**
+     * Set the background colour
+     * 
+     * @param bg The background colour
+     */
+    public void setBackgroundColor(Color bg) {
+    	this.backgroundColor = bg;
+    	repaint(0);
+    }
+    
+    /**
+     * Get the the background color we're previewing over
+     * 
+     * @return The background color we're previewing over
+     */
+    public Color getBackgroundColor() {
+    	return backgroundColor;
+    }
+    
+    /**
      * Set the list of effects to apply
      * 
      * @param effects The list of effects to apply
@@ -105,10 +146,17 @@ public class FontPanel extends JPanel {
         super.paintComponent(g1d);
         
         Graphics2D g = (Graphics2D) g1d;
-        g.setPaint(background);
+        if (transparent) {
+        	g.setPaint(background);
+        } else {
+        	g.setPaint(backgroundColor);
+        }
         g.fillRect(0,0,getWidth(), getHeight());
         g.drawImage(image, 0, 0, null);
-        g.drawImage(overlay, 0, 0, null);
+        
+        if (showGrid) {
+        	g.drawImage(overlay, 0, 0, null);
+        }
     }
     
     /**
