@@ -295,6 +295,9 @@ public class Input {
 	private int lastMouseX;
 	/** The last recorded mouse y position */
 	private int lastMouseY;
+	/** THe state of the mosu buttons */
+	private boolean[] mousePressed = new boolean[10];
+	
 	/** The character values representing the pressed keys */
 	private char[] keys = new char[1024];
 	/** True if the key has been pressed since last queries */
@@ -401,12 +404,36 @@ public class Input {
 	}
 	
 	/**
+	 * Check if a mouse button has been pressed since last call
+	 * 
+	 * @param button The button to check
+	 * @return True if the button has been pressed since last call
+	 */
+	public boolean isMousePressed(int button) {
+		if (mousePressed[button]) {
+			mousePressed[button] = true;
+			return false;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Clear the state for the <code>isKeyPressed</code> method. This will
 	 * resort in all keys returning that they haven't been pressed, until
 	 * they are pressed again
 	 */
 	public void clearKeyPressedRecord() {
 		Arrays.fill(pressed, false);
+	}
+
+	/**
+	 * Clear the state for the <code>isMousePressed</code> method. This will
+	 * resort in all mouse buttons returning that they haven't been pressed, until
+	 * they are pressed again
+	 */
+	public void clearMousePressedRecord() {
+		Arrays.fill(mousePressed, false);
 	}
 	
 	/**
@@ -737,6 +764,7 @@ public class Input {
 			if (Mouse.getEventButton() >= 0) {
 				if (Mouse.getEventButtonState()) {
 					consumed = false;
+					mousePressed[Mouse.getEventButton()] = true;
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
@@ -748,6 +776,7 @@ public class Input {
 					}
 				} else {
 					consumed = false;
+					mousePressed[Mouse.getEventButton()] = false;
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
