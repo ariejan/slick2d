@@ -411,8 +411,8 @@ public class Input {
 	 */
 	public boolean isMousePressed(int button) {
 		if (mousePressed[button]) {
-			mousePressed[button] = true;
-			return false;
+			mousePressed[button] = false;
+			return true;
 		}
 		
 		return false;
