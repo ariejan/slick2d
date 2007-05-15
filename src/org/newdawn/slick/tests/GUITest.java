@@ -64,12 +64,13 @@ public class GUITest extends BasicGame implements ComponentListener {
 				field2.setFocus(true);
 			}
 		});
-		field2 = new TextField(container, font, 150,50,500,35,new ComponentListener() {
+		field2 = new TextField(container, font, 150,70,500,35,new ComponentListener() {
 			public void componentActivated(BasicComponent source) {
 				message = "Entered2: "+field2.getText();
 				field.setFocus(true);
 			}
 		});
+		field2.setBorderColor(Color.red);
 		
 		this.container = container;
 		
