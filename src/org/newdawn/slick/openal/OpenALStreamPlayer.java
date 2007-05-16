@@ -6,6 +6,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.OpenALException;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -171,8 +172,6 @@ public class OpenALStreamPlayer {
 	 */
 	public boolean stream(int bufferId) {
 		try {
-			int frames = sectionSize;
-			
 			int count = audio.read(buffer);
 			
 			if (count != -1) {
@@ -180,17 +179,16 @@ public class OpenALStreamPlayer {
 				bufferData.put(buffer,0,count);
 				bufferData.flip();
 				bufferData.limit(count);
-		
+
 				int format = audio.getChannels() > 1 ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
-				if (format == AL10.AL_FORMAT_STEREO16) {
-					if (count % 2 != 0) {
-						Log.error("Invalid data read from ogg");
-						return false;
-					}
+				try {
+					AL10.alBufferData(bufferId, format, 
+												bufferData, audio.getRate());
+				} catch (OpenALException e) {
+					Log.error("Failed to loop buffer: "+bufferId+" "+format+" "+count+" "+audio.getRate());
+					return false;
 				}
-				
-				AL10.alBufferData(bufferId, format, 
-											bufferData, audio.getRate());
+				 
 			} else {
 				if (loop) {
 					initStreams();
