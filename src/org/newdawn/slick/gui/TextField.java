@@ -64,7 +64,7 @@ public class TextField extends BasicComponent {
 		
 		this.listener = listener;
 		this.font = font;
-		area = new Rectangle(x,y,width,height);
+		area = new Rectangle(x,y,width,height+1);
 	}
 	
 	/**
