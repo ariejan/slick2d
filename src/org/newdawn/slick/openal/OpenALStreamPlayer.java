@@ -181,7 +181,15 @@ public class OpenALStreamPlayer {
 				bufferData.flip();
 				bufferData.limit(count);
 		
-				AL10.alBufferData(bufferId, audio.getChannels() > 1 ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16, 
+				int format = audio.getChannels() > 1 ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
+				if (format == AL10.AL_FORMAT_STEREO16) {
+					if (count % 2 != 0) {
+						Log.error("Invalid data read from ogg");
+						return false;
+					}
+				}
+				
+				AL10.alBufferData(bufferId, format, 
 											bufferData, audio.getRate());
 			} else {
 				if (loop) {

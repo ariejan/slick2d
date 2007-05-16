@@ -742,7 +742,7 @@ public class SoundStore {
 				try {
 					stream.update();
 				} catch (OpenALException e) {
-					Log.error("Error with OpenGL MOD Player on this this platform");
+					Log.error("Error with OpenGL Streaming Player on this this platform");
 					Log.error(e);
 					mod = null;
 				}
