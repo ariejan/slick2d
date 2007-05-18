@@ -115,6 +115,7 @@ public class OffsetGradientEffect implements StorableEffect {
       /** The color for the bottom */
       private Color newBottom;
                
+      /** The control to set the gradient offset */
       private JSpinner yspinner = new JSpinner(new SpinnerNumberModel(0,-500,500,1));
                
       /**
