@@ -50,7 +50,7 @@ public class OffsetGradientEffect implements StorableEffect {
       int bottom = context.getMaxGlyphDecent();
       
       yoff = ((Number)confPanel.yspinner.getValue()).floatValue();
-      GradientPaint paint = new GradientPaint(glyph.getX(), top, this.top, glyph.getX(), bottom, this.bottom);
+      GradientPaint paint = new GradientPaint(glyph.getX(), top+yoff, this.top, glyph.getX(), bottom, this.bottom);
       g.setPaint(paint);
    }
 
