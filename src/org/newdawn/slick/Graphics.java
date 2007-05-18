@@ -736,6 +736,20 @@ public class Graphics {
 	}
 	
 	/**
+	 * Get the width of lines being drawn in this context
+	 *  
+	 * @return The width of lines being draw in this context
+	 */
+	public float getLineWidth() {
+		predraw();
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+		GL11.glGetFloat(GL11.GL_LINE_WIDTH, buffer);
+		postdraw();
+		
+		return buffer.get(0);
+	}
+	
+	/**
 	 * Reset the line width in use to the default for this graphics context
 	 */
 	public void resetLineWidth() {
