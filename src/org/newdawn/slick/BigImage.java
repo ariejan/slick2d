@@ -143,6 +143,7 @@ public class BigImage extends Image {
 				images[0][0] = new Image(tempData, filter);
 				xcount = 1;
 				ycount = 1;
+				inited = true;
 				return;
 			}
 			
@@ -169,8 +170,8 @@ public class BigImage extends Image {
 						subBuffer.put(byteData);
 					}
 					
-					int finalX = ((x+1) * tileSize);
-					int finalY = ((y+1) * tileSize);
+					int finalX = ((x) * tileSize);
+					int finalY = ((y) * tileSize);
 					final int imageWidth = realWidth < finalX ? realWidth % tileSize : tileSize;
 					final int imageHeight = realHeight < finalY ? realHeight % tileSize : tileSize;
 					
