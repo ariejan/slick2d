@@ -29,6 +29,7 @@ public class EffectsRegistry {
 		registerEffect(new GradientEffect());
 		registerEffect(new ShadowEffect());
 		registerEffect(new BlurShadowEffect());
+		registerEffect(new OffsetGradientEffect());
 		
 		File[] files = HieroConfig.listFiles(".jar");
 		System.out.println("Found: "+files.length+" custom effects");
