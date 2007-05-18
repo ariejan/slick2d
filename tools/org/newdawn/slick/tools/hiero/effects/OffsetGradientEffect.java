@@ -81,7 +81,7 @@ public class OffsetGradientEffect implements StorableEffect {
     * @see org.newdawn.slick.tools.hiero.effects.Effect#getInstance()
     */
    public Effect getInstance() {
-      return new GradientEffect();
+      return new OffsetGradientEffect();
    }
 
    /**
