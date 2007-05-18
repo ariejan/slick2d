@@ -192,7 +192,12 @@ public class Animation {
 	  * @param spd The speed to run the animation. Default: 1.0
 	  */
 	public void setSpeed(float spd) {
-	   if (speed >= 0) speed = spd;
+		if (spd > 0) {
+			// Adjust nextChange
+			nextChange = (long) (nextChange * speed / spd);
+
+			speed = spd;
+		} 
 	}
 
 	/**
@@ -257,7 +262,11 @@ public class Animation {
 			Log.error("Invalid duration: "+duration);
 			throw new RuntimeException("Invalid duration: "+duration);
 		}
-		
+
+	    if (frames.isEmpty()) {
+			nextChange = (int) (duration / speed);
+		} 
+	    
 		frames.add(new Frame(frame, duration));
 		currentFrame = 0;
 	}
