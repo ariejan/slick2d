@@ -91,31 +91,6 @@ public class Ellipse extends Shape {
         this(0, 0, 0);
     }
     /**
-     * Set the x position of this box
-     * 
-     * @param x The new x position of this box
-     */
-    public void setX(float x) {
-        float diff = x - center[0];
-        super.setX(x);
-        for(int i=0;i<points.length;i+=2) {
-            points[i] += diff;
-        }
-    }
-    
-    /**
-     * Set the y position of this box
-     * 
-     * @param y The new y position of this box
-     */
-    public void setY(float y) {
-        float diff = y - center[1];
-        super.setY(y);
-        for(int i=1;i<points.length;i+=2) {
-            points[i] += diff;
-        }
-    }
-    /**
      * Apply a transformation and return a new shape.  This will not alter the current shape but will 
      * return the transformed shape.
      * 

@@ -1,7 +1,5 @@
 package org.newdawn.slick.geom;
 
-
-
 /**
  * The description of any 2D shape that can be transformed. The points provided approximate the intent
  * of the shape. 
@@ -9,18 +7,15 @@ package org.newdawn.slick.geom;
  * @author Mark
  */
 public abstract class Shape {
-    /**
-     * The points representing this polygon.
-     */
+    /** The points representing this polygon. */
     protected float points[];
-    /**
-     * Center point of the polygon.
-     */
+    /** Center point of the polygon. */
     protected float center[];
-    
-    /**
-     * Radius of a circle that can completely enclose this shape.
-     */
+    /** The left most point of this shape. */
+    protected Float left;
+    /** The top most point of this shape. */
+    protected Float top;
+    /** Radius of a circle that can completely enclose this shape. */
     protected float boundingCircleRadius;
 
     /**
@@ -33,38 +28,68 @@ public abstract class Shape {
     public abstract Shape transform(Transform transform);
 
     /**
-     * Get the x location of the center of this circle
+     * Get the x location of the left side of this shape.
      * 
-     * @return The x location of the center of this circle
+     * @return The x location of the left side of this shape.
      */
     public float getX() {
-        return center[0];
+        if(left == null) {
+            calculateLeft();
+        }
+
+        return left.floatValue();
     }
     /**
-     * Set the x position of this box
+     * Set the x position of the left side this shape.
      * 
-     * @param x The new x position of this box
+     * @param x The new x position of the left side this shape.
      */
     public void setX(float x) {
-        center[0] = x;
+        if(left == null) {
+            calculateLeft();
+        }
+        
+        float xLeftDiff = center[0] - left.floatValue();
+        float newCenter = x - xLeftDiff;
+        float xCenterDiff = newCenter - center[0];
+        center[0] = x - xLeftDiff;
+        left = new Float(left.floatValue() + xCenterDiff);
+        for(int i=0;i<points.length;i+=2) {
+            points[i] += xCenterDiff;
+        }
     }
     
     /**
-     * Set the y position of this box
+     * Set the y position of the top of this shape.
      * 
-     * @param y The new y position of this box
+     * @param y The new y position of the top of this shape.
      */
     public void setY(float y) {
-        center[1] = y;
+        if(top == null) {
+            calculateTop();
+        }
+        
+        float yTopDiff = center[0] - top.floatValue();
+        float newCenter = y - yTopDiff;
+        float yCenterDiff = newCenter - center[1];
+        center[1] = y - yTopDiff;
+        top = new Float(top.floatValue() + yCenterDiff);
+        for(int i=1;i<points.length;i+=2) {
+            points[i] += yCenterDiff;
+        }
     }
 
     /**
-     * Get the y location of the center of this circle
+     * Get the y position of the top of this shape.
      * 
-     * @return The y location of the center of this circle
+     * @return The y position of the top of this shape.
      */
     public float getY() {
-        return center[1];
+        if(top == null) {
+            calculateTop();
+        }
+
+        return top.floatValue();
     }
     /**
      * Get the radius of a circle that can completely enclose this shape.
@@ -238,5 +263,31 @@ public abstract class Shape {
             boundingCircleRadius = (boundingCircleRadius > temp) ? boundingCircleRadius : temp;
         }
         boundingCircleRadius = (float)Math.sqrt(boundingCircleRadius);
+    }
+    
+    /**
+     * Calculate the left most point on this shape.
+     *
+     */
+    private void calculateLeft() {
+        left = new Float(Float.MAX_VALUE);
+        for(int i=0;i<points.length;i+=2) {
+            if(points[i] < left.floatValue()) {
+                left = new Float(points[i]);
+            }
+        }
+    }
+
+    /**
+     * Calculate the top most point on this shape.
+     *
+     */
+    private void calculateTop() {
+        top = new Float(Float.MAX_VALUE);
+        for(int i=1;i<points.length;i+=2) {
+            if(points[i] < top.floatValue()) {
+                top = new Float(points[i]);
+            }
+        }
     }
 }

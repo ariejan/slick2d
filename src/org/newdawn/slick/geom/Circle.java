@@ -53,23 +53,23 @@ public strictfp class Circle extends Ellipse {
 	}
 	
 	/**
-	 * Set the x location of the center of this circle
+	 * Set the x position of the left side this circle.
 	 * 
-	 * @param x The x location of the center of this circle
+	 * @param x The new x position of the left side this circle.
 	 */
 	public void setX(float x) {
         super.setX(x);
-		this.x = x;
+		this.x = center[0];
 	}
 
 	/**
-	 * Set the y location of the center of this circle
+	 * Set the y position of the top of this circle.
 	 * 
-	 * @param y The y location of the center of this circle
+	 * @param y The new y position of the top of this circle.
 	 */
 	public void setY(float y) {
         super.setY(y);
-		this.y = y;
+		this.y = center[1];
 	}
 	
 	/**
