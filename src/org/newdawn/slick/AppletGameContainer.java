@@ -18,11 +18,11 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
- * A game container that displays the game as an applet. Note however that 
- * the actual game container implementation is an internal class which 
- * can be obtained with the getContainer() method - this is due to the
- * Applet being a class wrap than an interface. 
- *
+ * A game container that displays the game as an applet. Note however that the
+ * actual game container implementation is an internal class which can be
+ * obtained with the getContainer() method - this is due to the Applet being a
+ * class wrap than an interface.
+ * 
  * @author kevin
  */
 public class AppletGameContainer extends Applet {
@@ -30,21 +30,21 @@ public class AppletGameContainer extends Applet {
 	private ContainerPanel canvas;
 	/** The actual container implementation */
 	private Container container;
-	
+
 	/**
 	 * @see java.applet.Applet#destroy()
 	 */
 	public void destroy() {
 		super.destroy();
 		container.stopApplet();
-		
+
 		Log.info("Clear up");
 		AWTInputAdapter.destroy();
 		Mouse.destroy();
 		Keyboard.destroy();
 		AL.destroy();
 	}
-	
+
 	/**
 	 * @see java.applet.Applet#start()
 	 */
@@ -56,7 +56,7 @@ public class AppletGameContainer extends Applet {
 	 */
 	public void stop() {
 	}
-	
+
 	/**
 	 * @see java.applet.Applet#init()
 	 */
@@ -67,16 +67,17 @@ public class AppletGameContainer extends Applet {
 			le.printStackTrace();
 			return;
 		}
-		
+
 		setLayout(new BorderLayout());
-		
+
 		try {
-			Game game = (Game) Class.forName(getParameter("game")).newInstance();
+			Game game = (Game) Class.forName(getParameter("game"))
+					.newInstance();
 
 			container = new Container(game);
 			canvas = new ContainerPanel(container);
 			canvas.setSize(getWidth(), getHeight());
-			
+
 			add(canvas);
 			canvas.setFocusable(true);
 			canvas.requestFocus();
@@ -85,14 +86,14 @@ public class AppletGameContainer extends Applet {
 			throw new RuntimeException("Unable to create game container");
 		}
 	}
-	
+
 	/**
 	 * @see java.awt.Container#paint(java.awt.Graphics)
 	 */
 	public void paint(java.awt.Graphics g) {
 		canvas.update(g);
 	}
-	
+
 	/**
 	 * Get the GameContainer providing this applet
 	 * 
@@ -101,37 +102,39 @@ public class AppletGameContainer extends Applet {
 	public GameContainer getContainer() {
 		return container;
 	}
-	
+
 	/**
 	 * Create a new panel to display the GL context
-	 *
+	 * 
 	 * @author kevin
 	 */
 	public class ContainerPanel extends AWTGLCanvas {
 		/** The container being displayed on this canvas */
 		private Container container;
-		
+
 		/**
 		 * Create a new panel
 		 * 
-		 * @param container The container proxied by this canvas
+		 * @param container
+		 *            The container proxied by this canvas
 		 * @throws LWJGLException
 		 */
 		public ContainerPanel(Container container) throws LWJGLException {
 			super();
-			
+
 			this.container = container;
 		}
-		
+
 		/**
 		 * Set the container held by this canvas
 		 * 
-		 * @param container The container rendered on this canvas
+		 * @param container
+		 *            The container rendered on this canvas
 		 */
 		public void setContainer(Container container) {
 			this.container = container;
 		}
-		
+
 		/**
 		 * @see org.lwjgl.opengl.AWTGLCanvas#initGL()
 		 */
@@ -157,41 +160,42 @@ public class AppletGameContainer extends Applet {
 				Mouse.poll();
 				Keyboard.poll();
 				Controllers.poll();
-			} 
-			
+			}
+
 			try {
 				container.pollApplet(isVisible());
 			} catch (SlickException e) {
 				Log.error(e);
 				container.stopApplet();
 			}
-			
+
 			try {
 				swapBuffers();
 				if (isVisible()) {
 					repaint();
 				}
-			} catch (Exception e) {/*OK*/
+			} catch (Exception e) {/* OK */
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * A game container to provide the applet context
-	 *
+	 * 
 	 * @author kevin
 	 */
 	public class Container extends GameContainer {
 		/**
 		 * Create a new container wrapped round the game
 		 * 
-		 * @param game The game to be held in this container
+		 * @param game
+		 *            The game to be held in this container
 		 */
 		public Container(Game game) {
 			super(game);
-			
+
 			width = AppletGameContainer.this.getWidth();
 			height = AppletGameContainer.this.getHeight();
 		}
@@ -199,7 +203,8 @@ public class AppletGameContainer extends Applet {
 		/**
 		 * Initiliase based on Applet init
 		 * 
-		 * @throws SlickException Indicates a failure to inialise the basic framework
+		 * @throws SlickException
+		 *             Indicates a failure to inialise the basic framework
 		 */
 		public void initApplet() throws SlickException {
 			initSystem();
@@ -212,40 +217,44 @@ public class AppletGameContainer extends Applet {
 			} catch (Throwable e) {
 				Log.info("Controllers not available");
 			}
-			
+
 			game.init(this);
 			getDelta();
 		}
-		
+
 		/**
 		 * Stop the applet play back
 		 */
 		public void stopApplet() {
 			running = false;
 		}
-		
+
 		/**
 		 * Poll the applets update and render loops
 		 * 
-		 * @param visible True if the applet is currently visible
-		 * @throws SlickException Indicates a failure the internal game
+		 * @param visible
+		 *            True if the applet is currently visible
+		 * @throws SlickException
+		 *             Indicates a failure the internal game
 		 */
 		public void pollApplet(boolean visible) throws SlickException {
 			if (!running) {
 				return;
 			}
-			
+
 			int delta = getDelta();
-			
 			if (!visible) {
-				try { Thread.sleep(100); } catch (Exception e) {}
+				try {
+					Thread.sleep(100);
+				} catch (Exception e) {
+				}
 			} else {
 				updateAndRender(delta);
 			}
-			
+
 			updateFPS();
 		}
-		
+
 		/**
 		 * @see org.newdawn.slick.GameContainer#getScreenHeight()
 		 */
@@ -264,7 +273,7 @@ public class AppletGameContainer extends Applet {
 		 * @see org.newdawn.slick.GameContainer#hasFocus()
 		 */
 		public boolean hasFocus() {
-			return AppletGameContainer.this.hasFocus();
+			return true; // AppletGameContainer.this.hasFocus();
 		}
 
 		/**
@@ -282,9 +291,11 @@ public class AppletGameContainer extends Applet {
 		}
 
 		/**
-		 * @see org.newdawn.slick.GameContainer#setMouseCursor(java.lang.String, int, int)
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(java.lang.String,
+		 *      int, int)
 		 */
-		public void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException {
+		public void setMouseCursor(String ref, int hotSpotX, int hotSpotY)
+				throws SlickException {
 			// unsupported in an applet
 		}
 
@@ -296,18 +307,22 @@ public class AppletGameContainer extends Applet {
 		}
 
 		/**
-		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.opengl.ImageData, int, int)
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.opengl.ImageData,
+		 *      int, int)
 		 */
-		public void setMouseCursor(ImageData data, int hotSpotX, int hotSpotY) throws SlickException {
+		public void setMouseCursor(ImageData data, int hotSpotX, int hotSpotY)
+				throws SlickException {
 			// unsupported in an applet
 		}
 
 		/**
-		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.lwjgl.input.Cursor, int, int)
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.lwjgl.input.Cursor,
+		 *      int, int)
 		 */
-		public void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY) throws SlickException {
+		public void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY)
+				throws SlickException {
 			// unsupported in an applet
 		}
-		
+
 	}
 }
