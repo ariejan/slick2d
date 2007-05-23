@@ -153,9 +153,11 @@ public class AppletGameContainer extends Applet {
 		 * @see org.lwjgl.opengl.AWTGLCanvas#paintGL()
 		 */
 		protected void paintGL() {
-			Mouse.poll();
-			Keyboard.poll();
-			Controllers.poll();
+			if (Mouse.isCreated()) {
+				Mouse.poll();
+				Keyboard.poll();
+				Controllers.poll();
+			} 
 			
 			try {
 				container.pollApplet(isVisible());
