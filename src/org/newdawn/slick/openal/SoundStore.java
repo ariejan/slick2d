@@ -426,10 +426,12 @@ public class SoundStore {
 	 * @return The open al source used for music
 	 */
 	public int getMusicSource() {
-		IntBuffer deleteMe = BufferUtils.createIntBuffer(1);
-		deleteMe.put(sources.get(0));
-		deleteMe.flip();
-		AL10.alDeleteSources(deleteMe);
+		if (AL10.alIsSource(sources.get(0))) {
+			IntBuffer deleteMe = BufferUtils.createIntBuffer(1);
+			deleteMe.put(sources.get(0));
+			deleteMe.flip();
+			AL10.alDeleteSources(deleteMe);
+		}
 		
 		IntBuffer musicChannel = BufferUtils.createIntBuffer(1);
 		AL10.alGenSources(musicChannel);
