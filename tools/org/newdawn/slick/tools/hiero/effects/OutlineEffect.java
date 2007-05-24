@@ -84,7 +84,7 @@ public class OutlineEffect implements StorableEffect {
 	 */
 	public void setConfigurationFromPanel(JPanel panel) {
 		col = confPanel.newCol;
-		width = ((Integer) confPanel.spinner.getValue()).intValue();
+		width = (float) ((Double) confPanel.spinner.getValue()).doubleValue();
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class OutlineEffect implements StorableEffect {
 	 */
 	private class ConfigPanel extends JPanel {
 		/** The width information */
-		private JSpinner spinner = new JSpinner(new SpinnerNumberModel(1,1,10,1));
+		private JSpinner spinner = new JSpinner(new SpinnerNumberModel(0.5f,0.1f,10,0.1f));
 		/** The button to change the color */
 		private JButton colButton = new JButton("Set..");
 		/** The color */
