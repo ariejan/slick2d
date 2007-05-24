@@ -427,6 +427,7 @@ public class SoundStore {
 	 */
 	public int getMusicSource() {
 		if (AL10.alIsSource(sources.get(0))) {
+			AL10.alSourceStop(sources.get(0));
 			IntBuffer deleteMe = BufferUtils.createIntBuffer(1);
 			deleteMe.put(sources.get(0));
 			deleteMe.flip();
