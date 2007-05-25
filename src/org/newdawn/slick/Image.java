@@ -60,6 +60,7 @@ public class Image {
 		this.ref = other.ref;
 		this.textureOffsetX = other.textureOffsetX;
 		this.textureOffsetY = other.textureOffsetY;
+		inited = true;
 	}
 	
 	/**
