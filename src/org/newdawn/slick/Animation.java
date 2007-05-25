@@ -541,6 +541,31 @@ public class Animation {
 	}
 	
 	/**
+	 * Get the duration of a particular frame
+	 * 
+	 * @param index The index of the given frame
+	 * @return The duration in (ms) of the given frame
+	 */
+	public int getDuration(int index) {
+		return ((Frame) frames.get(index)).duration;
+	}
+	
+	/**
+	 * Get the durations of all the frames in this animation
+	 * 
+	 * @return The durations of all the frames in this animation
+	 */
+	public int[] getDurations() {
+		int[] durations = new int[frames.size()];
+		for (int i=0;i<frames.size();i++) {
+			durations[i] = getDuration(i);
+		}
+		
+		return durations;
+	}
+	
+	
+	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
