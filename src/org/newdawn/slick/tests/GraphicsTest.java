@@ -96,6 +96,10 @@ public class GraphicsTest extends BasicGame {
 		g.draw(poly);
 		g.resetTransform();
 		
+		g.setColor(Color.magenta);
+		g.drawRoundRect(10, 10, 100, 100, 10);
+		g.fillRoundRect(10, 210, 100, 100, 10);
+		
 		g.rotate(400, 300, ang);
 		g.setColor(Color.green);
 		g.drawRect(200,200,200,200);

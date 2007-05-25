@@ -723,7 +723,115 @@ public class Graphics {
 		
 		postdraw();
 	}
-	
+
+	/**
+	 * Draw a rounded rectangle
+	 * 
+	 * @param x The x coordinate of the top left corner of the rectangle
+	 * @param y The y coordinate of the top left corner of the rectangle
+	 * @param width The width of the rectangle
+	 * @param height The height of the rectangle
+	 * @param cornerRadius The radius of the rounded edges on the corners
+	 */
+	public void drawRoundRect(float x, float y, float width, float height, int cornerRadius) {
+		drawRoundRect(x, y, width, height, cornerRadius, DEFAULT_SEGMENTS);
+	}
+
+	/**
+	 * Draw a rounded rectangle
+	 * 
+	 * @param x The x coordinate of the top left corner of the rectangle
+	 * @param y The y coordinate of the top left corner of the rectangle
+	 * @param width The width of the rectangle
+	 * @param height The height of the rectangle
+	 * @param cornerRadius The radius of the rounded edges on the corners
+	 * @param segs The number of segments to make the corners out of 
+	 */
+	public void drawRoundRect(float x, float y, float width, float height, int cornerRadius, int segs) {
+        if (cornerRadius<0)
+            throw new IllegalArgumentException("corner radius must be > 0");
+        if (cornerRadius==0) {
+            drawRect(x, y, width, height);
+            return;
+        }
+       
+        int mr = (int)Math.min(width, height)/2;
+        // make sure that w & h are larger than 2*cornerRadius
+        if (cornerRadius > mr) {
+            cornerRadius = mr;
+        }
+
+        drawLine(x+cornerRadius, y, x+width-cornerRadius, y);
+        drawLine(x, y+cornerRadius, x, y+height-cornerRadius);
+        drawLine(x+width, y+cornerRadius, x+width, y+height-cornerRadius);
+        drawLine(x+cornerRadius, y+height, x+width-cornerRadius, y+height);
+               
+        float d = cornerRadius*2;
+        //bottom right - 0, 90
+        drawArc(x+width-d, y+height-d, d, d, segs, 0, 90);
+        //bottom left - 90, 180
+        drawArc(x, y+height-d, d, d, segs, 90, 180);
+        //top right - 270, 360
+        drawArc(x+width-d, y, d, d, segs, 270, 360);
+        //top left - 180, 270
+        drawArc(x, y, d, d, segs, 180, 270);
+    }
+   
+	/**
+	 * Fill a rounded rectangle
+	 * 
+	 * @param x The x coordinate of the top left corner of the rectangle
+	 * @param y The y coordinate of the top left corner of the rectangle
+	 * @param width The width of the rectangle
+	 * @param height The height of the rectangle
+	 * @param cornerRadius The radius of the rounded edges on the corners
+	 */
+	public void fillRoundRect(float x, float y, float width, float height, int cornerRadius) {
+		fillRoundRect(x, y, width, height, cornerRadius, DEFAULT_SEGMENTS);
+	}
+
+	/**
+	 * Fill a rounded rectangle
+	 * 
+	 * @param x The x coordinate of the top left corner of the rectangle
+	 * @param y The y coordinate of the top left corner of the rectangle
+	 * @param width The width of the rectangle
+	 * @param height The height of the rectangle
+	 * @param cornerRadius The radius of the rounded edges on the corners
+	 * @param segs The number of segments to make the corners out of 
+	 */
+	public void fillRoundRect(float x, float y, float width, float height, int cornerRadius, int segs) {
+        if (cornerRadius<0)
+            throw new IllegalArgumentException("corner radius must be > 0");
+        if (cornerRadius==0) {
+            fillRect(x, y, width, height);
+            return;
+        }
+       
+        int mr = (int)Math.min(width, height)/2;
+        // make sure that w & h are larger than 2*cornerRadius
+        if (cornerRadius > mr) {
+            cornerRadius = mr;
+        }
+       
+        float d = cornerRadius*2;
+       
+        fillRect(x+cornerRadius, y, width-d, cornerRadius);
+        fillRect(x, y+cornerRadius, cornerRadius, height-d);
+        fillRect(x+width-cornerRadius, y+cornerRadius, cornerRadius, height-d);
+        fillRect(x+cornerRadius, y+height-cornerRadius, width-d, cornerRadius);
+        fillRect(x+cornerRadius, y+cornerRadius, width-d, height-d);
+       
+        //bottom right - 0, 90
+        fillArc(x+width-d, y+height-d, d, d, segs, 0, 90);
+        //bottom left - 90, 180
+        fillArc(x, y+height-d, d, d, segs, 90, 180);
+        //top right - 270, 360
+        fillArc(x+width-d, y, d, d, segs, 270, 360);
+        //top left - 180, 270
+        fillArc(x, y, d, d, segs, 180, 270);
+    }
+    
 	/**
 	 * Set the with of the line to be used when drawing line based primitives
 	 * 
