@@ -1,5 +1,7 @@
 package org.newdawn.slick;
 
+import java.net.URL;
+
 import org.newdawn.slick.openal.InternalSound;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.Log;
@@ -13,6 +15,34 @@ import org.newdawn.slick.util.Log;
 public class Sound {
 	/** The internal sound effect represent this sound */
 	private InternalSound sound;
+
+	/**
+	 * Create a new Sound 
+	 * 
+	 * @param url The location of the OGG or MOD/XM to load
+	 * @throws SlickException Indicates a failure to load the sound effect
+	 */
+	public Sound(URL url) throws SlickException {
+		SoundStore.get().init();
+		String ref = url.getFile();
+		
+		try {
+			if (ref.toLowerCase().endsWith(".ogg")) {
+				sound = SoundStore.get().getOgg(url.openStream());
+			} else if (ref.toLowerCase().endsWith(".wav")) {
+				sound = SoundStore.get().getWAV(url.openStream());
+			} else if (ref.toLowerCase().endsWith(".aif")) {
+				sound = SoundStore.get().getAIF(url.openStream());
+			} else if (ref.toLowerCase().endsWith(".xm") || ref.toLowerCase().endsWith(".mod")) {
+				sound = SoundStore.get().getMOD(url.openStream());
+			} else {
+				throw new SlickException("Only .xm, .mod, .aif, .wav and .ogg are currently supported.");
+			}
+		} catch (Exception e) {
+			Log.error(e);
+			throw new SlickException("Failed to load sound: "+ref);
+		}
+	}
 	
 	/**
 	 * Create a new Sound 

@@ -1,5 +1,6 @@
 package org.newdawn.slick;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.newdawn.slick.openal.InternalSound;
@@ -48,6 +49,49 @@ public class Music {
 	 */
 	public Music(String ref) throws SlickException {
 		this(ref, false);
+	}
+
+	/**
+	 * Create and load a piece of music (either OGG or MOD/XM)
+	 * 
+	 * @param ref The location of the music
+	 * @throws SlickException
+	 */
+	public Music(URL ref) throws SlickException {
+		this(ref, false);
+	}
+	
+	/**
+	 * Create and load a piece of music (either OGG or MOD/XM)
+	 * 
+	 * @param url The location of the music
+	 * @param streamingHint A hint to indicate whether streaming should be used if possible
+	 * @throws SlickException
+	 */
+	public Music(URL url, boolean streamingHint) throws SlickException {
+		SoundStore.get().init();
+		String ref = url.getFile();
+		
+		try {
+			if (ref.toLowerCase().endsWith(".ogg")) {
+				if (streamingHint) {
+					sound = SoundStore.get().getOggStream(url);
+				} else {
+					sound = SoundStore.get().getOgg(url.openStream());
+				}
+			} else if (ref.toLowerCase().endsWith(".wav")) {
+				sound = SoundStore.get().getWAV(url.openStream());
+			} else if (ref.toLowerCase().endsWith(".xm") || ref.toLowerCase().endsWith(".mod")) {
+				sound = SoundStore.get().getMOD(url.openStream());
+			} else if (ref.toLowerCase().endsWith(".aif") || ref.toLowerCase().endsWith(".aiff")) {
+				sound = SoundStore.get().getAIF(url.openStream());
+			} else {
+				throw new SlickException("Only .xm, .mod, .ogg, and .aif/f are currently supported.");
+			}
+		} catch (Exception e) {
+			Log.error(e);
+			throw new SlickException("Failed to load sound: "+url);
+		}
 	}
 	
 	/**

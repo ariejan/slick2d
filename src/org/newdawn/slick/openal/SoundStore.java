@@ -2,6 +2,7 @@ package org.newdawn.slick.openal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.security.AccessController;
@@ -491,6 +492,29 @@ public class SoundStore {
 	 * @throws IOException Indicates a failure to read the data
 	 */
 	public InternalSound getMOD(String ref) throws IOException {
+		return getMOD(ref, ResourceLoader.getResourceAsStream(ref));
+	}
+
+	/**
+	 * Get a MOD sound (mod/xm etc)
+	 * 
+	 * @param in The stream to the MOD to load
+	 * @return The sound for play back 
+	 * @throws IOException Indicates a failure to read the data
+	 */
+	public InternalSound getMOD(InputStream in) throws IOException {
+		return getMOD(in.toString(), in);
+	}
+	
+	/**
+	 * Get a MOD sound (mod/xm etc)
+	 * 
+	 * @param ref The stream to the MOD to load
+	 * @param in The stream to the MOD to load
+	 * @return The sound for play back 
+	 * @throws IOException Indicates a failure to read the data
+	 */
+	public InternalSound getMOD(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
 			return new InternalSound(this, 0);
 		}
@@ -500,11 +524,10 @@ public class SoundStore {
 		if (deferred) {
 			return new DeferredSound(ref, DeferredSound.MOD);
 		}
-		Log.info("Loading: "+ref);
 		
-		return new MODSound(this, ResourceLoader.getResourceAsStream(ref));
+		return new MODSound(this, in);
 	}
-	
+
 	/**
 	 * Get the Sound based on a specified AIF file
 	 * 
@@ -513,6 +536,30 @@ public class SoundStore {
 	 * @throws IOException Indicates a failure to load the AIF
 	 */
 	public InternalSound getAIF(String ref) throws IOException {
+		return getAIF(ref, ResourceLoader.getResourceAsStream(ref));
+	}
+	
+
+	/**
+	 * Get the Sound based on a specified AIF file
+	 * 
+	 * @param in The stream to the MOD to load
+	 * @return The Sound read from the AIF file
+	 * @throws IOException Indicates a failure to load the AIF
+	 */
+	public InternalSound getAIF(InputStream in) throws IOException {
+		return getAIF(in.toString(), in);
+	}
+	
+	/**
+	 * Get the Sound based on a specified AIF file
+	 * 
+	 * @param ref The reference to the AIF file in the classpath
+	 * @param in The stream to the AIF to load
+	 * @return The Sound read from the AIF file
+	 * @throws IOException Indicates a failure to load the AIF
+	 */
+	public InternalSound getAIF(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
 			return new InternalSound(this, 0);
 		}
@@ -528,11 +575,9 @@ public class SoundStore {
 		if (loaded.get(ref) != null) {
 			buffer = ((Integer) loaded.get(ref)).intValue();
 		} else {
-			Log.info("Loading: "+ref);
 			try {
 				IntBuffer buf = BufferUtils.createIntBuffer(1);
 				
-				InputStream in = ResourceLoader.getResourceAsStream(ref);
 				AiffData data = AiffData.create(in);
 				AL10.alGenBuffers(buf);
 				AL10.alBufferData(buf.get(0), data.format, data.data, data.samplerate);
@@ -555,6 +600,8 @@ public class SoundStore {
 		return new InternalSound(this, buffer);
 	}
 	
+
+	
 	/**
 	 * Get the Sound based on a specified WAV file
 	 * 
@@ -563,6 +610,29 @@ public class SoundStore {
 	 * @throws IOException Indicates a failure to load the WAV
 	 */
 	public InternalSound getWAV(String ref) throws IOException {
+		return getWAV(ref, ResourceLoader.getResourceAsStream(ref));
+	}
+	
+	/**
+	 * Get the Sound based on a specified WAV file
+	 * 
+	 * @param in The stream to the WAV to load
+	 * @return The Sound read from the WAV file
+	 * @throws IOException Indicates a failure to load the WAV
+	 */
+	public InternalSound getWAV(InputStream in) throws IOException {
+		return getWAV(in.toString(), in);
+	}
+	
+	/**
+	 * Get the Sound based on a specified WAV file
+	 * 
+	 * @param ref The reference to the WAV file in the classpath
+	 * @param in The stream to the WAV to load
+	 * @return The Sound read from the WAV file
+	 * @throws IOException Indicates a failure to load the WAV
+	 */
+	public InternalSound getWAV(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
 			return new InternalSound(this, 0);
 		}
@@ -578,11 +648,9 @@ public class SoundStore {
 		if (loaded.get(ref) != null) {
 			buffer = ((Integer) loaded.get(ref)).intValue();
 		} else {
-			Log.info("Loading: "+ref);
 			try {
 				IntBuffer buf = BufferUtils.createIntBuffer(1);
 				
-				InputStream in = ResourceLoader.getResourceAsStream(ref);
 				WaveData data = WaveData.create(in);
 				AL10.alGenBuffers(buf);
 				AL10.alBufferData(buf.get(0), data.format, data.data, data.samplerate);
@@ -629,6 +697,31 @@ public class SoundStore {
 		
 		return new StreamSound(new OpenALStreamPlayer(0, ref));
 	}
+
+	/**
+	 * Get the Sound based on a specified OGG file
+	 * 
+	 * @param ref The reference to the OGG file in the classpath
+	 * @return The Sound read from the OGG file
+	 * @throws IOException Indicates a failure to load the OGG
+	 */
+	public StreamSound getOggStream(URL ref) throws IOException {
+		setMOD(null);
+		setStream(null);
+		
+		if (soundWorks) {
+			if (currentMusic != -1) {
+				AL10.alSourceStop(sources.get(0));
+			}
+			
+			getMusicSource();
+			currentMusic = sources.get(0);
+			
+			return new StreamSound(new OpenALStreamPlayer(currentMusic, ref));
+		}
+		
+		return new StreamSound(new OpenALStreamPlayer(0, ref));
+	}
 	
 	/**
 	 * Get the Sound based on a specified OGG file
@@ -638,6 +731,29 @@ public class SoundStore {
 	 * @throws IOException Indicates a failure to load the OGG
 	 */
 	public InternalSound getOgg(String ref) throws IOException {
+		return getOgg(ref, ResourceLoader.getResourceAsStream(ref));
+	}
+	
+	/**
+	 * Get the Sound based on a specified OGG file
+	 * 
+	 * @param in The stream to the OGG to load
+	 * @return The Sound read from the OGG file
+	 * @throws IOException Indicates a failure to load the OGG
+	 */
+	public InternalSound getOgg(InputStream in) throws IOException {
+		return getOgg(in.toString(), in);
+	}
+	
+	/**
+	 * Get the Sound based on a specified OGG file
+	 * 
+	 * @param ref The reference to the OGG file in the classpath
+	 * @param in The stream to the OGG to load
+	 * @return The Sound read from the OGG file
+	 * @throws IOException Indicates a failure to load the OGG
+	 */
+	public InternalSound getOgg(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
 			return new InternalSound(this, 0);
 		}
@@ -653,11 +769,8 @@ public class SoundStore {
 		if (loaded.get(ref) != null) {
 			buffer = ((Integer) loaded.get(ref)).intValue();
 		} else {
-			Log.info("Loading: "+ref);
 			try {
 				IntBuffer buf = BufferUtils.createIntBuffer(1);
-				
-				InputStream in = ResourceLoader.getResourceAsStream(ref);
 				
 				OggDecoder decoder = new OggDecoder();
 				OggData ogg = decoder.getData(in);

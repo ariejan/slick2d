@@ -1,6 +1,7 @@
 package org.newdawn.slick.openal;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -40,6 +41,8 @@ public class OpenALStreamPlayer {
 	private AudioInputStream audio;
 	/** The source of the data */
 	private String ref;
+	/** The source of the data */
+	private URL url;
 	
 	/**
 	 * Create a new player to work on an audio stream
@@ -50,6 +53,20 @@ public class OpenALStreamPlayer {
 	public OpenALStreamPlayer(int source, String ref) {
 		this.source = source;
 		this.ref = ref;
+		
+		bufferNames = BufferUtils.createIntBuffer(2);
+		AL10.alGenBuffers(bufferNames);
+	}
+
+	/**
+	 * Create a new player to work on an audio stream
+	 * 
+	 * @param source The source on which we'll play the audio
+	 * @param url A reference to the audio file to stream
+	 */
+	public OpenALStreamPlayer(int source, URL url) {
+		this.source = source;
+		this.url = url;
 		
 		bufferNames = BufferUtils.createIntBuffer(2);
 		AL10.alGenBuffers(bufferNames);
@@ -65,8 +82,11 @@ public class OpenALStreamPlayer {
 			audio.close();
 		}
 		
-		OggInputStream ogg = new OggInputStream(ResourceLoader.getResourceAsStream(ref));
-		audio = ogg;
+		if (url != null) {
+			audio = new OggInputStream(url.openStream());
+		} else {
+			audio = new OggInputStream(ResourceLoader.getResourceAsStream(ref));
+		}
 	}
 	
 	/**
