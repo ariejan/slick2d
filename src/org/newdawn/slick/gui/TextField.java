@@ -190,6 +190,8 @@ public class TextField extends BasicComponent {
 				}
 			}
 		}
+		
+		g.setFont(temp);
 	}
 
 	/**
