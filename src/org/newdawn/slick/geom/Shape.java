@@ -69,7 +69,7 @@ public abstract class Shape {
             calculateTop();
         }
         
-        float yTopDiff = center[0] - top.floatValue();
+        float yTopDiff = center[1] - top.floatValue();
         float newCenter = y - yTopDiff;
         float yCenterDiff = newCenter - center[1];
         center[1] = y - yTopDiff;
