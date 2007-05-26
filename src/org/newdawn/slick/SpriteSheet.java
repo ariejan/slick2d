@@ -32,6 +32,10 @@ public class SpriteSheet extends Image {
 		this.target = image;
 		this.tw = tw;
 		this.th = th;
+		
+		// call init manually since constructing from an image will have previously initialised
+		// from incorrect values 
+		initImpl();
 	}
 
 	/**
@@ -49,6 +53,10 @@ public class SpriteSheet extends Image {
 		this.tw = tw;
 		this.th = th;
 		this.spacing = spacing;
+
+		// call init manually since constructing from an image will have previously initialised
+		// from incorrect values 
+		initImpl();
 	}
 	
 	/**

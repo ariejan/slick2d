@@ -52,9 +52,9 @@ public class Image {
 	 * @param other The other texture to copy
 	 */
 	protected Image(Image other) {
+		this.width = other.getWidth();
+		this.height = other.getHeight();
 		this.texture = other.texture;
-		this.width = other.width;
-		this.height = other.height;
 		this.textureWidth = other.textureWidth;
 		this.textureHeight = other.textureHeight;
 		this.ref = other.ref;
