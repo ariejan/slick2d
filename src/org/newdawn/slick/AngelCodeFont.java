@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -21,6 +23,12 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author kevin
  */
 public class AngelCodeFont implements Font {
+	/** The line cache size, this is how many lines we can render before starting to regenerate lists */
+	private static final int LINE_CACHE_SIZE = 200;
+	
+	/** True if this font should use display list caching */
+	private boolean displayListCaching = true;
+	
 	/** The image containing the bitmap font */
 	private Image font;
 	/** The characters building up the font */
@@ -29,6 +37,8 @@ public class AngelCodeFont implements Font {
 	private int[][] kerning = new int[1000][1000];
 	/** The height of a line */
 	private int lineHeight;
+	/** The caches for rendered lines */
+	private ArrayList cache = new ArrayList();
 	
 	/**
 	 * Create a new font based on a font definition from AngelCode's tool and the font
@@ -48,6 +58,21 @@ public class AngelCodeFont implements Font {
 	 * Create a new font based on a font definition from AngelCode's tool and the font
 	 * image generated from the tool.
 	 * 
+	 * @param fntFile The location of the font defnition file
+	 * @param imgFile The location of the font image
+	 * @param caching True if this font should use display list caching
+	 * @throws SlickException Indicates a failure to load either file
+	 */
+	public AngelCodeFont(String fntFile, String imgFile, boolean caching) throws SlickException {
+		font = new Image(imgFile);
+		displayListCaching = caching;
+		parseFnt(ResourceLoader.getResourceAsStream(fntFile));
+	}
+	
+	/**
+	 * Create a new font based on a font definition from AngelCode's tool and the font
+	 * image generated from the tool.
+	 * 
 	 * @param name The name to assign to the font image in the image store
 	 * @param fntFile The stream of the font defnition file
 	 * @param imgFile The stream of the font image
@@ -58,6 +83,23 @@ public class AngelCodeFont implements Font {
 	
 		parseFnt(fntFile);
 	}
+
+	/**
+	 * Create a new font based on a font definition from AngelCode's tool and the font
+	 * image generated from the tool.
+	 * 
+	 * @param name The name to assign to the font image in the image store
+	 * @param fntFile The stream of the font defnition file
+	 * @param imgFile The stream of the font image
+	 * @param caching True if this font should use display list caching
+	 * @throws SlickException Indicates a failure to load either file
+	 */
+	public AngelCodeFont(String name, InputStream fntFile, InputStream imgFile, boolean caching) throws SlickException {
+		font = new Image(imgFile, name, false);
+
+		displayListCaching = caching;
+		parseFnt(fntFile);
+	}
 	
 	/**
 	 * Parse the font definition file
@@ -66,6 +108,13 @@ public class AngelCodeFont implements Font {
 	 * @throws SlickException
 	 */
 	private void parseFnt(InputStream fntFile) throws SlickException {
+		if (displayListCaching) {
+			int dlBase = GL11.glGenLists(LINE_CACHE_SIZE);
+			for (int i=0;i<LINE_CACHE_SIZE;i++) {
+				cache.add(new CachedString(dlBase+i));
+			}
+		}
+		
 		try {
 			// now parse the font file
 			BufferedReader in = new BufferedReader(new InputStreamReader(fntFile));
@@ -156,18 +205,31 @@ public class AngelCodeFont implements Font {
 	 */
 	public void drawString(float x, float y, String text, Color col) {
 		col.bind();
+		font.bind();
 
-		for (int i=0;i<text.length();i++) {
-			int id = text.charAt(i);
-			if (chars[id] == null) {
-				continue;
+		CachedString key = new CachedString(text);
+		if (displayListCaching) {
+			if (cache.contains(key)) {
+				int index = cache.indexOf(key);
+				CachedString cached = (CachedString) cache.get(index);
+				cache.remove(index);
+				cache.add(cached);
+				
+				GL11.glTranslatef(x,y,0);
+				cached.render();
+				GL11.glTranslatef(-x,-y,0);
+			} else {
+				CachedString cached = (CachedString) cache.get(0);
+				cached.setString(text);
+				cache.remove(0);
+				cache.add(cached);
+				
+				GL11.glTranslatef(x,y,0);
+				cached.render();
+				GL11.glTranslatef(-x,-y,0);
 			}
-			chars[id].image.draw(x+chars[id].xoffset, y+chars[id].yoffset, null);
-			x += chars[id].xadvance;
-			
-			if (i < text.length()-1) {
-				x += kerning[id][text.charAt(i+1)];
-			}
+		} else {
+			key.render(x,y);
 		}
 	}
 
@@ -254,6 +316,8 @@ public class AngelCodeFont implements Font {
 		public int xadvance;
 		/** The image containing the character */
 		public Image image;
+		/** The display list index for this character */
+		public int dlIndex;
 		
 		/**
 		 * Initialise the image by cutting the right section from the
@@ -269,6 +333,16 @@ public class AngelCodeFont implements Font {
 		public String toString() {
 			return "[CharDef id="+id+" x="+x+" y="+y+"]";
 		}
+		
+		/** 
+		 * Draw this character embedded in a image draw
+		 *
+		 * @param x The x position at which to draw the text
+		 * @param y The y position at which to draw the text
+		 */
+		public void draw(float x, float y) {
+			image.drawEmbedded(x+xoffset,y+yoffset,width,height);
+		}
 	}
 
 	/**
@@ -276,5 +350,91 @@ public class AngelCodeFont implements Font {
 	 */
 	public int getLineHeight() {
 		return lineHeight;
+	}
+	
+	/**
+	 * Cached strings to speed up rendering if we're consistantly rendering the same
+	 * string over and over
+	 */
+	private class CachedString {
+		/** The string that's cached in this list */
+		private String text = "";
+		/** The list that is held for this cached string */
+		private int list;
+		
+		/** 
+		 * Create a new cached string simply as a key to search for others
+		 * 
+		 * @param text The text for the cache
+		 */
+		public CachedString(String text) {
+			this.text = text;
+		}
+		
+		/**
+		 * Create a new cached string to hold a rendered line in a display list
+		 * 
+		 * @param list The list holding the string
+		 */ 
+		public CachedString(int list) {
+			this.list = list;
+		}
+
+		/**
+		 * Set the string to be rendered
+		 * 
+		 * @param text The string to be rendered
+		 */
+		public void setString(String text) {
+			this.text = text;
+			GL11.glNewList(list, GL11.GL_COMPILE);
+			render(0, 0);
+			GL11.glEndList();
+		}
+		
+		/**
+		 * Render based on the display list
+		 */
+		public void render() {
+			GL11.glCallList(list);
+		}
+		
+		/**
+		 * @see java.lang.Object#hashCode()
+		 */
+		public int hashCode() {
+			return text.hashCode();
+		}
+		
+		/**
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		public boolean equals(Object other) {
+			return ((CachedString) other).text.equals(text);
+		}
+		
+		/**
+		 * Render based on immediate rendering
+		 * 
+		 * @param x The x coordinate to render the string at
+		 * @param y The y coordinate to render the string at
+		 */
+		private void render(float x, float y) {
+			font.startUse();
+			for (int i=0;i<text.length();i++) {
+				int id = text.charAt(i);
+				if (chars[id] == null) {
+					continue;
+				}
+				
+				chars[id].draw(x,y);
+				x += chars[id].xadvance;
+				
+				if (i < text.length()-1) {
+					x += kerning[id][text.charAt(i+1)];
+				}
+			}
+			font.endUse();
+		}
 	}
 }
