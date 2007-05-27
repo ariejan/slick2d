@@ -76,8 +76,8 @@ public class AppletGameContainer extends Applet {
 
 			container = new Container(game);
 			canvas = new ContainerPanel(container);
-			canvas.setSize(getWidth(), getHeight());
-
+			canvas.setSize(getWidth(),getHeight());
+			
 			add(canvas);
 			canvas.setFocusable(true);
 			canvas.requestFocus();
@@ -91,7 +91,9 @@ public class AppletGameContainer extends Applet {
 	 * @see java.awt.Container#paint(java.awt.Graphics)
 	 */
 	public void paint(java.awt.Graphics g) {
-		canvas.update(g);
+		if (canvas != null) { 
+			canvas.update(g);
+		}
 	}
 
 	/**
