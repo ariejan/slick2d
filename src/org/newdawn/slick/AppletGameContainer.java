@@ -30,7 +30,7 @@ public class AppletGameContainer extends Applet {
 	private ContainerPanel canvas;
 	/** The actual container implementation */
 	private Container container;
-
+	
 	/**
 	 * @see java.applet.Applet#destroy()
 	 */
@@ -146,7 +146,13 @@ public class AppletGameContainer extends Applet {
 				SoundStore.get().clear();
 
 				setVSyncEnabled(true);
-				AWTInputAdapter.create(this);
+				try {
+					AWTInputAdapter.create(this);
+				} catch (Exception e) {
+					AWTInputAdapter.destroy();
+					AWTInputAdapter.create(this);
+				} 
+				
 				container.initApplet();
 			} catch (Exception e) {
 				Log.error(e);
