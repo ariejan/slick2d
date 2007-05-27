@@ -383,7 +383,7 @@ public class Input {
 	 * @param code The key code of the key to retrieve the name of
 	 * @return The name or character representation of the key requested
 	 */
-	public String getKeyName(int code) {
+	public static String getKeyName(int code) {
 		return Keyboard.getKeyName(code);
 	}
 	
