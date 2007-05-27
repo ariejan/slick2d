@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -60,7 +61,7 @@ public class FontPerformanceTest extends BasicGame {
 		
 		if (visible) {
 			for (int i=0;i<lines.size();i++) {
-				g.drawString((String) lines.get(i), 10, 50+(i*20));
+				font.drawString(10, 50+(i*20),(String) lines.get(i),i > 10 ? Color.red : Color.green);
 			}
 		}
 	}

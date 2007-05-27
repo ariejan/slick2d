@@ -420,7 +420,8 @@ public class AngelCodeFont implements Font {
 		 * @param y The y coordinate to render the string at
 		 */
 		private void render(float x, float y) {
-			font.startUse();
+			font.init();
+			GL11.glBegin(GL11.GL_QUADS);
 			for (int i=0;i<text.length();i++) {
 				int id = text.charAt(i);
 				if (chars[id] == null) {
@@ -434,7 +435,7 @@ public class AngelCodeFont implements Font {
 					x += kerning[id][text.charAt(i+1)];
 				}
 			}
-			font.endUse();
+			GL11.glEnd();
 		}
 	}
 }
