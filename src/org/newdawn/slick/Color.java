@@ -236,4 +236,14 @@ public class Color {
 		
 		return temp;
 	}
+	
+	/**
+	 * Multiply this color by another
+	 *
+	 * @param c the other color
+	 * @return product of the two colors
+	 */
+	public Color multiply(Color c) {
+		return new Color(r * c.r, g * c.g, b * c.b, a * c.a);
+	}
 }
