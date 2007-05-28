@@ -11,6 +11,7 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Ellipse;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 
@@ -40,8 +41,10 @@ public class GeomTest extends BasicGame {
             Transform.createTranslateTransform(-510, -350)).transform(
                     Transform.createScaleTransform(2, 2)).transform(
                             Transform.createTranslateTransform(510, 350));
-	
-	/**
+	/** The RoundedRectangle tested */
+    private Shape roundRect = new RoundedRectangle(50, 175, 100, 100, 20);
+
+    /**
 	 * Create a new test of graphics context rendering
 	 */
 	public GeomTest() {
@@ -70,6 +73,8 @@ public class GeomTest extends BasicGame {
 		g.draw(rect1);
 		g.setColor(rect2.intersects(rect) ? Color.red : Color.green);
 		g.draw(rect2);
+        g.setColor(roundRect.intersects(rect) ? Color.red : Color.green);
+        g.draw(roundRect);
 		g.setColor(circle1.intersects(rect) ? Color.red : Color.green);
 		g.draw(circle1);
 		g.setColor(circle2.intersects(rect) ? Color.red : Color.green);
@@ -82,6 +87,7 @@ public class GeomTest extends BasicGame {
 		g.setColor(Color.blue);
 		g.draw(new Circle(100,100,50));
 		g.drawRect(50,50,100,100);
+        
 	}
 
 	/**
