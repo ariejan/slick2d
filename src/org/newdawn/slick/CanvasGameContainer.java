@@ -137,6 +137,7 @@ public class CanvasGameContainer extends AWTGLCanvas {
 	 * @author kevin
 	 */
 	private class Container extends GameContainer {
+
 		/**
 		 * Create a new container wrapped round the game
 		 * 
@@ -284,6 +285,12 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		public void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY) throws SlickException {
 			// unsupported in an canvas
 		}
-		
+
+		/**
+		 * @see org.newdawn.slick.GameContainer#alwaysRender()
+		 */
+		protected boolean alwaysRender() {
+			return true;
+		}
 	}
 }

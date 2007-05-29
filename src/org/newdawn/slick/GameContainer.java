@@ -78,6 +78,15 @@ public abstract class GameContainer implements GUIContext {
 	public void reinit() throws SlickException {
 	}
 	
+	/** 
+	 * Check if this container should render whether it has focus or not
+	 * 
+	 * @return True if this container should render whether it has focus or not
+	 */
+	protected boolean alwaysRender() {
+		return false;
+	}
+	
 	/**
 	 * Get the build number of slick 
 	 * 
@@ -352,7 +361,7 @@ public abstract class GameContainer implements GUIContext {
 			}
 		}
 		
-		if (hasFocus()) {
+		if (hasFocus() || alwaysRender()) {
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			GL11.glLoadIdentity();
 			
