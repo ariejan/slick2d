@@ -10,11 +10,11 @@ import org.newdawn.slick.util.FastTrig;
  * 
  * @author Mark
  */
-public class Ellipse extends Polygon {
+public class Ellipse extends Shape {
     /**
      * Default number of segments to draw this ellipse with
      */
-    private static final int DEFAULT_SEGMENT_COUNT = 50;
+    protected static final int DEFAULT_SEGMENT_COUNT = 50;
     
     /**
      * The number of segments for graphical representation.
@@ -56,15 +56,6 @@ public class Ellipse extends Polygon {
         this.radius1 = radius1;
         this.radius2 = radius2;
         this.segmentCount = segmentCount;
-    }
-
-    /**
-     * Get the radius of a circle that can completely enclose this shape.
-     * 
-     * @return The radius of the circle.
-     */
-    public float getBoundingCircleRadius() {
-        return (radius1 > radius2) ? radius1 : radius2;
     }
 
     /**
@@ -147,5 +138,28 @@ public class Ellipse extends Polygon {
         for(int i=0;i<points.length;i++) {
             points[i] = ((Float)tempPoints.get(i)).floatValue();
         }
+    }
+
+    public Shape transform(Transform transform) {
+        checkPoints();
+        
+        Polygon resultPolygon = new Polygon();
+        
+        float result[] = new float[points.length];
+        transform.transform(points, 0, result, 0, points.length / 2);
+        resultPolygon.points = result;
+        resultPolygon.findCenter();
+
+        return resultPolygon;
+    }
+
+    protected void findCenter() {
+        center = new float[2];
+        center[0] = x + radius1;
+        center[1] = y + radius2;
+    }
+
+    protected void calculateRadius() {
+        boundingCircleRadius = (radius1 > radius2) ? radius1 : radius2;
     }
 }

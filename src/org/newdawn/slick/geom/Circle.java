@@ -12,30 +12,27 @@ public strictfp class Circle extends Ellipse {
 	/**
 	 * Create a new circle based on its radius
 	 * 
-	 * @param x The x location of the center of the circle
-	 * @param y The y location of the center of the circle
+	 * @param centerPointX The x location of the center of the circle
+	 * @param centerPointY The y location of the center of the circle
 	 * @param radius The radius of the circle
 	 */
-	public Circle(float x, float y, float radius) {
-        super(x, y, radius, radius);
-		this.x = x - radius;
-		this.y = y - radius;
-		this.radius = radius;
+	public Circle(float centerPointX, float centerPointY, float radius) {
+        this(centerPointX, centerPointY, radius, DEFAULT_SEGMENT_COUNT);
 	}
 
 	/**
 	 * Create a new circle based on its radius
 	 * 
-	 * @param x The x location of the center of the circle
-	 * @param y The y location of the center of the circle
+	 * @param centerPointX The x location of the center of the circle
+	 * @param centerPointY The y location of the center of the circle
 	 * @param radius The radius of the circle
 	 * @param segmentCount The number of segments to build the circle out of
 	 */
-	public Circle(float x, float y, float radius, int segmentCount) {
-        super(x, y, radius, radius, segmentCount);
-        this.x = x - radius;
-        this.y = y - radius;
-		this.radius = radius;
+	public Circle(float centerPointX, float centerPointY, float radius, int segmentCount) {
+        super(centerPointX, centerPointY, radius, radius, segmentCount);
+        this.x = centerPointX - radius;
+        this.y = centerPointY - radius;
+        this.radius = radius;
 	}
 	
 	/**
@@ -119,7 +116,18 @@ public strictfp class Circle extends Ellipse {
 		return intersects(new Circle(x,y,0));
 	}
 	
-	/**
+
+    protected void findCenter() {
+        center = new float[2];
+        center[0] = x + radius;
+        center[1] = y + radius;
+    }
+
+    protected void calculateRadius() {
+        boundingCircleRadius = radius;
+    }
+
+    /**
 	 * Check if this circle touches a rectangle
 	 * 
 	 * @param other The rectangle to check against
