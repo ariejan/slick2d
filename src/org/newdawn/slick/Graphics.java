@@ -253,10 +253,12 @@ public class Graphics {
 	 * @param color The color to use when rendering to this context
 	 */
 	public void setColor(Color color) {
-		currentColor = color;
-		predraw();
-		color.bind();
-		postdraw();  
+	    if (!color.equals(currentColor)) { 
+			currentColor = color;
+			predraw();
+			color.bind();
+			postdraw();  
+	    }
 	}
 	
 	/**
