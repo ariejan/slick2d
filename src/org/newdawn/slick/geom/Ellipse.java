@@ -79,19 +79,39 @@ public class Ellipse extends Polygon {
         pointsDirty = true;
     }
 
+    /**
+     * Get the horizontal radius of the ellipse
+     * 
+     * @return The horizontal radius of the ellipse
+     */
     public float getRadius1() {
         return radius1;
     }
 
+    /**
+     * Set the horizontal radius of the ellipse
+     * 
+     * @param radius1 The horizontal radius to set
+     */
     public void setRadius1(float radius1) {
         this.radius1 = radius1;
         pointsDirty = true;
     }
 
+    /**
+     * Get the vertical radius of the ellipse
+     * 
+     * @return The vertical radius of the ellipse
+     */
     public float getRadius2() {
         return radius2;
     }
 
+    /**
+     * Set the vertical radius of the ellipse
+     * 
+     * @param radius2 The vertical radius to set
+     */
     public void setRadius2(float radius2) {
         this.radius2 = radius2;
         pointsDirty = true;
