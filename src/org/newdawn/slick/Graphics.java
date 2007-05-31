@@ -946,10 +946,7 @@ public class Graphics {
 	 * @param y The y location at which to draw the image
 	 */
 	public void drawImage(Image image, float x, float y) {
-		predraw();
 		drawImage(image, x, y, Color.white);
-		currentColor.bind();
-		postdraw();
 	}
 
 	/**
