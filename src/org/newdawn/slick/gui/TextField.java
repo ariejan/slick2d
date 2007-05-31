@@ -127,7 +127,7 @@ public class TextField extends BasicComponent {
 	 * @see org.newdawn.slick.gui.BasicComponent#renderImpl(org.newdawn.slick.gui.GUIContext, org.newdawn.slick.Graphics)
 	 */
 	public void renderImpl(GUIContext container, Graphics g) {
-		g.setClip((int) area.x, (int) area.y-1, (int) area.width+1, (int) area.height+1);
+		g.setClip((int) area.getX(), (int) area.getY()-1, (int) area.getWidth()+1, (int) area.getHeight()+1);
 		if (background != null) {
 			g.setColor(background);
 			g.fill(area);
@@ -141,16 +141,16 @@ public class TextField extends BasicComponent {
 		
 		int cpos = font.getWidth(value.substring(0, cursorPos));
 		int tx = 0;
-		if (cpos > area.width) {
-			tx = (int) (area.width - cpos) - font.getWidth("_");
+		if (cpos > area.getWidth()) {
+			tx = (int) (area.getWidth() - cpos) - font.getWidth("_");
 		}
 		
 		g.translate(tx+2,0);
 		g.setFont(font);
-		g.drawString(value, (int) (area.x+1), (int) (area.y+1));
+		g.drawString(value, (int) (area.getX()+1), (int) (area.getY()+1));
 		
 		if ((focus) && (visibleCursor)) {
-			g.drawString("_", (int) (area.x+1)+cpos+2, (int) (area.y+1));
+			g.drawString("_", (int) (area.getX()+1)+cpos+2, (int) (area.getY()+1));
 		}
 		
 		g.translate(-tx-2, 0);

@@ -8,10 +8,6 @@ package org.newdawn.slick.geom;
 public strictfp class Circle extends Ellipse {
 	/** The radius of the circle */
 	public float radius;
-	/** The x position of the center of this circle */
-	public float x;
-	/** The y position of the center of this circle */
-	public float y;
 	
 	/**
 	 * Create a new circle based on its radius
@@ -21,9 +17,9 @@ public strictfp class Circle extends Ellipse {
 	 * @param radius The radius of the circle
 	 */
 	public Circle(float x, float y, float radius) {
-        super(x, y, radius);
-		this.x = x;
-		this.y = y;
+        super(x, y, radius, radius);
+		this.x = x - radius;
+		this.y = y - radius;
 		this.radius = radius;
 	}
 
@@ -37,8 +33,8 @@ public strictfp class Circle extends Ellipse {
 	 */
 	public Circle(float x, float y, float radius, int segmentCount) {
         super(x, y, radius, radius, segmentCount);
-		this.x = x;
-		this.y = y;
+        this.x = x - radius;
+        this.y = y - radius;
 		this.radius = radius;
 	}
 	
@@ -48,6 +44,7 @@ public strictfp class Circle extends Ellipse {
 	 * @param radius The radius of this circle
 	 */
 	public void setRadius(float radius) {
+        pointsDirty = true;
 		this.radius = radius;
         setRadii(radius, radius);
 	}
@@ -59,7 +56,6 @@ public strictfp class Circle extends Ellipse {
 	 */
 	public void setX(float x) {
         super.setX(x);
-		this.x = center[0];
 	}
 
 	/**
@@ -69,7 +65,6 @@ public strictfp class Circle extends Ellipse {
 	 */
 	public void setY(float y) {
         super.setY(y);
-		this.y = center[1];
 	}
 	
 	/**
@@ -151,7 +146,7 @@ public strictfp class Circle extends Ellipse {
 		
 		float r2 = circle.getRadius() * circle.getRadius();
 		
-		Vector2f pos = new Vector2f(circle.getX(), circle.getY());
+		Vector2f pos = new Vector2f(circle.getCenterX(), circle.getCenterY());
 		
 		for (int i=0;i<4;i++) {
 			float dis = lines[i].distanceSquared(pos);
@@ -163,13 +158,4 @@ public strictfp class Circle extends Ellipse {
 		return false;
 	}
 
-    public Shape transform(Transform transform) {
-        float oldPoints[] = {x, y, x + radius, y};
-        float result[] = new float[4];
-        transform.transform(oldPoints, 0, result, 0, 2);
-        float newRadius = (float)Math.sqrt(((result[2] - result[0]) * (result[2] - result[0])) + ((result[3] - result[1]) * (result[3] - result[1])));
-        Shape newShape = new Circle(result[0], result[1], newRadius);
-        return newShape;
-    }
-    
 }

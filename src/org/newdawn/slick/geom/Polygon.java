@@ -9,33 +9,6 @@ import java.util.ArrayList;
  */
 public class Polygon extends Shape {
     /**
-     * Convenience constructor to make a square or a rectangle.
-     *  
-     * @param x Left side
-     * @param y Top side
-     * @param width The width
-     * @param height The height
-     */
-    public Polygon(float x, float y, float width, float height) {
-        points = new float[8];
-        
-        points[0] = x;
-        points[1] = y;
-        
-        points[2] = x + width;
-        points[3] = y;
-        
-        points[4] = x + width;
-        points[5] = y + height;
-        
-        points[6] = x;
-        points[7] = y + height;
-        
-        findCenter();
-        calculateRadius();
-    }
-    
-    /**
      * Construct a new polygon with 3 or more points. 
      * This constructor will take the first set of points and copy them after
      * the last set of points to create a closed shape.
@@ -53,6 +26,7 @@ public class Polygon extends Shape {
         
         findCenter();
         calculateRadius();
+        pointsDirty = false;
     }
     /**
      * Create an empty polygon
@@ -93,15 +67,36 @@ public class Polygon extends Shape {
      * @return The transformed shape.
      */
     public Shape transform(Transform transform) {
+        checkPoints();
+        
         Polygon resultPolygon = new Polygon();
         
         float result[] = new float[points.length];
         transform.transform(points, 0, result, 0, points.length / 2);
         resultPolygon.points = result;
-        result = new float[]{center[0], center[1]};
-        transform.transform(result, 0, result, 0, 1);
-        resultPolygon.center = result;
+        resultPolygon.findCenter();
 
         return resultPolygon;
     }
+    
+    public void setX(float x) {
+        float xDiff = x - this.x;
+        super.setX(x);
+        
+        for(int i=0;i<points.length;i+=2) {
+            points[i] += xDiff;
+        }
+        pointsDirty = false;
+    }
+    public void setY(float y) {
+        float yDiff = y - this.y;
+        super.setY(y);
+        
+        for(int i=1;i<points.length;i+=2) {
+            points[i] += yDiff;
+        }
+        pointsDirty = false;
+    }
+    //This is empty since a polygon must have it's points all the time.
+    protected void createPoints() {}
 }

@@ -433,7 +433,7 @@ public class Graphics {
 		if (clip == null) {
 			clearWorldClip();
 		} else {
-			setWorldClip(clip.x,clip.y,clip.height,clip.width);
+			setWorldClip(clip.getX(), clip.getY(), clip.getWidth(), clip.getHeight());
 		}
 	}
 	
@@ -477,7 +477,7 @@ public class Graphics {
 			return;
 		}
 
-		setClip((int) rect.x, (int) rect.y, (int) rect.width, (int) rect.height);
+		setClip((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight());
 	}
 	
 	/**

@@ -9,7 +9,6 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Ellipse;
-import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
@@ -26,18 +25,18 @@ public class GeomTest extends BasicGame {
 	/** The rectangle drawn */
 	private Shape circle = new Circle(500,200,50);
 	/** The rectangle tested */
-	private Shape rect1 = new Polygon(150,120,50,100).transform(Transform.createTranslateTransform(50, 50));
+	private Shape rect1 = new Rectangle(150,120,50,100).transform(Transform.createTranslateTransform(50, 50));
 	/** The rectangle tested */
-	private Shape rect2 = new Polygon(310,210,50,100).transform(
+	private Shape rect2 = new Rectangle(310,210,50,100).transform(
             Transform.createRotateTransform((float)Math.toRadians(45), 335, 260));
 	/** The circle tested */
 	private Shape circle1 = new Circle(150,90,30);
 	/** The circle tested */
 	private Shape circle2 = new Circle(310,110,70);
 	/** The circle tested */
-	private Shape circle3 = new Ellipse(510,150,70);
+	private Shape circle3 = new Ellipse(510, 150, 70, 70);
 	/** The circle tested */
-	private Shape circle4 = new Ellipse(510,350,30).transform(
+	private Shape circle4 = new Ellipse(510, 350, 30, 30).transform(
             Transform.createTranslateTransform(-510, -350)).transform(
                     Transform.createScaleTransform(2, 2)).transform(
                             Transform.createTranslateTransform(510, 350));

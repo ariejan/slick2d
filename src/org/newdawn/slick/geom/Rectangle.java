@@ -7,13 +7,9 @@ package org.newdawn.slick.geom;
  */
 public class Rectangle extends Polygon {
 	/** The width of the box */
-	public float width;
+	private float width;
 	/** The height of the box */
-	public float height;
-	/** The x position of the box */
-	public float x;
-	/** The y position of the box */
-	public float y;
+    private float height;
 	
 	/**
 	 * Create a new bounding box
@@ -24,7 +20,6 @@ public class Rectangle extends Polygon {
 	 * @param height The hieght of the box
 	 */
 	public Rectangle(float x, float y, float width, float height) {
-        super(x, y, width, height);
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -61,35 +56,12 @@ public class Rectangle extends Polygon {
 	}
 	
 	/**
-	 * Set the x position of this box
-	 * 
-	 * @param x The new x position of this box
-	 */
-	public void setX(float x) {
-        super.setX(x + ((width - x) / 2.0f));
-		this.x = x;
-	}
-	
-	/**
-	 * Set the y position of this box
-	 * 
-	 * @param y The new y position of this box
-	 */
-	public void setY(float y) {
-        super.setY(y + ((height - y) / 2));
-		this.y = y;
-	}
-
-	/**
 	 * Set the width of this box
 	 * 
 	 * @param width The new width of this box
 	 */
 	public void setWidth(float width) {
-        points[2] = x + width;
-        points[4] = x + width;
-        findCenter();
-        calculateRadius();
+        pointsDirty = true;
 		this.width = width;
 	}
 	
@@ -99,10 +71,7 @@ public class Rectangle extends Polygon {
 	 * @param height The height of this box
 	 */
 	public void setHeight(float height) {
-        points[5] = y + height;
-        points[7] = y + height;
-        findCenter();
-        calculateRadius();
+        pointsDirty = true;
 		this.height = height;
 	}
 	
@@ -131,7 +100,26 @@ public class Rectangle extends Polygon {
         }
 	}
 
-	/**
+	protected void createPoints() {
+        points = new float[8];
+        
+        points[0] = x;
+        points[1] = y;
+        
+        points[2] = x + width;
+        points[3] = y;
+        
+        points[4] = x + width;
+        points[5] = y + height;
+        
+        points[6] = x;
+        points[7] = y + height;
+        
+        findCenter();
+        calculateRadius();
+    }
+
+    /**
 	 * Check if a circle touches this rectangle
 	 * 
 	 * @param other The circle to check against

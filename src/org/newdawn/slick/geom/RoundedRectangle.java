@@ -10,11 +10,18 @@ import org.newdawn.slick.util.FastTrig;
  * 
  * @author Mark Bernard
  */
-public class RoundedRectangle extends Shape {
-    /**
-     * Default number of segments to draw the rounded corners with
-     */
-    private static final int DEFAULT_SEGMENT_COUNT = 10;
+public class RoundedRectangle extends Polygon {
+    /** Default number of segments to draw the rounded corners with */
+    private static final int DEFAULT_SEGMENT_COUNT = 25;
+
+    /** width of the rectangle */
+    private float width;
+    /** height of the rectangle */
+    private float height;
+    /** radius of each corner */
+    private float cornerRadius;
+    /** number of segments for each corner */
+    private int segmentCount;
 
     /**
      * Construct a rectangle with rounded corners.
@@ -37,13 +44,81 @@ public class RoundedRectangle extends Shape {
      * @param width The width of the rectangle.
      * @param height The hieght of the rectangle.
      * @param cornerRadius The radius to use for the arc in each corner.
-     * @param segs The number of segments to use to draw each corner arc.
+     * @param segmentCount The number of segments to use to draw each corner arc.
      */
-    public RoundedRectangle(float x, float y, float width, float height, float cornerRadius, int segs) {
+    public RoundedRectangle(float x, float y, float width, float height, float cornerRadius, int segmentCount) {
         if(cornerRadius < 0) {
-            throw new IllegalArgumentException("corner radius must be > 0");
+            throw new IllegalArgumentException("corner radius must be >= 0");
         }
-        else if(cornerRadius == 0) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.cornerRadius = cornerRadius;
+        this.segmentCount = segmentCount;
+    }
+
+    /**
+     * Get the radius for each corner.
+     * 
+     * @return The radius for each corner.
+     */
+    public float getCornerRadius() {
+        return cornerRadius;
+    }
+
+    /**
+     * Set the radius for each corner.
+     * 
+     * @param cornerRadius The radius for each corner to set.
+     */
+    public void setCornerRadius(float cornerRadius) {
+        if(cornerRadius >= 0) {
+            this.cornerRadius = cornerRadius;
+            pointsDirty = true;
+        }
+    }
+
+    /**
+     * Get the height of this rectangle.
+     * 
+     * @return The height of this rectangle.
+     */
+    public float getHeight() {
+        return height;
+    }
+
+    /**
+     * Set the height of this rectangle.
+     * 
+     * @param height The height to set.
+     */
+    public void setHeight(float height) {
+        this.height = height;
+        pointsDirty = true;
+    }
+
+    /**
+     * Get the width of this rectangle.
+     * 
+     * @return The width of this rectangle.
+     */
+    public float getWidth() {
+        return width;
+    }
+
+    /**
+     * Set the width of this rectangle.
+     * 
+     * @param width The width to set.
+     */
+    public void setWidth(float width) {
+        this.width = width;
+        pointsDirty = true;
+    }
+
+    protected void createPoints() {
+        if(cornerRadius == 0) {
             points = new float[8];
             
             points[0] = x;
@@ -74,16 +149,16 @@ public class RoundedRectangle extends Shape {
             //straight sides, so the straight sides do not have to be added.
             
             //top left corner arc
-            tempPoints.addAll(createPoints(segs, cornerRadius, x + cornerRadius, y + cornerRadius, 180, 270));
+            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + cornerRadius, y + cornerRadius, 180, 270));
             
             //top right corner arc
-            tempPoints.addAll(createPoints(segs, cornerRadius, x + width - cornerRadius, y + cornerRadius, 270, 360));
+            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + width - cornerRadius, y + cornerRadius, 270, 360));
             
             //bottom right corner arc
-            tempPoints.addAll(createPoints(segs, cornerRadius, x + width - cornerRadius, y + height - cornerRadius, 0, 90));
+            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + width - cornerRadius, y + height - cornerRadius, 0, 90));
 
             //bottom left corner arc
-            tempPoints.addAll(createPoints(segs, cornerRadius, x + cornerRadius, y + height - cornerRadius, 90, 180));
+            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + cornerRadius, y + height - cornerRadius, 90, 180));
             
             points = new float[tempPoints.size()];
             for(int i=0;i<tempPoints.size();i++) {
@@ -93,34 +168,6 @@ public class RoundedRectangle extends Shape {
         
         findCenter();
         calculateRadius();
-    }
-
-    /**
-     * Construct an empty RoundedRectangle
-     *
-     */
-    public RoundedRectangle() {
-        points = new float[0];
-    }
-    /**
-     * Apply a transformation and return a new shape.  This will not alter the current shape but will 
-     * return the transformed shape.
-     * <b>Copied from superclass Shape</b>
-     * 
-     * @param transform The transform to be applied
-     * @return The transformed shape.
-     */
-    public Shape transform(Transform transform) {
-        RoundedRectangle resultRoundedRectangle = new RoundedRectangle();
-        
-        float result[] = new float[points.length];
-        transform.transform(points, 0, result, 0, points.length / 2);
-        resultRoundedRectangle.points = result;
-        result = new float[]{center[0], center[1]};
-        transform.transform(result, 0, result, 0, 1);
-        resultRoundedRectangle.center = result;
-
-        return resultRoundedRectangle;
     }
 
     /**

@@ -161,7 +161,7 @@ public class MouseOverArea extends BasicComponent {
 	 * @return The width of the area
 	 */
 	public int getWidth() {
-		return (int) rect.width;
+		return (int) rect.getWidth();
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class MouseOverArea extends BasicComponent {
 	 * @return The height of the area
 	 */
 	public int getHeight() {
-		return (int) rect.height;
+		return (int) rect.getHeight();
 	}
 	
 	/**
@@ -181,13 +181,13 @@ public class MouseOverArea extends BasicComponent {
 		updateImage(rect.contains(input.getMouseX(), input.getMouseY()));
 
         if (currentImage != null) {
-			int xp = (int) (rect.x +((rect.width - currentImage.getWidth()) / 2));
-			int yp = (int) (rect.y +((rect.height - currentImage.getHeight()) / 2));
+			int xp = (int) (rect.getX() +((rect.getWidth() - currentImage.getWidth()) / 2));
+			int yp = (int) (rect.getY() +((rect.getHeight() - currentImage.getHeight()) / 2));
 			
 			currentImage.draw(xp,yp,currentColor);
         } else {
         	g.setColor(currentColor);
-            g.fillRect(rect.x, rect.y, rect.width, rect.height);
+            g.fillRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
         } 
 	}
 

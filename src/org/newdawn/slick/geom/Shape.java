@@ -12,12 +12,21 @@ public abstract class Shape {
     /** Center point of the polygon. */
     protected float center[];
     /** The left most point of this shape. */
-    protected Float left;
+    protected float x;
     /** The top most point of this shape. */
-    protected Float top;
+    protected float y;
     /** Radius of a circle that can completely enclose this shape. */
     protected float boundingCircleRadius;
+    /** Flag to tell whether points need to be generated */
+    protected boolean pointsDirty;
 
+    /**
+     * Shape constructor.
+     *
+     */
+    public Shape() {
+        pointsDirty = true;
+    }
     /**
      * Apply a transformation and return a new shape.  This will not alter the current shape but will 
      * return the transformed shape.
@@ -28,16 +37,18 @@ public abstract class Shape {
     public abstract Shape transform(Transform transform);
 
     /**
+     * Subclasses implement this to create the points of the shape.
+     *
+     */
+    protected abstract void createPoints();
+    
+    /**
      * Get the x location of the left side of this shape.
      * 
      * @return The x location of the left side of this shape.
      */
     public float getX() {
-        if(left == null) {
-            calculateLeft();
-        }
-
-        return left.floatValue();
+        return x;
     }
     /**
      * Set the x position of the left side this shape.
@@ -45,18 +56,8 @@ public abstract class Shape {
      * @param x The new x position of the left side this shape.
      */
     public void setX(float x) {
-        if(left == null) {
-            calculateLeft();
-        }
-        
-        float xLeftDiff = center[0] - left.floatValue();
-        float newCenter = x - xLeftDiff;
-        float xCenterDiff = newCenter - center[0];
-        center[0] = x - xLeftDiff;
-        left = new Float(left.floatValue() + xCenterDiff);
-        for(int i=0;i<points.length;i+=2) {
-            points[i] += xCenterDiff;
-        }
+        this.x = x;
+        pointsDirty = true;
     }
     
     /**
@@ -65,18 +66,8 @@ public abstract class Shape {
      * @param y The new y position of the top of this shape.
      */
     public void setY(float y) {
-        if(top == null) {
-            calculateTop();
-        }
-        
-        float yTopDiff = center[1] - top.floatValue();
-        float newCenter = y - yTopDiff;
-        float yCenterDiff = newCenter - center[1];
-        center[1] = y - yTopDiff;
-        top = new Float(top.floatValue() + yCenterDiff);
-        for(int i=1;i<points.length;i+=2) {
-            points[i] += yCenterDiff;
-        }
+        this.y = y;
+        pointsDirty = true;
     }
 
     /**
@@ -85,11 +76,51 @@ public abstract class Shape {
      * @return The y position of the top of this shape.
      */
     public float getY() {
-        if(top == null) {
-            calculateTop();
-        }
+        return y;
+    }
+    
+    /**
+     * Get the x center of this shape.
+     * 
+     * @return The x center of this shape.
+     */
+    public float getCenterX() {
+        checkPoints();
+        
+        return center[0];
+    }
+    
+    /**
+     * Set the x center of this shape.
+     * 
+     * @param centerX The center point to set.
+     */
+    public void setCenterX(float centerX) {
+        pointsDirty = true;
+        float xDiff = centerX - center[0];
+        x += xDiff;
+    }
 
-        return top.floatValue();
+    /**
+     * Get the y center of this shape.
+     * 
+     * @return The y center of this shape.
+     */
+    public float getCenterY() {
+        checkPoints();
+        
+        return center[1];
+    }
+    
+    /**
+     * Set the y center of this shape.
+     * 
+     * @param centerY The center point to set.
+     */
+    public void setCenterY(float centerY) {
+        pointsDirty = true;
+        float yDiff = centerY - center[1];
+        y += yDiff;
     }
     /**
      * Get the radius of a circle that can completely enclose this shape.
@@ -97,6 +128,7 @@ public abstract class Shape {
      * @return The radius of the circle.
      */
     public float getBoundingCircleRadius() {
+        checkPoints();
         return boundingCircleRadius;
     }
     
@@ -106,6 +138,7 @@ public abstract class Shape {
      * @return The x,y coordinates of the center.
      */
     public float[] getCenter() {
+        checkPoints();
         return center;
     }
 
@@ -115,6 +148,7 @@ public abstract class Shape {
      * @return an array of x,y points
      */
     public float[] getPoints() {
+        checkPoints();
         return points;
     }
 
@@ -124,6 +158,7 @@ public abstract class Shape {
      * @return The number of points in this polygon
      */
     public int getPointCount() {
+        checkPoints();
         return points.length / 2;
     }
 
@@ -134,6 +169,8 @@ public abstract class Shape {
      * @return The point's coordinates
      */
     public float[] getPoint(int index) {
+        checkPoints();
+
         float result[] = new float[2];
         
         result[0] = points[index * 2];
@@ -150,8 +187,41 @@ public abstract class Shape {
      * @return True if the point is contained in the polygon
      */
     public boolean contains(float x, float y) {
-        //TODO
-        return false;
+        checkPoints();
+        boolean result = false;
+        float xnew,ynew;
+        float xold,yold;
+        float x1,y1;
+        float x2,y2;
+        int npoints = points.length;
+
+        xold=points[npoints - 2];
+        yold=points[npoints - 1];
+        for (int i=0;i < npoints;i+=2) {
+             xnew = points[i];
+             ynew = points[i + 1];
+             if (xnew > xold) {
+                  x1 = xold;
+                  x2 = xnew;
+                  y1 = yold;
+                  y2 = ynew;
+             }
+             else {
+                  x1 = xnew;
+                  x2 = xold;
+                  y1 = ynew;
+                  y2 = yold;
+             }
+             if ((xnew < x) == (x <= xold)          /* edge "open" at one end */
+              && ((double)y - (double)y1) * (x2 - x1)
+               < ((double)y2 - (double)y1) * (x - x1)) {
+                  result = !result;
+             }
+             xold = xnew;
+             yold = ynew;
+        }
+        
+        return result;
     }
     
     /**
@@ -175,6 +245,8 @@ public abstract class Shape {
          * 
          * Source: http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
          */
+        checkPoints();
+
         boolean result = false;
         float points[] = getPoints();           // (x3, y3)  and (x4, y4)
         float thatPoints[] = shape.getPoints(); // (x1, y1)  and (x2, y2)
@@ -223,6 +295,8 @@ public abstract class Shape {
      * @return True if the cordinates supplied are a vertex of this polygon
      */
     public boolean hasVertex(float x, float y) {
+        checkPoints();
+
         boolean result = false;
         
         for (int i=0;i<points.length;i+=2) {
@@ -266,28 +340,15 @@ public abstract class Shape {
     }
     
     /**
-     * Calculate the left most point on this shape.
+     * Check the dirty flag and create points as necessary.
      *
      */
-    private void calculateLeft() {
-        left = new Float(Float.MAX_VALUE);
-        for(int i=0;i<points.length;i+=2) {
-            if(points[i] < left.floatValue()) {
-                left = new Float(points[i]);
-            }
-        }
-    }
-
-    /**
-     * Calculate the top most point on this shape.
-     *
-     */
-    private void calculateTop() {
-        top = new Float(Float.MAX_VALUE);
-        for(int i=1;i<points.length;i+=2) {
-            if(points[i] < top.floatValue()) {
-                top = new Float(points[i]);
-            }
+    protected final void checkPoints() {
+        if(pointsDirty) {
+            createPoints();
+            findCenter();
+            calculateRadius();
+            pointsDirty = false;
         }
     }
 }
