@@ -39,6 +39,8 @@ public class Image {
 	private float textureOffsetX;
 	/** The y texture offset to use to find our image */
 	private float textureOffsetY;
+    /** Angle to rotate the image to. */
+    private float angle;
 	/** The name given for the image */
 	private String ref;
 	/** True if this image's state has been initialised */
@@ -410,17 +412,23 @@ public class Image {
 	 * @param height The height to render the image at
 	 * @param filter The color to filter with while drawing
 	 */
-	public void draw(float x,float y,float width,float height,Color filter) {
-		if (filter != null) {
-			filter.bind();
-		} 
-		
-		texture.bind();
-
-		GL11.glBegin(GL11.GL_QUADS);
-			drawEmbedded(x,y,width,height);
-		GL11.glEnd();
-	}
+    public void draw(float x,float y,float width,float height,Color filter) { 
+        if (filter != null) { 
+            filter.bind(); 
+        } 
+       
+        texture.bind(); 
+        if(angle != 0.0f) { 
+            float centerX = x + (width / 2); 
+            float centerY = y + (height / 2); 
+            GL11.glTranslatef(centerX, centerY, 0.0f); 
+            GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
+            GL11.glTranslatef(-centerX, -centerY, 0.0f); 
+        } 
+        GL11.glBegin(GL11.GL_QUADS); 
+            drawEmbedded(x,y,width,height); 
+        GL11.glEnd(); 
+    } 
 
 	/**
 	 * Draw this image at a specified location and size as a silohette
@@ -476,6 +484,36 @@ public class Image {
 		drawFlash(x,y,getWidth(),getHeight());
 	}
 	
+    /**
+     * Set the angle to rotate this image to.  The angle will be normalized to 
+     * be 0 <= angle < 360.
+     * 
+     * @param angle The angle to be set
+     */
+    public void setRotation(float angle) { 
+        this.angle = angle % 360.0f; 
+    } 
+    
+    /**
+     * Get the current angle of rotation for this image.
+     * 
+     * @return The current angle.
+     */
+    public float getRotation() { 
+        return angle; 
+    } 
+    
+    /**
+     * Add the angle provided to the current rotation.  The angle will be normalized to 
+     * be 0 <= angle < 360.
+     *  
+     * @param angle The angle to add.
+     */
+    public void rotate(float angle) { 
+        this.angle += angle;
+        this.angle = this.angle % 360;
+    } 
+
 	/**
 	 * Get a sub-part of this image. Note that the create image retains a reference to the
 	 * image data so should anything change it will affect sub-images too.
