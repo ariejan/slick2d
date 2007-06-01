@@ -89,6 +89,9 @@ public class ShapeTest extends BasicGame {
         g.drawString("Page Up/Page Down - resize circle", 10, 435);
         g.drawString("numpad 8546 - move polygon", 10, 450);
         
+        g.drawString("centerX=" + circle.getCenterX() + " centerY=" + circle.getCenterY(), 400, 300);
+        g.drawLine(circle.getCenterX(), circle.getCenterY(), circle.getCenterX(), circle.getCenterY());
+        
     }
 
     /**

@@ -418,9 +418,9 @@ public class Image {
         } 
        
         texture.bind(); 
+        float centerX = x + (width / 2); 
+        float centerY = y + (height / 2); 
         if(angle != 0.0f) { 
-            float centerX = x + (width / 2); 
-            float centerY = y + (height / 2); 
             GL11.glTranslatef(centerX, centerY, 0.0f); 
             GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
             GL11.glTranslatef(-centerX, -centerY, 0.0f); 
@@ -428,6 +428,11 @@ public class Image {
         GL11.glBegin(GL11.GL_QUADS); 
             drawEmbedded(x,y,width,height); 
         GL11.glEnd(); 
+        if(angle != 0.0f) { 
+            GL11.glTranslatef(centerX, centerY, 0.0f); 
+            GL11.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
+            GL11.glTranslatef(-centerX, -centerY, 0.0f); 
+        } 
     } 
 
 	/**
@@ -486,7 +491,7 @@ public class Image {
 	
     /**
      * Set the angle to rotate this image to.  The angle will be normalized to 
-     * be 0 <= angle < 360.
+     * be 0 <= angle < 360.  The image will be rotated around its center.
      * 
      * @param angle The angle to be set
      */
@@ -496,6 +501,7 @@ public class Image {
     
     /**
      * Get the current angle of rotation for this image.
+     * The image will be rotated around its center.
      * 
      * @return The current angle.
      */
@@ -505,7 +511,7 @@ public class Image {
     
     /**
      * Add the angle provided to the current rotation.  The angle will be normalized to 
-     * be 0 <= angle < 360.
+     * be 0 <= angle < 360.  The image will be rotated around its center.
      *  
      * @param angle The angle to add.
      */

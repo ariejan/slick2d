@@ -26,6 +26,8 @@ public class ImageTest extends BasicGame {
 	private Image image;
 	/** A sub part of the logo image */
 	private Image subImage;
+    /** Newer image rotation image. */
+    private Image rotImage;
 	/** The current rotation of our test image */
 	private float rot;
 	
@@ -41,6 +43,8 @@ public class ImageTest extends BasicGame {
 	 */
 	public void init(GameContainer container) throws SlickException {
 		image = tga = new Image("testdata/logo.png");
+        rotImage = new Image("testdata/logo.png");
+        rotImage = rotImage.getScaledCopy(rotImage.getWidth() / 2, rotImage.getHeight() / 2);
 		scaleMe = new Image("testdata/logo.tga", true, Image.FILTER_NEAREST);
 		gif = new Image("testdata/logo.gif");
 		scaled = gif.getScaledCopy(120, 120);
@@ -73,6 +77,9 @@ public class ImageTest extends BasicGame {
 		g.scale(0.3f,0.3f);
 		image.draw();
 		g.resetTransform();
+        
+        rotImage.setRotation(rot);
+        rotImage.draw(100, 200);
 	}
 
 	/**
