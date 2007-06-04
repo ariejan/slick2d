@@ -484,6 +484,13 @@ public class TiledMap {
 			tilesAcross = tiles.getWidth() / (tileWidth + spacing);
 			tilesDown = tiles.getHeight() / (tileHeight + spacing);
 			
+			if (tilesAcross <= 0) {
+				tilesAcross = 1;
+			}
+			if (tilesDown <= 0) {
+				tilesDown = 1;
+			}
+			
 			NodeList pElements = element.getElementsByTagName("tile");
 			for (int i=0;i<pElements.getLength();i++) {
 				Element tileElement = (Element) pElements.item(i);
