@@ -28,7 +28,7 @@ public class InputTest extends BasicGame {
 	/** The y position of our controlled stuff */
 	private float y;
 	/** The colors */
-	private Color[] cols = new Color[] {Color.red, Color.green, Color.blue};
+	private Color[] cols = new Color[] {Color.red, Color.green, Color.blue, Color.white, Color.magenta, Color.cyan};
 	/** The current color index */
 	private int index;
 	/** The input syste being polled */
@@ -206,7 +206,7 @@ public class InputTest extends BasicGame {
 	}
 
 	/**
-	 * @see org.newdawn.slick.Game#controllerButtonPressed(int, int)
+	 * @see org.newdawn.slick.BasicGame#controllerButtonPressed(int, int)
 	 */
 	public void controllerButtonPressed(int controller, int button) {
 		super.controllerButtonPressed(controller, button);

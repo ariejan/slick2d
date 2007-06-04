@@ -9,7 +9,7 @@ package org.newdawn.slick;
  *
  * @author kevin
  */
-public interface Game extends InputListener {
+public interface Game {
 	/**
 	 * Initialise the game. This can be used to load static resources. It's called
 	 * before the game loop starts

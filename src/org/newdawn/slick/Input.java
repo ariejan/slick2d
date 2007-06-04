@@ -285,6 +285,20 @@ public class Input {
 	private static final int BUTTON2 = 5;
 	/** Control index */
 	private static final int BUTTON3 = 6;
+	/** Control index */
+	private static final int BUTTON4 = 7;
+	/** Control index */
+	private static final int BUTTON5 = 8;
+	/** Control index */
+	private static final int BUTTON6 = 9;
+	/** Control index */
+	private static final int BUTTON7 = 10;
+	/** Control index */
+	private static final int BUTTON8 = 11;
+	/** Control index */
+	private static final int BUTTON9 = 12;
+	/** Control index */
+	private static final int BUTTON10 = 13;
 	
 	/** True if the controllers system has been initialised */
 	private static boolean controllersInited = false;
@@ -295,8 +309,10 @@ public class Input {
 	private int lastMouseX;
 	/** The last recorded mouse y position */
 	private int lastMouseY;
-	/** THe state of the mosu buttons */
+	/** THe state of the mouse buttons */
 	private boolean[] mousePressed = new boolean[10];
+	/** THe state of the controller buttons */
+	private boolean[] controllerPressed = new boolean[20];
 	
 	/** The character values representing the pressed keys */
 	private char[] keys = new char[1024];
@@ -306,7 +322,7 @@ public class Input {
 	private long[] nextRepeat = new long[1024];
 	
 	/** The control states from the controllers */
-	private boolean[][] controls = new boolean[10][8];
+	private boolean[][] controls = new boolean[10][30];
 	/** True if the event has been consumed */
 	private boolean consumed = false;
 	/** A list of listeners to be notified of input events */
@@ -325,6 +341,9 @@ public class Input {
 	private int keyRepeatInitial;
 	/** The interval of key repeat */
 	private int keyRepeatInterval;
+	
+	/** True if the input is currently paused */
+	private boolean paused;
 	
 	/**
 	 * Create a new input with the height of the screen
@@ -347,6 +366,13 @@ public class Input {
 		listeners.add(listener);
 	}
 
+	/**
+	 * Remove all the listeners from this input
+	 */
+	public void removeAllListeners() {
+		listeners.clear();
+	}
+	
 	/**
 	 * Add a listener to be notified of input events. This listener
 	 * will get events before others that are currently registered
@@ -416,6 +442,30 @@ public class Input {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Check if a controller button has been pressed since last 
+	 * time
+	 * 
+	 * @param button The button to check for (note that this includes directional controls first)
+	 * @return True if the button has been pressed since last time
+	 */
+	public boolean isControlPressed(int button) {
+		if (controllerPressed[button]) {
+			controllerPressed[button] = false;
+			return true;
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Clear the state for isControlPressed method. This will reset all
+	 * controls to not pressed
+	 */
+	public void clearControlPressedRecord() {
+		Arrays.fill(controllerPressed, false);
 	}
 	
 	/**
@@ -590,19 +640,20 @@ public class Input {
 	}
 
 	/**
-	 * Check if button 1 is pressed
+	 * Check if controller button is pressed
 	 * 
 	 * @param controller The index of the controller to check
+	 * @param index The index of the button to check
 	 * @return True if the button is pressed
 	 */
-	public boolean isButton1Pressed(int controller) {
+	public boolean isButtonPressed(int index, int controller) {
 		if (controller >= getControllerCount()) {
 			return false;
 		}
 
 		if (controller == ANY_CONTROLLER) {
 			for (int i=0;i<controllers.size();i++) {
-				if (isButton1Pressed(i)) {
+				if (isButtonPressed(index, i)) {
 					return true;
 				}
 			}
@@ -610,7 +661,17 @@ public class Input {
 			return false;
 		}
 		
-		return ((Controller) controllers.get(controller)).isButtonPressed(0);
+		return ((Controller) controllers.get(controller)).isButtonPressed(index);
+	}
+	
+	/**
+	 * Check if button 1 is pressed
+	 * 
+	 * @param controller The index of the controller to check
+	 * @return True if the button is pressed
+	 */
+	public boolean isButton1Pressed(int controller) {
+		return isButtonPressed(0, controller);
 	}
 
 	/**
@@ -620,21 +681,7 @@ public class Input {
 	 * @return True if the button is pressed
 	 */
 	public boolean isButton2Pressed(int controller) {
-		if (controller >= getControllerCount()) {
-			return false;
-		}
-
-		if (controller == ANY_CONTROLLER) {
-			for (int i=0;i<controllers.size();i++) {
-				if (isButton2Pressed(i)) {
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		return ((Controller) controllers.get(controller)).isButtonPressed(1);
+		return isButtonPressed(1, controller);
 	}
 
 	/**
@@ -644,21 +691,7 @@ public class Input {
 	 * @return True if the button is pressed
 	 */
 	public boolean isButton3Pressed(int controller) {
-		if (controller >= getControllerCount()) {
-			return false;
-		}
-
-		if (controller == ANY_CONTROLLER) {
-			for (int i=0;i<controllers.size();i++) {
-				if (isButton3Pressed(i)) {
-					return true;
-				}
-			}
-			
-			return false;
-		}
-		
-		return ((Controller) controllers.get(controller)).isButtonPressed(2);
+		return isButtonPressed(2, controller);
 	}
 	
 	/**
@@ -727,6 +760,12 @@ public class Input {
 	 * @param height The height of the game view
 	 */
 	public void poll(int width, int height) {
+		if (paused) {
+			while (Keyboard.next()) {}
+			while (Mouse.next()) {}
+			return;
+		}
+
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				keys[Keyboard.getEventKey()] = Keyboard.getEventCharacter();
@@ -842,7 +881,10 @@ public class Input {
 		
 		if (controllersInited) {
 			for (int i=0;i<getControllerCount();i++) {
-				for (int c=0;c<=BUTTON3;c++) {
+				int count = ((Controller) controllers.get(i)).getButtonCount()+3;
+				count = Math.min(count, 24);
+				
+				for (int c=0;c<=count;c++) {
 					if (controls[i][c] && !isControlPressed(c, i)) {
 						controls[i][c] = false;
 						fireControlRelease(c, i);
@@ -938,17 +980,10 @@ public class Input {
 				case DOWN:
 					listener.controllerDownPressed(controllerIndex);
 					break;
-				case BUTTON1:
-					listener.controllerButtonPressed(controllerIndex, 1);
-					break;
-				case BUTTON2:
-					listener.controllerButtonPressed(controllerIndex, 2);
-					break;
-				case BUTTON3:
-					listener.controllerButtonPressed(controllerIndex, 3);
-					break;
 				default:
-					throw new RuntimeException("Unknown control index");
+					// assume button pressed
+					listener.controllerButtonPressed(controllerIndex, (index - BUTTON1) + 1);
+					break;
 				}
 				if (consumed) {
 					break;
@@ -981,17 +1016,10 @@ public class Input {
 				case DOWN:
 					listener.controllerDownReleased(controllerIndex);
 					break;
-				case BUTTON1:
-					listener.controllerButtonReleased(controllerIndex, 1);
-					break;
-				case BUTTON2:
-					listener.controllerButtonReleased(controllerIndex, 2);
-					break;
-				case BUTTON3:
-					listener.controllerButtonReleased(controllerIndex, 3);
-					break;
 				default:
-					throw new RuntimeException("Unknown control index");
+					// assume button release
+					listener.controllerButtonReleased(controllerIndex, (index - BUTTON1) + 1);
+					break;
 				}
 				if (consumed) {
 					break;
@@ -1017,14 +1045,32 @@ public class Input {
 			return isControllerUp(controllerIndex);
 		case DOWN:
 			return isControllerDown(controllerIndex);
-		case BUTTON1:
-			return isButton1Pressed(controllerIndex);
-		case BUTTON2:
-			return isButton2Pressed(controllerIndex);
-		case BUTTON3:
-			return isButton3Pressed(controllerIndex);
+		}
+		
+		if (index >= BUTTON1) {
+			return isButtonPressed((index-BUTTON1), controllerIndex);
 		}
 
 		throw new RuntimeException("Unknown control index");
+	}
+	
+
+	/**
+	 * Pauses the polling and sending of input events.
+	 */
+	public void pause() {
+		paused = true;
+
+		// Reset all polling arrays
+		clearKeyPressedRecord();
+		clearMousePressedRecord();
+		clearControlPressedRecord();
+	}
+
+	/**
+	 * Resumes the polling and sending of input events.
+	 */
+	public void resume() {
+		paused = false;
 	}
 }

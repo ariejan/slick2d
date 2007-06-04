@@ -10,7 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.gui.BasicComponent;
+import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.MouseOverArea;
 import org.newdawn.slick.gui.TextField;
@@ -59,13 +59,13 @@ public class GUITest extends BasicGame implements ComponentListener {
 		
 		font = new AngelCodeFont("testdata/demo2.fnt","testdata/demo2_00.tga");
 		field = new TextField(container, font, 150,20,500,35, new ComponentListener() {
-			public void componentActivated(BasicComponent source) {
+			public void componentActivated(AbstractComponent source) {
 				message = "Entered1: "+field.getText();
 				field2.setFocus(true);
 			}
 		});
 		field2 = new TextField(container, font, 150,70,500,35,new ComponentListener() {
-			public void componentActivated(BasicComponent source) {
+			public void componentActivated(AbstractComponent source) {
 				message = "Entered2: "+field2.getText();
 				field.setFocus(true);
 			}
@@ -141,9 +141,9 @@ public class GUITest extends BasicGame implements ComponentListener {
 	}
 
 	/**
-	 * @see org.newdawn.slick.gui.ComponentListener#componentActivated(org.newdawn.slick.gui.BasicComponent)
+	 * @see org.newdawn.slick.gui.ComponentListener#componentActivated(org.newdawn.slick.gui.AbstractComponent)
 	 */
-	public void componentActivated(BasicComponent source) {
+	public void componentActivated(AbstractComponent source) {
 		System.out.println("ACTIVL : "+source);
 		for (int i=0;i<4;i++) {
 			if (source == areas[i]) {

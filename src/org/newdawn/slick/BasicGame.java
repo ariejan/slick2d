@@ -6,19 +6,19 @@ package org.newdawn.slick;
  *
  * @author kevin
  */
-public abstract class BasicGame implements Game {
+public abstract class BasicGame implements Game, InputListener {
 	/** The title of the game */
 	private String title;
 	/** The state of the left control */
-	protected boolean[] controllerLeft = new boolean[10];
+	protected boolean[] controllerLeft = new boolean[20];
 	/** The state of the right control */
-	protected boolean[] controllerRight = new boolean[10];
+	protected boolean[] controllerRight = new boolean[20];
 	/** The state of the up control */
-	protected boolean[] controllerUp = new boolean[10];
+	protected boolean[] controllerUp = new boolean[20];
 	/** The state of the down control */
-	protected boolean[] controllerDown = new boolean[10];
+	protected boolean[] controllerDown = new boolean[20];
 	/** The state of the button controlls */
-	protected boolean[][] controllerButton = new boolean[10][10];
+	protected boolean[][] controllerButton = new boolean[20][20];
 	
 	/**
 	 * Create a new basic game
@@ -55,75 +55,102 @@ public abstract class BasicGame implements Game {
 	public abstract void init(GameContainer container) throws SlickException;
 
 	/**
-	 * @see org.newdawn.slick.Game#keyPressed(int, char)
+	 * @see org.newdawn.slick.InputListener#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
 	}
 
 	/**
-	 * @see org.newdawn.slick.Game#keyReleased(int, char)
+	 * @see org.newdawn.slick.InputListener#keyReleased(int, char)
 	 */
 	public void keyReleased(int key, char c) {
 	}
 
 	/**
-	 * @see org.newdawn.slick.Game#mouseMoved(int, int, int, int)
+	 * @see org.newdawn.slick.InputListener#mouseMoved(int, int, int, int)
 	 */
 	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
 	}
 
 	/**
-	 * @see org.newdawn.slick.Game#mousePressed(int, int, int)
+	 * @see org.newdawn.slick.InputListener#mousePressed(int, int, int)
 	 */
 	public void mousePressed(int button, int x, int y) {
 
 	}
 	
 	/**
-	 * @see org.newdawn.slick.Game#controllerButtonPressed(int, int)
+	 * @see org.newdawn.slick.InputListener#controllerButtonPressed(int, int)
 	 */
 	public void controllerButtonPressed(int controller, int button) {
 		controllerButton[controller][button] = true;
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#controllerButtonReleased(int, int)
+	 */
 	public void controllerButtonReleased(int controller, int button) {
 		controllerButton[controller][button] = false;
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#controllerDownPressed(int)
+	 */
 	public void controllerDownPressed(int controller) {
 		controllerDown[controller] = true;
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#controllerDownReleased(int)
+	 */
 	public void controllerDownReleased(int controller) {
 		controllerDown[controller] = false;
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#controllerLeftPressed(int)
+	 */
 	public void controllerLeftPressed(int controller) {
 		controllerLeft[controller] = true;
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#controllerLeftReleased(int)
+	 */
 	public void controllerLeftReleased(int controller) {
 		controllerLeft[controller] = false;
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#controllerRightPressed(int)
+	 */
 	public void controllerRightPressed(int controller) {
 		controllerRight[controller] = true;
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#controllerRightReleased(int)
+	 */
 	public void controllerRightReleased(int controller) {
 		controllerRight[controller] = false;
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#controllerUpPressed(int)
+	 */
 	public void controllerUpPressed(int controller) {
 		controllerUp[controller] = true;
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#controllerUpReleased(int)
+	 */
 	public void controllerUpReleased(int controller) {
 		controllerUp[controller] = false;
 	}
 	
 	/**
-	 * @see org.newdawn.slick.Game#mouseReleased(int, int, int)
+	 * @see org.newdawn.slick.InputListener#mouseReleased(int, int, int)
 	 */
 	public void mouseReleased(int button, int x, int y) {
 	}

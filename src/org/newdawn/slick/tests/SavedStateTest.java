@@ -7,7 +7,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SavedState;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.gui.BasicComponent;
+import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.TextField;
 
@@ -68,7 +68,7 @@ public class SavedStateTest extends BasicGame implements ComponentListener {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.Game#keyPressed(int, char)
+	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
 		if (key == Input.KEY_ESCAPE) {
@@ -95,9 +95,9 @@ public class SavedStateTest extends BasicGame implements ComponentListener {
 	}
 
 	/**
-	 * @see org.newdawn.slick.gui.ComponentListener#componentActivated(org.newdawn.slick.gui.BasicComponent)
+	 * @see org.newdawn.slick.gui.ComponentListener#componentActivated(org.newdawn.slick.gui.AbstractComponent)
 	 */
-	public void componentActivated(BasicComponent source) {
+	public void componentActivated(AbstractComponent source) {
 		if (source == name) {
 			nameValue = name.getText();
 			state.setString("name", nameValue);

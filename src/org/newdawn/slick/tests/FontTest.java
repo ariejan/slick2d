@@ -71,7 +71,7 @@ public class FontTest extends BasicGame {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.Game#keyPressed(int, char)
+	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
 		if (key == Input.KEY_ESCAPE) {
