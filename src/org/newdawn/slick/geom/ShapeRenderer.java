@@ -55,7 +55,7 @@ public final class ShapeRenderer {
      * @param image The image to tile across the shape
      */
     public static final void texture(Shape shape, Image image) {
-    	texture(shape, image, 1, 1);
+    	texture(shape, image, 0.01f, 0.01f);
     }
     
     /**
