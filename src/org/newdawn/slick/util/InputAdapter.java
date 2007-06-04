@@ -9,7 +9,9 @@ import org.newdawn.slick.InputListener;
  * @author kevin
  */
 public class InputAdapter implements InputListener {
-
+	/** A flag to indicate if we're accepting input here */
+	private boolean acceptingInput = true;
+	
 	/**
 	 * @see org.newdawn.slick.InputListener#controllerButtonPressed(int, int)
 	 */
@@ -80,9 +82,18 @@ public class InputAdapter implements InputListener {
 	 * @see org.newdawn.slick.InputListener#isAcceptingInput()
 	 */
 	public boolean isAcceptingInput() {
-		return true;
+		return acceptingInput;
 	}
 
+	/**
+	 * Indicate if we should be accepting input of any sort
+	 * 
+	 * @param acceptingInput True if we should accept input
+	 */
+	public void setAcceptingInput(boolean acceptingInput) {
+		this.acceptingInput = acceptingInput;
+	}
+	
 	/**
 	 * @see org.newdawn.slick.InputListener#keyPressed(int, char)
 	 */
