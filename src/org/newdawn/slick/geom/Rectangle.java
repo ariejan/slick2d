@@ -135,4 +135,26 @@ public class Rectangle extends Polygon {
 	public String toString() {
 		return "[Rectangle "+width+"x"+height+"]";
 	}
+	
+	/**
+	 * Check if a rectangle contains a point (static to use it everywhere)
+	 * 
+	 * @param xp
+	 *            The x coordinate of the point to check
+	 * @param yp
+	 *            The y coordinate of the point to check
+	 * @param xr
+	 *            The x coordinate of the rectangle
+	 * @param yr
+	 *            The y coordinate of the rectangle
+	 * @param widthr
+	 *            The width of the rectangle
+	 * @param heightr The height of the rectangle
+	 * @return True if the point is within the rectangle
+	 */
+	public static boolean contains(float xp, float yp, float xr, float yr,
+			float widthr, float heightr) {
+		return (xp >= xr) && (yp >= yr) && (xp <= xr + widthr)
+				&& (yp <= yr + heightr);
+	}
 }
