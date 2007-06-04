@@ -253,12 +253,10 @@ public class Graphics {
 	 * @param color The color to use when rendering to this context
 	 */
 	public void setColor(Color color) {
-	    if (!color.equals(currentColor)) { 
-			currentColor = color;
-			predraw();
-			color.bind();
-			postdraw();  
-	    }
+		currentColor = color;
+		predraw();
+		color.bind();
+		postdraw();  
 	}
 	
 	/**
@@ -290,6 +288,38 @@ public class Graphics {
 		postdraw();
 	}
 
+    /**
+     * Draw the outline of the given shape.
+     * 
+     * @param shape The shape to draw.
+     * @param gradient The gradient to apply
+     */
+    public void draw(Shape shape, GradientFill gradient) {
+        predraw();
+        Texture.bindNone();
+
+        ShapeRenderer.draw(shape, gradient);
+
+        currentColor.bind();
+        postdraw();
+    }
+    
+    /**
+     * Draw the the given shape filled in.
+     * 
+     * @param shape The shape to fill.
+     * @param gradient The gradient to apply
+     */
+    public void fill(Shape shape, GradientFill gradient) {
+        predraw();
+        Texture.bindNone();
+        
+        ShapeRenderer.fill(shape, gradient);
+
+        currentColor.bind();
+        postdraw();
+    }
+    
     /**
      * Draw the outline of the given shape.
      * 
