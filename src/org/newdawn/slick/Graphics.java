@@ -357,9 +357,24 @@ public class Graphics {
      * @param image The image to tile across the shape
      */
     public void texture(Shape shape, Image image) {
-    	texture(shape,image,1,1);
+    	texture(shape,image,0.01f,0.01f,false);
     }
-    
+
+    /**
+     * Draw the the given shape filled in with a texture
+     * 
+     * @param shape The shape to texture.
+     * @param image The image to tile across the shape
+     * @param fit True if we want to fit the image on to the shape
+     */
+    public void texture(Shape shape, Image image, boolean fit) {
+    	if (fit) {
+    		texture(shape,image,1,1,true);
+    	} else {
+    		texture(shape,image,1,1,false);
+    	}
+    }
+
     /**
      * Draw the the given shape filled in with a texture
      * 
@@ -369,6 +384,19 @@ public class Graphics {
      * @param scaleY The scale to apply on the y axis for texturing
      */
     public void texture(Shape shape, Image image, float scaleX, float scaleY) {
+    	texture(shape,image,scaleX,scaleY,false);
+    }
+    
+    /**
+     * Draw the the given shape filled in with a texture
+     * 
+     * @param shape The shape to texture.
+     * @param image The image to tile across the shape
+     * @param scaleX The scale to apply on the x axis for texturing
+     * @param scaleY The scale to apply on the y axis for texturing
+     * @param fit True if we want to fit the image on to the shape
+     */
+    public void texture(Shape shape, Image image, float scaleX, float scaleY, boolean fit) {
         predraw();
         Texture.bindNone();
         currentColor.bind();
@@ -377,7 +405,6 @@ public class Graphics {
         
         postdraw();
     }
-    
     
 	/**
 	 * Draw a rectangle to the canvas in the current colour
