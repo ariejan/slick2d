@@ -917,6 +917,16 @@ public class Graphics {
 	}
 
 	/**
+	 * True if antialiasing has been turned on for this graphics 
+	 * context
+	 * 
+	 * @return True if antialiasing has been turned on for this graphics context
+	 */
+	public boolean isAntiAlias() {
+		return antialias;
+	}
+	
+	/**
 	 * Draw a string to the screen using the current font
 	 * 
 	 * @param str The string to draw

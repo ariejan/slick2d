@@ -52,6 +52,98 @@ public class GradientFill {
 	}
 	
 	/**
+	 * Get the position of the start control point
+	 * 
+	 * @return The position of the start control point
+	 */
+	public Vector2f getStart() {
+		return start;
+	}
+
+	/**
+	 * Get the position of the end control point
+	 * 
+	 * @return The position of the end control point
+	 */
+	public Vector2f getEnd() {
+		return end;
+	}
+	
+	/**
+	 * Get the colour at the start control point
+	 * 
+	 * @return The color at the start control point
+	 */
+	public Color getStartColor() {
+		return startCol;
+	}
+
+	/**
+	 * Get the colour at the end control point
+	 * 
+	 * @return The color at the end control point
+	 */
+	public Color getEndColor() {
+		return endCol;
+	}
+	
+	/**
+	 * Set the start point's position
+	 * 
+	 * @param x The x coordinate of the start control point
+	 * @param y The y coordinate of the start control point
+	 */
+	public void setStart(float x, float y) {
+		setStart(new Vector2f(x,y));
+	}
+	
+	/**
+	 * Set the start control point's position
+	 * 
+	 * @param start The new poisition for the start point
+	 */
+	public void setStart(Vector2f start) {
+		this.start = new Vector2f(start);
+	}
+	
+	/**
+	 * Set the end control point's position
+	 * 
+	 * @param x The x coordinate of the end control point
+	 * @param y The y coordinate of the end control point
+	 */
+	public void setEnd(float x, float y) {
+		setEnd(new Vector2f(x,y));
+	}
+	
+	/**
+	 * Set the end control point's position
+	 * 
+	 * @param end The new position for the end point
+	 */
+	public void setEnd(Vector2f end) {
+		this.end = new Vector2f(end);
+	}
+	
+	/**
+	 * Set the colour to apply at the start control's position
+	 * 
+	 * @param color The colour to apply at the start control point
+	 */
+	public void setStartColor(Color color) {
+		this.startCol = new Color(color);
+	}
+
+	/**
+	 * Set the colour to apply at the end control's position
+	 * 
+	 * @param color The colour to apply at the end control point
+	 */
+	public void setEndColor(Color color) {
+		this.endCol = new Color(color);
+	}
+	
+	/**
 	 * Get the colour that should be applied at the specified location
 	 * 
 	 * @param x The x coordinate of the point being coloured 
