@@ -10,7 +10,7 @@ import org.newdawn.slick.util.FastTrig;
  * 
  * @author Mark Bernard
  */
-public class RoundedRectangle extends Polygon {
+public class RoundedRectangle extends Shape {
     /** Default number of segments to draw the rounded corners with */
     private static final int DEFAULT_SEGMENT_COUNT = 25;
 
@@ -118,29 +118,33 @@ public class RoundedRectangle extends Polygon {
     }
 
     protected void createPoints() {
+        maxX = x + width;
+        maxY = y + height;
+        float useWidth = width - 1;
+        float useHeight = height - 1;
         if(cornerRadius == 0) {
             points = new float[8];
             
             points[0] = x;
             points[1] = y;
             
-            points[2] = x + width;
+            points[2] = x + useWidth;
             points[3] = y;
             
-            points[4] = x + width;
-            points[5] = y + height;
+            points[4] = x + useWidth;
+            points[5] = y + useHeight;
             
             points[6] = x;
-            points[7] = y + height;
+            points[7] = y + useHeight;
         }
         else {
             float doubleRadius = cornerRadius * 2;
-            if(doubleRadius > width) {
-                doubleRadius = width;
+            if(doubleRadius > useWidth) {
+                doubleRadius = useWidth;
                 cornerRadius = doubleRadius / 2;
             }
-            if(doubleRadius > height) {
-                doubleRadius = height;
+            if(doubleRadius > useHeight) {
+                doubleRadius = useHeight;
                 cornerRadius = doubleRadius / 2;
             }
             
@@ -152,13 +156,13 @@ public class RoundedRectangle extends Polygon {
             tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + cornerRadius, y + cornerRadius, 180, 270));
             
             //top right corner arc
-            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + width - cornerRadius, y + cornerRadius, 270, 360));
+            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + useWidth - cornerRadius, y + cornerRadius, 270, 360));
             
             //bottom right corner arc
-            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + width - cornerRadius, y + height - cornerRadius, 0, 90));
+            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + useWidth - cornerRadius, y + useHeight - cornerRadius, 0, 90));
 
             //bottom left corner arc
-            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + cornerRadius, y + height - cornerRadius, 90, 180));
+            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + cornerRadius, y + useHeight - cornerRadius, 90, 180));
             
             points = new float[tempPoints.size()];
             for(int i=0;i<tempPoints.size();i++) {
@@ -200,4 +204,24 @@ public class RoundedRectangle extends Polygon {
         
         return tempPoints;
     }
+    /**
+     * Apply a transformation and return a new shape.  This will not alter the current shape but will 
+     * return the transformed shape.
+     * 
+     * @param transform The transform to be applied
+     * @return The transformed shape.
+     */
+    public Shape transform(Transform transform) {
+        checkPoints();
+        
+        Polygon resultPolygon = new Polygon();
+        
+        float result[] = new float[points.length];
+        transform.transform(points, 0, result, 0, points.length / 2);
+        resultPolygon.points = result;
+        resultPolygon.findCenter();
+
+        return resultPolygon;
+    }
+    
 }

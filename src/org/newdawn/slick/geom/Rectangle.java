@@ -101,19 +101,24 @@ public class Rectangle extends Polygon {
 	}
 
 	protected void createPoints() {
+        float useWidth = width - 1;
+        float useHeight = height - 1;
         points = new float[8];
         
         points[0] = x;
         points[1] = y;
         
-        points[2] = x + width;
+        points[2] = x + useWidth;
         points[3] = y;
         
-        points[4] = x + width;
-        points[5] = y + height;
+        points[4] = x + useWidth;
+        points[5] = y + useHeight;
         
         points[6] = x;
-        points[7] = y + height;
+        points[7] = y + useHeight;
+        
+        maxX = points[2];
+        maxY = points[5];
         
         findCenter();
         calculateRadius();

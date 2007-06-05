@@ -92,16 +92,21 @@ public final class ShapeRenderer {
         Texture t = Texture.getLastBind();
         image.getTexture().bind();
         
+        float minX = shape.getX();
+        float minY = shape.getY();
+        float maxX = shape.getMaxX() - minX;
+        float maxY = shape.getMaxY() - minY;
+        
         GL11.glBegin(GL11.GL_TRIANGLE_FAN);
         float center[] = shape.getCenter();
-        GL11.glTexCoord2f(center[0] * scaleX, center[1] * scaleY);
+        GL11.glTexCoord2f(((center[0] - minX) / maxX) * scaleX, ((center[1] - minY) / maxY) * scaleY);
         GL11.glVertex2f(center[0], center[1]);
 
         for(int i=0;i<points.length;i+=2) {
-            GL11.glTexCoord2f(points[i] * scaleX, points[i + 1] * scaleY);
+            GL11.glTexCoord2f(((points[i] - minX) / maxX) * scaleX, ((points[i + 1] - minY) / maxY) * scaleY);
             GL11.glVertex2f(points[i], points[i + 1]);
         }
-        GL11.glTexCoord2f(points[0] * scaleX, points[1] * scaleY);
+        GL11.glTexCoord2f(((points[0] - minX) / maxX) * scaleX, ((points[1] - minY) / maxY) * scaleY);
         GL11.glVertex2f(points[0], points[1]);
         GL11.glEnd();
         

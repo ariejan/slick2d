@@ -115,6 +115,9 @@ public class Ellipse extends Shape {
     protected void createPoints() {
         ArrayList tempPoints = new ArrayList();
 
+        maxX = Float.MIN_VALUE;
+        maxY = Float.MIN_VALUE;
+
         float start = 0;
         float end = 360;
         
@@ -128,11 +131,18 @@ public class Ellipse extends Shape {
             if (ang > end) {
                 ang = end;
             }
-            float x = (float) (cx + (FastTrig.cos(Math.toRadians(ang)) * radius1));
-            float y = (float) (cy + (FastTrig.sin(Math.toRadians(ang)) * radius2));
+            float newX = (float) (cx + (FastTrig.cos(Math.toRadians(ang)) * radius1));
+            float newY = (float) (cy + (FastTrig.sin(Math.toRadians(ang)) * radius2));
+
+            if(newX > maxX) {
+                maxX = newX;
+            }
+            if(newY > maxY) {
+                maxY = newY;
+            }
             
-            tempPoints.add(new Float(x));
-            tempPoints.add(new Float(y));
+            tempPoints.add(new Float(newX));
+            tempPoints.add(new Float(newY));
         }
         points = new float[tempPoints.size()];
         for(int i=0;i<points.length;i++) {

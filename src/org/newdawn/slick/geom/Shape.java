@@ -15,6 +15,10 @@ public abstract class Shape {
     protected float x;
     /** The top most point of this shape. */
     protected float y;
+    /** The right most point of this shape */
+    protected float maxX;
+    /** The bottom most point of this shape */
+    protected float maxY;
     /** Radius of a circle that can completely enclose this shape. */
     protected float boundingCircleRadius;
     /** Flag to tell whether points need to be generated */
@@ -121,6 +125,22 @@ public abstract class Shape {
         pointsDirty = true;
         float yDiff = centerY - center[1];
         y += yDiff;
+    }
+    /**
+     * Get the right most point of this shape.
+     * 
+     * @return The right most point of this shape.
+     */
+    public float getMaxX() {
+        return maxX;
+    }
+    /**
+     * Get the bottom most point of this shape.
+     * 
+     * @return The bottom most point of this shape.
+     */
+    public float getMaxY() {
+        return maxY;
     }
     /**
      * Get the radius of a circle that can completely enclose this shape.

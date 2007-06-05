@@ -19,9 +19,29 @@ public class Polygon extends Shape {
         int length = points.length;
         
         this.points = new float[length];
+        maxX = Float.MIN_VALUE;
+        maxY = Float.MIN_VALUE;
+        x = Float.MAX_VALUE;
+        y = Float.MAX_VALUE;
         
         for(int i=0;i<length;i++) {
             this.points[i] = points[i];
+            if(i % 2 == 0) {
+                if(points[i] > maxX) {
+                    maxX = points[i];
+                }
+                if(points[i] < x) {
+                    x = points[i];
+                }
+            }
+            else {
+                if(points[i] > maxY) {
+                    maxY = points[i];
+                }
+                if(points[i] < y) {
+                    y = points[i];
+                }
+            }
         }
         
         findCenter();
@@ -34,6 +54,8 @@ public class Polygon extends Shape {
      */
     public Polygon(){
         points = new float[0];
+        maxX = Float.MIN_VALUE;
+        maxY = Float.MIN_VALUE;
     }
 
     /**
@@ -53,6 +75,12 @@ public class Polygon extends Shape {
         points = new float[length];
         for(int i=0;i<length;i++) {
             points[i] = ((Float)tempPoints.get(i)).floatValue();
+        }
+        if(x > maxX) {
+            maxX = x;
+        }
+        if(y > maxY) {
+            maxY = y;
         }
         findCenter();
         calculateRadius();
@@ -86,6 +114,8 @@ public class Polygon extends Shape {
         for(int i=0;i<points.length;i+=2) {
             points[i] += xDiff;
         }
+        maxX += xDiff;
+        center[0] += xDiff;
         pointsDirty = false;
     }
     public void setY(float y) {
@@ -95,8 +125,11 @@ public class Polygon extends Shape {
         for(int i=1;i<points.length;i+=2) {
             points[i] += yDiff;
         }
+        maxY += yDiff;
+        center[1] += yDiff;
         pointsDirty = false;
     }
     //This is empty since a polygon must have it's points all the time.
-    protected void createPoints() {}
+    protected void createPoints() {
+    }
 }

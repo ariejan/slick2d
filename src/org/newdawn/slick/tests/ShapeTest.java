@@ -34,11 +34,11 @@ public class ShapeTest extends BasicGame {
     private Polygon polygon;
     /** list for drawing the shapes*/
     private ArrayList shapes;
-    
     /** track key presses */
     private boolean keys[];
     /** since no modifiers, use this for shifted characters */
     private char lastChar[];
+    
     /**
      * Create a new test of graphics context rendering
      */
@@ -64,6 +64,10 @@ public class ShapeTest extends BasicGame {
         
         keys = new boolean[256];
         lastChar = new char[256];
+        RoundedRectangle rect = new RoundedRectangle(25f,25f,25f,25f,25f); 
+        rect.setX(200); 
+        rect.setY(200); 
+        rect.contains(25,25);    
     }
 
     /**
@@ -73,9 +77,9 @@ public class ShapeTest extends BasicGame {
         g.setColor(Color.green);
         
         for(int i=0;i<shapes.size();i++) {
-            g.draw((Shape)shapes.get(i));
+            g.fill((Shape)shapes.get(i));
         }
-        
+
         g.setColor(Color.white);
         g.drawString("keys", 10, 300);
         g.drawString("wasd - move rectangle", 10, 315);
@@ -84,14 +88,10 @@ public class ShapeTest extends BasicGame {
         g.drawString("TGFH - resize rounded rectangle", 10, 360);
         g.drawString("ry - resize corner radius on rounded rectangle", 10, 375);
         g.drawString("ikjl - move ellipse", 10, 390);
-        g.drawString("IKJL - move ellipse", 10, 405);
+        g.drawString("IKJL - resize ellipse", 10, 405);
         g.drawString("Arrows - move circle", 10, 420);
         g.drawString("Page Up/Page Down - resize circle", 10, 435);
         g.drawString("numpad 8546 - move polygon", 10, 450);
-        
-        g.drawString("centerX=" + circle.getCenterX() + " centerY=" + circle.getCenterY(), 400, 300);
-        g.drawLine(circle.getCenterX(), circle.getCenterY(), circle.getCenterX(), circle.getCenterY());
-        
     }
 
     /**
