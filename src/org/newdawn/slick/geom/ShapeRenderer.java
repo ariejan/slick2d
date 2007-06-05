@@ -232,4 +232,48 @@ public final class ShapeRenderer {
         	t.bind();
         }
     }
+    
+
+    /**
+     * Draw the the given shape filled in with a texture.  Only the vertices are set.  
+     * The colour has to be set independently of this method.
+     * 
+     * @param shape The shape to texture.
+     * @param image The image to tile across the shape
+     * @param scaleX The scale to apply on the x axis for texturing
+     * @param scaleY The scale to apply on the y axis for texturing
+     * @param fill The fill to apply
+     */
+    public static final void texture(Shape shape, Image image, float scaleX, float scaleY, ShapeFill fill) {
+        float points[] = shape.getPoints();
+        
+        Texture t = Texture.getLastBind();
+        image.getTexture().bind();
+        
+        GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+        float center[] = shape.getCenter();
+        
+        fill.colorAt(shape, 0, 0).bind();
+        Vector2f offset = fill.getOffsetAt(shape, 0, 0);
+        GL11.glTexCoord2f(center[0] * scaleX, center[1] * scaleY);
+        GL11.glVertex2f(center[0] + offset.getX(), center[1] + offset.getY());
+
+        for(int i=0;i<points.length;i+=2) {
+            fill.colorAt(shape, points[i] - center[0], points[i + 1] - center[1]).bind();
+            offset = fill.getOffsetAt(shape, points[i] - center[0], points[i + 1] - center[1]);
+            GL11.glTexCoord2f(points[i] * scaleX, points[i + 1] * scaleY);
+            GL11.glVertex2f(points[i] + offset.getX(), points[i + 1] + offset.getY());
+        }
+        fill.colorAt(shape, points[0] - center[0], points[1] - center[1]).bind();
+        offset = fill.getOffsetAt(shape, points[0] - center[0], points[1] - center[1]);
+        GL11.glTexCoord2f(points[0] * scaleX, points[1] * scaleY);
+        GL11.glVertex2f(points[0] + offset.getX(), points[1] + offset.getY());
+        GL11.glEnd();
+        
+        if (t == null) {
+        	Texture.bindNone();
+        } else {
+        	t.bind();
+        }
+    }
 }

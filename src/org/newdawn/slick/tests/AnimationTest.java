@@ -58,6 +58,7 @@ public class AnimationTest extends BasicGame {
 		}
 		pingPong = new Animation(sheet, 0,0,7,0,true,150,true);
 		pingPong.setPingPong(true);
+		container.getGraphics().setBackground(new Color(0.4f,0.6f,0.6f));
 	}
 
 	/**
@@ -69,7 +70,6 @@ public class AnimationTest extends BasicGame {
 		g.drawString("Hold 1 to move the manually animated", 100, 70);
 		g.drawString("PingPong Frame:"+pingPong.getFrame(), 600, 70);
 		
-		g.setBackground(new Color(0.4f,0.6f,0.6f));
 		g.scale(-1,1);
 		animation.draw(-100,100);
 		animation.draw(-200,100,36*4,65*4);

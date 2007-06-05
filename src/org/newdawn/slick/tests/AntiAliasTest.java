@@ -25,6 +25,7 @@ public class AntiAliasTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
+		container.getGraphics().setBackground(Color.green);
 	}
 
 	/**
@@ -37,7 +38,6 @@ public class AntiAliasTest extends BasicGame {
 	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) throws SlickException {
-		g.setBackground(Color.green);
 		g.setAntiAlias(true);
 		g.setColor(Color.red);
 		g.drawOval(100,100,100,100);

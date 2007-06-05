@@ -526,6 +526,16 @@ public abstract class GameContainer implements GUIContext {
 	public abstract boolean hasFocus();
 	
 	/**
+	 * Get the graphics context used by this container. Note that this 
+	 * value may vary over the life time of the game.
+	 * 
+	 * @return The graphics context used by this container
+	 */
+	public Graphics getGraphics() {
+		return graphics;
+	}
+	
+	/**
 	 * Enter the orthographic mode 
 	 * 
 	 * @param xsize The size of the panel being used
