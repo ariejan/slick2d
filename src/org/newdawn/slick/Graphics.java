@@ -292,13 +292,13 @@ public class Graphics {
      * Draw the outline of the given shape.
      * 
      * @param shape The shape to draw.
-     * @param gradient The gradient to apply
+     * @param fill The fill type to apply
      */
-    public void draw(Shape shape, GradientFill gradient) {
+    public void draw(Shape shape, ShapeFill fill) {
         predraw();
         Texture.bindNone();
 
-        ShapeRenderer.draw(shape, gradient);
+        ShapeRenderer.draw(shape, fill);
 
         currentColor.bind();
         postdraw();
@@ -308,13 +308,13 @@ public class Graphics {
      * Draw the the given shape filled in.
      * 
      * @param shape The shape to fill.
-     * @param gradient The gradient to apply
+     * @param fill The fill type to apply
      */
-    public void fill(Shape shape, GradientFill gradient) {
+    public void fill(Shape shape, ShapeFill fill) {
         predraw();
         Texture.bindNone();
         
-        ShapeRenderer.fill(shape, gradient);
+        ShapeRenderer.fill(shape, fill);
 
         currentColor.bind();
         postdraw();

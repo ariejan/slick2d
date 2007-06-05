@@ -1,5 +1,8 @@
-package org.newdawn.slick;
+package org.newdawn.slick.fills;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.ShapeFill;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
 /**
@@ -11,7 +14,9 @@ import org.newdawn.slick.geom.Vector2f;
  *
  * @author kevin
  */
-public class GradientFill {
+public class GradientFill implements ShapeFill {
+	/** The contant offset */
+	private Vector2f none = new Vector2f(0,0);
 	/** The start position of the gradient */
 	private Vector2f start;
 	/** The end poisition of the gradient */
@@ -146,6 +151,18 @@ public class GradientFill {
 	/**
 	 * Get the colour that should be applied at the specified location
 	 * 
+	 * @param shape The shape being filled
+	 * @param x The x coordinate of the point being coloured 
+	 * @param y The y coordinate of the point being coloured
+	 * @return The colour that should be applied based on the control points of this gradient
+	 */
+	public Color colorAt(Shape shape, float x, float y) {
+		return colorAt(x,y);
+	}
+
+	/**
+	 * Get the colour that should be applied at the specified location
+	 * 
 	 * @param x The x coordinate of the point being coloured 
 	 * @param y The y coordinate of the point being coloured
 	 * @return The colour that should be applied based on the control points of this gradient
@@ -178,5 +195,12 @@ public class GradientFill {
 		col.a = (u * endCol.a) + (v * startCol.a);
 		
 		return col;
+	}
+
+	/**
+	 * @see org.newdawn.slick.ShapeFill#getOffsetAt(org.newdawn.slick.geom.Shape, float, float)
+	 */
+	public Vector2f getOffsetAt(Shape shape, float x, float y) {
+		return none;
 	}
 }

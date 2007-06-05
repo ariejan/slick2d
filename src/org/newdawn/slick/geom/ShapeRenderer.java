@@ -1,8 +1,8 @@
 package org.newdawn.slick.geom;
 
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.GradientFill;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.ShapeFill;
 import org.newdawn.slick.opengl.Texture;
 
 /**
@@ -170,9 +170,9 @@ public final class ShapeRenderer {
      * The colour has to be set independently of this method.
      * 
      * @param shape The shape to draw.
-     * @param gradient The gradient to apply
+     * @param fill The fill to apply
      */
-    public static final void draw(Shape shape, GradientFill gradient) {
+    public static final void draw(Shape shape, ShapeFill fill) {
         Texture t = Texture.getLastBind();
         Texture.bindNone();
         
@@ -181,11 +181,13 @@ public final class ShapeRenderer {
         float center[] = shape.getCenter();
         GL11.glBegin(GL11.GL_LINE_STRIP);
         for(int i=0;i<points.length;i+=2) {
-            gradient.colorAt(points[i]-center[0], points[i + 1]-center[1]).bind();
-            GL11.glVertex2f(points[i], points[i + 1]);
+            fill.colorAt(shape, points[i]-center[0], points[i + 1]-center[1]).bind();
+            Vector2f offset = fill.getOffsetAt(shape, points[i], points[i + 1]);
+            GL11.glVertex2f(points[i] + offset.x, points[i + 1] + offset.y);
         }
-        gradient.colorAt(points[0]-center[0], points[1]-center[1]).bind();
-        GL11.glVertex2f(points[0], points[1]);
+        fill.colorAt(shape, points[0]-center[0], points[1]-center[1]).bind();
+        Vector2f offset = fill.getOffsetAt(shape, points[0], points[1]);
+        GL11.glVertex2f(points[0] + offset.x, points[1] + offset.y);
         GL11.glEnd();
         
         if (t == null) {
@@ -200,9 +202,9 @@ public final class ShapeRenderer {
      * The colour has to be set independently of this method.
      * 
      * @param shape The shape to fill.
-     * @param gradient The gradient to apply
+     * @param fill The fill to apply
      */
-    public static final void fill(Shape shape, GradientFill gradient) {
+    public static final void fill(Shape shape, ShapeFill fill) {
         Texture t = Texture.getLastBind();
         Texture.bindNone();
         
@@ -210,15 +212,18 @@ public final class ShapeRenderer {
         
         GL11.glBegin(GL11.GL_TRIANGLE_FAN);
         float center[] = shape.getCenter();
-        gradient.colorAt(0,0).bind();
-        GL11.glVertex2f(center[0], center[1]);
+        fill.colorAt(shape, 0,0).bind();
+        Vector2f offset = fill.getOffsetAt(shape,0,0);
+        GL11.glVertex2f(center[0]+offset.x, center[1]+offset.y);
 
         for(int i=0;i<points.length;i+=2) {
-            gradient.colorAt(points[i] - center[0], points[i + 1] - center[1]).bind();
-            GL11.glVertex2f(points[i], points[i + 1]);
+            fill.colorAt(shape, points[i] - center[0], points[i + 1] - center[1]).bind();
+            offset = fill.getOffsetAt(shape, points[i], points[i+1]);
+            GL11.glVertex2f(points[i] + offset.x, points[i + 1] + offset.y);
         }
-        gradient.colorAt(points[0] - center[0], points[1] - center[1]).bind();
-        GL11.glVertex2f(points[0], points[1]);
+        fill.colorAt(shape, points[0] - center[0], points[1] - center[1]).bind();
+        offset = fill.getOffsetAt(shape, points[0], points[1]);
+        GL11.glVertex2f(points[0] + offset.x, points[1] + offset.y);
         GL11.glEnd();
         
         if (t == null) {
