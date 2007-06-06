@@ -271,6 +271,11 @@ public class Input {
 	/** */
 	public static final int KEY_SLEEP           = 0xDF;
 	
+	/** A helper for left ALT */
+	public static final int KEY_LALT = KEY_LMENU;
+	/** A helper for right ALT */
+	public static final int KEY_RALT = KEY_RMENU;
+	
 	/** Control index */
 	private static final int LEFT = 0;
 	/** Control index */
