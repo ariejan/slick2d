@@ -65,6 +65,7 @@ public class PBufferGraphics extends Graphics {
 			
 			Display.makeCurrent();
 		} catch (Exception e) {
+			Log.error(e);
 			throw new SlickException("Failed to create PBuffer for dynamic image. OpenGL driver failure?");
 		}
 	}
