@@ -1,12 +1,14 @@
 package org.newdawn.slick.geom;
 
+import java.io.Serializable;
+
 /**
  * The description of any 2D shape that can be transformed. The points provided approximate the intent
  * of the shape. 
  * 
  * @author Mark
  */
-public abstract class Shape {
+public abstract class Shape implements Serializable {
     /** The points representing this polygon. */
     protected float points[];
     /** Center point of the polygon. */

@@ -5,7 +5,7 @@ package org.newdawn.slick.geom;
  * 
  * @author Kevin Glass
  */
-public class Rectangle extends Polygon {
+public class Rectangle extends Shape {
 	/** The width of the box */
 	private float width;
 	/** The height of the box */
@@ -162,4 +162,23 @@ public class Rectangle extends Polygon {
 		return (xp >= xr) && (yp >= yr) && (xp <= xr + widthr)
 				&& (yp <= yr + heightr);
 	}
+    /**
+     * Apply a transformation and return a new shape.  This will not alter the current shape but will 
+     * return the transformed shape.
+     * 
+     * @param transform The transform to be applied
+     * @return The transformed shape.
+     */
+    public Shape transform(Transform transform) {
+        checkPoints();
+        
+        Polygon resultPolygon = new Polygon();
+        
+        float result[] = new float[points.length];
+        transform.transform(points, 0, result, 0, points.length / 2);
+        resultPolygon.points = result;
+        resultPolygon.findCenter();
+
+        return resultPolygon;
+    }
 }
