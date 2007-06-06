@@ -15,6 +15,7 @@ import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
 
 /**
  * A geomertry test
@@ -64,10 +65,6 @@ public class ShapeTest extends BasicGame {
         
         keys = new boolean[256];
         lastChar = new char[256];
-        RoundedRectangle rect = new RoundedRectangle(25f,25f,25f,25f,25f); 
-        rect.setX(200); 
-        rect.setY(200); 
-        rect.contains(25,25);    
     }
 
     /**
