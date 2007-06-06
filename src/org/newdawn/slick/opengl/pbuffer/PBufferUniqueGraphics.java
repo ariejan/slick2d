@@ -5,7 +5,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.PixelFormat;
-import org.lwjgl.opengl.RenderTexture;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -14,11 +13,12 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
- * A graphics implementation that renders to a PBuffer
+ * A graphics implementation that renders to a PBuffer using a unique context, i.e.
+ * without render to texture
  *
  * @author kevin
  */
-public class PBufferGraphics extends Graphics {
+public class PBufferUniqueGraphics extends Graphics {
 	/** The pbuffer we're going to render to */
 	private Pbuffer pbuffer;
 	/** The image we're we're sort of rendering to */
@@ -30,13 +30,16 @@ public class PBufferGraphics extends Graphics {
 	 * @param image The image we're rendering to
 	 * @throws SlickException Indicates a failure to use pbuffers
 	 */
-	public PBufferGraphics(Image image) throws SlickException {
+	public PBufferUniqueGraphics(Image image) throws SlickException {
 		super(image.getTexture().getTextureWidth(), image.getTexture().getTextureHeight());
 		this.image = image;
 		
-		Log.debug("Creating pbuffer(rtt) "+image.getWidth()+"x"+image.getHeight());
+		Log.debug("Creating pbuffer(unique) "+image.getWidth()+"x"+image.getHeight());
 		if ((Pbuffer.getCapabilities() & Pbuffer.PBUFFER_SUPPORTED) == 0) {
 			throw new SlickException("Your OpenGL card does not support PBuffers and hence can't handle the dynamic images required for this application.");
+		}
+		if ((Pbuffer.getCapabilities() & Pbuffer.RENDER_TEXTURE_SUPPORTED) == 0) {
+			throw new SlickException("Your OpenGL card does not support Render-To-Texture and hence can't handle the dynamic images required for this application.");
 		}
 	
 		init();
@@ -50,17 +53,17 @@ public class PBufferGraphics extends Graphics {
 	private void init() throws SlickException {
 		try {
 			Texture tex = TextureLoader.get().createTexture(image.getWidth(), image.getHeight());
-			
-			final RenderTexture rt = new RenderTexture(false, true, false, false, RenderTexture.RENDER_TEXTURE_2D, 0);
-			pbuffer = new Pbuffer(screenWidth, screenHeight, new PixelFormat(8, 0, 0), rt, null);
 
+			pbuffer = new Pbuffer(screenWidth, screenHeight, new PixelFormat(8, 0, 0), null, null);
 			// Initialise state of the pbuffer context.
 			pbuffer.makeCurrent();
 
 			initGL();
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureID());
-			pbuffer.releaseTexImage(Pbuffer.FRONT_LEFT_BUFFER);
 			image.draw(0,0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureID());
+			GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, 0, 0, 
+								  tex.getTextureWidth(), 
+								  tex.getTextureHeight(), 0);
 			image.setTexture(tex);
 			
 			Display.makeCurrent();
@@ -76,7 +79,9 @@ public class PBufferGraphics extends Graphics {
 	protected void disable() {
 		// Bind the texture after rendering.
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, image.getTexture().getTextureID());
-		pbuffer.bindTexImage(Pbuffer.FRONT_LEFT_BUFFER);
+		GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, 0, 0, 
+							  image.getTexture().getTextureWidth(), 
+							  image.getTexture().getTextureHeight(), 0);
 		
 		try {
 			Display.makeCurrent();
@@ -98,12 +103,11 @@ public class PBufferGraphics extends Graphics {
 			pbuffer.makeCurrent();
 		} catch (Exception e) {
 			Log.error("Failed to recreate the PBuffer");
+			Log.error(e);
 			throw new RuntimeException(e);
 		}
 		
 		// Put the renderer contents to the texture
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, image.getTexture().getTextureID());
-		pbuffer.releaseTexImage(Pbuffer.FRONT_LEFT_BUFFER);
 		Texture.unbind();
 		initGL();
 	}
