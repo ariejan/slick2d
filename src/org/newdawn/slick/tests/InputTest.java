@@ -38,6 +38,13 @@ public class InputTest extends BasicGame {
 	/** The container holding this test */
 	private AppGameContainer app;
 	
+	/** True if space is down */
+	private boolean space;
+	/** True if left shift is down */
+	private boolean lshift;
+	/** True if right shift is down */
+	private boolean rshift;
+	
 	/**
 	 * Create a new input test
 	 */
@@ -62,6 +69,10 @@ public class InputTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) {
+        g.drawString("left shift down: "+lshift, 100, 240);
+        g.drawString("right shift down: "+rshift, 100, 260);
+        g.drawString("space down: "+space, 100, 280); 
+        
 		g.setColor(Color.white);
 		g.drawString(message, 10, 50);
 		g.drawString(""+container.getInput().getMouseY(), 10, 400);
@@ -82,6 +93,10 @@ public class InputTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(GameContainer container, int delta) {
+        lshift = container.getInput().isKeyDown(Input.KEY_LSHIFT);
+        rshift = container.getInput().isKeyDown(Input.KEY_RSHIFT);
+        space = container.getInput().isKeyDown(Input.KEY_SPACE); 
+        
 		if (controllerLeft[0]) {
 			x -= delta * 0.1f;
 		}
