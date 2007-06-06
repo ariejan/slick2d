@@ -40,8 +40,6 @@ public class GraphicsFactory {
 		pbuffer = (Pbuffer.getCapabilities() & Pbuffer.PBUFFER_SUPPORTED) != 0;
 		pbufferRT = (Pbuffer.getCapabilities() & Pbuffer.RENDER_TEXTURE_SUPPORTED) != 0;
 		
-		fbo = false;
-		pbufferRT = false;
 		if (!fbo && !pbuffer && !pbufferRT) {
 			throw new SlickException("Your OpenGL card does not support offscreen buffers and hence can't handle the dynamic images required for this application.");
 		}
