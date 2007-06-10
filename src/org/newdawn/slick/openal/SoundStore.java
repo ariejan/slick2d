@@ -784,7 +784,7 @@ public class SoundStore {
 			} catch (Exception e) {
 				Log.error(e);
 				Sys.alert("Error","Failed to load: "+ref+" - "+e.getMessage());
-				System.exit(0);
+				throw new IOException("Unable to load: "+ref);
 			}
 		}
 		
