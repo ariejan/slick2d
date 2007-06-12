@@ -1,5 +1,8 @@
 package org.newdawn.slick.particles;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -530,5 +533,37 @@ public class ParticleSystem {
 				}
 			}
 		}
+	}
+	
+
+	/**
+	 * Create a duplicate of this system. This would have been nicer as a different interface
+	 * but may cause to much API change headache. Maybe next full version release it should be
+	 * rethought.
+	 * 
+	 * TODO: Consider refactor at next point release
+	 * 
+	 * @return A copy of this particle system
+	 * @throws SlickException Indicates a failure during copy or a invalid particle system to be duplicated
+	 */
+	public ParticleSystem duplicate() throws SlickException {
+		for (int i=0;i<emitters.size();i++) {
+			if (!(emitters.get(i) instanceof ConfigurableEmitter)) {
+				throw new SlickException("Only systems contianing configurable emitters can be duplicated");
+			}
+		}
+	
+		ParticleSystem theCopy = null;
+		try {
+			ByteArrayOutputStream bout = new ByteArrayOutputStream();
+			ParticleIO.saveConfiguredSystem(bout, this);
+			ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
+			theCopy = ParticleIO.loadConfiguredSystem(bin);
+		} catch (IOException e) {
+			Log.error("Failed to duplicate particle system");
+			throw new SlickException("Unable to duplicated particle system", e);
+		}
+		
+		return theCopy;
 	}
 }
