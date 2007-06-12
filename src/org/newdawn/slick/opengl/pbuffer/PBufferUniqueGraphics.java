@@ -8,6 +8,7 @@ import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
@@ -85,12 +86,16 @@ public class PBufferUniqueGraphics extends Graphics {
 		} catch (LWJGLException e) {
 			Log.error(e);
 		}
+		
+		SlickCallable.leaveSafeBlock();
 	}
 
 	/**
 	 * @see org.newdawn.slick.Graphics#enable()
 	 */
 	protected void enable() {
+		SlickCallable.enterSafeBlock();
+		
 		try {
 			if (pbuffer.isBufferLost()) {
 				pbuffer.destroy();
