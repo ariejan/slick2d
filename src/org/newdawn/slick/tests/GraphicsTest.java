@@ -44,6 +44,7 @@ public class GraphicsTest extends BasicGame {
 		image = new Image("testdata/logo.tga", true);
 		container.setMouseCursor("testdata/palette_tool.png", 0, 0);
 		
+		container.setIcons(new String[] {"testdata/icon.tga"});
 		container.setTargetFrameRate(100);
 		
 		poly = new Polygon();
