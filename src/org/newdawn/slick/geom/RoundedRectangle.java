@@ -73,9 +73,11 @@ public class RoundedRectangle extends Shape {
      * @param cornerRadius The radius for each corner to set.
      */
     public void setCornerRadius(float cornerRadius) {
-        if(cornerRadius >= 0) {
-            this.cornerRadius = cornerRadius;
-            pointsDirty = true;
+        if (cornerRadius >= 0) {
+        	if (cornerRadius != this.cornerRadius) {
+	            this.cornerRadius = cornerRadius;
+	            pointsDirty = true;
+        	}
         }
     }
 
@@ -94,8 +96,10 @@ public class RoundedRectangle extends Shape {
      * @param height The height to set.
      */
     public void setHeight(float height) {
-        this.height = height;
-        pointsDirty = true;
+    	if (this.height != height) {
+	        this.height = height;
+	        pointsDirty = true;
+    	}
     }
 
     /**
@@ -113,8 +117,10 @@ public class RoundedRectangle extends Shape {
      * @param width The width to set.
      */
     public void setWidth(float width) {
-        this.width = width;
-        pointsDirty = true;
+    	if (width != this.width) {
+	        this.width = width;
+	        pointsDirty = true;
+    	}
     }
 
     protected void createPoints() {

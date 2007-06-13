@@ -118,6 +118,7 @@ public class Polygon extends Shape {
         center[0] += xDiff;
         pointsDirty = false;
     }
+    
     public void setY(float y) {
         float yDiff = y - this.y;
         super.setY(y);
@@ -129,6 +130,7 @@ public class Polygon extends Shape {
         center[1] += yDiff;
         pointsDirty = false;
     }
+    
     //This is empty since a polygon must have it's points all the time.
     protected void createPoints() {
     }

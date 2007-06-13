@@ -61,8 +61,10 @@ public class Rectangle extends Shape {
 	 * @param width The new width of this box
 	 */
 	public void setWidth(float width) {
-        pointsDirty = true;
-		this.width = width;
+		if (width != this.width) {
+	        pointsDirty = true;
+			this.width = width;
+		}
 	}
 	
 	/**
@@ -71,8 +73,10 @@ public class Rectangle extends Shape {
 	 * @param height The height of this box
 	 */
 	public void setHeight(float height) {
-        pointsDirty = true;
-		this.height = height;
+		if (height != this.height) {
+	        pointsDirty = true;
+			this.height = height;
+		}
 	}
 	
 	/**

@@ -41,9 +41,11 @@ public strictfp class Circle extends Ellipse {
 	 * @param radius The radius of this circle
 	 */
 	public void setRadius(float radius) {
-        pointsDirty = true;
-		this.radius = radius;
-        setRadii(radius, radius);
+		if (radius != this.radius) {
+	        pointsDirty = true;
+			this.radius = radius;
+	        setRadii(radius, radius);
+		}
 	}
 	
 	/**

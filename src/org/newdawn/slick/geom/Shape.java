@@ -62,8 +62,10 @@ public abstract class Shape implements Serializable {
      * @param x The new x position of the left side this shape.
      */
     public void setX(float x) {
-        this.x = x;
-        pointsDirty = true;
+    	if (x != this.x) {
+	        this.x = x;
+	        pointsDirty = true;
+    	}
     }
     
     /**
@@ -72,8 +74,10 @@ public abstract class Shape implements Serializable {
      * @param y The new y position of the top of this shape.
      */
     public void setY(float y) {
-        this.y = y;
-        pointsDirty = true;
+    	if (y != this.y) {
+	        this.y = y;
+	        pointsDirty = true;
+    	}
     }
 
     /**
@@ -102,9 +106,8 @@ public abstract class Shape implements Serializable {
      * @param centerX The center point to set.
      */
     public void setCenterX(float centerX) {
-        pointsDirty = true;
         float xDiff = centerX - center[0];
-        x += xDiff;
+        setX(x + xDiff);
     }
 
     /**
@@ -124,9 +127,8 @@ public abstract class Shape implements Serializable {
      * @param centerY The center point to set.
      */
     public void setCenterY(float centerY) {
-        pointsDirty = true;
         float yDiff = centerY - center[1];
-        y += yDiff;
+        setY(y + yDiff);
     }
     /**
      * Get the right most point of this shape.

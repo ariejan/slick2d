@@ -65,9 +65,8 @@ public class Ellipse extends Shape {
      * @param radius2 vertical radius
      */
     public void setRadii(float radius1, float radius2) {
-        this.radius1 = radius1;
-        this.radius2 = radius2;
-        pointsDirty = true;
+    	setRadius1(radius1);
+    	setRadius2(radius2);
     }
 
     /**
@@ -85,8 +84,10 @@ public class Ellipse extends Shape {
      * @param radius1 The horizontal radius to set
      */
     public void setRadius1(float radius1) {
-        this.radius1 = radius1;
-        pointsDirty = true;
+    	if (radius1 != this.radius1) {
+	        this.radius1 = radius1;
+	        pointsDirty = true;
+    	}
     }
 
     /**
@@ -104,8 +105,10 @@ public class Ellipse extends Shape {
      * @param radius2 The vertical radius to set
      */
     public void setRadius2(float radius2) {
-        this.radius2 = radius2;
-        pointsDirty = true;
+    	if (radius2 != this.radius2) {
+	        this.radius2 = radius2;
+	        pointsDirty = true;
+    	}
     }
 
     /**
