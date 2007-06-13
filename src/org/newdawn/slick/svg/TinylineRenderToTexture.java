@@ -35,7 +35,7 @@ import com.tinyline.tiny2d.TinyString;
  * 
  * @author kevin
  */
-public class SVGTest extends BasicGame implements SVGImageProducer, ImageLoader {
+public class TinylineRenderToTexture extends BasicGame implements SVGImageProducer, ImageLoader {
 	/** The texture generated from the SVG */
 	private int texture;
 	/** The pixel buffer filled by TinyLine */
@@ -56,8 +56,8 @@ public class SVGTest extends BasicGame implements SVGImageProducer, ImageLoader 
 	/**
 	 * SVG test
 	 */
-	public SVGTest() {
-		super("SVGTest");
+	public TinylineRenderToTexture() {
+		super("TinylineRenderToTexture");
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class SVGTest extends BasicGame implements SVGImageProducer, ImageLoader 
 	 */
 	public static void main(String[] argv) {
 		try {
-			AppGameContainer container = new AppGameContainer(new SVGTest(),
+			AppGameContainer container = new AppGameContainer(new TinylineRenderToTexture(),
 					800, 600, false);
 			container.start();
 		} catch (Exception e) {

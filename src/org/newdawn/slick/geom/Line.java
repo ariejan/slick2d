@@ -7,7 +7,7 @@ package org.newdawn.slick.geom;
  * 
  * @author Kevin Glass
  */
-public strictfp class Line {
+public strictfp class Line extends Shape {
 	/** The start point of the line */
 	private Vector2f start;
 	/** The end point of the line */
@@ -125,6 +125,7 @@ public strictfp class Line {
 	 * @param end The end point of the line
 	 */
 	public void set(Vector2f start, Vector2f end) {
+		super.pointsDirty = true;
 		this.start = start;
 		this.end = end;
 		
@@ -282,5 +283,26 @@ public strictfp class Line {
 		float iy = start.getY() + (u * (end.getY() - start.getY()));
 		
 		return new Vector2f(ix,iy);
+	}
+
+	/**
+	 * @see org.newdawn.slick.geom.Shape#createPoints()
+	 */
+	protected void createPoints() {
+		points = new float[4];
+		points[0] = getX1();
+		points[1] = getY1();
+		points[2] = getX2();
+		points[3] = getY2();
+	}
+
+	/**
+	 * @see org.newdawn.slick.geom.Shape#transform(org.newdawn.slick.geom.Transform)
+	 */
+	public Shape transform(Transform transform) {
+		float[] temp = new float[4];
+		transform.transform(points, 0, temp, 0, 2);
+		
+		return new Line(temp[0],temp[1],temp[2],temp[3]);
 	}
 }

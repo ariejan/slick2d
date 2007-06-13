@@ -368,7 +368,7 @@ public abstract class Shape implements Serializable {
      *
      */
     protected final void checkPoints() {
-        if(pointsDirty) {
+        if (pointsDirty) {
             createPoints();
             findCenter();
             calculateRadius();

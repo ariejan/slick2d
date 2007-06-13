@@ -38,16 +38,28 @@ public final class ShapeRenderer {
     }
     
     /**
+     * Check there are enough points to fill
+     * 
+     * @param points The points to check
+     */
+    private static void checkPoints(float[] points) {
+        if (points.length < 6) {
+        	throw new RuntimeException("Attempt to fill shape with less than 3 verticies");
+        }
+    }
+    
+    /**
      * Draw the the given shape filled in.  Only the vertices are set.  
      * The colour has to be set independently of this method.
      * 
      * @param shape The shape to fill.
      */
     public static final void fill(Shape shape) {
+        float points[] = shape.getPoints();
+        checkPoints(points);
+
         Texture t = Texture.getLastBind();
         Texture.bindNone();
-        
-        float points[] = shape.getPoints();
         
         GL11.glBegin(GL11.GL_TRIANGLE_FAN);
         float center[] = shape.getCenter();
@@ -100,6 +112,7 @@ public final class ShapeRenderer {
      */
     public static final void texture(Shape shape, Image image, float scaleX, float scaleY) {
         float points[] = shape.getPoints();
+        checkPoints(points);
         
         Texture t = Texture.getLastBind();
         image.getTexture().bind();
@@ -136,6 +149,7 @@ public final class ShapeRenderer {
      */
     public static final void textureFit(Shape shape, Image image, float scaleX, float scaleY) {
         float points[] = shape.getPoints();
+        checkPoints(points);
         
         Texture t = Texture.getLastBind();
         image.getTexture().bind();
@@ -173,10 +187,10 @@ public final class ShapeRenderer {
      * @param fill The fill to apply
      */
     public static final void draw(Shape shape, ShapeFill fill) {
+        float points[] = shape.getPoints();
+        
         Texture t = Texture.getLastBind();
         Texture.bindNone();
-        
-        float points[] = shape.getPoints();
 
         float center[] = shape.getCenter();
         GL11.glBegin(GL11.GL_LINE_STRIP);
@@ -205,10 +219,12 @@ public final class ShapeRenderer {
      * @param fill The fill to apply
      */
     public static final void fill(Shape shape, ShapeFill fill) {
+        float points[] = shape.getPoints();
+        checkPoints(points);
+        
         Texture t = Texture.getLastBind();
         Texture.bindNone();
         
-        float points[] = shape.getPoints();
         
         GL11.glBegin(GL11.GL_TRIANGLE_FAN);
         float center[] = shape.getCenter();
@@ -246,6 +262,7 @@ public final class ShapeRenderer {
      */
     public static final void texture(Shape shape, Image image, float scaleX, float scaleY, ShapeFill fill) {
         float points[] = shape.getPoints();
+        checkPoints(points);
         
         Texture t = Texture.getLastBind();
         image.getTexture().bind();
