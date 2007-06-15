@@ -46,7 +46,7 @@ public class Polygon extends Shape {
         
         findCenter();
         calculateRadius();
-        pointsDirty = false;
+        pointsDirty = true;
     }
     /**
      * Create an empty polygon
@@ -84,6 +84,8 @@ public class Polygon extends Shape {
         }
         findCenter();
         calculateRadius();
+        
+        pointsDirty = true;
     }
 
 

@@ -27,9 +27,10 @@ public class SimpleDiagramRenderer {
 	 * @param g The graphics context to which we should render the diagram
 	 */
 	public void render(Graphics g) {
+		g.scale(1.5f,1.5f);
 		for (int i=0;i<diagram.getFigureCount();i++) {
 			Figure figure = diagram.getFigure(i);
-			
+
 			if (figure.getData().isColor(NonGeometricData.FILL)) {
 				g.setColor(figure.getData().getAsColor(NonGeometricData.FILL));
 				g.fill(diagram.getFigure(i).getShape());
@@ -39,5 +40,6 @@ public class SimpleDiagramRenderer {
 				g.draw(diagram.getFigure(i).getShape());
 			}
 		}
+		g.resetTransform();
 	}
 }

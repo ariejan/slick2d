@@ -25,7 +25,9 @@ public abstract class Shape implements Serializable {
     protected float boundingCircleRadius;
     /** Flag to tell whether points need to be generated */
     protected boolean pointsDirty;
-
+    /** The triangles that define the shape */
+    protected Triangulator tris;
+    
     /**
      * Shape constructor.
      *
@@ -33,6 +35,7 @@ public abstract class Shape implements Serializable {
     public Shape() {
         pointsDirty = true;
     }
+    
     /**
      * Apply a transformation and return a new shape.  This will not alter the current shape but will 
      * return the transformed shape.
@@ -364,6 +367,51 @@ public abstract class Shape implements Serializable {
     }
     
     /**
+     * Calculate the triangles that can fill this shape
+     */
+    protected void caculateTriangles() {
+    	tris = new MannTriangulator();
+    	if (points.length >= 6) {
+    		boolean clockwise = true;
+    		float area = 0;
+    		for (int i=0;i<(points.length/2)-1;i++) {
+    			float x1 = points[(i*2)];
+    			float y1 = points[(i*2)+1];
+    			float x2 = points[(i*2)+2];
+    			float y2 = points[(i*2)+3];
+    			
+    			area += (x1 * y2) - (y1 * x2);
+    		}
+    		area /= 2;
+    		clockwise = area >= 0;
+    		
+    		if (clockwise) {
+		    	for (int i=0;i<points.length;i+=2) {
+		    		tris.addPolyPoint(points[i], points[i+1]);
+		    	}
+    		} else {
+		    	for (int i=points.length-2;i>=0;i-=2) {
+		    		tris.addPolyPoint(points[i], points[i+1]);
+		    	}
+    		}
+    		tris.triangulate();
+    	} else {
+    		tris.triangulate();
+    	}
+    	
+    }
+    
+    /**
+     * The triangles that define the filled version of this shape
+     * 
+     * @return The triangles that define the 
+     */
+    public Triangulator getTriangles() {
+        checkPoints();
+    	return tris;
+    }
+    
+    /**
      * Check the dirty flag and create points as necessary.
      *
      */
@@ -372,6 +420,7 @@ public abstract class Shape implements Serializable {
             createPoints();
             findCenter();
             calculateRadius();
+            caculateTriangles();
             pointsDirty = false;
         }
     }

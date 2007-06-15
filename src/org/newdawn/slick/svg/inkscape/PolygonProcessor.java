@@ -1,5 +1,6 @@
 package org.newdawn.slick.svg.inkscape;
 
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import org.newdawn.slick.geom.Polygon;
@@ -51,6 +52,9 @@ public class PolygonProcessor implements ElementProcessor {
 	private static int processPoly(Polygon poly, Element element, StringTokenizer tokens) throws ParsingException {
 		int count = 0;
 		
+		ArrayList pts = new ArrayList();
+		boolean moved = false;
+		
 		while (tokens.hasMoreTokens()) {
 			String nextToken = tokens.nextToken();
 			if (nextToken.equals("L")) {
@@ -60,6 +64,15 @@ public class PolygonProcessor implements ElementProcessor {
 				break;
 			}
 			if (nextToken.equals("M")) {
+				// ignore moves
+				continue;
+			}
+			if (nextToken.equals("C")) {
+				// skip control points
+				tokens.nextToken();
+				tokens.nextToken();
+				tokens.nextToken();
+				tokens.nextToken();
 				continue;
 			}
 			
@@ -96,13 +109,13 @@ public class PolygonProcessor implements ElementProcessor {
 		
 		StringTokenizer tokens = new StringTokenizer(points, ", ");
 		Polygon poly = new Polygon();
-		if (processPoly(poly, element, tokens) > 2) {
+		int count = processPoly(poly, element, tokens);
+		if (count > 3) {
 			Shape shape = poly.transform(transform);
-	
+			
 			NonGeometricData data = Util.getNonGeometricData(element);
 			
 			diagram.addFigure(new Figure(shape, data));
 		}
 	}
-
 }

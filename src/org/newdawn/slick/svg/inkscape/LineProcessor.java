@@ -61,6 +61,9 @@ public class LineProcessor implements ElementProcessor {
 			if (nextToken.equals("M")) {
 				continue;
 			}
+			if (nextToken.equals("C")) {
+				return 0;
+			}
 			
 			String tokenX = nextToken;
 			String tokenY = tokens.nextToken();

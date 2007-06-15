@@ -46,12 +46,32 @@ public class NonGeometricData {
 	}
 	
 	/**
+	 * Morph the color from a string
+	 * 
+	 * @param str The string to morph
+	 * @return The new color string
+	 */
+	private String morphColor(String str) {
+		if (str.equals("")) {
+			return "#000000";
+		}
+		if (str.equals("white")) {
+			return "#ffffff";
+		}
+		
+		return str;
+	}
+	
+	/**
 	 * Add a configured style attribute into the data set
 	 * 
 	 * @param attribute The attribute to add  
 	 * @param value The value to assign
 	 */
 	public void addAttribute(String attribute, String value) {
+		if (attribute.equals(FILL) ) {
+			value = morphColor(value);
+		}
 		props.setProperty(attribute, value);
 	}
 	
@@ -93,7 +113,7 @@ public class NonGeometricData {
 	 */
 	public Color getAsColor(String attribute) {
 		if (!isColor(attribute)) {
-			throw new RuntimeException("Attribute "+attribute+" is not specified as a color");
+			throw new RuntimeException("Attribute "+attribute+" is not specified as a color:"+getAttribute(attribute));
 		}
 		
 		int col = Integer.parseInt(getAttribute(attribute).substring(1), 16);
