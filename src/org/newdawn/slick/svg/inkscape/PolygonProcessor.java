@@ -91,7 +91,7 @@ public class PolygonProcessor implements ElementProcessor {
 			
 			NonGeometricData data = Util.getNonGeometricData(element);
 			
-			diagram.addFigure(new Figure(shape, data));
+			diagram.addFigure(new Figure(Figure.POLYGON, shape, data));
 		}
 	}
 
