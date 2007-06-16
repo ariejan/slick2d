@@ -42,6 +42,15 @@ public class Diagram {
 	}
 	
 	/**
+	 * Get the names of the patterns defined 
+	 * 
+	 * @return The names of the pattern
+	 */
+	public String[] getPatternDefNames() {
+		return (String[]) patterns.keySet().toArray(new String[0]);		
+	}
+	
+	/**
 	 * Add a figure to the diagram
 	 * 
 	 * @param figure The figure to add
