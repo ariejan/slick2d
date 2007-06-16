@@ -31,8 +31,12 @@ public class EllipseProcessor implements ElementProcessor {
 		Shape shape = ellipse.transform(transform);
 
 		NonGeometricData data = Util.getNonGeometricData(element);
+		data.addAttribute("cx", ""+x);
+		data.addAttribute("cy", ""+y);
+		data.addAttribute("rx", ""+rx);
+		data.addAttribute("ry", ""+ry);
 		
-		diagram.addFigure(new Figure(Figure.ELLIPSE, shape, data));
+		diagram.addFigure(new Figure(Figure.ELLIPSE, shape, data, transform));
 	}
 
 	/**

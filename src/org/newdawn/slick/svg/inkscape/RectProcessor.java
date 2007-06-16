@@ -33,7 +33,7 @@ public class RectProcessor implements ElementProcessor {
 		
 		NonGeometricData data = Util.getNonGeometricData(element);
 		
-		diagram.addFigure(new Figure(Figure.RECTANGLE, shape, data));
+		diagram.addFigure(new Figure(Figure.RECTANGLE, shape, data, transform));
 	}
 
 	/**

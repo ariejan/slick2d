@@ -101,7 +101,7 @@ public class LineProcessor implements ElementProcessor {
 		
 		NonGeometricData data = Util.getNonGeometricData(element);
 		
-		diagram.addFigure(new Figure(Figure.LINE, line, data));
+		diagram.addFigure(new Figure(Figure.LINE, line, data, transform));
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package org.newdawn.slick.svg;
 
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
 
 /**
  * A figure that is part of diagram loaded from SVG
@@ -26,6 +27,8 @@ public class Figure {
 	private Shape shape;
 	/** The other bits of data assocaited with the SVG element */
 	private NonGeometricData data;
+	/** The transform that has already been applied to the shape */
+	private Transform transform;
 	
 	/**
 	 * Create a new figure
@@ -33,13 +36,24 @@ public class Figure {
 	 * @param type The type of the figure
 	 * @param shape The shape of the figure
 	 * @param data The other associated data
+	 * @param transform The transform that was applied to the shape
 	 */
-	public Figure(int type, Shape shape, NonGeometricData data) {
+	public Figure(int type, Shape shape, NonGeometricData data, Transform transform) {
 		this.shape = shape;
 		this.data = data;
 		this.type = type;
 	}
 
+	/**
+	 * Get the transform that was applied to the shape given in the SVG 
+	 * to get it to it's currently state
+	 * 
+	 * @return The transform specified in the SVG
+	 */
+	public Transform getTransform() {
+		return transform;
+	}
+	
 	/**
 	 * Get the type of this figure
 	 * 
