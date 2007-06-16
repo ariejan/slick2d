@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.svg.inkscape.DefsProcessor;
 import org.newdawn.slick.svg.inkscape.ElementProcessor;
 import org.newdawn.slick.svg.inkscape.EllipseProcessor;
 import org.newdawn.slick.svg.inkscape.GroupProcessor;
@@ -42,6 +43,7 @@ public class InkscapeLoader implements Loader {
 		processors.add(new PathProcessor());
 		processors.add(new LineProcessor());
 		processors.add(new GroupProcessor());
+		processors.add(new DefsProcessor());
 	}
 	
 	/**
