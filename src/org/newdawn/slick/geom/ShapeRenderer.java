@@ -132,7 +132,6 @@ public final class ShapeRenderer {
 
         GL11.glBegin(GL11.GL_TRIANGLES);
         for (int i=0;i<tris.getTriangleCount();i++) {
-            //GL11.glBegin(GL11.GL_LINE_STRIP);
         	for (int p=0;p<3;p++) {
         		float[] pt = tris.getTrianglePoint(i, p);
         		float[] np = callback.preRenderPoint(pt[0],pt[1]);
@@ -143,11 +142,6 @@ public final class ShapeRenderer {
         			GL11.glVertex2f(np[0],np[1]);
         		}
         	}
-        	
-//    		float[] pt = tris.getTrianglePoint(i, 0);
-//			GL11.glVertex2f(pt[0],pt[1]);
-//			
-//            GL11.glEnd();
         }
         GL11.glEnd();
     }
