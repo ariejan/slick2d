@@ -43,6 +43,12 @@ public class SimpleDiagramRenderer {
 				g.draw(diagram.getFigure(i).getShape());
 				g.setAntiAlias(false);
 			}
+	
+			// DEBUG VERSION
+//			g.setColor(Color.black);
+//			g.draw(diagram.getFigure(i).getShape());
+//			g.setColor(Color.red);
+//			g.fill(diagram.getFigure(i).getShape());
 		}
 	}
 }

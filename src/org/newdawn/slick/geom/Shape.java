@@ -389,20 +389,11 @@ public abstract class Shape implements Serializable {
     		area /= 2;
     		clockwise = area > 0;
 
-        	tris = new MannTriangulator();
+        	tris = new NeatTriangulator();
     		for (int i=0;i<points.length;i+=2) {
 	    		tris.addPolyPoint(points[i], points[i+1]);
 	    	}
     		tris.triangulate();
-    		
-    		// winding was the wrong way, wind it the other
-    		if (tris.getTriangleCount() < points.length / 3) {
-            	tris = new MannTriangulator();
-		    	for (int i=points.length-2;i>=0;i-=2) {
-		    		tris.addPolyPoint(points[i], points[i+1]);
-		    	}
-	    		tris.triangulate();
-    		}
     	}
     	
     	trianglesDirty = false;

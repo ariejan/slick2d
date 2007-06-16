@@ -36,6 +36,9 @@ import java.util.List;
  * @author Matthias Mann
  */
 public class MannTriangulator implements Triangulator {
+	/** The allowed error value */
+	private static final double EPSILON = 1e-5;
+	
 	/** The outer countour of the shape */
 	protected PointBag contour;
 	/** The holes defined in the polygon */
@@ -51,7 +54,7 @@ public class MannTriangulator implements Triangulator {
 	public MannTriangulator() {
 		contour = getPointBag();
 	}
-
+	
 	/**
 	 * @see org.newdawn.slick.geom.Triangulator#addPolyPoint(float, float)
 	 */
@@ -86,11 +89,11 @@ public class MannTriangulator implements Triangulator {
 	 * @param pt The point to add
 	 */
 	private void addPoint(Vector2f pt) {
-		Point p = getPoint(pt);
-
 		if (holes == null) {
+			Point p = getPoint(pt);
 			contour.add(p);
 		} else {
+			Point p = getPoint(pt);
 			holes.add(p);
 		}
 	}
@@ -193,7 +196,7 @@ public class MannTriangulator implements Triangulator {
 					}
 				}
 			} while ((pContour = pContour.next) != contour.first);
-
+			
 			// remove the point - we do it in every case to prevent endless loop
 			Point prev = pContour.prev;
 			Point next = pContour.next;
@@ -353,12 +356,18 @@ public class MannTriangulator implements Triangulator {
 		 * Compute the angle at this point
 		 */
 		public void computeAngle() {
+			if (prev.pt.equals(pt)) {
+				pt.x += 0.01f;
+			}
 			double dx1 = pt.x - prev.pt.x;
 			double dy1 = pt.y - prev.pt.y;
 			double len1 = Math.hypot(dx1, dy1);
 			dx1 /= len1;
 			dy1 /= len1;
 
+			if (next.pt.equals(pt)) {
+				pt.y += 0.01f;
+			}
 			double dx2 = next.pt.x - pt.x;
 			double dy2 = next.pt.y - pt.y;
 			double len2 = Math.hypot(dx2, dy2);
@@ -371,7 +380,7 @@ public class MannTriangulator implements Triangulator {
 			nx = (nx1 - dy2) * 0.5;
 			ny = (ny1 + dx2) * 0.5;
 
-			if (nx * nx + ny * ny < 1e-3) {
+			if (nx * nx + ny * ny < EPSILON) {
 				nx = dx1;
 				ny = dy2;
 				angle = 1; // TODO: nx1,ny1 and nx2,ny2 facing ?
@@ -505,7 +514,7 @@ public class MannTriangulator implements Triangulator {
 					double dyB = n.pt.y - p.pt.y;
 					double d = (dxA * dyB) - (dyA * dxB);
 
-					if (Math.abs(d) > 1e-4f) {
+					if (Math.abs(d) > EPSILON) {
 						double tmp1 = p.pt.x - v1.x;
 						double tmp2 = p.pt.y - v1.y;
 						double tA = (dyB * tmp1 - dxB * tmp2) / d;
@@ -540,6 +549,26 @@ public class MannTriangulator implements Triangulator {
 				++count;
 			} while ((p = p.next) != first);
 			return count;
+		}
+		
+		/**
+		 * Check if the point provided was contained
+		 * 
+		 * @param point The point provided
+		 * @return True if it's in the bag
+		 */
+		public boolean contains(Vector2f point) {
+			if (first == null) {
+				return false;
+			}
+			
+			if (first.prev.pt.equals(point)) {
+				return true;
+			}
+			if (first.pt.equals(point)) {
+				return true;
+			}
+			return false;
 		}
 	}
 

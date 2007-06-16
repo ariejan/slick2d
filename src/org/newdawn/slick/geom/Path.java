@@ -115,76 +115,100 @@ public class Path extends Shape {
 	 * @see org.newdawn.slick.geom.Shape#transform(org.newdawn.slick.geom.Transform)
 	 */
 	public Shape transform(Transform transform) {
-        checkPoints();
-        
-        Polygon resultPolygon = new Polygon();
-        
-        float result[] = new float[points.length];
-        transform.transform(points, 0, result, 0, points.length / 2);
-        resultPolygon.points = result;
-        resultPolygon.findCenter();
-
-        return resultPolygon;
+		Path p = new Path(cx,cy);
+		p.localPoints = transform(localPoints, transform);
+		for (int i=0;i<holes.size();i++) {
+			p.holes.add(transform((ArrayList) holes.get(i), transform));
+		}
+		p.closed = this.closed;
+		
+		return p;
 	}
 
-    /**
-     * Calculate the triangles that can fill this shape
-     */
-    protected void caculateTriangles() {
-    	if (!trianglesDirty) {
-    		return;
-    	}
-    	if (points.length >= 6) {
-    		boolean clockwise = true;
-    		float area = 0;
-    		for (int i=0;i<(points.length/2)-1;i++) {
-    			float x1 = points[(i*2)];
-    			float y1 = points[(i*2)+1];
-    			float x2 = points[(i*2)+2];
-    			float y2 = points[(i*2)+3];
-    			
-    			area += (x1 * y2) - (y1 * x2);
-    		}
-    		area /= 2;
-    		clockwise = area > 0;
-
-        	tris = new MannTriangulator();
-    		for (int i=0;i<points.length;i+=2) {
-	    		tris.addPolyPoint(points[i], points[i+1]);
-	    	}
-    		for (int h=0;h<holes.size();h++) {
-    			ArrayList hole = (ArrayList) holes.get(h);
-				tris.startHole();
-    			for (int i=0;i<hole.size();i++) {
-    				float[] pt = (float[]) hole.get(i);
-    				tris.addPolyPoint(pt[0],pt[1]);
-    			}
-    		}
-    		tris.triangulate();
-    		
-    		// winding was the wrong way, wind it the other
-    		if (tris.getTriangleCount() < points.length / 3) {
-            	tris = new MannTriangulator();
-		    	for (int i=points.length-2;i>=0;i-=2) {
-		    		tris.addPolyPoint(points[i], points[i+1]);
-		    	}
-	    		for (int h=0;h<holes.size();h++) {
-	    			ArrayList hole = (ArrayList) holes.get(h);
-					tris.startHole();
-	    			for (int i=hole.size()-1;i>=0;i--) {
-	    				float[] pt = (float[]) hole.get(i);
-	    				tris.addPolyPoint(pt[0],pt[1]);
-	    			}
-	    		}
-	    		tris.triangulate();
-    		}
-    		
-    	} else {
-    		tris.triangulate();
-    	}
-    	
-    	trianglesDirty = false;
-    }
+	/**
+	 * Transform a list of points
+	 * 
+	 * @param pts The pts to transform
+	 * @param t The transform to apply
+	 * @return The transformed points
+	 */
+	private ArrayList transform(ArrayList pts, Transform t) {
+		float[] in = new float[pts.size()*2];
+		float[] out = new float[pts.size()*2];
+	
+		for (int i=0;i<pts.size();i++) {
+			in[i*2] = ((float[]) pts.get(i))[0];
+			in[(i*2)+1] = ((float[]) pts.get(i))[1];
+		}
+		t.transform(in, 0, out, 0, pts.size());
+		
+		ArrayList outList = new ArrayList();
+		for (int i=0;i<pts.size();i++) {
+			outList.add(new float[] {out[(i*2)],out[(i*2)+1]});
+		}
+		
+		return outList;
+	}
+	
+//    /**
+//     * Calculate the triangles that can fill this shape
+//     */
+//    protected void caculateTriangles() {
+//    	if (!trianglesDirty) {
+//    		return;
+//    	}
+//    	if (points.length >= 6) {
+//    		boolean clockwise = true;
+//    		float area = 0;
+//    		for (int i=0;i<(points.length/2)-1;i++) {
+//    			float x1 = points[(i*2)];
+//    			float y1 = points[(i*2)+1];
+//    			float x2 = points[(i*2)+2];
+//    			float y2 = points[(i*2)+3];
+//    			
+//    			area += (x1 * y2) - (y1 * x2);
+//    		}
+//    		area /= 2;
+//    		clockwise = area > 0;
+//
+//    		if (clockwise) {
+//	        	tris = new MannTriangulator();
+//	    		for (int i=0;i<points.length;i+=2) {
+//		    		tris.addPolyPoint(points[i], points[i+1]);
+//		    	}
+//	    		
+//	    		for (int h=0;h<holes.size();h++) {
+//	    			ArrayList hole = (ArrayList) holes.get(h);
+//					tris.startHole();
+//	    			for (int i=0;i<hole.size();i++) {
+//	    				float[] pt = (float[]) hole.get(i);
+//	    				tris.addPolyPoint(pt[0],pt[1]);
+//	    			}
+//	    		}
+//	    		tris.triangulate();
+//    		} else {
+//            	tris = new MannTriangulator();
+//    	    	for (int i=points.length-2;i>=0;i-=2) {
+//    	    		tris.addPolyPoint(points[i], points[i+1]);
+//    	    	}
+//    	    	
+//        		for (int h=0;h<holes.size();h++) {
+//        			ArrayList hole = (ArrayList) holes.get(h);
+//    				tris.startHole();
+//        			for (int i=hole.size()-1;i>=0;i--) {
+//        				float[] pt = (float[]) hole.get(i);
+//        				tris.addPolyPoint(pt[0],pt[1]);
+//        			}
+//        		}
+//        		tris.triangulate();
+//    		}
+//    		
+//    	} else {
+//    		tris.triangulate();
+//    	}
+//    	
+//    	trianglesDirty = false;
+//    }
     
     /**
      * True if this is a closed shape

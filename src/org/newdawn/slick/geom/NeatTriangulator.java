@@ -480,7 +480,7 @@ public class NeatTriangulator implements Triangulator
         try
         {
             basicTriangulation();
-            optimize();
+            //optimize();
             return true;
         }
         catch (InternalException e)
@@ -609,7 +609,5 @@ public class NeatTriangulator implements Triangulator
 	 * @see org.newdawn.slick.geom.Triangulator#startHole()
 	 */
 	public void startHole() {
-		// TODO Auto-generated method stub
-		
 	}
 }
