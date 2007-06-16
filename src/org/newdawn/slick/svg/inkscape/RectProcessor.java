@@ -5,10 +5,10 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.svg.Diagram;
 import org.newdawn.slick.svg.Figure;
+import org.newdawn.slick.svg.Loader;
 import org.newdawn.slick.svg.NonGeometricData;
-import org.w3c.dom.Document;
+import org.newdawn.slick.svg.ParsingException;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * A processor for the <rect> element.
@@ -18,22 +18,9 @@ import org.w3c.dom.NodeList;
 public class RectProcessor implements ElementProcessor {
 
 	/**
-	 * @see org.newdawn.slick.svg.inkscape.ElementProcessor#process(org.w3c.dom.Document, org.newdawn.slick.svg.Diagram)
+	 * @see org.newdawn.slick.svg.inkscape.ElementProcessor#process(org.newdawn.slick.svg.Loader, org.w3c.dom.Element, org.newdawn.slick.svg.Diagram)
 	 */
-	public void process(Document document, Diagram diagram) {
-		NodeList list = document.getDocumentElement().getElementsByTagName("rect");
-		for (int i=0;i<list.getLength();i++) {
-			processNode((Element) list.item(i), diagram);
-		}
-	}
-
-	/**
-	 * Process a single <rect> element
-	 * 
-	 * @param element The element to be processed
-	 * @param diagram The diagram to be updated
-	 */
-	private void processNode(Element element, Diagram diagram) {
+	public void process(Loader loader, Element element, Diagram diagram) throws ParsingException {
 		Transform transform = Util.getTransform(element);
 		
 		float width = Float.parseFloat(element.getAttribute("width"));
@@ -47,5 +34,16 @@ public class RectProcessor implements ElementProcessor {
 		NonGeometricData data = Util.getNonGeometricData(element);
 		
 		diagram.addFigure(new Figure(shape, data));
+	}
+
+	/**
+	 * @see org.newdawn.slick.svg.inkscape.ElementProcessor#handles(org.w3c.dom.Element)
+	 */
+	public boolean handles(Element element) {
+		if (element.getNodeName().equals("rect")) {
+			return true;
+		}
+		
+		return false;
 	}
 }

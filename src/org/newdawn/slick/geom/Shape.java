@@ -27,6 +27,8 @@ public abstract class Shape implements Serializable {
     protected boolean pointsDirty;
     /** The triangles that define the shape */
     protected Triangulator tris;
+    /** True if the triangles need updating */
+    protected boolean trianglesDirty;
     
     /**
      * Shape constructor.
@@ -370,7 +372,9 @@ public abstract class Shape implements Serializable {
      * Calculate the triangles that can fill this shape
      */
     protected void caculateTriangles() {
-    	tris = new MannTriangulator();
+    	if (!trianglesDirty) {
+    		return;
+    	}
     	if (points.length >= 6) {
     		boolean clockwise = true;
     		float area = 0;
@@ -383,22 +387,28 @@ public abstract class Shape implements Serializable {
     			area += (x1 * y2) - (y1 * x2);
     		}
     		area /= 2;
-    		clockwise = area >= 0;
+    		clockwise = area > 0;
+
+        	tris = new MannTriangulator();
+    		for (int i=0;i<points.length;i+=2) {
+	    		tris.addPolyPoint(points[i], points[i+1]);
+	    	}
+    		tris.triangulate();
     		
-    		if (clockwise) {
-		    	for (int i=0;i<points.length;i+=2) {
-		    		tris.addPolyPoint(points[i], points[i+1]);
-		    	}
-    		} else {
+    		// winding was the wrong way, wind it the other
+    		if (tris.getTriangleCount() < points.length / 3) {
+            	tris = new MannTriangulator();
 		    	for (int i=points.length-2;i>=0;i-=2) {
 		    		tris.addPolyPoint(points[i], points[i+1]);
 		    	}
+	    		tris.triangulate();
     		}
-    		tris.triangulate();
+    		
     	} else {
     		tris.triangulate();
     	}
     	
+    	trianglesDirty = false;
     }
     
     /**
@@ -408,6 +418,7 @@ public abstract class Shape implements Serializable {
      */
     public Triangulator getTriangles() {
         checkPoints();
+        caculateTriangles();
     	return tris;
     }
     
@@ -420,8 +431,17 @@ public abstract class Shape implements Serializable {
             createPoints();
             findCenter();
             calculateRadius();
-            caculateTriangles();
             pointsDirty = false;
+            trianglesDirty = true;
         }
+    }
+    
+    /**
+     * True if this is a closed shape
+     * 
+     * @return True if this is a closed shape
+     */
+    public boolean closed() {
+    	return true;
     }
 }

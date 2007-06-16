@@ -27,19 +27,22 @@ public class SimpleDiagramRenderer {
 	 * @param g The graphics context to which we should render the diagram
 	 */
 	public void render(Graphics g) {
-		g.scale(1.5f,1.5f);
 		for (int i=0;i<diagram.getFigureCount();i++) {
 			Figure figure = diagram.getFigure(i);
 
 			if (figure.getData().isColor(NonGeometricData.FILL)) {
 				g.setColor(figure.getData().getAsColor(NonGeometricData.FILL));
 				g.fill(diagram.getFigure(i).getShape());
+				g.setAntiAlias(true);
+				g.draw(diagram.getFigure(i).getShape());
+				g.setAntiAlias(false);
 			}
 			if (figure.getData().isColor(NonGeometricData.STROKE)) {
 				g.setColor(figure.getData().getAsColor(NonGeometricData.STROKE));
+				g.setAntiAlias(true);
 				g.draw(diagram.getFigure(i).getShape());
+				g.setAntiAlias(false);
 			}
 		}
-		g.resetTransform();
 	}
 }

@@ -426,4 +426,12 @@ public class BasicTriangulator implements Triangulator {
 			points.clear();
 		}
 	}
+
+	/**
+	 * @see org.newdawn.slick.geom.Triangulator#startHole()
+	 */
+	public void startHole() {
+		// TODO Auto-generated method stub
+		
+	}
 }

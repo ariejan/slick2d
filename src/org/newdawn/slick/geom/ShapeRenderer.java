@@ -27,7 +27,46 @@ public final class ShapeRenderer {
         for(int i=0;i<points.length;i+=2) {
             GL11.glVertex2f(points[i], points[i + 1]);
         }
-        GL11.glVertex2f(points[0], points[1]);
+        
+        if (shape.closed()) {
+        	GL11.glVertex2f(points[0], points[1]);
+        }
+        
+        GL11.glEnd();
+        
+        if (t == null) {
+        	Texture.bindNone();
+        } else {
+        	t.bind();
+        }
+    }
+
+    /**
+     * Draw the outline of the given shape.  Only the vertices are set.  
+     * The colour has to be set independently of this method.
+     * 
+     * @param shape The shape to draw.
+     * @param fill The fill to apply
+     */
+    public static final void draw(Shape shape, ShapeFill fill) {
+        float points[] = shape.getPoints();
+        
+        Texture t = Texture.getLastBind();
+        Texture.bindNone();
+
+        float center[] = shape.getCenter();
+        GL11.glBegin(GL11.GL_LINE_STRIP);
+        for(int i=0;i<points.length;i+=2) {
+            fill.colorAt(shape, points[i]-center[0], points[i + 1]-center[1]).bind();
+            Vector2f offset = fill.getOffsetAt(shape, points[i], points[i + 1]);
+            GL11.glVertex2f(points[i] + offset.x, points[i + 1] + offset.y);
+        }
+        
+        if (shape.closed()) {
+	        fill.colorAt(shape, points[0]-center[0], points[1]-center[1]).bind();
+	        Vector2f offset = fill.getOffsetAt(shape, points[0], points[1]);
+	        GL11.glVertex2f(points[0] + offset.x, points[1] + offset.y);
+        }
         GL11.glEnd();
         
         if (t == null) {
@@ -93,6 +132,7 @@ public final class ShapeRenderer {
 
         GL11.glBegin(GL11.GL_TRIANGLES);
         for (int i=0;i<tris.getTriangleCount();i++) {
+            //GL11.glBegin(GL11.GL_LINE_STRIP);
         	for (int p=0;p<3;p++) {
         		float[] pt = tris.getTrianglePoint(i, p);
         		float[] np = callback.preRenderPoint(pt[0],pt[1]);
@@ -103,6 +143,11 @@ public final class ShapeRenderer {
         			GL11.glVertex2f(np[0],np[1]);
         		}
         	}
+        	
+//    		float[] pt = tris.getTrianglePoint(i, 0);
+//			GL11.glVertex2f(pt[0],pt[1]);
+//			
+//            GL11.glEnd();
         }
         GL11.glEnd();
     }
@@ -201,38 +246,6 @@ public final class ShapeRenderer {
 	            return null;
 			}
     	});
-        
-        if (t == null) {
-        	Texture.bindNone();
-        } else {
-        	t.bind();
-        }
-    }
-
-    /**
-     * Draw the outline of the given shape.  Only the vertices are set.  
-     * The colour has to be set independently of this method.
-     * 
-     * @param shape The shape to draw.
-     * @param fill The fill to apply
-     */
-    public static final void draw(Shape shape, ShapeFill fill) {
-        float points[] = shape.getPoints();
-        
-        Texture t = Texture.getLastBind();
-        Texture.bindNone();
-
-        float center[] = shape.getCenter();
-        GL11.glBegin(GL11.GL_LINE_STRIP);
-        for(int i=0;i<points.length;i+=2) {
-            fill.colorAt(shape, points[i]-center[0], points[i + 1]-center[1]).bind();
-            Vector2f offset = fill.getOffsetAt(shape, points[i], points[i + 1]);
-            GL11.glVertex2f(points[i] + offset.x, points[i + 1] + offset.y);
-        }
-        fill.colorAt(shape, points[0]-center[0], points[1]-center[1]).bind();
-        Vector2f offset = fill.getOffsetAt(shape, points[0], points[1]);
-        GL11.glVertex2f(points[0] + offset.x, points[1] + offset.y);
-        GL11.glEnd();
         
         if (t == null) {
         	Texture.bindNone();

@@ -3,7 +3,7 @@ package org.newdawn.slick.svg.inkscape;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Path;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.svg.Diagram;
@@ -18,58 +18,74 @@ import org.w3c.dom.Element;
  *
  * @author kevin
  */
-public class PolygonProcessor implements ElementProcessor {
+public class PathProcessor implements ElementProcessor {
 
 	/**
 	 * Process the points in a polygon definition
 	 * 
-	 * @param poly The polygon being built
 	 * @param element The XML element being read
 	 * @param tokens The tokens representing the path
 	 * @return The number of points found
 	 * @throws ParsingException Indicates an invalid token in the path
 	 */
-	private static int processPoly(Polygon poly, Element element, StringTokenizer tokens) throws ParsingException {
+	private static Path processPoly(Element element, StringTokenizer tokens) throws ParsingException {
 		int count = 0;
 		
 		ArrayList pts = new ArrayList();
 		boolean moved = false;
+		boolean reasonToBePath = false;
+		Path path = null;
 		
 		while (tokens.hasMoreTokens()) {
-			String nextToken = tokens.nextToken();
-			if (nextToken.equals("L")) {
-				continue;
-			}
-			if (nextToken.equals("z")) {
-				break;
-			}
-			if (nextToken.equals("M")) {
-				if (!moved) {
-					moved = true;
+			try {
+				String nextToken = tokens.nextToken();
+				if (nextToken.equals("L")) {
+					float x = Float.parseFloat(tokens.nextToken());
+					float y = Float.parseFloat(tokens.nextToken());
+					path.lineTo(x,y);
 					continue;
 				}
-				
-				return 0;
-			}
-			if (nextToken.equals("C")) {
-				return 0;
-			}
-			
-			String tokenX = nextToken;
-			String tokenY = tokens.nextToken();
-			
-			try {
-				float x = Float.parseFloat(tokenX);
-				float y = Float.parseFloat(tokenY);
-				
-				poly.addPoint(x,y);
-				count++;
+				if (nextToken.equals("z")) {
+					path.close();
+					continue;
+				}
+				if (nextToken.equals("M")) {
+					if (!moved) {
+						moved = true;
+						float x = Float.parseFloat(tokens.nextToken());
+						float y = Float.parseFloat(tokens.nextToken());
+						path = new Path(x,y);
+						continue;
+					}
+	
+					reasonToBePath = true;
+					float x = Float.parseFloat(tokens.nextToken());
+					float y = Float.parseFloat(tokens.nextToken());
+					path.startHole(x,y);
+					
+					continue;
+				}
+				if (nextToken.equals("C")) {
+					reasonToBePath = true;
+					float cx1 = Float.parseFloat(tokens.nextToken());
+					float cy1 = Float.parseFloat(tokens.nextToken());
+					float cx2 = Float.parseFloat(tokens.nextToken());
+					float cy2 = Float.parseFloat(tokens.nextToken());
+					float x = Float.parseFloat(tokens.nextToken());
+					float y = Float.parseFloat(tokens.nextToken());
+					path.curveTo(x,y,cx1,cy1,cx2,cy2);
+					continue;
+				}
 			} catch (NumberFormatException e) {
 				throw new ParsingException(element.getAttribute("id"), "Invalid token in points list", e);
 			}
 		}
 		
-		return count;
+		if (!reasonToBePath) {
+			return null;
+		}
+		
+		return path;
 	}
 
 
@@ -84,10 +100,10 @@ public class PolygonProcessor implements ElementProcessor {
 		}
 		
 		StringTokenizer tokens = new StringTokenizer(points, ", ");
-		Polygon poly = new Polygon();
-		int count = processPoly(poly, element, tokens);
-		if (count > 3) {
-			Shape shape = poly.transform(transform);
+		Path path = processPoly(element, tokens);
+		if (path != null) {
+			//Shape shape = poly.transform(transform);
+			Shape shape = path;
 			
 			NonGeometricData data = Util.getNonGeometricData(element);
 			
@@ -99,10 +115,6 @@ public class PolygonProcessor implements ElementProcessor {
 	 * @see org.newdawn.slick.svg.inkscape.ElementProcessor#handles(org.w3c.dom.Element)
 	 */
 	public boolean handles(Element element) {
-		if (element.getNodeName().equals("polygon")) {
-			return true;
-		}
-		
 		if (element.getNodeName().equals("path")) {
 			if (!element.getAttributeNS(Util.SODIPODI, "type").equals("arc")) {
 				return true;
@@ -111,4 +123,5 @@ public class PolygonProcessor implements ElementProcessor {
 		
 		return false;
 	}
+	
 }

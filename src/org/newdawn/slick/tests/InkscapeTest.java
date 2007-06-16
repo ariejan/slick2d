@@ -34,7 +34,7 @@ public class InkscapeTest extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		container.getGraphics().setBackground(Color.white);
 		
-		diagram = InkscapeLoader.load("testdata/svg/lwjgl3.svg");
+		diagram = InkscapeLoader.load("testdata/svg/test1.svg");
 		System.out.println("Figures: "+diagram.getFigureCount());
 		renderer = new SimpleDiagramRenderer(diagram);
 	}

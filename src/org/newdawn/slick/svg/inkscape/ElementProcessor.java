@@ -1,8 +1,9 @@
 package org.newdawn.slick.svg.inkscape;
 
 import org.newdawn.slick.svg.Diagram;
+import org.newdawn.slick.svg.Loader;
 import org.newdawn.slick.svg.ParsingException;
-import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * The description of a module which processes a single XML element from a SVG (inkscape) 
@@ -16,9 +17,18 @@ public interface ElementProcessor {
 	 * interested in and producing appropriate diagram components for the
 	 * element.
 	 * 
-	 * @param document The document to be processed
+	 * @param loader The loader/context of the parsing
+	 * @param element The element to be processed
 	 * @param diagram The diagram to be built
 	 * @throws ParsingException Indicates an invalid content to an element
 	 */
-	public void process(Document document, Diagram diagram) throws ParsingException;
+	public void process(Loader loader, Element element, Diagram diagram) throws ParsingException;
+
+	/**
+	 * Check if this processor handles the element specified
+	 * 
+	 * @param element The element to check
+	 * @return True if this processor can handle the given element
+	 */
+	public boolean handles(Element element);
 }

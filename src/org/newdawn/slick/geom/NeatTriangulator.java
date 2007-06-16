@@ -604,4 +604,12 @@ public class NeatTriangulator implements Triangulator
 		
 		return new float[] {xp,yp};
 	}
+
+	/**
+	 * @see org.newdawn.slick.geom.Triangulator#startHole()
+	 */
+	public void startHole() {
+		// TODO Auto-generated method stub
+		
+	}
 }

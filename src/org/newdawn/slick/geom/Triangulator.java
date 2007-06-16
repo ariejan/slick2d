@@ -33,6 +33,11 @@ public interface Triangulator {
 	public void addPolyPoint(float x, float y);
 	
 	/**
+	 * Start a hole in the polygon
+	 */
+	public void startHole();
+	
+	/**
 	 * Run the triangulation
 	 * 
 	 * @return True if successful

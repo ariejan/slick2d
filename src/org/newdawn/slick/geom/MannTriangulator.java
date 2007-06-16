@@ -183,8 +183,7 @@ public class MannTriangulator implements Triangulator {
 					Point prev = pContour.prev;
 					Point next = pContour.next;
 
-					if (next.next == prev || prev.isInfront(next)
-							&& next.isInfront(prev)) {
+					if (next.next == prev || prev.isInfront(next) && next.isInfront(prev)) {
 						if (!contour.doesIntersectSegment(prev.pt, next.pt)) {
 							result[idx++] = pContour.pt;
 							result[idx++] = next.pt;
@@ -506,7 +505,7 @@ public class MannTriangulator implements Triangulator {
 					double dyB = n.pt.y - p.pt.y;
 					double d = (dxA * dyB) - (dyA * dxB);
 
-					if (Math.abs(d) > 1e-4) {
+					if (Math.abs(d) > 1e-4f) {
 						double tmp1 = p.pt.x - v1.x;
 						double tmp2 = p.pt.y - v1.y;
 						double tA = (dyB * tmp1 - dxB * tmp2) / d;

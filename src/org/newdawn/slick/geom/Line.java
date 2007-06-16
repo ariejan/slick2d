@@ -305,4 +305,11 @@ public strictfp class Line extends Shape {
 		
 		return new Line(temp[0],temp[1],temp[2],temp[3]);
 	}
+	
+	/**
+	 * @see org.newdawn.slick.geom.Shape#closed()
+	 */
+	public boolean closed() {
+		return false;
+	}
 }
