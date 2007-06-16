@@ -42,6 +42,7 @@ public class Figure {
 		this.shape = shape;
 		this.data = data;
 		this.type = type;
+		this.transform = transform;
 	}
 
 	/**

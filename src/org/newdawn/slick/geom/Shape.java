@@ -403,9 +403,6 @@ public abstract class Shape implements Serializable {
 		    	}
 	    		tris.triangulate();
     		}
-    		
-    	} else {
-    		tris.triangulate();
     	}
     	
     	trianglesDirty = false;
