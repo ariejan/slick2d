@@ -873,6 +873,10 @@ public class SoundStore {
 	 */
 	public boolean isMusicPlaying() 
 	{
+		if (!soundWorks) {
+			return false;
+		}
+		
 		int state = AL10.alGetSourcei(sources.get(0), AL10.AL_SOURCE_STATE);
 		return ((state == AL10.AL_PLAYING) || (state == AL10.AL_PAUSED));
 	}
