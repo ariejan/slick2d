@@ -421,7 +421,6 @@ public abstract class Shape implements Serializable {
     
     /**
      * Check the dirty flag and create points as necessary.
-     *
      */
     protected final void checkPoints() {
         if (pointsDirty) {
@@ -431,6 +430,14 @@ public abstract class Shape implements Serializable {
             pointsDirty = false;
             trianglesDirty = true;
         }
+    }
+    
+    /**
+     * Cause all internal state to be generated and cached
+     */
+    public void preCache() {
+    	checkPoints();
+    	getTriangles();
     }
     
     /**
