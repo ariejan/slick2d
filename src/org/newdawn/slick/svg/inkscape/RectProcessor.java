@@ -32,6 +32,10 @@ public class RectProcessor implements ElementProcessor {
 		Shape shape = rect.transform(transform);
 		
 		NonGeometricData data = Util.getNonGeometricData(element);
+		data.addAttribute("width", ""+width);
+		data.addAttribute("height", ""+height);
+		data.addAttribute("x", ""+x);
+		data.addAttribute("y", ""+y);
 		
 		diagram.addFigure(new Figure(Figure.RECTANGLE, shape, data, transform));
 	}
