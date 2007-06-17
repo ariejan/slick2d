@@ -29,7 +29,7 @@ public class Path extends Shape {
  	 * @param sy The start y coordiante of the path
 	 */
 	public Path(float sx, float sy) {
-		localPoints.add(new float[] {sx,sy});
+		//localPoints.add(new float[] {sx,sy});
 		cx = sx;
 		cy = sy;
 	}

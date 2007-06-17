@@ -46,6 +46,8 @@ public class PolygonProcessor implements ElementProcessor {
 			if (nextToken.equals("M")) {
 				if (!moved) {
 					moved = true;
+					tokens.nextToken();
+					tokens.nextToken();
 					continue;
 				}
 				
