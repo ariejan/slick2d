@@ -279,10 +279,17 @@ public abstract class Shape implements Serializable {
         boolean result = false;
         float points[] = getPoints();           // (x3, y3)  and (x4, y4)
         float thatPoints[] = shape.getPoints(); // (x1, y1)  and (x2, y2)
-        int length = points.length - 2;
-        int thatLength = thatPoints.length - 2;
+        int length = points.length;
+        int thatLength = thatPoints.length;
         float unknownA;
         float unknownB;
+        
+        if (!closed()) {
+        	length -= 2;
+        }
+        if (!shape.closed()) {
+        	thatLength -= 2;
+        }
         
         // x1 = thatPoints[j]
         // x2 = thatPoints[j + 2]
@@ -292,16 +299,26 @@ public abstract class Shape implements Serializable {
         // x4 = points[i + 2]
         // y3 = points[i + 1]
         // y4 = points[i + 3]
-        for(int i=0;i<length;i+=2) {
+        for(int i=0;i<length;i+=2) {        	
+        	int iNext = i+2;
+	    	if (iNext >= points.length) {
+	    		iNext = 0;
+	    	}
+	    	
             for(int j=0;j<thatLength;j+=2) {
-                unknownA = (((points[i + 2] - points[i]) * (thatPoints[j + 1] - points[i + 1])) - 
-                        ((points[i + 3] - points[i + 1]) * (thatPoints[j] - points[i]))) / 
-                        (((points[i + 3] - points[i + 1]) * (thatPoints[j + 2] - thatPoints[j])) - 
-                                ((points[i + 2] - points[i]) * (thatPoints[j + 3] - thatPoints[j + 1])));
-                unknownB = (((thatPoints[j + 2] - thatPoints[j]) * (thatPoints[j + 1] - points[i + 1])) - 
-                        ((thatPoints[j + 3] - thatPoints[j + 1]) * (thatPoints[j] - points[i]))) / 
-                        (((points[i + 3] - points[i + 1]) * (thatPoints[j + 2] - thatPoints[j])) - 
-                                ((points[i + 2] - points[i]) * (thatPoints[j + 3] - thatPoints[j + 1])));
+            	int jNext = j+2;
+            	if (jNext >= thatPoints.length) {
+            		jNext = 0;
+            	}
+
+                unknownA = (((points[iNext] - points[i]) * (thatPoints[j + 1] - points[i + 1])) - 
+                        ((points[iNext+1] - points[i + 1]) * (thatPoints[j] - points[i]))) / 
+                        (((points[iNext+1] - points[i + 1]) * (thatPoints[jNext] - thatPoints[j])) - 
+                                ((points[iNext] - points[i]) * (thatPoints[jNext+1] - thatPoints[j + 1])));
+                unknownB = (((thatPoints[jNext] - thatPoints[j]) * (thatPoints[j + 1] - points[i + 1])) - 
+                        ((thatPoints[jNext+1] - thatPoints[j + 1]) * (thatPoints[j] - points[i]))) / 
+                        (((points[iNext+1] - points[i + 1]) * (thatPoints[jNext] - thatPoints[j])) - 
+                                ((points[iNext] - points[i]) * (thatPoints[jNext+1] - thatPoints[j + 1])));
                 
                 if(unknownA >= 0 && unknownA <= 1 && unknownB >= 0 && unknownB <= 1) {
                     result = true;
