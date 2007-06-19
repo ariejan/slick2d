@@ -85,17 +85,17 @@ public strictfp class Circle extends Ellipse {
             Circle other = (Circle)shape;
     		float totalRad2 = getRadius() + other.getRadius();
     		
-    		if (Math.abs(other.x - x) > totalRad2) {
+    		if (Math.abs(other.getCenterX() - getCenterX()) > totalRad2) {
     			return false;
     		}
-    		if (Math.abs(other.y - y) > totalRad2) {
+    		if (Math.abs(other.getCenterY() - getCenterY()) > totalRad2) {
     			return false;
     		}
     		
     		totalRad2 *= totalRad2;
     		
-    		float dx = Math.abs(other.x - x);
-    		float dy = Math.abs(other.y - y);
+    		float dx = Math.abs(other.getCenterX() - getCenterX());
+    		float dy = Math.abs(other.getCenterY() - getCenterY());
     		
     		return totalRad2 >= ((dx*dx) + (dy*dy));
         }
