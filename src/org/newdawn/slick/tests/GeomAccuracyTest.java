@@ -5,6 +5,7 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Ellipse;
@@ -38,6 +39,9 @@ public class GeomAccuracyTest extends BasicGame {
 	/** The number of tests to do */
 	private static final int NUMTESTS = 3;
 	
+	/** An image used to magnify where the mouse is */
+	private Image magImage;
+	
 	/**
 	 * Create a new test of graphics context rendering
 	 */
@@ -53,6 +57,8 @@ public class GeomAccuracyTest extends BasicGame {
 		
 		geomColor = Color.magenta;
 		overlayColor = Color.white;
+		
+		magImage = new Image(21, 21);
 	}
 
 	/**
@@ -81,16 +87,31 @@ public class GeomAccuracyTest extends BasicGame {
 		}
 		
 		g.setColor(Color.white);
-		g.drawString("Current Test:" + text, 200, 75);
 		g.drawString("Press T to toggle overlay", 200, 55);
 		g.drawString("Press N to switch tests", 200, 35);
 		g.drawString("Press C to cycle drawing colors", 200, 15);
+		g.drawString("Current Test:", 400, 35);
+		g.setColor(Color.blue);
+		g.drawString(text, 485, 35);
 		
+		g.setColor(Color.white);
 		g.drawString("Normal:", 10, 150);
 		g.drawString("Filled:", 10, 300);
 		
 		g.drawString("Drawn with Graphics context", 125, 400);
 		g.drawString("Drawn using Shapes", 450, 400);
+		
+		// Grab our mouse position and copy the screen to our magnified image
+		g.copyArea(magImage, container.getInput().getMouseX() - 10, container.getInput().getMouseY() - 10);
+		magImage.draw(351, 451, 5);
+		g.drawString("Mag Area -", 250, 475);
+		g.setColor(Color.darkGray);
+		g.drawRect(350, 450, 106, 106);
+		
+		g.setColor(Color.white);
+		g.drawString("NOTE:", 500, 450);
+		g.drawString("lines should be flush with edges", 525, 470);
+		g.drawString("corners should be symetric", 525, 490);
 		
 	}
 	
@@ -275,7 +296,7 @@ public class GeomAccuracyTest extends BasicGame {
 	public static void main(String[] argv) {
 		try {
 			AppGameContainer container = new AppGameContainer(new GeomAccuracyTest());
-			container.setDisplayMode(800,600,false);
+			container.setDisplayMode(800, 600, false);
 			container.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
