@@ -35,7 +35,8 @@ public class StreamSound extends InternalSound {
 	 */
 	public void playAsMusic(float pitch, float gain, boolean loop) {
 		try {
-			player.setup(pitch, gain);
+			player.setup(pitch, 1.0f);
+			SoundStore.get().setMusicVolume(gain);
 			player.play(loop);
 			SoundStore.get().setStream(player);
 		} catch (IOException e) {

@@ -37,7 +37,8 @@ public class MODSound extends InternalSound {
 	 */
 	public void playAsMusic(float pitch, float gain, boolean loop) {
 		player.play(module, store.getMusicSource(), loop, SoundStore.get().isMusicOn());
-		player.setup(pitch, gain);
+		player.setup(pitch, 1.0f);
+		store.setMusicVolume(gain);
 		
 		store.setMOD(this);
 	}
