@@ -10,14 +10,10 @@ import org.newdawn.slick.util.FastTrig;
  * 
  * @author Mark Bernard
  */
-public class RoundedRectangle extends Shape {
+public class RoundedRectangle extends Rectangle {
     /** Default number of segments to draw the rounded corners with */
     private static final int DEFAULT_SEGMENT_COUNT = 25;
 
-    /** width of the rectangle */
-    private float width;
-    /** height of the rectangle */
-    private float height;
     /** radius of each corner */
     private float cornerRadius;
     /** number of segments for each corner */
@@ -47,7 +43,9 @@ public class RoundedRectangle extends Shape {
      * @param segmentCount The number of segments to use to draw each corner arc.
      */
     public RoundedRectangle(float x, float y, float width, float height, float cornerRadius, int segmentCount) {
-        if(cornerRadius < 0) {
+        super(x,y,width,height);
+        
+    	if(cornerRadius < 0) {
             throw new IllegalArgumentException("corner radius must be >= 0");
         }
         this.x = x;

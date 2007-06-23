@@ -7,9 +7,9 @@ package org.newdawn.slick.geom;
  */
 public class Rectangle extends Shape {
 	/** The width of the box */
-	private float width;
+	protected float width;
 	/** The height of the box */
-    private float height;
+	protected float height;
 	
 	/**
 	 * Create a new bounding box
