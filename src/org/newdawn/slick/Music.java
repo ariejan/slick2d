@@ -38,6 +38,8 @@ public class Music {
 	private InternalSound sound;
 	/** True if the music is playing */
 	private boolean playing;
+	/** the volume of this music */
+	private float volume = 1.0f;
 	/** The list of listeners waiting for notification that the music ended */
 	private ArrayList listeners = new ArrayList();
 	
@@ -169,14 +171,14 @@ public class Music {
 	 * Loop the music
 	 */
 	public void loop() {
-		loop(1.0f,1.0f);
+		loop(1.0f, this.volume);
 	}
 	
 	/**
 	 * Play the music
 	 */
 	public void play() {
-		play(1.0f,1.0f);
+		play(1.0f, this.volume);
 	}
 
 	/**
@@ -186,14 +188,7 @@ public class Music {
 	 * @param volume The volume to play the music at (1.0 = default)
 	 */
 	public void play(float pitch, float volume) {
-		if (currentMusic != null) {
-			currentMusic.stop();
-			currentMusic.fireMusicSwapped(this);
-		}
-		
-		currentMusic = this;
-		sound.playAsMusic(pitch, volume, false);
-		playing = true;
+		startMusic(pitch, volume, false);
 	}
 
 	/**
@@ -203,13 +198,28 @@ public class Music {
 	 * @param volume The volume to play the music at (1.0 = default)
 	 */
 	public void loop(float pitch, float volume) {
+		startMusic(pitch, volume, true);
+	}
+	
+	/**
+	 * play or loop the music at a given pitch and volume
+	 * @param pitch The pitch to play the music at (1.0 = default)
+	 * @param volume The volume to play the music at (1.0 = default)
+	 * @param loop if false the music is played once, the music is looped otherwise
+	 */
+	private void startMusic(float pitch, float volume, boolean loop) {
 		if (currentMusic != null) {
 			currentMusic.stop();
 			currentMusic.fireMusicSwapped(this);
 		}
 		
 		currentMusic = this;
-		sound.playAsMusic(pitch, volume, true);
+		if (volume < 0.0f)
+			volume = 0.0f;
+		if (volume > 1.0f)
+			volume = 1.0f;
+		this.volume = volume;
+		sound.playAsMusic(pitch, volume * SoundStore.get().getMusicVolume(), loop);
 		playing = true;
 	}
 	
@@ -257,8 +267,17 @@ public class Music {
 		} else if(volume < 0) {
 			volume = 0;
 		}
+		this.volume = volume;
 		
 		// This sound is being played as music
-		SoundStore.get().setMusicVolume(volume);
+		 SoundStore.get().setCurrentMusicVolume(volume);
+	}
+
+	/**
+	 * Get the individual volume of the music
+	 * @return The volume of this music, still effected by global SoundStore volume. 0 - 1, 1 is Max
+	 */
+	public float getVolume() {
+		return volume;
 	}
 }

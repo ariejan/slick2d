@@ -142,6 +142,26 @@ public class SoundStore {
 			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastMusicGain * volume); 
 		}
 	}
+
+	/**
+	 * Set the music volume of the current playing music. Does NOT affect the global volume
+	 * 
+	 * @param volume The volume for the current playing music
+	 */
+	public void setCurrentMusicVolume(float volume) {
+		if (volume < 0) {
+			volume = 0;
+		}
+		if (volume > 1)
+			volume = 1;
+		lastMusicGain = volume;
+		if (soundWorks) {
+			if (volume == 0) {
+				volume = 0.001f;
+			}
+			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastMusicGain * musicVolume); 
+		}
+	}
 	
 	/**
 	 * Set the sound volume

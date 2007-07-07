@@ -75,7 +75,7 @@ public class Sound {
 	 * Play this sound effect at default volume and pitch
 	 */
 	public void play() {
-		play(1.0f,1.0f);
+		play(1.0f, 1.0f);
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class Sound {
 	 * @param volume The volumen to play the sound effect at
 	 */
 	public void play(float pitch, float volume) {
-		sound.playAsSoundEffect(pitch, volume, false);
+		sound.playAsSoundEffect(pitch, volume * SoundStore.get().getSoundVolume(), false);
 	}
 
 	/**
@@ -96,14 +96,26 @@ public class Sound {
 	 * @param z The z position of the source of the effect
 	 */
 	public void playAt(float x, float y, float z) {
-		sound.playAsSoundEffect(1.0f, 1.0f, false, x,y,z);
+		playAt(1.0f, 1.0f, x,y,z);
 	}
 	
+	/**
+	 * Play a sound effect from a particular location
+	 * 
+	 * @param pitch The pitch to play the sound effect at
+	 * @param volume The volumen to play the sound effect at
+	 * @param x The x position of the source of the effect
+ 	 * @param y The y position of the source of the effect
+	 * @param z The z position of the source of the effect
+	 */
+	public void playAt(float pitch, float volume, float x, float y, float z) {
+		sound.playAsSoundEffect(pitch, volume * SoundStore.get().getSoundVolume(), false, x,y,z);
+	}
 	/**
 	 * Loop this sound effect at default volume and pitch
 	 */
 	public void loop() {
-		loop(1.0f,1.0f);
+		loop(1.0f, 1.0f);
 	}
 	
 	/**
@@ -113,7 +125,7 @@ public class Sound {
 	 * @param volume The volumen to play the sound effect at
 	 */
 	public void loop(float pitch, float volume) {
-		sound.playAsSoundEffect(pitch, volume, true);
+		sound.playAsSoundEffect(pitch, volume * SoundStore.get().getSoundVolume(), true);
 	}
 	
 	/**

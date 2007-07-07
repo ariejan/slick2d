@@ -153,6 +153,38 @@ public abstract class GameContainer implements GUIContext {
 	}
 	
 	/**
+	 * Retrieve the current default volume for music
+	 * @return the current default volume for music
+	 */
+	public float getMusicVolume() {
+		return SoundStore.get().getMusicVolume();
+	}
+	
+	/**
+	 * Retrieve the current default volume for sound fx
+	 * @return the current default volume for sound fx
+	 */
+	public float getSoundVolume() {
+		return SoundStore.get().getSoundVolume();
+	}
+	
+	/**
+	 * Set the default volume for sound fx
+	 * @param volume the new default value for sound fx volume
+	 */
+	public void setSoundVolume(float volume) {
+		SoundStore.get().setSoundVolume(volume);
+	}
+
+	/**
+	 * Set the default volume for music
+	 * @param volume the new default value for music volume
+	 */
+	public void setMusicVolume(float volume) {
+		SoundStore.get().setMusicVolume(volume);
+	}
+	
+	/**
 	 * Get the width of the standard screen resolution
 	 * 
 	 * @return The screen width

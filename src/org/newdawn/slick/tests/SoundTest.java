@@ -17,6 +17,8 @@ import org.newdawn.slick.SlickException;
  * @author aaron
  */
 public class SoundTest extends BasicGame {
+	/** the GameContainer instance for this game/testcase */
+	private GameContainer myContainer;
 	/** The sound to be played */
 	private Sound sound;
 	/** The sound to be played */
@@ -25,31 +27,32 @@ public class SoundTest extends BasicGame {
 	private Sound burp;
 	/** The music to be played */
 	private Music music;
-	/** The music to be played */
+	/** first music that can be played */
 	private Music musica;
-	/** The music to be played */
+	/** second music that can be played */
 	private Music musicb;
 	/** The sound to be played */
 	private Sound engine;
 	/** The Volume of the playing music */
-	private int volume = 1;
+	private int volume = 10;
 	
 	/**
 	 * Create a new test for sounds
 	 */
 	public SoundTest() {
-		super("Sound Test");
+		super("Sound And Music Test");
 	}
 	
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
+		myContainer = container;
 		sound = new Sound("testdata/restart.ogg");
 		charlie = new Sound("testdata/cbrown01.wav");
 		engine = new Sound("testdata/engine.wav");
 		//music = musica = new Music("testdata/SMB-X.XM");
-		music = musica = new Music("testdata/restart.ogg", false);
+		music = musica = new Music("testdata/theme.ogg", false);
 		musicb = new Music("testdata/kirby.ogg", false);
 		burp = new Sound("testdata/burp.aif");
 	}
@@ -66,9 +69,13 @@ public class SoundTest extends BasicGame {
 		g.drawString("Press enter for charlie (WAV)",100,160);
 		g.drawString("Press C to change music",100,210);
 		g.drawString("Press B to burp (AIF)",100,240);
-		g.drawString("Press + or - to change volume of music", 100, 270);
+		g.drawString("Press + or - to change global volume of music", 100, 270);
+		g.drawString("Press Y or X to change individual volume of music", 100, 300);
+		g.drawString("Press N or M to change global volume of sound fx", 100, 330);
 		g.setColor(Color.blue);
-		g.drawString("Music Volume Level: " + volume / 10.0f, 150, 300);
+		g.drawString("Global Sound Volume Level: " + container.getSoundVolume(), 150, 390);
+		g.drawString("Global Music Volume Level: " + container.getMusicVolume(), 150, 420);
+		g.drawString("Current Music Volume Level: " + music.getVolume(), 150, 450);
 	}
 
 	/**
@@ -133,11 +140,40 @@ public class SoundTest extends BasicGame {
 			volume -= 1;
 			setVolume();
 		}
+		
+		if (key == Input.KEY_Y) {
+			int vol = (int) (music.getVolume() * 10);
+			vol --;
+			if (vol < 0) vol = 0;
+			// set individual volume of music
+			music.setVolume(vol/10.0f);
+		}
+		if (key == Input.KEY_X) {
+			int vol = (int) (music.getVolume() * 10);
+			vol ++;
+			if (vol > 10) vol = 10;
+			// set individual volume of music
+			music.setVolume(vol/10.0f);
+		}
+		if (key == Input.KEY_N) {
+			int vol = (int) (myContainer.getSoundVolume() * 10);
+			vol --;
+			if (vol < 0) vol = 0;
+			// set global volume of sound fx
+			myContainer.setSoundVolume(vol/10.0f);
+		}
+		if (key == Input.KEY_M) {
+			int vol = (int) (myContainer.getSoundVolume() * 10);
+			vol ++;
+			if (vol > 10) vol = 10;
+			// set global volume of sound fx
+			myContainer.setSoundVolume(vol/10.0f);
+		}
 
 	}
 	
 	/**
-	 *  Convenience routine to set volume of current music 
+	 *  Convenience routine to set global volume of music 
 	 */
 	private void setVolume() {
 		// Do bounds checking
@@ -147,7 +183,7 @@ public class SoundTest extends BasicGame {
 			volume = 0;
 		}
 		
-		music.setVolume(volume / 10.0f);
+		myContainer.setMusicVolume(volume / 10.0f);
 	}
 	
 	/**
