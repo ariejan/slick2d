@@ -24,6 +24,8 @@ public class Rectangle extends Shape {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		maxX = x+width;
+		maxY = y+height;
 	}
 	
 	/**

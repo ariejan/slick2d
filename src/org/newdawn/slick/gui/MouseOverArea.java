@@ -6,6 +6,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
 /**
  * A mouse over area that can be used for menus or buttons
@@ -46,17 +47,8 @@ public class MouseOverArea extends AbstractComponent {
 	/** The sound for mouse down */
 	private Sound mouseDownSound;
 
-	/** The location in the X coordinate */
-	protected int x;
-
-	/** The location in the Y coordinate */
-	protected int y;
-	
-	/** The width of the field */
-	private int width;
-
-	/** The height of the field */
-	private int height;
+	/** The shape defining the area */
+	private Shape area;
 
 	/** The current normalImage being displayed */
 	private Image currentImage;
@@ -134,7 +126,7 @@ public class MouseOverArea extends AbstractComponent {
 		this(container,image,x,y,width,height);
 		addListener(listener);
 	}
-	
+
 	/**
 	 * Create a new mouse over area
 	 * 
@@ -153,8 +145,23 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public MouseOverArea(GUIContext container, Image image, int x, int y,
 			int width, int height) {
+		this(container,image,new Rectangle(x,y,width,height));
+	}
+	
+	/**
+	 * Create a new mouse over area
+	 * 
+	 * @param container
+	 *            The container displaying the mouse over area
+	 * @param image
+	 *            The normalImage to display
+	 * @param shape
+	 *            The shape defining the area of the mouse sensitive zone
+	 */
+	public MouseOverArea(GUIContext container, Image image, Shape shape) {
 		super(container);
 
+		area = shape;
 		normalImage = image;
 		currentImage = image;
 		mouseOverImage = image;
@@ -162,13 +169,9 @@ public class MouseOverArea extends AbstractComponent {
 
 		currentColor = normalColor;
 
-		setLocation(x, y);
-		this.width = width;
-		this.height = height;
-		
 		state = NORMAL;
 		Input input = container.getInput();
-		over = Rectangle.contains(input.getMouseX(), input.getMouseY(), x, y, width, height);
+		over = area.contains(input.getMouseX(), input.getMouseY());
 		mouseDown = input.isMouseButtonDown(0);
 		updateImage();
 	}
@@ -182,8 +185,10 @@ public class MouseOverArea extends AbstractComponent {
 	 *            Y coordinate
 	 */
 	public void setLocation(int x, int y) {
-		this.x = x;
-		this.y = y;
+		if (area != null) {
+			area.setX(x);
+			area.setY(y);
+		}
 	}
 
 	/**
@@ -192,7 +197,7 @@ public class MouseOverArea extends AbstractComponent {
 	 * @return x
 	 */
 	public int getX() {
-		return x;
+		return (int) area.getX();
 	}
 
 	/**
@@ -201,7 +206,7 @@ public class MouseOverArea extends AbstractComponent {
 	 * @return y
 	 */
 	public int getY() {
-		return y;
+		return (int) area.getY();
 	}
 	
 	/**
@@ -271,36 +276,19 @@ public class MouseOverArea extends AbstractComponent {
 	}
 
 	/**
-	 * Get the width of the area
-	 * 
-	 * @return The width of the area
-	 */
-	public int getWidth() {
-		return width;
-	}
-
-	/**
-	 * Get the height of the area
-	 * 
-	 * @return The height of the area
-	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
 	 * @see org.newdawn.slick.gui.AbstractComponent#render(org.newdawn.slick.gui.GUIContext,
 	 *      org.newdawn.slick.Graphics)
 	 */
 	public void render(GUIContext container, Graphics g) {
 		if (currentImage != null) {
-			int xp = x + ((width - currentImage.getWidth()) / 2);
-			int yp = y + ((height - currentImage.getHeight()) / 2);
+			
+			int xp = (int) (area.getX() + ((getWidth() - currentImage.getWidth()) / 2));
+			int yp = (int) (area.getY() + ((getHeight() - currentImage.getHeight()) / 2));
 
 			currentImage.draw(xp, yp, currentColor);
 		} else {
 			g.setColor(currentColor);
-			g.fillRect(x, y, width, height);
+			g.fill(area);
 		}
 	}
 
@@ -367,7 +355,7 @@ public class MouseOverArea extends AbstractComponent {
 	 * @see org.newdawn.slick.util.InputAdapter#mouseMoved(int, int, int, int)
 	 */
 	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-		over = Rectangle.contains(newx, newy, x, y, width, height);
+		over = area.contains(newx, newy);
 		updateImage();
 	}
 
@@ -375,7 +363,7 @@ public class MouseOverArea extends AbstractComponent {
 	 * @see org.newdawn.slick.util.InputAdapter#mousePressed(int, int, int)
 	 */
 	public void mousePressed(int button, int mx, int my) {
-		over = Rectangle.contains(mx, my, x, y, width, height);
+		over = area.contains(mx, my);
 		if (button == 0) {
 			mouseDown = true; 
 		}
@@ -386,10 +374,24 @@ public class MouseOverArea extends AbstractComponent {
 	 * @see org.newdawn.slick.util.InputAdapter#mouseReleased(int, int, int)
 	 */
 	public void mouseReleased(int button, int mx, int my) {
-		over = Rectangle.contains(mx, my, x, y, width, height);
+		over = area.contains(mx, my);
 		if (button == 0) {
 			mouseDown = false; 
 		}
 		updateImage();
+	}
+
+	/**
+	 * @see org.newdawn.slick.gui.AbstractComponent#getHeight()
+	 */
+	public int getHeight() {
+		return (int) (area.getMaxY() - area.getY());
+	}
+
+	/**
+	 * @see org.newdawn.slick.gui.AbstractComponent#getWidth()
+	 */
+	public int getWidth() {
+		return (int) (area.getMaxX() - area.getX());
 	}
 }
