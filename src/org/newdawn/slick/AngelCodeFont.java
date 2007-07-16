@@ -189,7 +189,10 @@ public class AngelCodeFont implements Font {
 		
 		def.init();
 
-		lineHeight = Math.max(def.height+def.yoffset, lineHeight);
+		if (def.id != ' ') {
+			lineHeight = Math.max(def.height+def.yoffset, lineHeight);
+		}
+		
 		return def;
 	}
 	
@@ -262,6 +265,10 @@ public class AngelCodeFont implements Font {
 		for (int i=0;i<text.length();i++) {
 			int id = text.charAt(i);
 			if (chars[id] == null) {
+				continue;
+			}
+			// ignore space, it doesn't contribute to height
+			if (id == ' ') {
 				continue;
 			}
 			
