@@ -334,6 +334,12 @@ public class Graphics {
 		currentColor.bind();
 		Texture.bindNone();
 
+		// make sure the start and end points are drawn - GL implementations
+		// seem a bit flakey on this
+		GL11.glBegin(GL11.GL_POINTS);
+			GL11.glVertex2f(x1,y1);
+			GL11.glVertex2f(x2,y2);
+		GL11.glEnd();
 		GL11.glBegin(GL11.GL_LINES);
 			GL11.glVertex2f(x1,y1);
 			GL11.glVertex2f(x2,y2);
@@ -982,6 +988,7 @@ public class Graphics {
 	public void setLineWidth(float width) {
 		predraw();
 		GL11.glLineWidth(width);
+		GL11.glPointSize(width);
 		postdraw();
 	}
 	
@@ -1005,6 +1012,7 @@ public class Graphics {
 	public void resetLineWidth() {
 		predraw();
 		GL11.glLineWidth(1.0f);
+		GL11.glPointSize(1.0f);
 		postdraw();
 	}
 	
