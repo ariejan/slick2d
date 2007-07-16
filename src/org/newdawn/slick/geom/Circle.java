@@ -35,6 +35,24 @@ public strictfp class Circle extends Ellipse {
         this.radius = radius;
 	}
 	
+	/** 
+	 * Get the x coordinate of the centre of the circle
+	 * 
+	 * @return The x coordinate of the centre of the circle
+	 */
+	public float getCentreX() {
+		return getX() + radius;
+	}
+	
+	/** 
+	 * Get the y coordinate of the centre of the circle
+	 * 
+	 * @return The y coordinate of the centre of the circle
+	 */
+	public float getCenterY() {
+		return getY() + radius;
+	}
+	
 	/**
 	 * Set the radius of this circle
 	 * 
@@ -49,24 +67,6 @@ public strictfp class Circle extends Ellipse {
 	}
 	
 	/**
-	 * Set the x position of the left side this circle.
-	 * 
-	 * @param x The new x position of the left side this circle.
-	 */
-	public void setX(float x) {
-        super.setX(x);
-	}
-
-	/**
-	 * Set the y position of the top of this circle.
-	 * 
-	 * @param y The new y position of the top of this circle.
-	 */
-	public void setY(float y) {
-        super.setY(y);
-	}
-	
-	/**
 	 * Get the radius of the circle
 	 * 
 	 * @return The radius of the circle
@@ -74,6 +74,7 @@ public strictfp class Circle extends Ellipse {
 	public float getRadius() {
 		return radius;
 	}
+	
 	/**
 	 * Check if this circle touches another
 	 * 

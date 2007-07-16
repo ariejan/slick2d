@@ -68,8 +68,17 @@ public abstract class Shape implements Serializable {
      */
     public void setX(float x) {
     	if (x != this.x) {
+    		float dx = x - this.x;
 	        this.x = x;
-	        pointsDirty = true;
+	        
+	        // update the points in the special case
+    		for (int i=0;i<points.length/2;i++) {
+    			points[i*2] += dx;
+    		}
+    		center[0] += dx;
+    		x += dx;
+    		maxX += dx;
+	        trianglesDirty = true;
     	}
     }
     
@@ -80,8 +89,17 @@ public abstract class Shape implements Serializable {
      */
     public void setY(float y) {
     	if (y != this.y) {
+    		float dy = y - this.y;
 	        this.y = y;
-	        pointsDirty = true;
+	        
+	        // update the points in the special case
+    		for (int i=0;i<points.length/2;i++) {
+    			points[(i*2)+1] += dy;
+    		}
+    		center[1] += dy;
+    		y += dy;
+    		maxY += dy;
+	        trianglesDirty = true;
     	}
     }
 
