@@ -251,6 +251,13 @@ public class AppGameContainer extends GameContainer {
 	        			Display.create(format);
 	        		} catch (Exception e) {
 	        			Log.error(e);
+	        			
+	        			// if we couldn't get alpha, let us know
+		        		try {
+		        			Display.create();
+		        		} catch (Exception x) {
+		        			Log.error(x);
+		        		}
 	        		}
 					
 					return null;
