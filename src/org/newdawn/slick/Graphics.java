@@ -22,6 +22,13 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class Graphics {
+	/** The normal drawing mode */
+	public static int MODE_NORMAL = 1;
+	/** Draw to the alpha map */
+	public static int MODE_ALPHA_MAP = 2;
+	/** Draw using the alpha blending */
+	public static int MODE_ALPHA_BLEND = 3;
+	
 	/** The default number of segments that will be used when drawing an oval */
 	private static final int DEFAULT_SEGMENTS = 50;
 	/** The last graphics context in use */
@@ -49,6 +56,8 @@ public class Graphics {
 	private boolean antialias;
 	/** The world clip recorded since last set */
 	private Rectangle worldClipRecord;
+	/** The current drawing mode */
+	private int currentDrawingMode = MODE_NORMAL;
 	
 	/**
 	 * Create a new graphics context. Only the container should
@@ -73,6 +82,50 @@ public class Graphics {
 		this.font = defaultFont;
 		screenWidth = width;
 		screenHeight = height;
+	}
+	
+	/**
+	 * Set the drawing mode to use. This mode defines how pixels are drawn
+	 * to the graphics context. It can be used to draw into the alpha map. 
+	 * 
+	 * The mode supplied should be one of {@link Graphics#MODE_NORMAL} or
+	 * {@link Graphics#MODE_ALPHA_MAP} or {@link Graphics#MODE_ALPHA_BLEND}
+	 * 
+	 * @param mode The mode to apply.
+	 */
+	public void setDrawMode(int mode) {
+		predraw();
+		if (currentDrawingMode != mode) {
+			currentDrawingMode = mode;
+			if (currentDrawingMode == MODE_NORMAL) {
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glColorMask(true, true, true, true);
+				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			}
+			if (currentDrawingMode == MODE_ALPHA_MAP) {
+				GL11.glDisable(GL11.GL_BLEND);
+				GL11.glColorMask(false, false, false, true);
+			}
+			if (currentDrawingMode == MODE_ALPHA_BLEND) {
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glColorMask(true, true, true, true);
+				GL11.glBlendFunc(GL11.GL_DST_ALPHA, GL11.GL_ONE_MINUS_DST_ALPHA);
+			}
+		}
+		postdraw();
+	}
+	
+	/**
+	 * Clear the state of the alpha map across the entire
+	 * screen. This sets alpha to 0 everywhere, meaning
+	 * in {@link Graphics#MODE_ALPHA_BLEND} nothing will
+	 * be drawn.
+	 */
+	public void clearAlphaMap() {
+		int originalMode = currentDrawingMode;
+		setDrawMode(MODE_ALPHA_MAP);
+		fillRect(0,0,screenWidth, screenHeight);
+		setDrawMode(originalMode);
 	}
 	
 	/**
