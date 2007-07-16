@@ -1182,4 +1182,72 @@ public class Graphics {
 						 translate(readBuffer.get(2)),
 						 translate(readBuffer.get(3)));
 	}
+	
+	   
+    /**
+	 * Draw a section of an image at a particular location and scale on the
+	 * screen
+	 * 
+	 * @param image
+	 *            The image to draw a section of
+	 * @param x
+	 *            The x position to draw the image
+	 * @param y
+	 *            The y position to draw the image
+	 * @param x2
+	 *            The x position of the bottom right corner of the drawn image
+	 * @param y2
+	 *            The y position of the bottom right corner of the drawn image
+	 * @param srcx
+	 *            The x position of the rectangle to draw from this image (i.e.
+	 *            relative to the image)
+	 * @param srcy
+	 *            The y position of the rectangle to draw from this image (i.e.
+	 *            relative to the image)
+	 * @param srcx2
+	 *            The x position of the bottom right cornder of rectangle to
+	 *            draw from this image (i.e. relative to the image)
+	 * @param srcy2
+	 *            The t position of the bottom right cornder of rectangle to
+	 *            draw from this image (i.e. relative to the image)
+	 * @param col
+	 *            The color to apply to the image as a filter
+	 */
+	public void drawImage(Image image, float x, float y, float x2, float y2,
+			float srcx, float srcy, float srcx2, float srcy2, Color col) {
+		predraw();
+		image.draw(x, y, x2, y2, srcx, srcy, srcx2, srcy2, col);
+		currentColor.bind();
+		postdraw();
+	}
+
+	/**
+	 * Draw a section of an image at a particular location and scale on the
+	 * screen
+	 * 
+	 * @param image
+	 *            The image to draw a section of
+	 * @param x
+	 *            The x position to draw the image
+	 * @param y
+	 *            The y position to draw the image
+	 * @param srcx
+	 *            The x position of the rectangle to draw from this image (i.e.
+	 *            relative to the image)
+	 * @param srcy
+	 *            The y position of the rectangle to draw from this image (i.e.
+	 *            relative to the image)
+	 * @param srcx2
+	 *            The x position of the bottom right cornder of rectangle to
+	 *            draw from this image (i.e. relative to the image)
+	 * @param srcy2
+	 *            The t position of the bottom right cornder of rectangle to
+	 *            draw from this image (i.e. relative to the image)
+	 * @param col
+	 *            The color to apply to the image as a filter
+	 */
+	public void drawImage(Image image, float x, float y, float srcx,
+			float srcy, float srcx2, float srcy2, Color col) {
+		drawImage(image, x, y, x+image.getWidth(), y+image.getHeight(), srcx, srcy, srcx2, srcy2, col);
+   }
 }
