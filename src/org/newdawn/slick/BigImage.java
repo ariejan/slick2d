@@ -568,7 +568,37 @@ public class BigImage extends Image {
 	 */
 	public void startUse() {
 	}
+	
+	/**
+	 * Get a sub-image that builds up this image. Note that the offsets 
+	 * used will depend on the maximum texture size on the OpenGL hardware
+	 * 
+	 * @param offsetX The x position of the image to return
+	 * @param offsetY The y position of the image to return
+	 * @return The image at the specified offset into the big image
+	 */
+	public Image getSubImage(int offsetX, int offsetY) {
+	     return images[offsetX][offsetY];
+	}
 
+	/**
+	 * Get a count of the number images that build this image up horizontally
+	 * 
+	 * @return The number of sub-images across the big image
+	 */
+	public int getHorizontalImageCount() {
+	     return xcount;
+	}
+
+	/**
+	 * Get a count of the number images that build this image up vertically
+	 * 
+	 * @return The number of sub-images down the big image
+	 */
+	public int getVerticalImageCount() {
+	    return ycount;
+	} 
+	
 	/**
 	 * @see org.newdawn.slick.Image#toString()
 	 */
