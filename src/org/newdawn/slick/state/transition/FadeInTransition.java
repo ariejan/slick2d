@@ -13,6 +13,8 @@ import org.newdawn.slick.state.StateBasedGame;
 public class FadeInTransition implements Transition {
 	/** The color to fade to */
 	private Color color;
+	/** The time it takes to fade in */
+	private int fadeTime = 500;
 	
 	/**
 	 * Create a new fade in transition
@@ -20,8 +22,19 @@ public class FadeInTransition implements Transition {
 	 * @param color The color we're going to fade in from
 	 */
 	public FadeInTransition(Color color) {
+		this(color, 500);
+	}
+	
+	/**
+	 * Create a new fade in transition
+	 * 
+	 * @param color The color we're going to fade in from
+	 * @param fadeTime The time it takes for the fade to occur
+	 */
+	public FadeInTransition(Color color, int fadeTime) {
 		this.color = new Color(color);
 		this.color.a = 1;
+		this.fadeTime = fadeTime;
 	}
 	
 	/**
@@ -45,7 +58,7 @@ public class FadeInTransition implements Transition {
 	 * @see org.newdawn.slick.state.transition.Transition#update(org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(StateBasedGame game, GameContainer container, int delta) {
-		color.a -= delta * 0.002f;
+		color.a -= delta * (1.0f / fadeTime);
 		if (color.a < 0) {
 			color.a = 0;
 		}
