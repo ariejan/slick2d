@@ -56,6 +56,7 @@ public class Ellipse extends Shape {
         this.radius1 = radius1;
         this.radius2 = radius2;
         this.segmentCount = segmentCount;
+        checkPoints();
     }
 
     /**
