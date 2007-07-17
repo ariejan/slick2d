@@ -72,6 +72,7 @@ public abstract class Shape implements Serializable {
 	        this.x = x;
 	        
 	        // update the points in the special case
+	        checkPoints();
     		for (int i=0;i<points.length/2;i++) {
     			points[i*2] += dx;
     		}
@@ -93,6 +94,7 @@ public abstract class Shape implements Serializable {
 	        this.y = y;
 	        
 	        // update the points in the special case
+	        checkPoints();
     		for (int i=0;i<points.length/2;i++) {
     			points[(i*2)+1] += dy;
     		}

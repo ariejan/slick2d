@@ -40,7 +40,7 @@ public strictfp class Circle extends Ellipse {
 	 * 
 	 * @return The x coordinate of the centre of the circle
 	 */
-	public float getCentreX() {
+	public float getCenterX() {
 		return getX() + radius;
 	}
 	
