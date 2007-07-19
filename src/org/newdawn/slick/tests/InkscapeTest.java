@@ -20,7 +20,7 @@ import org.newdawn.slick.svg.SimpleDiagramRenderer;
  */
 public class InkscapeTest extends BasicGame {
 	/** The renderer doing the work */
-	private SimpleDiagramRenderer[] renderer = new SimpleDiagramRenderer[4];
+	private SimpleDiagramRenderer[] renderer = new SimpleDiagramRenderer[5];
 	/** The zoom */
 	private float zoom = 1;
 	/** The x location */
@@ -45,6 +45,7 @@ public class InkscapeTest extends BasicGame {
 		renderer[1] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head2.svg"));
 		renderer[2] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head3.svg"));
 		renderer[3] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/santa.svg"));
+		renderer[4] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/cow.svg"));
 		
 		container.getGraphics().setBackground(new Color(0.5f,0.7f,1.0f));
 	}
@@ -88,18 +89,20 @@ public class InkscapeTest extends BasicGame {
 		g.scale(0.3f,0.3f);
 		renderer[0].render(g);
 		g.scale(1/0.3f,1/0.3f);
-		g.translate(300, 0);
+		g.translate(400, 0);
 		renderer[1].render(g);
 		g.translate(100, 300);
 		g.scale(0.7f,0.7f);
 		renderer[2].render(g);
 		g.scale(1/0.7f,1/0.7f);
-		g.translate(-300, 0);
+		g.translate(-500, 80);
 		renderer[3].render(g);
+		
+		g.translate(200, -200);
+		g.scale(0.5f,0.5f);
+		renderer[4].render(g);
+		
 		g.resetTransform();
-//		g.scale(0.3f,0.3f);
-//		g.translate(50,50);
-//		renderer.render(g);
 	}
 	
 	/**
