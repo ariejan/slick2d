@@ -19,10 +19,8 @@ import org.newdawn.slick.svg.SimpleDiagramRenderer;
  * @author kevin
  */
 public class InkscapeTest extends BasicGame {
-	/** The diagram being rendered */
-	private Diagram diagram;
 	/** The renderer doing the work */
-	private SimpleDiagramRenderer renderer;
+	private SimpleDiagramRenderer[] renderer = new SimpleDiagramRenderer[4];
 	/** The zoom */
 	private float zoom = 1;
 	/** The x location */
@@ -43,10 +41,10 @@ public class InkscapeTest extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		container.getGraphics().setBackground(Color.white);
 		
-		//diagram = InkscapeLoader.load("testdata/svg/lwjgl3.svg");
-		diagram = InkscapeLoader.load("testdata/svg/orc.svg");
-		System.out.println("Figures: "+diagram.getFigureCount());
-		renderer = new SimpleDiagramRenderer(diagram);
+		renderer[0] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/orc.svg"));
+		renderer[1] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head2.svg"));
+		renderer[2] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head3.svg"));
+		renderer[3] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/santa.svg"));
 		
 		container.getGraphics().setBackground(new Color(0.5f,0.7f,1.0f));
 	}
@@ -87,11 +85,21 @@ public class InkscapeTest extends BasicGame {
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.scale(zoom,zoom);
 		g.translate(x, y);
-		renderer.render(g);
-		g.resetTransform();
 		g.scale(0.3f,0.3f);
-		g.translate(50,50);
-		renderer.render(g);
+		renderer[0].render(g);
+		g.scale(1/0.3f,1/0.3f);
+		g.translate(300, 0);
+		renderer[1].render(g);
+		g.translate(100, 300);
+		g.scale(0.7f,0.7f);
+		renderer[2].render(g);
+		g.scale(1/0.7f,1/0.7f);
+		g.translate(-300, 0);
+		renderer[3].render(g);
+		g.resetTransform();
+//		g.scale(0.3f,0.3f);
+//		g.translate(50,50);
+//		renderer.render(g);
 	}
 	
 	/**

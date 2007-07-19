@@ -122,6 +122,7 @@ public class Util {
 			for (int j=0;j<tr.length;j++) {
 				tr[j] = Float.parseFloat(tokens.nextToken());
 			}
+			
 			pose[0] = tr[0];
 			pose[1] = tr[2];
 			pose[2] = tr[4];

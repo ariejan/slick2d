@@ -22,7 +22,7 @@ public class EllipseProcessor implements ElementProcessor {
 	 */
 	public void process(Loader loader, Element element, Diagram diagram, Transform t) throws ParsingException {
 		Transform transform = Util.getTransform(element);
-		transform = new Transform(transform, t);
+		transform = new Transform(t, transform);
 		
 		float x = Util.getFloatAttribute(element,"cx");
 		float y = Util.getFloatAttribute(element,"cy");

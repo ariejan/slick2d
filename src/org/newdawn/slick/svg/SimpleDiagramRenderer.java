@@ -48,9 +48,11 @@ public class SimpleDiagramRenderer {
 				}
 				if (figure.getData().isColor(NonGeometricData.STROKE)) {
 					g.setColor(figure.getData().getAsColor(NonGeometricData.STROKE));
+					g.setLineWidth(figure.getData().getAsFloat(NonGeometricData.STROKE_WIDTH));
 					g.setAntiAlias(true);
 					g.draw(diagram.getFigure(i).getShape());
 					g.setAntiAlias(false);
+					g.resetLineWidth();
 				}
 		
 				// DEBUG VERSION

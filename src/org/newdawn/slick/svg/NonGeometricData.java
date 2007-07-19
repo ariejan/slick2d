@@ -43,6 +43,7 @@ public class NonGeometricData {
 	 */
 	public NonGeometricData(String metaData) {
 		this.metaData = metaData;
+		addAttribute(STROKE_WIDTH, "1");
 	}
 	
 	/**
@@ -58,6 +59,9 @@ public class NonGeometricData {
 		if (str.equals("white")) {
 			return "#ffffff";
 		}
+		if (str.equals("black")) {
+			return "#000000";
+		}
 		
 		return str;
 	}
@@ -72,9 +76,29 @@ public class NonGeometricData {
 		if (attribute.equals(FILL) ) {
 			value = morphColor(value);
 		}
+		if (attribute.equals(STROKE_OPACITY)) {
+			if (value.equals("0")) {
+				props.setProperty(STROKE, "none");
+			}
+		}
+		if (attribute.equals(STROKE_WIDTH)) {
+			if (value.equals("")) {
+				value = "1";
+			}
+			if (value.endsWith("px")) {
+				value = value.substring(0,value.length()-2);
+			}
+		}
+		if (attribute.equals(STROKE)) {
+			if ("none".equals(props.getProperty(STROKE))) {
+				return;
+			}
+			value = morphColor(value);
+		}
+		
 		props.setProperty(attribute, value);
 	}
-	
+
 	/**
 	 * Check if a given attribute is in colour format
 	 * 
@@ -119,5 +143,24 @@ public class NonGeometricData {
 		int col = Integer.parseInt(getAttribute(attribute).substring(1), 16);
 		
 		return new Color(col);
+	}
+	
+	/**
+	 * Get an attribute converted to a float value
+	 * 
+	 * @param attribute The attribute to retrieve
+	 * @return The float value derived from the attribute
+	 */
+	public float getAsFloat(String attribute) {
+		String value = getAttribute(attribute);
+		if (value == null) {
+			return 0;
+		}
+		
+		try {
+			return Float.parseFloat(value);
+		} catch (NumberFormatException e) {
+			throw new RuntimeException("Attribute "+attribute+" is not specified as a float:"+getAttribute(attribute));			
+		}
 	}
 }
