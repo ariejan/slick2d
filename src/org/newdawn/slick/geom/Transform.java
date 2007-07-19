@@ -24,7 +24,30 @@ public class Transform {
     public Transform() {   
         matrixPosition = new float[]{1, 0, 0, 0, 1, 0, 0, 0, 1};   
     }   
+    
+    /**   
+     * Copy a transform
+     * 
+     * @param other The other transform to copy
+     */   
+    public Transform(Transform other) {   
+    	matrixPosition = new float[9];
+    	for (int i=0;i<9;i++) {
+    		matrixPosition[i] = other.matrixPosition[i];
+    	}
+    }   
        
+    /**
+     * Concatanate to transform into one
+     * 
+     * @param t1 The first transform to join
+     * @param t2 The second transform to join
+     */
+    public Transform(Transform t1, Transform t2) {
+    	this(t1);
+    	concatenate(t2);
+    }
+    
     /**   
      * Create a transform for the given positions   
      *    
@@ -85,17 +108,32 @@ public class Transform {
     /**   
      * Update this Transform by concatenating the given Transform to this one.   
      *    
-     * @param transform The Transfrom to concatenate to this one.   
+     * @param tx The Transfrom to concatenate to this one.   
      * @return The resulting Transform   
      */   
-    public Transform concatenate(Transform transform) {   
-        matrixPosition[0] = matrixPosition[0] * transform.matrixPosition[0] + matrixPosition[0] * transform.matrixPosition[3] + matrixPosition[0] * transform.matrixPosition[6]; 
-        matrixPosition[1] = matrixPosition[1] * transform.matrixPosition[1] + matrixPosition[1] * transform.matrixPosition[4] + matrixPosition[1] * transform.matrixPosition[7];
-        matrixPosition[2] = matrixPosition[2] * transform.matrixPosition[2] + matrixPosition[2] * transform.matrixPosition[5] + matrixPosition[2] * transform.matrixPosition[8]; 
-        matrixPosition[3] = matrixPosition[3] * transform.matrixPosition[0] + matrixPosition[3] * transform.matrixPosition[3] + matrixPosition[3] * transform.matrixPosition[6]; 
-        matrixPosition[4] = matrixPosition[4] * transform.matrixPosition[1] + matrixPosition[4] * transform.matrixPosition[4] + matrixPosition[4] * transform.matrixPosition[7];
-        matrixPosition[5] = matrixPosition[5] * transform.matrixPosition[2] + matrixPosition[5] * transform.matrixPosition[5] + matrixPosition[5] * transform.matrixPosition[8]; 
-        
+    public Transform concatenate(Transform tx) {   
+    	float[] mp = new float[9];
+    	float n00 = matrixPosition[0] * tx.matrixPosition[0] + matrixPosition[1] * tx.matrixPosition[3];
+    	float n01 = matrixPosition[0] * tx.matrixPosition[1] + matrixPosition[1] * tx.matrixPosition[4];
+    	float n02 = matrixPosition[0] * tx.matrixPosition[2] + matrixPosition[1] * tx.matrixPosition[5] + matrixPosition[2];
+    	float n10 = matrixPosition[3] * tx.matrixPosition[0] + matrixPosition[4] * tx.matrixPosition[3];
+    	float n11 = matrixPosition[3] * tx.matrixPosition[1] + matrixPosition[4] * tx.matrixPosition[4];
+    	float n12 = matrixPosition[3] * tx.matrixPosition[2] + matrixPosition[4] * tx.matrixPosition[5] + matrixPosition[5];
+    	mp[0] = n00;
+    	mp[1] = n01;
+    	mp[2] = n02;
+    	mp[3] = n10;
+    	mp[4] = n11;
+    	mp[5] = n12;
+//    	
+//        mp[0] = matrixPosition[0] * transform.matrixPosition[0] + matrixPosition[0] * transform.matrixPosition[3] + matrixPosition[0] * transform.matrixPosition[6]; 
+//        mp[1] = matrixPosition[1] * transform.matrixPosition[1] + matrixPosition[1] * transform.matrixPosition[4] + matrixPosition[1] * transform.matrixPosition[7];
+//        mp[2] = matrixPosition[2] * transform.matrixPosition[2] + matrixPosition[2] * transform.matrixPosition[5] + matrixPosition[2] * transform.matrixPosition[8]; 
+//        mp[3] = matrixPosition[3] * transform.matrixPosition[0] + matrixPosition[3] * transform.matrixPosition[3] + matrixPosition[3] * transform.matrixPosition[6]; 
+//        mp[4] = matrixPosition[4] * transform.matrixPosition[1] + matrixPosition[4] * transform.matrixPosition[4] + matrixPosition[4] * transform.matrixPosition[7];
+//        mp[5] = matrixPosition[5] * transform.matrixPosition[2] + matrixPosition[5] * transform.matrixPosition[5] + matrixPosition[5] * transform.matrixPosition[8]; 
+//        
+        matrixPosition = mp;
         return this;
     }   
    
