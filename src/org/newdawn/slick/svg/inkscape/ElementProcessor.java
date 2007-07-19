@@ -1,5 +1,6 @@
 package org.newdawn.slick.svg.inkscape;
 
+import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.svg.Diagram;
 import org.newdawn.slick.svg.Loader;
 import org.newdawn.slick.svg.ParsingException;
@@ -20,9 +21,10 @@ public interface ElementProcessor {
 	 * @param loader The loader/context of the parsing
 	 * @param element The element to be processed
 	 * @param diagram The diagram to be built
+	 * @param transform The transform to apply to all elements at this level
 	 * @throws ParsingException Indicates an invalid content to an element
 	 */
-	public void process(Loader loader, Element element, Diagram diagram) throws ParsingException;
+	public void process(Loader loader, Element element, Diagram diagram, Transform transform) throws ParsingException;
 
 	/**
 	 * Check if this processor handles the element specified

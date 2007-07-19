@@ -7,6 +7,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.SlickCallable;
+import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.svg.Diagram;
 import org.newdawn.slick.svg.InkscapeLoader;
 import org.newdawn.slick.svg.SimpleDiagramRenderer;
@@ -41,9 +43,12 @@ public class InkscapeTest extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		container.getGraphics().setBackground(Color.white);
 		
-		diagram = InkscapeLoader.load("testdata/svg/lwjgl3.svg");
+		//diagram = InkscapeLoader.load("testdata/svg/lwjgl3.svg");
+		diagram = InkscapeLoader.load("testdata/svg/orc.svg");
 		System.out.println("Figures: "+diagram.getFigureCount());
 		renderer = new SimpleDiagramRenderer(diagram);
+		
+		container.getGraphics().setBackground(new Color(0.5f,0.7f,1.0f));
 	}
 
 	/**
@@ -58,8 +63,8 @@ public class InkscapeTest extends BasicGame {
 		}
 		if (container.getInput().isKeyDown(Input.KEY_A)) {
 			zoom -= (delta * 0.01f);
-			if (zoom < 1) {
-				zoom = 1;
+			if (zoom < 0.1f) {
+				zoom = 0.1f;
 			}
 		}
 		if (container.getInput().isKeyDown(Input.KEY_RIGHT)) {
@@ -82,6 +87,10 @@ public class InkscapeTest extends BasicGame {
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.scale(zoom,zoom);
 		g.translate(x, y);
+		renderer.render(g);
+		g.resetTransform();
+		g.scale(0.3f,0.3f);
+		g.translate(50,50);
 		renderer.render(g);
 	}
 	

@@ -1,5 +1,6 @@
 package org.newdawn.slick.svg.inkscape;
 
+import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.svg.Diagram;
 import org.newdawn.slick.svg.Loader;
 import org.newdawn.slick.svg.ParsingException;
@@ -22,11 +23,14 @@ public class GroupProcessor implements ElementProcessor {
 		return false;
 	}
 
-	/**
-	 * @see org.newdawn.slick.svg.inkscape.ElementProcessor#process(org.newdawn.slick.svg.Loader, org.w3c.dom.Element, org.newdawn.slick.svg.Diagram)
+	/**O
+	 * @see org.newdawn.slick.svg.inkscape.ElementProcessor#process(org.newdawn.slick.svg.Loader, org.w3c.dom.Element, org.newdawn.slick.svg.Diagram, org.newdawn.slick.geom.Transform)
 	 */
-	public void process(Loader loader, Element element, Diagram diagram) throws ParsingException {
-		loader.loadChildren(element);
+	public void process(Loader loader, Element element, Diagram diagram, Transform t) throws ParsingException {
+		Transform transform = Util.getTransform(element);
+		transform = new Transform(t, transform);
+		
+		loader.loadChildren(element, transform);
 	}
 
 }

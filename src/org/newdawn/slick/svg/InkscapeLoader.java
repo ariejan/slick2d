@@ -9,6 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.svg.inkscape.DefsProcessor;
 import org.newdawn.slick.svg.inkscape.ElementProcessor;
 import org.newdawn.slick.svg.inkscape.EllipseProcessor;
@@ -82,7 +83,6 @@ public class InkscapeLoader implements Loader {
 	 * @throws SlickException Indicates a failure to process the document
 	 */
 	private Diagram loadDiagram(InputStream in) throws SlickException {
-
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setValidating(false);
@@ -99,7 +99,7 @@ public class InkscapeLoader implements Loader {
 			Document doc = builder.parse(in);
 			Element root = doc.getDocumentElement();
 			
-			loadChildren(root);
+			loadChildren(root, new Transform());
 			
 			return diagram;
 		} catch (Exception e) {
@@ -108,13 +108,13 @@ public class InkscapeLoader implements Loader {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.svg.Loader#loadChildren(org.w3c.dom.Element)
+	 * @see org.newdawn.slick.svg.Loader#loadChildren(org.w3c.dom.Element, org.newdawn.slick.geom.Transform)
 	 */
-	public void loadChildren(Element element) throws ParsingException   {
+	public void loadChildren(Element element, Transform t) throws ParsingException   {
 		NodeList list = element.getChildNodes();
 		for (int i=0;i<list.getLength();i++) {
 			if (list.item(i) instanceof Element) {
-				loadElement((Element) list.item(i));
+				loadElement((Element) list.item(i), t);
 			}
 		}
 	}
@@ -123,14 +123,15 @@ public class InkscapeLoader implements Loader {
 	 * Load a single element into the diagram
 	 * 
 	 * @param element The element ot be loaded
+	 * @param t The transform to apply to the loaded element from the parent
 	 * @throws ParsingException Indicates a failure to parse the element
 	 */
-	private void loadElement(Element element) throws ParsingException {
+	private void loadElement(Element element, Transform t) throws ParsingException {
 		for (int i=0;i<processors.size();i++) {
 			ElementProcessor processor = (ElementProcessor) processors.get(i);
 			
 			if (processor.handles(element)) {
-				processor.process(this, element, diagram);
+				processor.process(this, element, diagram, t);
 			}
 		}
 	}
