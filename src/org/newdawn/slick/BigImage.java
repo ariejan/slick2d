@@ -289,7 +289,7 @@ public class BigImage extends Image {
 		int srcwidth = (int) (srcx2 - srcx)+1;
 		int srcheight = (int) (srcy2 - srcy)+1;
 
-		Image subImage = getSubImage(srcx,srcy,srcwidth,srcheight);
+		Image subImage = getSubImage((int) srcx,(int) srcy,srcwidth,srcheight);
 
 		int width = (int) (x2 - x)+1;
 		int height = (int) (y2 - y)+1;
