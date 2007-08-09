@@ -286,14 +286,25 @@ public class BigImage extends Image {
 	 * @see org.newdawn.slick.Image#draw(float, float, float, float, float, float, float, float)
 	 */
 	public void draw(float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2) {
-		throw new OperationNotSupportedException("Can't draw subsections of big images yet");
+		int srcwidth = (srcx2 - srcx)+1;
+		int srcheight = (srcy2 - srcy)+1;
+
+		Image subImage = getSubImage(srcx,srcy,srcwidth,srcheight);
+
+		int width = (x2 - x)+1;
+		int height = (y2 - y)+1;
+
+		subImage.draw(x,y,width,height);
 	}
 
 	/**
 	 * @see org.newdawn.slick.Image#draw(float, float, float, float, float, float)
 	 */
 	public void draw(float x, float y, float srcx, float srcy, float srcx2, float srcy2) {
-		throw new OperationNotSupportedException("Can't draw subsections of big images yet");
+		int srcwidth = (srcx2 - srcx)+1;
+		int srcheight = (srcy2 - srcy)+1;
+
+		draw(x,y,srcwidth,srcheight,srcx,srcy,srcx2,srcy2);
 	}
 
 	/**
