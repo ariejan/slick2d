@@ -286,13 +286,13 @@ public class BigImage extends Image {
 	 * @see org.newdawn.slick.Image#draw(float, float, float, float, float, float, float, float)
 	 */
 	public void draw(float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2) {
-		int srcwidth = (int) (srcx2 - srcx)+1;
-		int srcheight = (int) (srcy2 - srcy)+1;
+		int srcwidth = (int) (srcx2 - srcx);
+		int srcheight = (int) (srcy2 - srcy);
 
 		Image subImage = getSubImage((int) srcx,(int) srcy,srcwidth,srcheight);
 
-		int width = (int) (x2 - x)+1;
-		int height = (int) (y2 - y)+1;
+		int width = (int) (x2 - x);
+		int height = (int) (y2 - y);
 
 		subImage.draw(x,y,width,height);
 	}
@@ -301,8 +301,8 @@ public class BigImage extends Image {
 	 * @see org.newdawn.slick.Image#draw(float, float, float, float, float, float)
 	 */
 	public void draw(float x, float y, float srcx, float srcy, float srcx2, float srcy2) {
-		int srcwidth = (int) (srcx2 - srcx)+1;
-		int srcheight = (int) (srcy2 - srcy)+1;
+		int srcwidth = (int) (srcx2 - srcx);
+		int srcheight = (int) (srcy2 - srcy);
 
 		draw(x,y,srcwidth,srcheight,srcx,srcy,srcx2,srcy2);
 	}
