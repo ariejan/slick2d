@@ -49,6 +49,8 @@ public class AppGameContainer extends GameContainer {
 	private DisplayMode targetDisplayMode;
 	/** True if we should update the game only when the display is visible */
 	private boolean updateOnlyOnVisible = true;
+	/** True if we should force exit */
+	private boolean forceExit = true;
 	
 	/**
 	 * Create a new container wrapping a game
@@ -75,6 +77,16 @@ public class AppGameContainer extends GameContainer {
 		originalDisplayMode = Display.getDisplayMode();
 		
 		setDisplayMode(width,height,fullscreen);
+	}
+	
+	/**
+	 * Indicate if we should force exitting the VM at the end
+	 * of the game (default = true)
+	 * 
+	 * @param force True if we should force the VM exit
+	 */
+	public void setForceExit(boolean forceExit) {
+		this.forceExit = forceExit;
 	}
 	
 	/**
@@ -316,7 +328,9 @@ public class AppGameContainer extends GameContainer {
 			Display.destroy();
 		}
 		
-		System.exit(0);
+		if (forceExit) {
+			System.exit(0);
+		}
 	}
 
 	/**
