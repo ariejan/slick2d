@@ -56,6 +56,8 @@ public abstract class GameContainer implements GUIContext {
 	private long maximumLogicInterval = 0;
 	/** The last game started */
 	private Game lastGame;
+	/** True if we should clear the screen each frame */
+	private boolean clearEachFrame = true;
 	
 	/**
 	 * Create a new game container wrapping a given game
@@ -68,6 +70,17 @@ public abstract class GameContainer implements GUIContext {
 		
 		getBuildVersion();
 		Log.checkVerboseLogSetting();
+	}
+	
+	/**
+	 * Indicate if we should clear the screen at the beginning of each frame. If you're
+	 * rendering to the whole screen each frame then setting this to false can give
+	 * some performance improvements
+	 * 
+	 * @param clear True if the the screen should be cleared each frame
+	 */
+	public void setClearEachFrame(boolean clear) {
+		this.clearEachFrame = clear;
 	}
 	
 	/**
@@ -394,7 +407,10 @@ public abstract class GameContainer implements GUIContext {
 		}
 		
 		if (hasFocus() || alwaysRender()) {
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+			if (clearEachFrame) {
+				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+			} 
+			
 			GL11.glLoadIdentity();
 			
 			graphics.resetFont();
