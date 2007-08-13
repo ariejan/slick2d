@@ -396,6 +396,7 @@ public class AppGameContainer extends GameContainer {
 			if (refs[i].endsWith(".tga")) {
 				data = new TGAImageData();
 			} else {
+				flip = false;
 				data = new ImageIOImageData();
 			}
 			
