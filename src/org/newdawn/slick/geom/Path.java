@@ -153,7 +153,7 @@ public class Path extends Shape {
 //    /**
 //     * Calculate the triangles that can fill this shape
 //     */
-//    protected void caculateTriangles() {
+//    protected void calculateTriangles() {
 //    	if (!trianglesDirty) {
 //    		return;
 //    	}

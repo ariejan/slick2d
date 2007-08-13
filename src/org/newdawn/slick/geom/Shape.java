@@ -406,7 +406,7 @@ public abstract class Shape implements Serializable {
     /**
      * Calculate the triangles that can fill this shape
      */
-    protected void caculateTriangles() {
+    protected void calculateTriangles() {
     	if (!trianglesDirty) {
     		return;
     	}
@@ -441,7 +441,7 @@ public abstract class Shape implements Serializable {
      */
     public Triangulator getTriangles() {
         checkPoints();
-        caculateTriangles();
+        calculateTriangles();
     	return tris;
     }
     
