@@ -71,6 +71,9 @@ public abstract class Shape implements Serializable {
     		float dx = x - this.x;
 	        this.x = x;
 	        
+	        if ((points == null) || (center == null)) {
+	        	checkPoints();
+	        }
 	        // update the points in the special case
     		for (int i=0;i<points.length/2;i++) {
     			points[i*2] += dx;
@@ -91,7 +94,10 @@ public abstract class Shape implements Serializable {
     	if (y != this.y) {
     		float dy = y - this.y;
 	        this.y = y;
-	        
+
+	        if ((points == null) || (center == null)) {
+	        	checkPoints();
+	        }
 	        // update the points in the special case
     		for (int i=0;i<points.length/2;i++) {
     			points[(i*2)+1] += dy;
