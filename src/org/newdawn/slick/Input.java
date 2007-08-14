@@ -349,6 +349,10 @@ public class Input {
 	
 	/** True if the input is currently paused */
 	private boolean paused;
+	/** The scale to apply to screen coordinates */
+	private float scaleX = 1;
+	/** The scale to apply to screen coordinates */
+	private float scaleY = 1;
 	
 	/**
 	 * Create a new input with the height of the screen
@@ -357,6 +361,17 @@ public class Input {
 	 */
 	public Input(int height) {
 		init(height);
+	}
+	
+	/**
+	 * Set the scaling to apply to screen coordinates
+	 * 
+	 * @param scaleX The scaling to apply to the horizontal axis
+	 * @param scaleY The scaling to apply to the vertical axis
+	 */
+	public void setScale(float scaleX, float scaleY) {
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
 	}
 	
 	/**
@@ -507,7 +522,7 @@ public class Input {
 	 * @return The x position of the mouse cursor
 	 */
 	public int getMouseX() {
-		return Mouse.getX();
+		return (int) (Mouse.getX() * scaleX);
 	}
 	
 	/**
@@ -516,7 +531,7 @@ public class Input {
 	 * @return The y position of the mouse cursor
 	 */
 	public int getMouseY() {
-		return height-Mouse.getY();
+		return (int) ((height-Mouse.getY()) * scaleY);
 	}
 	
 	/**
@@ -812,7 +827,7 @@ public class Input {
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
-							listener.mousePressed(Mouse.getEventButton(), Mouse.getEventX(), height-Mouse.getEventY());
+							listener.mousePressed(Mouse.getEventButton(), (int) (Mouse.getEventX() * scaleX), (int) ((height-Mouse.getEventY()) * scaleY));
 							if (consumed) {
 								break;
 							}
@@ -824,7 +839,7 @@ public class Input {
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
-							listener.mouseReleased(Mouse.getEventButton(), Mouse.getEventX(), height-Mouse.getEventY());
+							listener.mouseReleased(Mouse.getEventButton(), (int) (Mouse.getEventX() * scaleX), (int) ((height-Mouse.getEventY()) * scaleY));
 							if (consumed) {
 								break;
 							}
@@ -873,7 +888,7 @@ public class Input {
 				for (int i=0;i<listeners.size();i++) {
 					InputListener listener = (InputListener) listeners.get(i);
 					if (listener.isAcceptingInput()) {
-						listener.mouseMoved(lastMouseX,  lastMouseY, getMouseX(), getMouseY());
+						listener.mouseMoved(lastMouseX ,  lastMouseY, getMouseX(), getMouseY());
 						if (consumed) {
 							break;
 						}
