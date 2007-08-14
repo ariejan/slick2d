@@ -10,6 +10,7 @@ import org.lwjgl.opengl.Pbuffer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
@@ -144,12 +145,16 @@ public class FBOGraphics extends Graphics {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glPopMatrix();
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		
+		SlickCallable.leaveSafeBlock();
 	}
 
 	/**
 	 * @see org.newdawn.slick.Graphics#enable()
 	 */
 	protected void enable() {
+		SlickCallable.enterSafeBlock();
+		
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glPushClientAttrib(GL11.GL_ALL_CLIENT_ATTRIB_BITS);
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
