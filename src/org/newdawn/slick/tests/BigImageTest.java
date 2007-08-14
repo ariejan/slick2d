@@ -57,7 +57,7 @@ public class BigImageTest extends BasicGame {
 		imageX = image.getFlippedCopy(true, false);
 		imageY = imageX.getFlippedCopy(true, true);
 		
-		bigSheet = new SpriteSheet(original, 64, 64);
+		bigSheet = new SpriteSheet(original, 16, 16);
 	}
 
 	/**

@@ -43,6 +43,9 @@ public class BigImage extends Image {
 		return buffer.get(0);
 	}
 	
+	/** The last image that we put into "in use" mode */
+	private static Image lastBind;
+	
 	/** The images building up this sub-image */
 	private Image[][] images;
 	/** The number of images on the xaxis */
@@ -332,7 +335,33 @@ public class BigImage extends Image {
 	 * @see org.newdawn.slick.Image#drawEmbedded(float, float, float, float)
 	 */
 	public void drawEmbedded(float x, float y, float width, float height) {
-		draw(x,y,width,height,Color.white);
+		float sx = width / realWidth;
+		float sy = height / realHeight;
+
+		float xp = 0;
+		float yp = 0;
+		
+		for (int tx=0;tx<xcount;tx++) {
+			yp = 0;
+			for (int ty=0;ty<ycount;ty++) {
+				Image image = images[tx][ty];
+
+				if ((lastBind == null) || (image.getTexture() != lastBind.getTexture())) {
+					if (lastBind != null) {
+						lastBind.endUse();
+					}
+					lastBind = image;
+					lastBind.startUse();
+				}
+				image.drawEmbedded(xp+x,yp+y,image.getWidth(), image.getHeight());
+			
+				yp += image.getHeight();
+				if (ty == ycount - 1) {
+					xp += image.getWidth();
+				}
+			}
+			
+		}
 	}
 
 	/**
@@ -380,8 +409,20 @@ public class BigImage extends Image {
 	 * @see org.newdawn.slick.Image#endUse()
 	 */
 	public void endUse() {
+		if (lastBind != null) {
+			lastBind.endUse();
+		}
+		lastBind = null;
 	}
 
+	/**
+	 * Not supported in BigImage
+	 * 
+	 * @see org.newdawn.slick.Image#startUse()
+	 */
+	public void startUse() {
+	}
+	
 	/**
 	 * Not supported in BigImage
 	 * 
@@ -570,14 +611,6 @@ public class BigImage extends Image {
 	 */
 	public void setTexture(Texture texture) {
 		throw new OperationNotSupportedException("Can't use big images as offscreen buffers");
-	}
-
-	/**
-	 * Not supported in BigImage
-	 * 
-	 * @see org.newdawn.slick.Image#startUse()
-	 */
-	public void startUse() {
 	}
 	
 	/**

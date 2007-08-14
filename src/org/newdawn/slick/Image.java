@@ -731,7 +731,6 @@ public class Image {
 		if (inUse != this) {
 			throw new RuntimeException("The sprite sheet is not currently in use");
 		}
-		
 		inUse = null;
 		GL11.glEnd();
 	}
@@ -748,7 +747,7 @@ public class Image {
 		}
 		inUse = this;
 		init();
-		
+
 		Color.white.bind();
 		texture.bind();
 		GL11.glBegin(GL11.GL_QUADS);

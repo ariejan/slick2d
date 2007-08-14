@@ -83,7 +83,7 @@ public class AppGameContainer extends GameContainer {
 	 * Indicate if we should force exitting the VM at the end
 	 * of the game (default = true)
 	 * 
-	 * @param force True if we should force the VM exit
+	 * @param forceExit True if we should force the VM exit
 	 */
 	public void setForceExit(boolean forceExit) {
 		this.forceExit = forceExit;
