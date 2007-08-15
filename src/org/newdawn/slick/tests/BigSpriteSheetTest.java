@@ -59,6 +59,8 @@ public class BigSpriteSheetTest extends BasicGame {
 		}
 		
 		g.drawString("Press space to toggle rendering method",10,30);
+		
+		container.getDefaultFont().drawString(10, 100, "TEST");
 	}
 
 	/**

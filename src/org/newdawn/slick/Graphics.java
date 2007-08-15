@@ -133,6 +133,9 @@ public class Graphics {
 	 * context for dynamic images
 	 */
 	private void predraw() {
+		if (Image.inUse != null) {
+			throw new RuntimeException("Attempt to access the graphics context within a renderInUse() block. This will fail on some hardware and drivers.");
+		}
 		if (currentGraphics != this) {
 			if (currentGraphics != null) {
 				currentGraphics.disable();

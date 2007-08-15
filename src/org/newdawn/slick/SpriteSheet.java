@@ -171,10 +171,6 @@ public class SpriteSheet extends Image {
 	 * @param sy The y location of the cell to render
 	 */
 	public void renderInUse(int x,int y,int sx,int sy) {
-		if ((inUse != this) && (target == null)) {
-			throw new RuntimeException("The sprite sheet is not currently in use");
-		}
-		
 		subImages[sx][sy].drawEmbedded(x, y, tw, th);
 	}
 
@@ -182,21 +178,13 @@ public class SpriteSheet extends Image {
 	 * @see org.newdawn.slick.Image#endUse()
 	 */
 	public void endUse() {
-		if (target != null) {
-			target.endUse();
-		} else {
-			super.endUse();
-		}
+		target.endUse();
 	}
 
 	/**
 	 * @see org.newdawn.slick.Image#startUse()
 	 */
 	public void startUse() {
-		if (target != null) {
-			target.startUse();
-		} else {
-			super.startUse();
-		}
+		target.startUse();
 	}
 }
