@@ -7,8 +7,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.Music;
-import org.newdawn.slick.Sound;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
+import org.newdawn.slick.openal.SoundStore;
 
 /**
  * A test for the sound system of the library
@@ -47,6 +48,8 @@ public class SoundTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
+		SoundStore.get().setMaxSources(32);
+		
 		myContainer = container;
 		sound = new Sound("testdata/restart.ogg");
 		charlie = new Sound("testdata/cbrown01.wav");

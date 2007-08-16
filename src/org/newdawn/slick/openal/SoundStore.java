@@ -66,6 +66,9 @@ public class SoundStore {
     /** The buffer used to set the position of a source */
     private FloatBuffer sourcePos = BufferUtils.createFloatBuffer(3);
     
+    /** The maximum number of sources */
+    private int maxSources = 64;
+    
 	/**
 	 * Create a new sound store
 	 */
@@ -242,6 +245,16 @@ public class SoundStore {
 	}
 	
 	/**
+	 * Set the maximum number of concurrent sound effects that will be 
+	 * attempted
+	 * 
+	 * @param max The maximum number of sound effects/music to mix
+	 */
+	public void setMaxSources(int max) {
+		this.maxSources = max;
+	}
+	
+	/**
 	 * Initialise the sound effects stored. This must be called
 	 * before anything else will work
 	 */
@@ -272,10 +285,28 @@ public class SoundStore {
             }});
 		
 		if (soundWorks) {
-			sourceCount = 8;
-			sources = BufferUtils.createIntBuffer(sourceCount);
-			AL10.alGenSources(sources);
-			
+			sourceCount = 0;
+			sources = BufferUtils.createIntBuffer(maxSources);
+			while (AL10.alGetError() == AL10.AL_NO_ERROR) {
+				IntBuffer temp = BufferUtils.createIntBuffer(1);
+				
+				try {
+					AL10.alGenSources(temp);
+				
+					if (AL10.alGetError() == AL10.AL_NO_ERROR) {
+						sourceCount++;
+						sources.put(temp.get(0));
+						if (sourceCount > maxSources-1) {
+							break;
+						}
+					} 
+				} catch (OpenALException e) {
+					// expected at the end
+					break;
+				}
+			}
+			Log.error("- "+sourceCount+" OpenAL source available");
+		
 			if (AL10.alGetError() != AL10.AL_NO_ERROR) {
 				sounds = false;
 				music = false;
