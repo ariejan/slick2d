@@ -217,7 +217,6 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public void setNormalColor(Color color) {
 		normalColor = color;
-		updateImage();
 	}
 
 	/**
@@ -228,7 +227,6 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public void setMouseOverColor(Color color) {
 		mouseOverColor = color;
-		updateImage();
 	}
 
 	/**
@@ -239,7 +237,6 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public void setMouseDownColor(Color color) {
 		mouseDownColor = color;
-		updateImage();
 	}
 
 	/**
@@ -250,7 +247,6 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public void setNormalImage(Image image) {
 		normalImage = image;
-		updateImage();
 	}
 
 	/**
@@ -261,7 +257,6 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public void setMouseOverImage(Image image) {
 		mouseOverImage = image;
-		updateImage();
 	}
 
 	/**
@@ -272,7 +267,6 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public void setMouseDownImage(Image image) {
 		mouseDownImage = image;
-		updateImage();
 	}
 
 	/**
@@ -290,6 +284,7 @@ public class MouseOverArea extends AbstractComponent {
 			g.setColor(currentColor);
 			g.fill(area);
 		}
+		updateImage();
 	}
 
 	/**
@@ -356,7 +351,6 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
 		over = area.contains(newx, newy);
-		updateImage();
 	}
 
 	/**
@@ -367,7 +361,6 @@ public class MouseOverArea extends AbstractComponent {
 		if (button == 0) {
 			mouseDown = true; 
 		}
-		updateImage();
 	}
 	
 	/**
@@ -378,7 +371,6 @@ public class MouseOverArea extends AbstractComponent {
 		if (button == 0) {
 			mouseDown = false; 
 		}
-		updateImage();
 	}
 
 	/**
