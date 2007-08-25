@@ -11,9 +11,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -132,13 +130,13 @@ public class ParticleEditor extends JFrame {
 		};
 		chooser.setFileFilter(xmlFileFilter);
 		
-		try {
-			InputStream in = ParticleEditor.class.getClassLoader().getResourceAsStream("org/newdawn/slick/tools/peditor/data/icon.gif");
-			
-			setIconImage(ImageIO.read(in));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			InputStream in = ParticleEditor.class.getClassLoader().getResourceAsStream("org/newdawn/slick/tools/peditor/data/icon.gif");
+//			
+//			setIconImage(ImageIO.read(in));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		
 		emitters = new EmitterList(this);
 		emissionControls = new EmissionControls();
@@ -375,13 +373,13 @@ public class ParticleEditor extends JFrame {
 	    graphEditorFrame.setLocation(this.getX(), this.getY()+this.getHeight());
 	    graphEditorFrame.setVisible(true);
 	    
-		try {
-			InputStream in = ParticleEditor.class.getClassLoader().getResourceAsStream("org/newdawn/slick/tools/peditor/data/icon.gif");
-			
-			graphEditorFrame.setIconImage(ImageIO.read(in));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			InputStream in = ParticleEditor.class.getClassLoader().getResourceAsStream("org/newdawn/slick/tools/peditor/data/icon.gif");
+//			
+//			//graphEditorFrame.setIconImage(ImageIO.read(in));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	/**
