@@ -1,5 +1,7 @@
 package org.newdawn.slick.tools.peditor;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 import org.lwjgl.LWJGLException;
@@ -10,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleEmitter;
 import org.newdawn.slick.particles.ParticleSystem;
@@ -49,6 +52,10 @@ public class ParticleCanvas extends AWTGLCanvas {
 	private int systemMove;
 	/** The y position of the system */
 	private float ypos;
+	/** The background image file to load */
+	private File backgroundImage;
+	/** The background image being rendered */
+	private Image background;
 	
 	/**
 	 * Create a new canvas
@@ -60,6 +67,16 @@ public class ParticleCanvas extends AWTGLCanvas {
 		super();
 	}
 
+	/**
+	 * Set the image to display behind the particle system
+	 * 
+	 * @param file The file to load for the background image
+	 */
+	public void setBackgroundImage(File file) {
+		backgroundImage = file;
+		background = null;
+	}
+	
 	/**
 	 * Set how much the system should move
 	 * 
@@ -218,9 +235,25 @@ public class ParticleCanvas extends AWTGLCanvas {
 	 * @see org.lwjgl.opengl.AWTGLCanvas#paintGL()
 	 */
 	protected void paintGL() {
+		try {
+			if (backgroundImage != null) {
+				if (background == null) {
+					background = new Image(new FileInputStream(backgroundImage), backgroundImage.getAbsolutePath(), false);
+				}
+			}
+		} catch (Exception e) {
+			Log.error("Failed to load backgroundImage: "+backgroundImage);
+			Log.error(e);
+			backgroundImage = null;
+			background = null;
+		}
+		
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		GL11.glLoadIdentity();
 
+		if (background != null) {
+			graphics.fillRect(0,0,getWidth(),getHeight(),background,0,0);
+		}
 		max = Math.max(max, system.getParticleCount());
 		
 		if (hudOn) {

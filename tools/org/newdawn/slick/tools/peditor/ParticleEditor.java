@@ -61,6 +61,10 @@ public class ParticleEditor extends JFrame {
 	private JMenuItem exp = new JMenuItem("Export Emitter");
 	/** Toggle the HUD  */
 	private JMenuItem hud = new JMenuItem("Toggle Overlay");
+	/** Toggle the HUD  */
+	private JMenuItem loadBackground = new JMenuItem("Load Background Image");
+	/** Toggle the HUD  */
+	private JMenuItem clearBackground = new JMenuItem("Clear Background Image");
 	/** Toggle the graphice editor  */
 	private JMenuItem whiskas = new JMenuItem("Show/Hide Graph Editor");
 	/** Exit the editor */
@@ -159,8 +163,22 @@ public class ParticleEditor extends JFrame {
 		file.add(hud);
 		file.add(whiskas);
 		file.addSeparator();
+		file.add(loadBackground);
+		file.add(clearBackground);
+		file.addSeparator();
 		file.add(quit);
 
+		loadBackground.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				loadBackground();
+			}
+		});
+		clearBackground.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clearBackground();
+			}
+		});
+		
 		newSystem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				createNewSystem();
@@ -318,6 +336,25 @@ public class ParticleEditor extends JFrame {
 		initGraphEditorWindow();
 
 		emitters.setSelected(0);
+	}
+	
+	/**
+	 * Load a background image to display behind the particle system
+	 */
+	private void loadBackground() {
+		JFileChooser chooser = new JFileChooser(".");
+		chooser.setDialogTitle("Open");
+		int resp = chooser.showOpenDialog(this);
+		if (resp == JFileChooser.APPROVE_OPTION) {
+			canvas.setBackgroundImage(chooser.getSelectedFile());
+		}
+	}
+	
+	/** 
+	 * Clear the background image in use
+	 */
+	private void clearBackground() {
+		canvas.setBackgroundImage(null);
 	}
 	
 	/**
