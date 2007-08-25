@@ -743,10 +743,8 @@ public class Input {
 			}
 		} catch (LWJGLException e) {
 			if (e.getCause() instanceof ClassNotFoundException) {
-				Log.error(e.getCause());
 				throw new SlickException("Unable to create controller - no jinput found - add jinput.jar to your classpath");
 			}
-			Log.error(e);
 			throw new SlickException("Unable to create controllers");
 		}
 	}
