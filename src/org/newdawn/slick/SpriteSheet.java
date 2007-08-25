@@ -178,6 +178,10 @@ public class SpriteSheet extends Image {
 	 * @see org.newdawn.slick.Image#endUse()
 	 */
 	public void endUse() {
+		if (target == this) {
+			super.endUse();
+			return;
+		}
 		target.endUse();
 	}
 
@@ -185,6 +189,10 @@ public class SpriteSheet extends Image {
 	 * @see org.newdawn.slick.Image#startUse()
 	 */
 	public void startUse() {
+		if (target == this) {
+			super.startUse();
+			return;
+		}
 		target.startUse();
 	}
 }
