@@ -267,6 +267,13 @@ public class TextureLoader {
 
         texWidth = texture.getTextureWidth();
         texHeight = texture.getTextureHeight();
+
+        IntBuffer temp = BufferUtils.createIntBuffer(16);
+        GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE, temp);
+        int max = temp.get(0);
+        if ((texWidth > max) || (texHeight > max)) {
+        	throw new IOException("Attempt to allocate a texture to big for the current hardware");
+        }
         
         int srcPixelFormat = hasAlpha ? GL11.GL_RGBA : GL11.GL_RGB;
         int componentCount = hasAlpha ? 4 : 3;
@@ -391,7 +398,7 @@ public class TextureLoader {
         IntBuffer temp = BufferUtils.createIntBuffer(16);
         GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE, temp);
         int max = temp.get(0);
-        if ((width > max) || (height > max)) {
+        if ((texWidth > max) || (texHeight > max)) {
         	throw new IOException("Attempt to allocate a texture to big for the current hardware");
         }
         
