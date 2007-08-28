@@ -305,7 +305,7 @@ public class SoundStore {
 					break;
 				}
 			}
-			Log.error("- "+sourceCount+" OpenAL source available");
+			Log.info("- "+sourceCount+" OpenAL source available");
 		
 			if (AL10.alGetError() != AL10.AL_NO_ERROR) {
 				sounds = false;
