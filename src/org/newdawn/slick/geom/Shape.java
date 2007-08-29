@@ -135,6 +135,10 @@ public abstract class Shape implements Serializable {
      * @param centerX The center point to set.
      */
     public void setCenterX(float centerX) {
+        if ((points == null) || (center == null)) {
+        	checkPoints();
+        }
+        
         float xDiff = centerX - center[0];
         setX(x + xDiff);
     }
@@ -156,6 +160,10 @@ public abstract class Shape implements Serializable {
      * @param centerY The center point to set.
      */
     public void setCenterY(float centerY) {
+        if ((points == null) || (center == null)) {
+        	checkPoints();
+        }
+        
         float yDiff = centerY - center[1];
         setY(y + yDiff);
     }
