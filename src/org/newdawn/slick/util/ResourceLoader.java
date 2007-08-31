@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * A simple wrapper around resource loading should anyone decide to change
@@ -14,7 +15,40 @@ import java.net.URL;
  * @author Kevin Glass
  */
 public class ResourceLoader {
-
+	/** The list of locations to be searched */
+	private static ArrayList locations = new ArrayList();
+	
+	static {
+		locations.add(new ClasspathLocation());
+		locations.add(new FileSystemLocation(new File(".")));
+	}
+	
+	/**
+	 * Add a location that will be searched for resources
+	 * 
+	 * @param location The location that will be searched for resoruces
+	 */
+	public static void addResourceLocation(ResourceLocation location) {
+		locations.add(location);
+	}
+	
+	/**
+	 * Remove a location that will be no longer be searched for resources
+	 * 
+	 * @param location The location that will be removed from the search list
+	 */
+	public static void removeResourceLocation(ResourceLocation location) {
+		locations.remove(location);
+	}
+	
+	/**
+	 * Remove all the locations, no resources will be found until
+	 * new locations have been added
+	 */
+	public static void removeAllResourceLocations() {
+		locations.clear();
+	}
+	
 	/**
 	 * Get a resource
 	 * 
@@ -22,25 +56,22 @@ public class ResourceLoader {
 	 * @return A stream from which the resource can be read
 	 */
 	public static InputStream getResourceAsStream(String ref) {
-		String cpRef = ref.replace('\\', '/');
-		InputStream in = ResourceLoader.class.getClassLoader().getResourceAsStream(cpRef);
+		InputStream in = null;
 		
-		if (in == null) {
-			File file = new File(ref);
-			try {
-				if (System.getProperty("jnlp.slick.webstart", "false").equals("false")) {
-					in = new FileInputStream(file);
-					return new BufferedInputStream(in);
-				} else {
-					Log.error("Resource not found: "+ref);
-					throw new RuntimeException("Resource not found: "+ref);
-				}
-			} catch (IOException e) {
-				Log.error("Resource not found: "+ref);
-				throw new RuntimeException("Resource not found: "+ref);
-			} 
+		for (int i=0;i<locations.size();i++) {
+			ResourceLocation location = (ResourceLocation) locations.get(i);
+			in = location.getResourceAsStream(ref);
+			if (in != null) {
+				break;
+			}
 		}
 		
+		if (in == null)
+		{
+			Log.error("Resource not found: "+ref);
+			throw new RuntimeException("Resource not found: "+ref);
+		}
+			
 		return new BufferedInputStream(in);
 	}
 	
@@ -51,24 +82,23 @@ public class ResourceLoader {
 	 * @return A stream from which the resource can be read
 	 */
 	public static URL getResource(String ref) {
-		String cpRef = ref.replace('\\', '/');
-		URL url = ResourceLoader.class.getClassLoader().getResource(cpRef);
+
+		URL url = null;
 		
-		if (url == null) {
-			File file = new File(ref);
-			try {
-				if (System.getProperty("jnlp.slick.webstart", "false").equals("false")) {
-					return file.toURL();
-				} else {
-					Log.error("Resource not found: "+ref);
-					throw new RuntimeException("Resource not found: "+ref);
-				}
-			} catch (IOException e) {
-				Log.error("Resource not found: "+ref);
-				throw new RuntimeException("Resource not found: "+ref);
-			} 
+		for (int i=0;i<locations.size();i++) {
+			ResourceLocation location = (ResourceLocation) locations.get(i);
+			url = location.getResource(ref);
+			if (url != null) {
+				break;
+			}
 		}
 		
+		if (url == null)
+		{
+			Log.error("Resource not found: "+ref);
+			throw new RuntimeException("Resource not found: "+ref);
+		}
+			
 		return url;
 	}
 }
