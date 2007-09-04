@@ -916,11 +916,6 @@ public class Input {
 			}
 		}
 		
-		for (int i=0;i<listeners.size();i++) {
-			InputListener listener = (InputListener) listeners.get(i);
-			listener.inputEnded();
-		}
-		
 		if (keyRepeat) {
 			for (int i=0;i<1024;i++) {
 				if (pressed[i] && (nextRepeat[i] != 0)) {
@@ -929,7 +924,7 @@ public class Input {
 						consumed = false;
 						for (int j=0;j<listeners.size();j++) {
 							InputListener listener = (InputListener) listeners.get(j);
-							
+
 							if (listener.isAcceptingInput()) {
 								listener.keyPressed(i, keys[i]);
 								if (consumed) {
@@ -940,6 +935,11 @@ public class Input {
 					}
 				}
 			}
+		}
+
+		for (int i=0;i<listeners.size();i++) {
+			InputListener listener = (InputListener) listeners.get(i);
+			listener.inputEnded();
 		}
 		
 		if (Display.isCreated()) {
