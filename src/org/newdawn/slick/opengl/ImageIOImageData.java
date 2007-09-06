@@ -182,6 +182,7 @@ public class ImageIOImageData implements LoadableImageData {
         imageBuffer.order(ByteOrder.nativeOrder()); 
         imageBuffer.put(data, 0, data.length); 
         imageBuffer.flip();
+        g.dispose();
         
         return imageBuffer; 
 	}
