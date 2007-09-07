@@ -139,7 +139,7 @@ public abstract class Shape implements Serializable {
         	checkPoints();
         }
         
-        float xDiff = centerX - center[0];
+        float xDiff = centerX - getCenterX();
         setX(x + xDiff);
     }
 
@@ -164,9 +164,10 @@ public abstract class Shape implements Serializable {
         	checkPoints();
         }
         
-        float yDiff = centerY - center[1];
+        float yDiff = centerY - getCenterY();
         setY(y + yDiff);
     }
+    
     /**
      * Get the right most point of this shape.
      * 
