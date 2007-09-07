@@ -439,7 +439,9 @@ public class AngelCodeFont implements Font {
 				x += chars[id].xadvance;
 				
 				if (i < text.length()-1) {
-					x += kerning[id][text.charAt(i+1)];
+					if ((text.charAt(i+1) < 1000) && (id < 1000)) {
+						x += kerning[id][text.charAt(i+1)];
+					}
 				}
 			}
 			GL11.glEnd();
