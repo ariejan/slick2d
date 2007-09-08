@@ -431,6 +431,9 @@ public class AngelCodeFont implements Font {
 			GL11.glBegin(GL11.GL_QUADS);
 			for (int i=0;i<text.length();i++) {
 				int id = text.charAt(i);
+				if (id >= chars.length) {
+					continue;
+				}
 				if (chars[id] == null) {
 					continue;
 				}
