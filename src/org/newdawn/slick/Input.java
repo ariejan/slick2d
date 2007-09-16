@@ -774,6 +774,24 @@ public class Input {
 	}
 	
 	/**
+	 * Hook to allow us to translate any key character into special key 
+	 * codes for easier use.
+	 * 
+	 * @param key The original key code
+	 * @param c The character that was fired
+	 * @return The key code to fire
+	 */
+	private int resolveEventKey(int key, char c) {
+		// BUG with LWJGL - equals comes back with keycode = 0
+		// See: http://slick.javaunlimited.net/viewtopic.php?t=617
+		if ((c == '=') && (key == 0)) {
+			return KEY_EQUALS;
+		}
+		
+		return key;
+	}
+	
+	/**
 	 * Poll the state of the input
 	 * 
 	 * @param width The width of the game view
@@ -788,29 +806,32 @@ public class Input {
 
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
-				keys[Keyboard.getEventKey()] = Keyboard.getEventCharacter();
-				pressed[Keyboard.getEventKey()] = true;
-				nextRepeat[Keyboard.getEventKey()] = System.currentTimeMillis() + keyRepeatInitial;
+				int eventKey = resolveEventKey(Keyboard.getEventKey(), Keyboard.getEventCharacter());
+				
+				keys[eventKey] = Keyboard.getEventCharacter();
+				pressed[eventKey] = true;
+				nextRepeat[eventKey] = System.currentTimeMillis() + keyRepeatInitial;
 				
 				consumed = false;
 				for (int i=0;i<listeners.size();i++) {
 					InputListener listener = (InputListener) listeners.get(i);
 					
 					if (listener.isAcceptingInput()) {
-						listener.keyPressed(Keyboard.getEventKey(), Keyboard.getEventCharacter());
+						listener.keyPressed(eventKey, Keyboard.getEventCharacter());
 						if (consumed) {
 							break;
 						}
 					}
 				}
 			} else {
-				nextRepeat[Keyboard.getEventKey()] = 0;
+				int eventKey = resolveEventKey(Keyboard.getEventKey(), Keyboard.getEventCharacter());
+				nextRepeat[eventKey] = 0;
 				
 				consumed = false;
 				for (int i=0;i<listeners.size();i++) {
 					InputListener listener = (InputListener) listeners.get(i);
 					if (listener.isAcceptingInput()) {
-						listener.keyReleased(Keyboard.getEventKey(), keys[Keyboard.getEventKey()]);
+						listener.keyReleased(eventKey, keys[eventKey]);
 						if (consumed) {
 							break;
 						}
