@@ -27,9 +27,9 @@ import org.newdawn.slick.util.Log;
  */
 public class AppletGameContainer extends Applet {
 	/** The GL Canvas used for this container */
-	private ContainerPanel canvas;
+	protected ContainerPanel canvas;
 	/** The actual container implementation */
-	private Container container;
+	protected Container container;
 	
 	/**
 	 * @see java.applet.Applet#destroy()
