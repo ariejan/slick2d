@@ -29,7 +29,7 @@ import org.w3c.dom.NodeList;
  */
 public class FontData {
 	/** The maximum font file size that will be read */
-	private static long MAX_FILE_SIZE = 1000000;
+	private static long MAX_FILE_SIZE = 2000000;
 	
 	/** The user's home directory for locating fonts */
 	private static String userhome = System.getProperty("user.home");
@@ -222,7 +222,7 @@ public class FontData {
 					}
 				} catch (Exception e) {
 					if (DEBUG) {
-						System.err.println("Unable to process: "+source.getAbsolutePath());
+						System.err.println("Unable to process: "+source.getAbsolutePath()+" ("+e.getClass()+": "+e.getMessage()+")");
 					}
 					if (statusListener != null) {
 						statusListener.updateStatus("Unable to process: "+source.getName());
@@ -354,6 +354,9 @@ public class FontData {
 	 * @throws IOException Indicates a failure to 
 	 */
 	private FontData(InputStream ttf, float size) throws IOException {
+		if (ttf.available() > MAX_FILE_SIZE) {
+			throw new IOException("Can't load font - too big");
+		}
 		byte[] data = IOUtils.toByteArray(ttf);
 		if (data.length > MAX_FILE_SIZE) {
 			throw new IOException("Can't load font - too big");
@@ -368,6 +371,7 @@ public class FontData {
 			}
 
 			String name = getName();
+			System.err.println("Loaded: "+name+" ("+data.length+")");
 			boolean bo = false;
 			boolean it = false;
 			if (name.indexOf(',') >= 0) {

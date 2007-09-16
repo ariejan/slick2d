@@ -42,6 +42,9 @@ public class FontFileReader {
      * @throws IOException In case of an I/O problem
      */
     private void init(InputStream in) throws java.io.IOException {
+        if (in.available() > 2000000) {
+        	throw new IOException("Font too big");
+        }
         this.file = IOUtils.toByteArray(in);
         this.fsize = this.file.length;
         if (fsize > 2000000) {
@@ -58,6 +61,10 @@ public class FontFileReader {
      */
     public FontFileReader(String fileName) throws IOException {
         final File f = new File(fileName);
+        if (f.length() > 2000000) {
+        	throw new IOException("Font too big");
+        }
+        
         InputStream in = new java.io.FileInputStream(f);
         try {
             init(in);
