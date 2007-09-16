@@ -23,11 +23,11 @@ import org.newdawn.slick.util.Log;
  */
 public class CanvasGameContainer extends AWTGLCanvas {
 	/** The actual container implementation */
-	private Container container;
+	protected Container container;
 	/** The game being held in this container */
-	private Game game;
+	protected Game game;
 	/** True if a reinit is required */
-	private boolean reinit = false;
+	protected boolean reinit = false;
 	
 	/**
 	 * Create a new panel

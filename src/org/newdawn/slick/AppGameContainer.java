@@ -44,13 +44,13 @@ public class AppGameContainer extends GameContainer {
 	}
 	
 	/** The original display mode before we tampered with things */
-	private DisplayMode originalDisplayMode;
+	protected DisplayMode originalDisplayMode;
 	/** The display mode we're going to try and use */
-	private DisplayMode targetDisplayMode;
+	protected DisplayMode targetDisplayMode;
 	/** True if we should update the game only when the display is visible */
-	private boolean updateOnlyOnVisible = true;
+	protected boolean updateOnlyOnVisible = true;
 	/** True if we should force exit */
-	private boolean forceExit = true;
+	protected boolean forceExit = true;
 	
 	/**
 	 * Create a new container wrapping a game
