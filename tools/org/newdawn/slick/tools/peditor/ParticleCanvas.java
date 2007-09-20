@@ -161,8 +161,8 @@ public class ParticleCanvas extends AWTGLCanvas {
 		
 		Log.info("Starting display "+width+"x"+height);
 		String extensions = GL11.glGetString(GL11.GL_EXTENSIONS);
-		
-		Display.setVSyncEnabled(true);
+
+		setVSyncEnabled(true);
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glShadeModel(GL11.GL_SMOOTH);        
@@ -311,6 +311,8 @@ public class ParticleCanvas extends AWTGLCanvas {
 				system.update(1);
 			}
 		}
+		
+		Display.sync2(100);
 	}
 
 	/**
