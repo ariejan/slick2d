@@ -66,7 +66,7 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	/** The index into the byte array we currently read from */
 	private int readIndex;
 	/** The byte array store used to hold the data read from the ogg */
-	private ByteBuffer pcmBuffer = BufferUtils.createByteBuffer(4096 * 100);
+	private ByteBuffer pcmBuffer = BufferUtils.createByteBuffer(4096 * 200);
 	
 	/**
 	 * Create a new stream to decode OGG data
