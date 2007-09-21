@@ -433,6 +433,9 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 		}
 
 		int value = pcmBuffer.get(readIndex);
+		if (value < 0) {
+			value = 256 + value;
+		}
 		readIndex++;
 		
 		return value;
@@ -452,21 +455,17 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 		for (int i=0;i<len;i++) {
 			try {
 				int value = read();
-				b[i] = (byte) value;
-				
-				if (readIndex >= pcmBuffer.position()) {
-					pcmBuffer.clear();
-					readPCM();
-					readIndex = 0;
-				}
-				if (readIndex >= pcmBuffer.position()) {
-					if (i == 0) {
+				if (value >= 0) {
+					b[i] = (byte) value;
+				} else {
+					if (i == 0) {						
 						return -1;
 					} else {
 						return i;
 					}
 				}
 			} catch (IOException e) {
+				Log.error(e);
 				return i;
 			}
 		}

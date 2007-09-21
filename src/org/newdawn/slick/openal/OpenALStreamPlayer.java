@@ -18,6 +18,8 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author Kevin Glass
  */
 public class OpenALStreamPlayer {
+	/** The number of buffers to maintain */
+	public static final int BUFFER_COUNT = 3;
 	/** The size of the sections to stream from the stream */
 	private static final int sectionSize = 4096 * 10;
 	
@@ -54,7 +56,7 @@ public class OpenALStreamPlayer {
 		this.source = source;
 		this.ref = ref;
 		
-		bufferNames = BufferUtils.createIntBuffer(2);
+		bufferNames = BufferUtils.createIntBuffer(BUFFER_COUNT);
 		AL10.alGenBuffers(bufferNames);
 	}
 
@@ -119,9 +121,9 @@ public class OpenALStreamPlayer {
 		removeBuffers();
 	    AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_FALSE);
 		
-		remainingBufferCount = 2;
+		remainingBufferCount = BUFFER_COUNT;
 	
-		for (int i=0;i<2;i++) {
+		for (int i=0;i<BUFFER_COUNT;i++) {
 	        stream(bufferNames.get(i));
 		}
 		
@@ -198,13 +200,12 @@ public class OpenALStreamPlayer {
 				bufferData.clear();
 				bufferData.put(buffer,0,count);
 				bufferData.flip();
-				bufferData.limit(count);
 
 				int format = audio.getChannels() > 1 ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
 				try {
-					AL10.alBufferData(bufferId, format, 
-												bufferData, audio.getRate());
+					AL10.alBufferData(bufferId, format, bufferData, audio.getRate());
 				} catch (OpenALException e) {
+					e.printStackTrace();
 					Log.error("Failed to loop buffer: "+bufferId+" "+format+" "+count+" "+audio.getRate());
 					return false;
 				}
