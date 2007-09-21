@@ -55,4 +55,8 @@ public class MODSound extends InternalSound {
 	 */
 	public void playAsSoundEffect(float pitch, float gain, boolean loop) {
 	}
+
+	public void stop() {
+		store.setMOD(null);
+	}
 }
