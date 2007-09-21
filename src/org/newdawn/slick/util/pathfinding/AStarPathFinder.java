@@ -117,7 +117,7 @@ public class AStarPathFinder implements PathFinder {
 						// the cost to get to this node is cost the current plus the movement
 						// cost to reach this node. Note that the heursitic value is only used
 						// in the sorted open list
-						int nextStepCost = current.cost + getMovementCost(mover, current.x, current.y, tx, ty);
+						int nextStepCost = current.cost + getMovementCost(mover, current.x, current.y, xp, yp);
 						Node neighbour = nodes[xp][yp];
 						map.pathFinderVisited(xp, yp);
 						
@@ -265,8 +265,8 @@ public class AStarPathFinder implements PathFinder {
 	 * @param ty The y coordinate of the target location
 	 * @return The cost of movement through the given tile
 	 */
-	public int getMovementCost(Mover mover, int x, int y, int tx, int ty) {
-		return map.getCost(mover, x, y);
+	public int getMovementCost(Mover mover, int sx, int sy, int tx, int ty) {
+		return map.getCost(mover, sx, sy, tx, ty);
 	}
 
 	/**

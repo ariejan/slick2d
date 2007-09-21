@@ -19,7 +19,9 @@ public class ClosestHeuristic implements AStarHeuristic {
 		int dx = tx - x;
 		int dy = ty - y;
 		
-		return (int) (Math.sqrt((dx*dx)+(dy*dy)) * 1000);
+		int result = (int) (Math.sqrt((dx*dx)+(dy*dy)) * 1000);
+		
+		return result;
 	}
 
 }

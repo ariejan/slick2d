@@ -51,9 +51,11 @@ public interface TileBasedMap {
 	 * of this method would be to return 1 in all cases.
 	 * 
 	 * @param mover The mover that is trying to move across the tile
-	 * @param x The x coordinate of the tile to check
-	 * @param y The y coordinate of the tile to check
+	 * @param sx The x coordinate of the tile we're moving from
+	 * @param sy The y coordinate of the tile we're moving from
+	 * @param tx The x coordinate of the tile we're moving to
+	 * @param ty The y coordinate of the tile we're moving to
 	 * @return The relative cost of moving across the given tile
 	 */
-	public int getCost(Mover mover, int x, int y);
+	public int getCost(Mover mover, int sx, int sy, int tx, int ty);
 }
