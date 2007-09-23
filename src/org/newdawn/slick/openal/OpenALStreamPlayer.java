@@ -70,7 +70,7 @@ public class OpenALStreamPlayer {
 		this.source = source;
 		this.url = url;
 		
-		bufferNames = BufferUtils.createIntBuffer(2);
+		bufferNames = BufferUtils.createIntBuffer(BUFFER_COUNT);
 		AL10.alGenBuffers(bufferNames);
 	}
 	
