@@ -670,6 +670,7 @@ public class Image {
 	 * @return The new scaled image
 	 */
 	public Image getScaledCopy(float scale) {
+		init();
 		return getScaledCopy((int) (width*scale),(int) (height*scale));
 	}
 	
