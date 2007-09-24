@@ -57,5 +57,5 @@ public interface TileBasedMap {
 	 * @param ty The y coordinate of the tile we're moving to
 	 * @return The relative cost of moving across the given tile
 	 */
-	public int getCost(Mover mover, int sx, int sy, int tx, int ty);
+	public float getCost(Mover mover, int sx, int sy, int tx, int ty);
 }
