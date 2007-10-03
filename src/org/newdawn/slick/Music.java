@@ -28,8 +28,9 @@ public class Music {
 		if (currentMusic != null) {
 			SoundStore.get().poll(delta);
 			if (!SoundStore.get().isMusicPlaying()) {
+				Music oldMusic = currentMusic;
 				currentMusic = null;
-				currentMusic.fireMusicEnded();
+				oldMusic.fireMusicEnded();
 			}
 		}
 	}
