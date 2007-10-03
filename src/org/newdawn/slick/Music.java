@@ -28,8 +28,8 @@ public class Music {
 		if (currentMusic != null) {
 			SoundStore.get().poll(delta);
 			if (!SoundStore.get().isMusicPlaying()) {
-				currentMusic.fireMusicEnded();
 				currentMusic = null;
+				currentMusic.fireMusicEnded();
 			}
 		}
 	}
