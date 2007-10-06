@@ -51,6 +51,8 @@ public class AppGameContainer extends GameContainer {
 	protected boolean updateOnlyOnVisible = true;
 	/** True if we should force exit */
 	protected boolean forceExit = true;
+	/** Alpha background supported */
+	protected boolean alphaSupport = true;
 	
 	/**
 	 * Create a new container wrapping a game
@@ -77,6 +79,15 @@ public class AppGameContainer extends GameContainer {
 		originalDisplayMode = Display.getDisplayMode();
 		
 		setDisplayMode(width,height,fullscreen);
+	}
+	
+	/**
+	 * Check if the display created supported alpha in the back buffer
+	 * 
+	 * @return True if the back buffer supported alpha
+	 */
+	public boolean supportsAlphaInBackBuffer() {
+		return alphaSupport;
 	}
 	
 	/**
@@ -264,6 +275,8 @@ public class AppGameContainer extends GameContainer {
 	        		} catch (Exception e) {
 	        			Log.error(e);
 	        			
+	        			alphaSupport = false;
+	        			Display.destroy();
 	        			// if we couldn't get alpha, let us know
 		        		try {
 		        			Display.create();
