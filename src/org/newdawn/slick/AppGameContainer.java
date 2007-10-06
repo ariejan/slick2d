@@ -269,21 +269,21 @@ public class AppGameContainer extends GameContainer {
 			
 			AccessController.doPrivileged(new PrivilegedAction() {
 	            public Object run() {
-	        		try {
-	        			PixelFormat format = new PixelFormat(8,8,0);
-	        			Display.create(format);
-	        		} catch (Exception e) {
-	        			Log.error(e);
-	        			
+//	        		try {
+//	        			PixelFormat format = new PixelFormat(8,8,0);
+//	        			Display.create(format);
+//	        		} catch (Exception e) {
+//	        			Log.error(e);
+//	        			
 	        			alphaSupport = false;
-	        			Display.destroy();
+//	        			Display.destroy();
 	        			// if we couldn't get alpha, let us know
 		        		try {
 		        			Display.create();
 		        		} catch (Exception x) {
 		        			Log.error(x);
 		        		}
-	        		}
+//	        		}
 					
 					return null;
 	            }});
