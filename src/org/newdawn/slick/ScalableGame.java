@@ -12,13 +12,19 @@ import org.lwjgl.opengl.GL11;
  * 
  * @author kevin
  */
-public final class ScalableGame implements Game {
+public class ScalableGame implements Game {
 	/** The normal or native width of the game */
 	private float normalWidth;
 	/** The normal or native height of the game */
 	private float normalHeight;
 	/** The game that is being wrapped */
 	private Game held;
+	/** True if we should maintain the aspect ratio */
+	private boolean maintainAspect;
+	/** The target width */
+	private int targetWidth;
+	/** The target height */
+	private int targetHeight;
 	
 	/** 
 	 * Create a new scalable game wrapper
@@ -28,20 +34,60 @@ public final class ScalableGame implements Game {
 	 * @param normalHeight The noral height of the game
 	 */
 	public ScalableGame(Game held, int normalWidth, int normalHeight) {
+		this(held, normalWidth, normalHeight, false);
+	}
+	
+	/** 
+	 * Create a new scalable game wrapper
+	 * 
+	 * @param held The game to be wrapper and displayed at a different resolution
+	 * @param normalWidth The normal width of the game
+	 * @param normalHeight The noral height of the game
+	 * @param maintainAspect True if we should maintain the aspect ratio
+	 */
+	public ScalableGame(Game held, int normalWidth, int normalHeight, boolean maintainAspect) {
 		this.held = held;
 		this.normalWidth = normalWidth;
 		this.normalHeight = normalHeight;
+		this.maintainAspect = maintainAspect;
 	}
 	
 	/**
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
+		targetWidth = container.getWidth();
+		targetHeight = container.getHeight();
+		if (maintainAspect) {
+			if (container.getWidth() > container.getHeight()) {
+				float ratio = normalHeight / normalWidth;
+				targetHeight = (int) (targetWidth * ratio);
+			} else {
+				float ratio = normalWidth / normalHeight;
+				targetWidth = (int) (targetHeight * ratio);
+			}
+		}
+		
 		if (held instanceof InputListener) {
 			container.getInput().addListener((InputListener) held);
 		}
-		container.getInput().setScale(normalWidth / container.getWidth(),
-									  normalHeight / container.getHeight());
+		container.getInput().setScale(normalWidth / targetWidth,
+									  normalHeight / targetHeight);
+		
+
+		int yoffset = 0;
+		int xoffset = 0;
+		
+		if (targetHeight < container.getHeight()) {
+			yoffset = (container.getHeight() - targetHeight) / 2;
+		}
+		if (targetWidth < container.getWidth()) {
+			xoffset = (container.getWidth() - targetWidth) / 2;
+		}
+		container.getInput().setOffset(-xoffset / (targetWidth / normalWidth), 
+									   -yoffset / (targetHeight / normalHeight));
+		
+		
 		held.init(container);
 	}
 
@@ -55,15 +101,37 @@ public final class ScalableGame implements Game {
 	/**
 	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(GameContainer container, Graphics g)
+	public final void render(GameContainer container, Graphics g)
 			throws SlickException {
-		GL11.glScalef(container.getWidth() / normalWidth,
-					  container.getHeight() / normalHeight,0);
+		int yoffset = 0;
+		int xoffset = 0;
+		
+		if (targetHeight < container.getHeight()) {
+			yoffset = (container.getHeight() - targetHeight) / 2;
+		}
+		if (targetWidth < container.getWidth()) {
+			xoffset = (container.getWidth() - targetWidth) / 2;
+		}
+		
+		renderOverlay(container, g);
+		g.setClip(xoffset, yoffset, targetWidth, targetHeight);
+		GL11.glTranslatef(xoffset, yoffset, 0);
+		GL11.glScalef(targetWidth / normalWidth, targetHeight / normalHeight,0);
 		GL11.glPushMatrix();
 		held.render(container, g);
 		GL11.glPopMatrix();
+		g.clearClip();
 	}
 
+	/**
+	 * Render the overlay that will sit over the scaled screen
+	 * 
+	 * @param container The container holding the game being render
+	 * @param g Graphics context on which to render
+	 */
+	protected void renderOverlay(GameContainer container, Graphics g) {
+	}
+	
 	/**
 	 * @see org.newdawn.slick.Game#closeRequested()
 	 */
@@ -77,5 +145,4 @@ public final class ScalableGame implements Game {
 	public String getTitle() {
 		return held.getTitle();
 	}
-
 }

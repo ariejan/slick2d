@@ -353,6 +353,10 @@ public class Input {
 	private float scaleX = 1;
 	/** The scale to apply to screen coordinates */
 	private float scaleY = 1;
+	/** The offset to apply to screen coordinates */
+	private float xoffset = 0;
+	/** The offset to apply to screen coordinates */
+	private float yoffset = 0;
 	
 	/**
 	 * Create a new input with the height of the screen
@@ -372,6 +376,17 @@ public class Input {
 	public void setScale(float scaleX, float scaleY) {
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
+	}
+	
+	/**
+	 * Set the offset to apply to the screen coodinates
+	 * 
+	 * @param xoffset The offset on the x-axis
+	 * @param yoffset The offset on the y-axis
+	 */
+	public void setOffset(float xoffset, float yoffset) {
+		this.xoffset = xoffset;
+		this.yoffset = yoffset;
 	}
 	
 	/**
@@ -522,7 +537,7 @@ public class Input {
 	 * @return The x position of the mouse cursor
 	 */
 	public int getMouseX() {
-		return (int) (Mouse.getX() * scaleX);
+		return (int) ((Mouse.getX() * scaleX)+xoffset);
 	}
 	
 	/**
@@ -531,7 +546,7 @@ public class Input {
 	 * @return The y position of the mouse cursor
 	 */
 	public int getMouseY() {
-		return (int) ((height-Mouse.getY()) * scaleY);
+		return (int) (((height-Mouse.getY()) * scaleY)+yoffset);
 	}
 	
 	/**
@@ -848,7 +863,7 @@ public class Input {
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
-							listener.mousePressed(Mouse.getEventButton(), (int) (Mouse.getEventX() * scaleX), (int) ((height-Mouse.getEventY()) * scaleY));
+							listener.mousePressed(Mouse.getEventButton(), (int) (xoffset + (Mouse.getEventX() * scaleX)), (int) (yoffset + ((height-Mouse.getEventY()) * scaleY)));
 							if (consumed) {
 								break;
 							}
@@ -860,7 +875,7 @@ public class Input {
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
-							listener.mouseReleased(Mouse.getEventButton(), (int) (Mouse.getEventX() * scaleX), (int) ((height-Mouse.getEventY()) * scaleY));
+							listener.mouseReleased(Mouse.getEventButton(), (int) (xoffset + (Mouse.getEventX() * scaleX)), (int) (yoffset + ((height-Mouse.getEventY()) * scaleY)));
 							if (consumed) {
 								break;
 							}
