@@ -18,6 +18,8 @@ public class PolygonTest extends BasicGame {
 	private Polygon poly;
 	/** True if the mouse is in the polygon */
 	private boolean in;
+	/** The y offset */
+	private float y;
 	
 	/**
 	 * Create the test
@@ -37,6 +39,7 @@ public class PolygonTest extends BasicGame {
 		poly.addPoint(280, 250);
 		poly.addPoint(300, 200);
 		poly.addPoint(240, 150);
+		
 	}
 
 	/**
@@ -44,6 +47,8 @@ public class PolygonTest extends BasicGame {
 	 */
 	public void update(GameContainer container, int delta) throws SlickException {
 		in = poly.contains(container.getInput().getMouseX(), container.getInput().getMouseY());
+		
+		poly.setCenterY(0);
 	}
 
 	/**
@@ -54,6 +59,8 @@ public class PolygonTest extends BasicGame {
 			g.setColor(Color.red);
 			g.fill(poly);
 		}
+		g.setColor(Color.yellow);
+		g.fillOval(poly.getCenterX()-3, poly.getCenterY()-3, 6, 6);
 		g.setColor(Color.white);
 		g.draw(poly);
 	}

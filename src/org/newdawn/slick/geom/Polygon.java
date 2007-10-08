@@ -109,31 +109,28 @@ public class Polygon extends Shape {
         return resultPolygon;
     }
     
+    /**
+     * @see org.newdawn.slick.geom.Shape#setX(float)
+     */
     public void setX(float x) {
-        float xDiff = x - this.x;
         super.setX(x);
         
-        for(int i=0;i<points.length;i+=2) {
-            points[i] += xDiff;
-        }
-        maxX += xDiff;
-        center[0] += xDiff;
         pointsDirty = false;
     }
     
+    /**
+     * @see org.newdawn.slick.geom.Shape#setY(float)
+     */
     public void setY(float y) {
-        float yDiff = y - this.y;
         super.setY(y);
         
-        for(int i=1;i<points.length;i+=2) {
-            points[i] += yDiff;
-        }
-        maxY += yDiff;
-        center[1] += yDiff;
         pointsDirty = false;
     }
     
-    //This is empty since a polygon must have it's points all the time.
+    /**
+     * @see org.newdawn.slick.geom.Shape#createPoints()
+     */
     protected void createPoints() {
+//    	This is empty since a polygon must have it's points all the time.
     }
 }
