@@ -39,6 +39,17 @@ public abstract class Shape implements Serializable {
     }
     
     /**
+     * Set the location of this shape
+     * 
+     * @param x The x coordinate of the new location of the shape
+     * @param y The y coordinate of the new location of the shape
+     */
+    public void setLocation(float x, float y) {
+    	setX(x);
+    	setY(y);
+    }
+    
+    /**
      * Apply a transformation and return a new shape.  This will not alter the current shape but will 
      * return the transformed shape.
      * 
