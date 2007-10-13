@@ -251,7 +251,40 @@ public abstract class Shape implements Serializable {
         
         return result;
     }
+    
+    /**
+     * Get the combine tanget of a given point
+     * 
+     * @param index The index of the point whose tanger should be retrieved
+     * @return The combine tanget of a given point
+     */
+    public float[] getTangent(int index) {
+    	float[] current = getPoint(index);
+    	float[] prev = getPoint(index - 1 < 0 ? getPointCount() - 1 : index - 1);
+    	float[] next = getPoint(index + 1 >= getPointCount() ? 0 : index + 1);
+    	
+    	float[] t1 = getTangent(prev, current);
+    	float[] t2 = getTangent(current, next);
+    	
+    	return new float[] {(t1[0]+t2[0])/2,(t1[1]+t2[1])/2};
+    }
 
+    /**
+     * Get the tanget of the line between two points
+     * 
+     * @param start The start point
+     * @param end The end point
+     * @return The tangent of the line between the two points
+     */
+    private float[] getTangent(float[] start, float[] end) {
+		float dx = start[0] - end[0];
+		float dy = start[1] - end[1];
+		float len = (float) Math.sqrt((dx*dx)+(dy*dy));
+		dx /= len;
+		dy /= len;
+		return new float[] {-dy,dx};
+    }
+    
     /**
      * Check if this polygon contains the given point
      * 
