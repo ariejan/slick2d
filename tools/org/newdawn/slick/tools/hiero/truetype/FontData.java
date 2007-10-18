@@ -303,7 +303,7 @@ public class FontData {
 			NodeList dirs = document.getElementsByTagName("dir");
 			for (int i=0;i<dirs.getLength();i++) {
 				Element element = (Element) dirs.item(i);
-				String dir = element.getFirstChild().getTextContent();
+				String dir = element.getFirstChild().getNodeValue();
 				
 				if (dir.startsWith("~")) {
 					dir = dir.substring(1);
@@ -316,7 +316,7 @@ public class FontData {
 			NodeList includes = document.getElementsByTagName("include");
 			for (int i=0;i<includes.getLength();i++) {
 				Element element = (Element) dirs.item(i);
-				String inc = element.getFirstChild().getTextContent();
+				String inc = element.getFirstChild().getNodeValue();
 				if (inc.startsWith("~")) {
 					inc = inc.substring(1);
 					inc = userhome + inc;
