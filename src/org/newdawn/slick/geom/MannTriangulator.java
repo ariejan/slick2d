@@ -353,6 +353,17 @@ public class MannTriangulator implements Triangulator {
 		}
 
 		/**
+		 * Java 5 hypot method
+		 * 
+		 * @param x The x component
+		 * @param y The y component
+		 * @return The hypotenuse
+		 */
+		private double hypot(double x, double y) {
+			return Math.sqrt(x*x + y*y);
+		}
+		
+		/**
 		 * Compute the angle at this point
 		 */
 		public void computeAngle() {
@@ -361,7 +372,7 @@ public class MannTriangulator implements Triangulator {
 			}
 			double dx1 = pt.x - prev.pt.x;
 			double dy1 = pt.y - prev.pt.y;
-			double len1 = Math.hypot(dx1, dy1);
+			double len1 = hypot(dx1, dy1);
 			dx1 /= len1;
 			dy1 /= len1;
 
@@ -370,7 +381,7 @@ public class MannTriangulator implements Triangulator {
 			}
 			double dx2 = next.pt.x - pt.x;
 			double dy2 = next.pt.y - pt.y;
-			double len2 = Math.hypot(dx2, dy2);
+			double len2 = hypot(dx2, dy2);
 			dx2 /= len2;
 			dy2 /= len2;
 
@@ -402,7 +413,7 @@ public class MannTriangulator implements Triangulator {
 		public double getAngle(Point p) {
 			double dx = p.pt.x - pt.x;
 			double dy = p.pt.y - pt.y;
-			double dlen = Math.hypot(dx, dy);
+			double dlen = hypot(dx, dy);
 
 			return (nx * dx + ny * dy) / dlen;
 		}
