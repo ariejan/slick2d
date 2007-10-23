@@ -562,4 +562,25 @@ public abstract class Shape implements Serializable {
     public boolean closed() {
     	return true;
     }
+    
+    /**
+     * Subtract the given shape from this one. Note that this method only deals
+     * with edges, it will not create holes in polygons.
+     * 
+     * @param other The other shape to subtract from this one
+     * @return The newly created set of shapes resulting from the operation
+     */
+    public Shape[] subtract(Shape other) {
+    	return new GeomUtil().subtract(this, other);
+    }
+
+    /**
+     * Join this shape with another.
+     * 
+     * @param other The other shape to join with this one
+     * @return The newly created set of shapes resulting from the operation
+     */
+    public Shape[] union(Shape other) {
+    	return new GeomUtil().union(this, other);
+    }
 }
