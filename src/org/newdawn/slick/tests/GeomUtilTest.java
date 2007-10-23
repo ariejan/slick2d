@@ -166,6 +166,9 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 			g.drawString("Polys:"+result.length,10,100);
 			g.drawString("X:"+xp,10,120);
 			g.drawString("Y:"+yp,10,130);
+			g.drawString("Space - toggle movement of cutting shape",10,30);
+			g.drawString("1,2,3 - select cutting shape",10,50);
+			g.drawString("Mouse wheel - rotate shape",10,70);
 		}
 		
 	}
