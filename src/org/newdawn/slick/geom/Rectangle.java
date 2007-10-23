@@ -36,7 +36,20 @@ public class Rectangle extends Shape {
 	 * @return True if the point is within the rectangle
 	 */
 	public boolean contains(float xp, float yp) {
-		return (xp >= x) && (yp >= y) && (xp <= x+width) && (yp <= y+height);
+		if (xp < getX()) {
+			return false;
+		}
+		if (yp < getY()) {
+			return false;
+		}
+		if (xp > getMaxX()) {
+			return false;
+		}
+		if (yp > getMaxY()) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**

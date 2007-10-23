@@ -72,6 +72,7 @@ public abstract class Shape implements Serializable {
     public float getX() {
         return x;
     }
+    
     /**
      * Set the x position of the left side this shape.
      * 

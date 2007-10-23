@@ -65,6 +65,10 @@ public class Polygon extends Shape {
      * @param y The y coordinate of the point
      */
     public void addPoint(float x, float y) {
+    	if (includes(x,y)) {
+    		return;
+    	}
+    	
         ArrayList tempPoints = new ArrayList();
         for(int i=0;i<points.length;i++) {
             tempPoints.add(new Float(points[i]));
