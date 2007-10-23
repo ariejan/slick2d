@@ -135,6 +135,10 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 	 */
 	public void render(GameContainer container, Graphics g)
 			throws SlickException {
+		g.drawString("Space - toggle movement of cutting shape",530,10);
+		g.drawString("1,2,3 - select cutting shape",530,30);
+		g.drawString("Mouse wheel - rotate shape",530,50);
+		
 		g.setColor(Color.green);
 		g.draw(source);
 		g.setColor(Color.red);
@@ -166,9 +170,6 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 			g.drawString("Polys:"+result.length,10,100);
 			g.drawString("X:"+xp,10,120);
 			g.drawString("Y:"+yp,10,130);
-			g.drawString("Space - toggle movement of cutting shape",10,30);
-			g.drawString("1,2,3 - select cutting shape",10,50);
-			g.drawString("Mouse wheel - rotate shape",10,70);
 		}
 		
 	}
@@ -204,10 +205,12 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 	}
 
 	public void mouseWheelMoved(int change) {
-		if (change < 0) {
-			cut = cut.transform(Transform.createRotateTransform((float) Math.toRadians(10), cut.getCenterX(), cut.getCenterY()));
-		} else {
-			cut = cut.transform(Transform.createRotateTransform((float) Math.toRadians(-10), cut.getCenterX(), cut.getCenterY()));
+		if (dynamic) {
+			if (change < 0) {
+				cut = cut.transform(Transform.createRotateTransform((float) Math.toRadians(10), cut.getCenterX(), cut.getCenterY()));
+			} else {
+				cut = cut.transform(Transform.createRotateTransform((float) Math.toRadians(-10), cut.getCenterX(), cut.getCenterY()));
+			}
 		}
 	}
 }
