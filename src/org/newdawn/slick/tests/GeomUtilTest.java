@@ -22,7 +22,7 @@ public class GeomUtilTest extends BasicGame {
 	/** The shape we're cutting */
 	private Shape cut;
 	/** The resulting shape */
-	private Shape result;
+	private Shape[] result;
 	
 	/**
 	 * Create a simple test
@@ -40,7 +40,7 @@ public class GeomUtilTest extends BasicGame {
 		source.addPoint(150,80);
 		source.addPoint(210,120);
 		source.addPoint(210,120);
-		source.addPoint(240,150);
+		source.addPoint(340,150);
 		source.addPoint(150,200);
 		source.addPoint(120,250);
 		this.source = source;
@@ -76,7 +76,9 @@ public class GeomUtilTest extends BasicGame {
 		g.draw(cut);
 		g.translate(0,300);
 		g.setColor(Color.white);
-		g.draw(result);
+		for (int i=0;i<result.length;i++) {
+			g.draw(result[i]);
+		}
 	}
 	
 	/**
@@ -87,6 +89,7 @@ public class GeomUtilTest extends BasicGame {
 	public static void main(String[] argv) {
 		GeomUtilTest test = new GeomUtilTest();
 		test.init();
+		System.out.println(test.result.length);
 		
 		try {
 			AppGameContainer container = new AppGameContainer(new GeomUtilTest());

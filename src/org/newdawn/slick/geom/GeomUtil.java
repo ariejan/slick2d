@@ -1,5 +1,7 @@
 package org.newdawn.slick.geom;
 
+import java.util.ArrayList;
+
 /**
  * A set of utilities to play with geometry
  * 
@@ -12,9 +14,9 @@ public class GeomUtil {
 	 *  
 	 * @param target The target to be subtracted from
 	 * @param missing The shape to subtract 
-	 * @return The newly created shape
+	 * @return The newly created shapes
 	 */
-	public static Shape subtract(Shape target, Shape missing) {		
+	public static Shape[] subtract(Shape target, Shape missing) {		
 		return combine(target, missing, true);
 	}
 
@@ -24,14 +26,58 @@ public class GeomUtil {
 	 * 
 	 * @param target The target shape to union with
 	 * @param other The additional shape to union
-	 * @return The newly created shape or null if the shapes were not touching
+	 * @return The newly created shapes 
 	 */
-	public static Shape union(Shape target, Shape other) {
+	public static Shape[] union(Shape target, Shape other) {
 		if (!target.intersects(other)) {
-			return null;
+			return new Shape[] {target, other};
 		}
 		
 		return combine(target, other, false);
+	}
+	
+	/**
+	 * Perform the combination
+	 * 
+	 * @param target The target shape we're updating
+	 * @param other The other shape in the operation
+	 * @param subtract True if it's a subtract operation, otherwise it's union
+	 * @return The set of shapes produced
+	 */
+	private static Shape[] combine(Shape target, Shape other, boolean subtract) {
+		if (subtract) {
+			ArrayList shapes = new ArrayList();
+			ArrayList used = new ArrayList();
+			
+			// remove any points that are contianed in the shape we're removing, these
+			// are implicitly used
+			for (int i=0;i<target.getPointCount();i++) {
+				float[] point = target.getPoint(i);
+				if (other.contains(point[0], point[1])) {
+					used.add(new Vector2f(point[0], point[1]));
+				}
+			}
+
+			for (int i=0;i<target.getPointCount();i++) {
+				float[] point = target.getPoint(i);
+				Vector2f pt = new Vector2f(point[0], point[1]);
+				
+				if (!used.contains(pt)) {
+					Shape result = combineSingle(target, other, true, i);
+					shapes.add(result);
+					for (int j=0;j<result.getPointCount();j++) {
+						float[] kpoint = result.getPoint(j);
+						Vector2f kpt = new Vector2f(kpoint[0], kpoint[1]);
+						used.add(kpt);
+					}
+				}
+			}
+			
+			return (Shape[]) shapes.toArray(new Shape[0]);
+		} else {
+			Shape shape = combineSingle(target, other, false, 0);
+			return new Shape[] {shape};
+		}
 	}
 	
 	/**
@@ -40,12 +86,13 @@ public class GeomUtil {
 	 * @param target The target shape
 	 * @param missing The second shape to apply
 	 * @param subtract True if we should subtract missing from target, otherwise union
+	 * @param start The point to start at
 	 * @return The newly created shape
 	 */
-	private static Shape combine(Shape target, Shape missing, boolean subtract) {
+	private static Shape combineSingle(Shape target, Shape missing, boolean subtract, int start) {
 		Shape current = target;
 		Shape other = missing;
-		int point = 0;
+		int point = start;
 		int dir = 1;
 		
 		Polygon poly = new Polygon();
