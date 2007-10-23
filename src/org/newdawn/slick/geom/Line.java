@@ -254,7 +254,7 @@ public strictfp class Line extends Shape {
 	public String toString() {
 		return "[Line "+start+","+end+"]";
 	}
-	
+
 	/**
 	 * Intersect this line with another
 	 * 
@@ -262,6 +262,17 @@ public strictfp class Line extends Shape {
 	 * @return The intersection point or null if the lines are parallel
 	 */
 	public Vector2f intersect(Line other) {
+		return intersect(other, false);
+	}
+	
+	/**
+	 * Intersect this line with another
+	 * 
+	 * @param other The other line we should intersect with
+	 * @param limit True if the collision is limited to the extent of the lines
+	 * @return The intersection point or null if the lines don't intersect
+	 */
+	public Vector2f intersect(Line other, boolean limit) {
 		float dx1 = end.getX() - start.getX();
 		float dx2 = other.end.getX() - other.start.getX();
 		float dy1 = end.getY() - start.getY();
@@ -276,6 +287,10 @@ public strictfp class Line extends Shape {
 		ua /= denom;
 		float ub = (dx1 * (start.getY() - other.start.getY())) - (dy1 * (start.getX() - other.start.getX()));
 		ub /= denom;
+		
+		if ((limit) && ((ua < 0) || (ua > 1) || (ub < 0) || (ub > 1))) {
+			return null;			
+		}
 		
 		float u = ua;
 		

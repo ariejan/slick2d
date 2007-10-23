@@ -286,6 +286,30 @@ public abstract class Shape implements Serializable {
     }
     
     /**
+     * Check if the given point is part of the path that
+     * forms this shape
+     * 
+     * @param x The x position of the point to check
+     * @param y The y position of the point to check
+     * @return True if the point is includes in the path of the polygon
+     */
+    public boolean includes(float x, float y) {
+    	if (points.length == 0) {
+    		return false;
+    	}
+    	
+    	checkPoints();
+    	
+    	for (int i=0;i<points.length;i+=2) {
+    		if ((points[i] == x) && (points[i+1] == y)) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }
+    
+    /**
      * Check if this polygon contains the given point
      * 
      * @param x The x position of the point to check
@@ -293,7 +317,11 @@ public abstract class Shape implements Serializable {
      * @return True if the point is contained in the polygon
      */
     public boolean contains(float x, float y) {
-        checkPoints();
+    	if (points.length == 0) {
+    		return false;
+    	}
+    	
+    	checkPoints();
         boolean result = false;
         float xnew,ynew;
         float xold,yold;

@@ -123,7 +123,7 @@ public class Ellipse extends Shape {
         maxY = Float.MIN_VALUE;
 
         float start = 0;
-        float end = 360;
+        float end = 359;
         
         float cx = x + radius1;
         float cy = y + radius2;
