@@ -94,8 +94,14 @@ public class GeomUtil {
 			
 			return (Shape[]) shapes.toArray(new Shape[0]);
 		} else {
-			Shape shape = combineSingle(target, other, false, 0);
-			return new Shape[] {shape};
+			for (int i=0;i<target.getPointCount();i++) {
+				if (!other.contains(target.getPoint(i)[0], target.getPoint(i)[1])) {
+					Shape shape = combineSingle(target, other, false, i);
+					return new Shape[] {shape};
+				}
+			}
+			
+			return new Shape[] {other};
 		}
 	}
 	
@@ -168,11 +174,11 @@ public class GeomUtil {
 						}
 					} else {
 						if (current == target) {
-							point = hit.p1;
+							point = hit.p2;
 							dir = -1;
 						} else {
 							point = hit.p2;
-							dir = 1;
+							dir = -1;
 						}
 					}
 					
@@ -192,9 +198,9 @@ public class GeomUtil {
 					} else {
 						if (current == missing) {
 							point = hit.p1;
-							dir = -1;
+							dir = 1;
 						} else {
-							point = hit.p2;
+							point = hit.p1;
 							dir = 1;
 						}
 					}
@@ -205,7 +211,18 @@ public class GeomUtil {
 					other = temp;
 				} else {
 					// give up
-					break;
+					if (subtract) {
+						break;
+					} else {
+						point = hit.p1;
+						Shape temp = current;
+						current = other;
+						other = temp;
+						
+						point = rationalPoint(current, point+dir);
+						px = current.getPoint(point)[0];
+						py = current.getPoint(point)[1];
+					}
 				}
 			} else {
 				// otherwise just move to the next point in the current shape

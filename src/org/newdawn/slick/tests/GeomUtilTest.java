@@ -53,6 +53,8 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 	private Shape rect;
 	/** The star cutting tool */
 	private Polygon star;
+	/** True if we're in union mode */
+	private boolean union;
 	
 	/**
 	 * Create a simple test
@@ -88,15 +90,17 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 		
 		this.cut = circle;
 		cut.setLocation(203,78);
-		result = util.subtract(source, cut);
+		xp = (int) cut.getCenterX();
+		yp = (int) cut.getCenterY();
+		makeBoolean();
 	}
 	
 	/**
 	 * @see BasicGame#init(GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
-		init();
 		util.setListener(this);
+		init();
 		container.setVSync(true);
 	}
 
@@ -108,28 +112,52 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
 			dynamic = !dynamic;
 		}
+		if (container.getInput().isKeyPressed(Input.KEY_ENTER)) {
+			union = !union;
+			makeBoolean();
+		}
 		if (container.getInput().isKeyPressed(Input.KEY_1)) {
 			cut = circle;
+			circle.setCenterX(xp);
+			circle.setCenterY(yp);
+			makeBoolean();
 		}
 		if (container.getInput().isKeyPressed(Input.KEY_2)) {
 			cut = rect;
+			rect.setCenterX(xp);
+			rect.setCenterY(yp);
+			makeBoolean();
 		}
 		if (container.getInput().isKeyPressed(Input.KEY_3)) {
 			cut = star;
+			star.setCenterX(xp);
+			star.setCenterY(yp);
+			makeBoolean();
 		}
 		
 		if (dynamic) {
-			marks.clear();
-			points.clear();
-			exclude.clear();
 			xp = container.getInput().getMouseX();
 			yp = container.getInput().getMouseY();
-			cut.setCenterX(xp);
-			cut.setCenterY(yp);
-			result = util.subtract(source, cut);
+			makeBoolean();
 		}
 	}
 
+	/**
+	 * Make the boolean operation
+	 */
+	private void makeBoolean() {
+		marks.clear();
+		points.clear();
+		exclude.clear();
+		cut.setCenterX(xp);
+		cut.setCenterY(yp);
+		if (union) {
+			result = util.union(source, cut);
+		} else {
+			result = util.subtract(source, cut);
+		}
+	}
+	
 	/**
 	 * @see org.newdawn.slick.Game#render(GameContainer, Graphics)
 	 */
@@ -138,6 +166,8 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 		g.drawString("Space - toggle movement of cutting shape",530,10);
 		g.drawString("1,2,3 - select cutting shape",530,30);
 		g.drawString("Mouse wheel - rotate shape",530,50);
+		g.drawString("Enter - toggle union/subtract",530,70);
+		g.drawString("MODE: "+(union ? "Union" : "Cut"),530,200);
 		
 		g.setColor(Color.green);
 		g.draw(source);
@@ -180,9 +210,6 @@ public class GeomUtilTest extends BasicGame implements GeomUtilListener {
 	 * @param argv The arguments passed to the test
 	 */
 	public static void main(String[] argv) {
-		GeomUtilTest test = new GeomUtilTest();
-		test.init();
-		
 		try {
 			AppGameContainer container = new AppGameContainer(new GeomUtilTest());
 			container.setDisplayMode(800,600,false);
