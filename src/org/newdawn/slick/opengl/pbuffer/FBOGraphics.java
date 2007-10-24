@@ -182,7 +182,8 @@ public class FBOGraphics extends Graphics {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         
         GL11.glViewport(0,0,screenWidth,screenHeight);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);               
+		GL11.glLoadIdentity();
 		
 		enterOrtho();
 	}
