@@ -55,8 +55,10 @@ public class GeomUtil {
 		int buttCount = 0;
 		for (int i=0;i<target.getPointCount();i++) {
 			if (other.contains(target.getPoint(i)[0], target.getPoint(i)[1])) {
-				touches = true;
-				break;
+				if (!other.includes(target.getPoint(i)[0], target.getPoint(i)[1])) {
+					touches = true;
+					break;
+				}
 			}
 			if (other.includes(target.getPoint(i)[0], target.getPoint(i)[1])) {
 				buttCount++;
@@ -64,8 +66,10 @@ public class GeomUtil {
 		}
 		for (int i=0;i<other.getPointCount();i++) {
 			if (target.contains(other.getPoint(i)[0], other.getPoint(i)[1])) {
-				touches = true;
-				break;
+				if (!target.includes(other.getPoint(i)[0], other.getPoint(i)[1])) {
+					touches = true;
+					break;
+				}
 			}
 		}
 		
@@ -121,8 +125,10 @@ public class GeomUtil {
 		} else {
 			for (int i=0;i<target.getPointCount();i++) {
 				if (!other.contains(target.getPoint(i)[0], target.getPoint(i)[1])) {
-					Shape shape = combineSingle(target, other, false, i);
-					return new Shape[] {shape};
+					if (!other.includes(target.getPoint(i)[0], target.getPoint(i)[1])) {
+						Shape shape = combineSingle(target, other, false, i);
+						return new Shape[] {shape};
+					}
 				}
 			}
 			

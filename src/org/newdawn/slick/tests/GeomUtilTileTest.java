@@ -9,6 +9,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.GeomUtil;
 import org.newdawn.slick.geom.GeomUtilListener;
 import org.newdawn.slick.geom.Polygon;
@@ -53,26 +54,83 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 	 * Perform the cut
 	 */
 	public void init() {
-		int[][] map = new int[][] { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		int[][] map = new int[][] { 
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+//				
+				{ 0, 0, 0, 0, 0, 0, 0, 3, 0, 0 },
 				{ 0, 1, 1, 1, 0, 0, 1, 1, 1, 0 },
-				{ 0, 1, 1, 0, 0, 0, 0, 1, 0, 0 },
-				{ 0, 1, 0, 0, 0, 0, 0, 1, 1, 0 },
+				{ 0, 1, 1, 0, 0, 0, 5, 1, 6, 0 },
+				{ 0, 1, 2, 0, 0, 0, 4, 1, 1, 0 },
 				{ 0, 1, 1, 0, 0, 0, 1, 1, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 },
+				{ 0, 0, 0, 0, 3, 0, 1, 1, 0, 0 },
 				{ 0, 0, 0, 1, 1, 0, 0, 0, 1, 0 },
 				{ 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, };
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
+				};
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 10; y++) {
 				if (map[y][x] != 0) {
+					switch (map[y][x]) {
+					case 1:
+						Polygon p2 = new Polygon();
+						p2.addPoint(x * 32, y * 32);
+						p2.addPoint((x * 32) + 32, y * 32);
+						p2.addPoint((x * 32) + 32, (y * 32) + 32);
+						p2.addPoint(x * 32, (y * 32) + 32);
+						original.add(p2);
+						//original.add(new Rectangle(x*32,y*32,33,33));
+						break;
+					case 2:
+						Polygon poly = new Polygon();
+						poly.addPoint(x * 32, y * 32);
+						poly.addPoint((x * 32) + 32, y * 32);
+						poly.addPoint(x * 32, (y * 32) + 32);
+						original.add(poly);
+						break;
+					case 3:
+						Circle ellipse = new Circle((x*32)+16,(y*32)+32,16,16);
+						original.add(ellipse);
+						break;
+					case 4:
+						Polygon p = new Polygon();
+						p.addPoint((x * 32) + 32, (y * 32));
+						p.addPoint((x * 32) + 32, (y * 32)+32);
+						p.addPoint(x * 32, (y * 32) + 32);
+						original.add(p);
+						break;
+					case 5:
+						Polygon p3 = new Polygon();
+						p3.addPoint((x * 32), (y * 32));
+						p3.addPoint((x * 32) + 32, (y * 32));
+						p3.addPoint((x * 32) + 32, (y * 32)+32);
+						original.add(p3);
+						break;
+					case 6:
+						Polygon p4 = new Polygon();
+						p4.addPoint((x * 32), (y * 32));
+						p4.addPoint((x * 32) + 32, (y * 32));
+						p4.addPoint((x * 32), (y * 32)+32);
+						original.add(p4);
+						break;
+					}
 //					Polygon poly = new Polygon();
 //					poly.addPoint(x * 64, y * 32);
 //					poly.addPoint((x * 64) + 64, y * 32);
 //					poly.addPoint((x * 64) + 64, (y * 32) + 32);
 //					poly.addPoint(x * 64, (y * 32) + 32);
 					//original.add(poly);
-					original.add(new Rectangle(x*32,y*32,33,33));
 				}
 			}
 		}
