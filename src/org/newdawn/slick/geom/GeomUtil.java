@@ -142,11 +142,21 @@ public class GeomUtil {
 				listener.pointUsed(px,py);
 			}
 			
+//			if (other.includes(px, py)) {
+//				int last = rationalPoint(current, point-dir);
+//				Line line = getLine(current, last, point);
+//				float dx = line.getDX() / line.length();
+//				float dy = line.getDY() / line.length();
+//				px += dx * 0.01f;
+//				py += dy * 0.01f;
+//			}
+			
 			// if the line between the current point and the next one intersect the
 			// other shape work out where on the other shape and start traversing it's 
 			// path instead
 			Line line = getLine(current, px, py, rationalPoint(current, point+dir));
 			HitResult hit = intersect(other, line);
+			
 			if (hit != null) {
 				Line hitLine = hit.line;
 				Vector2f pt = hit.pt;
