@@ -34,6 +34,9 @@ public class MorphShape extends Shape {
 	 * @param shape The new shape that forms part of the morphing shape
 	 */
 	public void addShape(Shape shape) {
+		if (shape.points.length != points.length) {
+			throw new RuntimeException("Attempt to morph between two shapes with different vertex counts");
+		}
 		shapes.add(shape);
 	}
 	
@@ -41,7 +44,7 @@ public class MorphShape extends Shape {
 	 * Set the "time" index for this morph. This is given in terms of shapes, so
 	 * 0.5f would give you the position half way between the first and second shapes.
 	 * 
-	 * @param time The time index to represent something on this shape
+	 * @param time The time index to represent on this shape
 	 */
 	public void setMorphTime(float time) {
 		int p = (int) time;

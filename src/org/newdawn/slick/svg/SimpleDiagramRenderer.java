@@ -35,37 +35,45 @@ public class SimpleDiagramRenderer {
 		if (list == -1) {
 			list = GL11.glGenLists(1);
 			GL11.glNewList(list, GL11.GL_COMPILE);
-			
-			for (int i=0;i<diagram.getFigureCount();i++) {
-				Figure figure = diagram.getFigure(i);
-	
-				if (figure.getData().isColor(NonGeometricData.FILL)) {
-					g.setColor(figure.getData().getAsColor(NonGeometricData.FILL));
-					g.fill(diagram.getFigure(i).getShape());
-					g.setAntiAlias(true);
-					g.draw(diagram.getFigure(i).getShape());
-					g.setAntiAlias(false);
-				}
-				if (figure.getData().isColor(NonGeometricData.STROKE)) {
-					g.setColor(figure.getData().getAsColor(NonGeometricData.STROKE));
-					g.setLineWidth(figure.getData().getAsFloat(NonGeometricData.STROKE_WIDTH));
-					g.setAntiAlias(true);
-					g.draw(diagram.getFigure(i).getShape());
-					g.setAntiAlias(false);
-					g.resetLineWidth();
-				}
-		
-				// DEBUG VERSION
-	//			g.setColor(Color.black);
-	//			g.draw(diagram.getFigure(i).getShape());
-	//			g.setColor(Color.red);
-	//			g.fill(diagram.getFigure(i).getShape());
-			}
-			
+				render(g, diagram);
 			GL11.glEndList();
 		}
 		
 		GL11.glCallList(list);
 		Texture.bindNone();
+	}
+	
+	/**
+	 * Utility method to render a digram in immediate mode
+	 * 
+	 * @param g The graphics context to render to
+	 * @param diagram The diagram to render
+	 */
+	public static void render(Graphics g, Diagram diagram) {
+		for (int i=0;i<diagram.getFigureCount();i++) {
+			Figure figure = diagram.getFigure(i);
+
+			if (figure.getData().isColor(NonGeometricData.FILL)) {
+				g.setColor(figure.getData().getAsColor(NonGeometricData.FILL));
+				g.fill(diagram.getFigure(i).getShape());
+				g.setAntiAlias(true);
+				g.draw(diagram.getFigure(i).getShape());
+				g.setAntiAlias(false);
+			}
+			if (figure.getData().isColor(NonGeometricData.STROKE)) {
+				g.setColor(figure.getData().getAsColor(NonGeometricData.STROKE));
+				g.setLineWidth(figure.getData().getAsFloat(NonGeometricData.STROKE_WIDTH));
+				g.setAntiAlias(true);
+				g.draw(diagram.getFigure(i).getShape());
+				g.setAntiAlias(false);
+				g.resetLineWidth();
+			}
+	
+			// DEBUG VERSION
+//			g.setColor(Color.black);
+//			g.draw(diagram.getFigure(i).getShape());
+//			g.setColor(Color.red);
+//			g.fill(diagram.getFigure(i).getShape());
+		}
 	}
 }
