@@ -12,6 +12,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.GeomUtil;
 import org.newdawn.slick.geom.GeomUtilListener;
 import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -65,13 +66,13 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 10; y++) {
 				if (map[y][x] != 0) {
-					Polygon poly = new Polygon();
-					poly.addPoint(x * 32, y * 32);
-					poly.addPoint((x * 32) + 32, y * 32);
-					poly.addPoint((x * 32) + 32, (y * 32) + 32);
-					poly.addPoint(x * 32, (y * 32) + 32);
-					original.add(poly);
-					// original.add(new Rectangle(x*32,y*32,33,33));
+//					Polygon poly = new Polygon();
+//					poly.addPoint(x * 64, y * 32);
+//					poly.addPoint((x * 64) + 64, y * 32);
+//					poly.addPoint((x * 64) + 64, (y * 32) + 32);
+//					poly.addPoint(x * 64, (y * 32) + 32);
+					//original.add(poly);
+					original.add(new Rectangle(x*32,y*32,33,33));
 				}
 			}
 		}

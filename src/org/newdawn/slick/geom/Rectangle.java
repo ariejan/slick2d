@@ -26,6 +26,7 @@ public class Rectangle extends Shape {
 		this.height = height;
 		maxX = x+width;
 		maxY = y+height;
+		checkPoints();
 	}
 	
 	/**
