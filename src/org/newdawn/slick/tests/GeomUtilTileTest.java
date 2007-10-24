@@ -13,7 +13,6 @@ import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.GeomUtil;
 import org.newdawn.slick.geom.GeomUtilListener;
 import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 
@@ -198,7 +197,7 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 	public void init(GameContainer container) throws SlickException {
 		util.setListener(this);
 		init();
-		container.setVSync(true);
+		//container.setVSync(true);
 	}
 
 	/**
@@ -206,12 +205,6 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 	 */
 	public void update(GameContainer container, int delta)
 			throws SlickException {
-		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
-			intersections.clear();
-			used.clear();
-			combined = combineImpl(combined);
-			System.out.println(intersections.size());
-		}
 	}
 
 	/**
@@ -223,16 +216,6 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 		for (int i = 0; i < original.size(); i++) {
 			Shape shape = (Shape) original.get(i);
 			g.draw(shape);
-		}
-		g.setColor(Color.white);
-		for (int i = 0; i < intersections.size(); i++) {
-			Vector2f pt = (Vector2f) intersections.get(i);
-			g.drawOval(pt.x - 3, pt.y - 3, 7, 7);
-		}
-		g.setColor(Color.yellow);
-		for (int i = 0; i < used.size(); i++) {
-			Vector2f pt = (Vector2f) used.get(i);
-			g.fillOval(pt.x - 1, pt.y - 1, 3, 3);
 		}
 
 		g.translate(0, 320);
