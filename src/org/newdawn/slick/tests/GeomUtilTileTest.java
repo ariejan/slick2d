@@ -27,20 +27,20 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 	private Shape cut;
 	/** The resulting shape */
 	private Shape[] result;
-	
+
 	/** The util under test */
 	private GeomUtil util = new GeomUtil();
-	
+
 	/** The original list of shapes */
 	private ArrayList original = new ArrayList();
 	/** The original list of shapes */
 	private ArrayList combined = new ArrayList();
-	
+
 	/** The list of intersection points */
 	private ArrayList intersections = new ArrayList();
 	/** The list of used points */
 	private ArrayList used = new ArrayList();
-	
+
 	/**
 	 * Create a simple test
 	 */
@@ -52,58 +52,75 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 	 * Perform the cut
 	 */
 	public void init() {
-		int[][] map = new int[][] {
-				{0,0,0,0,0,0,0,0,0,0},
-				{0,1,1,0,0,0,0,0,0,0},
-				{0,1,0,0,0,0,0,0,0,0},
-				{0,1,1,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0,0},
-				{0,0,0,0,0,0,0,0,0,0},
-		};
-		for (int x=0;x<10;x++) {
-			for (int y=0;y<10;y++) {
+		int[][] map = new int[][] { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 1, 1, 1, 0, 0, 1, 1, 1, 0 },
+				{ 0, 1, 1, 0, 0, 0, 0, 1, 0, 0 },
+				{ 0, 1, 0, 0, 0, 0, 0, 1, 1, 0 },
+				{ 0, 1, 1, 0, 0, 0, 1, 1, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 1, 1, 0, 0 },
+				{ 0, 0, 0, 1, 1, 0, 0, 0, 1, 0 },
+				{ 0, 0, 0, 1, 1, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, };
+		for (int x = 0; x < 10; x++) {
+			for (int y = 0; y < 10; y++) {
 				if (map[y][x] != 0) {
 					Polygon poly = new Polygon();
-					poly.addPoint(x*32, y*32);
-					poly.addPoint((x*32)+32, y*32);
-					poly.addPoint((x*32)+32, (y*32)+32);
-					poly.addPoint(x*32, (y*32)+32);
+					poly.addPoint(x * 32, y * 32);
+					poly.addPoint((x * 32) + 32, y * 32);
+					poly.addPoint((x * 32) + 32, (y * 32) + 32);
+					poly.addPoint(x * 32, (y * 32) + 32);
 					original.add(poly);
-					//original.add(new Rectangle(x*32,y*32,33,33));
+					// original.add(new Rectangle(x*32,y*32,33,33));
 				}
 			}
 		}
-		
-		combined = combineImpl(original);
+
+		combined = combine(original);
 	}
-	
+
+	/**
+	 * Combine a set of shapes together
+	 * 
+	 * @param shapes
+	 *            The shapes to be combined
+	 * @return The list of combined shapes
+	 */
 	private ArrayList combine(ArrayList shapes) {
 		ArrayList last = shapes;
 		ArrayList current = shapes;
 		boolean first = true;
-		
+
 		while ((current.size() != last.size()) || (first)) {
 			first = false;
 			last = current;
 			current = combineImpl(current);
 		}
-		
-		return current;
+
+		ArrayList pruned = new ArrayList();
+		for (int i = 0; i < current.size(); i++) {
+			pruned.add(((Shape) current.get(i)).prune());
+		}
+		return pruned;
 	}
-	
+
+	/**
+	 * Attempt to find a simple combination that can be performed
+	 * 
+	 * @param shapes
+	 *            The shapes to be combined
+	 * @return The new list of shapes - this will be the same length as the
+	 *         input if there are no new combinations
+	 */
 	private ArrayList combineImpl(ArrayList shapes) {
 		ArrayList result = new ArrayList(shapes);
-		
-		for (int i=0;i<shapes.size();i++) {
+
+		for (int i = 0; i < shapes.size(); i++) {
 			Shape first = (Shape) shapes.get(i);
-			for (int j=i+1;j<shapes.size();j++) {
+			for (int j = i + 1; j < shapes.size(); j++) {
 				Shape second = (Shape) shapes.get(j);
-				
-				Shape[] joined = util.union(first,second);
+
+				Shape[] joined = util.union(first, second);
 				if (joined.length == 1) {
 					result.remove(first);
 					result.remove(second);
@@ -112,10 +129,10 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * @see BasicGame#init(GameContainer)
 	 */
@@ -137,47 +154,55 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 			System.out.println(intersections.size());
 		}
 	}
-	
+
 	/**
 	 * @see org.newdawn.slick.Game#render(GameContainer, Graphics)
 	 */
 	public void render(GameContainer container, Graphics g)
 			throws SlickException {
 		g.setColor(Color.green);
-		for (int i=0;i<original.size();i++) {
+		for (int i = 0; i < original.size(); i++) {
 			Shape shape = (Shape) original.get(i);
 			g.draw(shape);
 		}
 		g.setColor(Color.white);
-		for (int i=0;i<intersections.size();i++) {
+		for (int i = 0; i < intersections.size(); i++) {
 			Vector2f pt = (Vector2f) intersections.get(i);
-			g.drawOval(pt.x-3, pt.y-3, 7,7);
+			g.drawOval(pt.x - 3, pt.y - 3, 7, 7);
 		}
 		g.setColor(Color.yellow);
-		for (int i=0;i<used.size();i++) {
+		for (int i = 0; i < used.size(); i++) {
 			Vector2f pt = (Vector2f) used.get(i);
-			g.fillOval(pt.x-1, pt.y-1, 3,3);
+			g.fillOval(pt.x - 1, pt.y - 1, 3, 3);
 		}
 
-		g.translate(0,320);
+		g.translate(0, 320);
 		g.setColor(Color.white);
-		
-		for (int i=0;i<combined.size();i++) {
+
+		for (int i = 0; i < combined.size(); i++) {
+			g.setColor(Color.white);
 			Shape shape = (Shape) combined.get(i);
 			g.draw(shape);
+			for (int j = 0; j < shape.getPointCount(); j++) {
+				g.setColor(Color.yellow);
+				float[] pt = shape.getPoint(j);
+				g.fillOval(pt[0] - 1, pt[1] - 1, 3, 3);
+			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Entry point to our test
 	 * 
-	 * @param argv The arguments passed to the test
+	 * @param argv
+	 *            The arguments passed to the test
 	 */
 	public static void main(String[] argv) {
 		try {
-			AppGameContainer container = new AppGameContainer(new GeomUtilTileTest());
-			container.setDisplayMode(800,600,false);
+			AppGameContainer container = new AppGameContainer(
+					new GeomUtilTileTest());
+			container.setDisplayMode(800, 600, false);
 			container.start();
 		} catch (SlickException e) {
 			e.printStackTrace();
@@ -188,10 +213,10 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 	}
 
 	public void pointIntersected(float x, float y) {
-		intersections.add(new Vector2f(x,y));
+		intersections.add(new Vector2f(x, y));
 	}
 
 	public void pointUsed(float x, float y) {
-		used.add(new Vector2f(x,y));
+		used.add(new Vector2f(x, y));
 	}
 }

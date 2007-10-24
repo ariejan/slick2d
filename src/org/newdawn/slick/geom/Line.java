@@ -200,6 +200,19 @@ public strictfp class Line extends Shape {
 		return (float) Math.sqrt(distanceSquared(point));
 	}
 	
+	/**
+	 * Check if the given point is on the line
+	 * 
+	 * @param point The point to check
+	 * @return True if the point is on this line
+	 */
+	public boolean on(Vector2f point) {
+		Vector2f result = new Vector2f();
+		getClosestPoint(point, result);
+		
+		return result.equals(point);
+	}
+	
 	/** 
 	 * Get the shortest distance squared from a point to this line
 	 * 

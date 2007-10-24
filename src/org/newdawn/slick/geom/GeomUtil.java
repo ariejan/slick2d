@@ -49,6 +49,31 @@ public class GeomUtil {
 			return new Shape[] {target, other};
 		}
 		
+		// handle the case where intersects is true but really we're talking
+		// about edge points
+		boolean touches = false;
+		int buttCount = 0;
+		for (int i=0;i<target.getPointCount();i++) {
+			if (other.contains(target.getPoint(i)[0], target.getPoint(i)[1])) {
+				touches = true;
+				break;
+			}
+			if (other.includes(target.getPoint(i)[0], target.getPoint(i)[1])) {
+				buttCount++;
+			} 
+		}
+		for (int i=0;i<other.getPointCount();i++) {
+			if (target.contains(other.getPoint(i)[0], other.getPoint(i)[1])) {
+				touches = true;
+				break;
+			}
+		}
+		
+		if ((!touches) && (buttCount < 2)) {
+			return new Shape[] {target, other};
+		}
+		
+		// so they are definitely touching, consider the union
 		return combine(target, other, false);
 	}
 	
@@ -141,16 +166,7 @@ public class GeomUtil {
 			if (listener != null) {
 				listener.pointUsed(px,py);
 			}
-			
-//			if (other.includes(px, py)) {
-//				int last = rationalPoint(current, point-dir);
-//				Line line = getLine(current, last, point);
-//				float dx = line.getDX() / line.length();
-//				float dy = line.getDY() / line.length();
-//				px += dx * 0.01f;
-//				py += dy * 0.01f;
-//			}
-			
+
 			// if the line between the current point and the next one intersect the
 			// other shape work out where on the other shape and start traversing it's 
 			// path instead
@@ -164,6 +180,18 @@ public class GeomUtil {
 				py = pt.y;
 				if (listener != null) {
 					listener.pointIntersected(px,py);
+				}
+				
+				if (other.includes(px, py)) {
+					point = other.indexOf(pt.x,pt.y);
+					dir = 1;
+					px = pt.x;
+					py = pt.y;
+					
+					Shape temp = current;
+					current = other;
+					other = temp;
+					continue;
 				}
 				
 				float dx = hitLine.getDX() / hitLine.length();

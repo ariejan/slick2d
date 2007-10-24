@@ -311,6 +311,23 @@ public abstract class Shape implements Serializable {
     }
     
     /**
+     * Get the index of a given point
+     * 
+     * @param x The x coordinate of the point
+     * @param y The y coordinate of the point
+     * @return The index of the point or -1 if the point is not part of this shape path
+     */
+    public int indexOf(float x, float y) {
+    	for (int i=0;i<points.length;i+=2) {
+    		if ((points[i] == x) && (points[i+1] == y)) {
+    			return i / 2;
+    		}
+    	}
+    	
+    	return -1;
+    }
+    
+    /**
      * Check if this polygon contains the given point
      * 
      * @param x The x position of the point to check
@@ -561,6 +578,38 @@ public abstract class Shape implements Serializable {
      */
     public boolean closed() {
     	return true;
+    }
+    
+    /**
+     * Prune any required points in this shape
+     * 
+     * @return The new shape with points pruned
+     */
+    public Shape prune() {
+    	Polygon result = new Polygon();
+    	
+    	for (int i=0;i<getPointCount();i++) {
+    		int next = i+1 >= getPointCount() ? 0 : i+1;
+    		int prev = i-1 < 0 ? getPointCount() - 1 : i-1;
+    		
+    		float dx1 = getPoint(i)[0] - getPoint(prev)[0];
+    		float dy1 = getPoint(i)[1] - getPoint(prev)[1];
+    		float dx2 = getPoint(next)[0] - getPoint(i)[0];
+    		float dy2 = getPoint(next)[1] - getPoint(i)[1];
+    		
+    		float len1 = (float) Math.sqrt((dx1*dx1) + (dy1*dy1));
+    		float len2 = (float) Math.sqrt((dx2*dx2) + (dy2*dy2));
+    		dx1 /= len1;
+    		dy1 /= len1;
+    		dx2 /= len2;
+    		dy2 /= len2;
+    		
+    		if ((dx1 != dx2) || (dy1 != dy2)) {
+    			result.addPoint(getPoint(i)[0],getPoint(i)[1]);
+    		}
+    	}
+    	
+    	return result;
     }
     
     /**
