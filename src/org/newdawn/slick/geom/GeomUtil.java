@@ -12,6 +12,8 @@ public class GeomUtil {
 	public float EPSILON = 0.0001f;
 	/** The tolerance for determining direction change */
 	public float EDGE_SCALE = 1f;
+	/** The maximum number of points returned by an operation - prevents full lockups */
+	public int MAX_POINTS = 10000;
 	/** The listener to notify of operations */
 	public GeomUtilListener listener;
 	
@@ -163,7 +165,7 @@ public class GeomUtil {
 		while (!poly.includes(px, py) || (first) || (current != target)) {
 			first = false;
 			loop++;
-			if (loop > 80) {
+			if (loop > MAX_POINTS) {
 				break;
 			}
 			
