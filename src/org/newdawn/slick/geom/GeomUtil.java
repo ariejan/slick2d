@@ -28,6 +28,23 @@ public class GeomUtil {
 	public Shape[] subtract(Shape target, Shape missing) {	
 		target = target.transform(new Transform());
 		missing = missing.transform(new Transform());
+
+		if (!target.intersects(missing)) {
+			return new Shape[] {target};
+		}
+		
+		boolean foundSignificant = false;
+		for (int i=0;i<missing.getPointCount();i++) {
+			if (target.contains(missing.getPoint(i)[0], missing.getPoint(i)[1])) {
+				if (!target.includes(missing.getPoint(i)[0], missing.getPoint(i)[1])) {
+					foundSignificant = true;
+				}
+			}
+		}
+		
+		if (!foundSignificant) {
+			return new Shape[] {target};
+		}
 		
 		return combine(target, missing, true);
 	}
