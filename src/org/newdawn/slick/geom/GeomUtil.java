@@ -25,7 +25,10 @@ public class GeomUtil {
 	 * @param missing The shape to subtract 
 	 * @return The newly created shapes
 	 */
-	public Shape[] subtract(Shape target, Shape missing) {		
+	public Shape[] subtract(Shape target, Shape missing) {	
+		target = target.transform(new Transform());
+		missing = missing.transform(new Transform());
+		
 		return combine(target, missing, true);
 	}
 
@@ -47,6 +50,9 @@ public class GeomUtil {
 	 * @return The newly created shapes 
 	 */
 	public Shape[] union(Shape target, Shape other) {
+		target = target.transform(new Transform());
+		other = other.transform(new Transform());
+		
 		if (!target.intersects(other)) {
 			return new Shape[] {target, other};
 		}
