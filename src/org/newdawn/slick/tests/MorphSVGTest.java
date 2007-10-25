@@ -50,8 +50,7 @@ public class MorphSVGTest extends BasicGame {
 	 */
 	public void update(GameContainer container, int delta)
 			throws SlickException {
-		time += delta * 0.003f;
-		morph.setMorphTime(time);
+		morph.updateMorphTime(delta * 0.003f);
 		
 		x += delta * 0.2f;
 		if (x > 550) {

@@ -48,6 +48,10 @@ public class MorphShape extends Shape {
 		} else {
 			shapes.add(shape);
 		}
+		
+		if (shapes.size() == 2) {
+			next = (Shape) shapes.get(1);
+		}
 	}
 	
 	/**
