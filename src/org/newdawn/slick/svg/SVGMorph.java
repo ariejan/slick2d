@@ -52,6 +52,41 @@ public class SVGMorph extends Diagram {
 	}
 
 	/**
+	 * Set the current diagram we should morph from. This only really works with 
+	 * updateMorphTime() but can be used for smooth transitions between 
+	 * morphs.
+	 * 
+	 * @param diagram The diagram to use as the base of the morph
+	 */
+	public void setExternalDiagram(Diagram diagram) {
+		for (int i=0;i<figures.size();i++) {
+			Figure figure = (Figure) figures.get(i);
+			
+			for (int j=0;j<diagram.getFigureCount();j++) {
+				Figure newBase = diagram.getFigure(j);
+				if (newBase.getData().getMetaData().equals(figure.getData().getMetaData())) {
+					MorphShape shape = (MorphShape) figure.getShape();
+					shape.setExternalFrame(newBase.getShape());
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Update the morph time index by the amount specified
+	 * 
+	 * @param delta The amount to update the morph by
+	 */
+	public void updateMorphTime(float delta) {
+		for (int i=0;i<figures.size();i++) {
+			Figure figure = (Figure) figures.get(i);
+			MorphShape shape = (MorphShape) figure.getShape();
+			shape.updateMorphTime(delta);
+		}
+	}
+	
+	/**
 	 * Set the "time" index for this morph. This is given in terms of diagrams, so
 	 * 0.5f would give you the position half way between the first and second diagrams.
 	 * 
