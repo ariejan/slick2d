@@ -34,10 +34,18 @@ public class GeomUtil {
 		}
 		
 		boolean foundSignificant = false;
-		for (int i=0;i<missing.getPointCount();i++) {
-			if (target.contains(missing.getPoint(i)[0], missing.getPoint(i)[1])) {
-				if (!target.includes(missing.getPoint(i)[0], missing.getPoint(i)[1])) {
-					foundSignificant = true;
+		for (int i=0;i<target.getPointCount();i++) {
+			if (missing.contains(target.getPoint(i)[0], target.getPoint(i)[1])) {
+				foundSignificant = true;
+			}
+		}
+		
+		if (!foundSignificant) {
+			for (int i=0;i<missing.getPointCount();i++) {
+				if (target.contains(missing.getPoint(i)[0], missing.getPoint(i)[1])) {
+					if (!target.includes(missing.getPoint(i)[0], missing.getPoint(i)[1])) {
+						foundSignificant = true;
+					}
 				}
 			}
 		}
