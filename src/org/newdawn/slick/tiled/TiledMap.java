@@ -481,9 +481,10 @@ public class TiledMap {
 			
 			Image image = new Image(tilesLocation+"/"+ref,false,Image.FILTER_NEAREST,trans);
 			tiles = new SpriteSheet(image , tileWidth, tileHeight, spacing);
-			tilesAcross = tiles.getWidth() / (tileWidth + spacing);
-			tilesDown = tiles.getHeight() / (tileHeight + spacing);
+			tilesAcross = tiles.getHorizontalCount();
+			tilesDown = tiles.getVerticalCount();
 			
+			System.out.println(tileWidth+" "+tileHeight+" "+tilesAcross+" "+tilesDown);
 			if (tilesAcross <= 0) {
 				tilesAcross = 1;
 			}

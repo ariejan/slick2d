@@ -113,9 +113,12 @@ public class SpriteSheet extends Image {
 			return;
 		}
 		
-		subImages = new Image[(getWidth()/(tw+spacing))][(getHeight()/(th+spacing))];
-		for (int x=0;x<getWidth()/(tw+spacing);x++) {
-			for (int y=0;y<getHeight()/(th+spacing);y++) {
+		int tilesAcross = ((getWidth() - tw) / (tw + spacing)) + 1;
+		int tilesDown = ((getHeight() - th) / (th + spacing)) + 1;
+		
+		subImages = new Image[tilesAcross][tilesDown];
+		for (int x=0;x<tilesAcross;x++) {
+			for (int y=0;y<tilesDown;y++) {
 				subImages[x][y] = getSprite(x,y);
 			}
 		}
