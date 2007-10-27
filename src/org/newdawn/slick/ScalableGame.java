@@ -59,14 +59,28 @@ public class ScalableGame implements Game {
 		targetWidth = container.getWidth();
 		targetHeight = container.getHeight();
 		if (maintainAspect) {
-			if (container.getWidth() > container.getHeight()) {
-				float ratio = normalHeight / normalWidth;
-				targetHeight = (int) (targetWidth * ratio);
+			boolean normalIsWide = (normalWidth / normalHeight > 1.6 ? true : false);
+			boolean containerIsWide = ((float) targetWidth / (float) targetHeight > 1.6 ? true : false);
+			float wScale = targetWidth / normalWidth;
+			float hScale = targetHeight / normalHeight;
+
+			if (normalIsWide & containerIsWide) {
+				float scale = (wScale < hScale ? wScale : hScale);
+				targetWidth = (int) (normalWidth * scale);
+				targetHeight = (int) (normalHeight * scale);
+			} else if (normalIsWide & !containerIsWide) {
+				targetWidth = (int) (normalWidth * wScale);
+				targetHeight = (int) (normalHeight * wScale);
+			} else if (!normalIsWide & containerIsWide) {
+				targetWidth = (int) (normalWidth * hScale);
+				targetHeight = (int) (normalHeight * hScale);
 			} else {
-				float ratio = normalWidth / normalHeight;
-				targetWidth = (int) (targetHeight * ratio);
+				float scale = (wScale < hScale ? wScale : hScale);
+				targetWidth = (int) (normalWidth * scale);
+				targetHeight = (int) (normalHeight * scale);
 			}
-		}
+
+		} 
 		
 		if (held instanceof InputListener) {
 			container.getInput().addListener((InputListener) held);
