@@ -484,7 +484,6 @@ public class TiledMap {
 			tilesAcross = tiles.getHorizontalCount();
 			tilesDown = tiles.getVerticalCount();
 			
-			System.out.println(tileWidth+" "+tileHeight+" "+tilesAcross+" "+tilesDown);
 			if (tilesAcross <= 0) {
 				tilesAcross = 1;
 			}
