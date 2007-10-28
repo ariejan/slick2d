@@ -727,8 +727,10 @@ public class TiledMap {
 						int sheetX = set.getTileX(data[sx+tx][sy+ty][1]);
 						int sheetY = set.getTileY(data[sx+tx][sy+ty][1]);
 						
+						int tileOffsetY = set.tileHeight - mapTileHeight;
+						
 //						set.tiles.renderInUse(x+(tx*set.tileWidth), y+(ty*set.tileHeight), sheetX, sheetY);
-						set.tiles.renderInUse(x+(tx*mapTileWidth), y+(ty*mapTileHeight), sheetX, sheetY);
+						set.tiles.renderInUse(x+(tx*mapTileWidth), y+(ty*mapTileHeight)-tileOffsetY, sheetX, sheetY);
 					}
 				}
 				
