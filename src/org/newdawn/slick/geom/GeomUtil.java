@@ -44,11 +44,11 @@ public class GeomUtil {
 			return new Shape[] {target};
 		}
 		
-		boolean found = false;
+		int found = 0;
 		for (int i=0;i<missing.getPointCount();i++) {
 			if (target.contains(missing.getPoint(i)[0], missing.getPoint(i)[1])) {
 				if (!onPath(target, missing.getPoint(i)[0], missing.getPoint(i)[1])) {
-					found = true;
+					found++;
 				}
 			}
 		}
@@ -56,12 +56,12 @@ public class GeomUtil {
 			if (missing.contains(target.getPoint(i)[0], target.getPoint(i)[1])) {
 				if (!onPath(missing, target.getPoint(i)[0], target.getPoint(i)[1])) 
 				{
-					found = true;
+					found++;
 				}
 			}
 		}
 		
-		if (!found) {
+		if (found < 2) {
 			return new Shape[] {target};
 		}
 		
