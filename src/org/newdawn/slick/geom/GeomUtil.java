@@ -47,18 +47,47 @@ public class GeomUtil {
 		boolean found = false;
 		for (int i=0;i<missing.getPointCount();i++) {
 			if (target.contains(missing.getPoint(i)[0], missing.getPoint(i)[1])) {
-				if (target.includes(missing.getPoint(i)[0], missing.getPoint(i)[1])) {
+				if (!onPath(target, missing.getPoint(i)[0], missing.getPoint(i)[1])) {
 					found = true;
 				}
 			}
 		}
-		if (found) {
+		for (int i=0;i<target.getPointCount();i++) {
+			if (missing.contains(target.getPoint(i)[0], target.getPoint(i)[1])) {
+				if (!onPath(missing, target.getPoint(i)[0], target.getPoint(i)[1])) 
+				{
+					found = true;
+				}
+			}
+		}
+		
+		if (!found) {
 			return new Shape[] {target};
 		}
 		
 		return combine(target, missing, true);
 	}
 
+	/**
+	 * Check if the given point is on the path
+	 * 
+	 * @param path The path to check
+	 * @param x The x coordinate of the point to check
+	 * @param y The y coordiante of teh point to check
+	 * @return True if the point is on the path
+	 */
+	private boolean onPath(Shape path, float x, float y) {
+		for (int i=0;i<path.getPointCount()+1;i++) {
+			int n = rationalPoint(path, i+1);
+			Line line = getLine(path, rationalPoint(path, i), n);
+			if (line.distance(new Vector2f(x,y)) < EPSILON*10) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * Set the listener to be notified of geometry based operations
 	 * 
@@ -219,6 +248,7 @@ public class GeomUtil {
 				Vector2f pt = hit.pt;
 				px = pt.x;
 				py = pt.y;
+				
 				if (listener != null) {
 					listener.pointIntersected(px,py);
 				}
@@ -294,6 +324,7 @@ public class GeomUtil {
 						break;
 					} else {
 						point = hit.p1;
+						dir = 1;
 						Shape temp = current;
 						current = other;
 						other = temp;
