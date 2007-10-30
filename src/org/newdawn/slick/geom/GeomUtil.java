@@ -61,7 +61,7 @@ public class GeomUtil {
 			}
 		}
 		
-		if (found < 2) {
+		if (found < 1) {
 			return new Shape[] {target};
 		}
 		
@@ -80,7 +80,7 @@ public class GeomUtil {
 		for (int i=0;i<path.getPointCount()+1;i++) {
 			int n = rationalPoint(path, i+1);
 			Line line = getLine(path, rationalPoint(path, i), n);
-			if (line.distance(new Vector2f(x,y)) < EPSILON*10) {
+			if (line.distance(new Vector2f(x,y)) < EPSILON*100) {
 				return true;
 			}
 		}
