@@ -462,6 +462,7 @@ public class TiledMap {
             }
 			tileWidth = Integer.parseInt(tileWidthString);
 			tileHeight = Integer.parseInt(tileHeightString);
+			
 			int spacing = 0;
 			String sv = element.getAttribute("spacing");
 			if ((sv != null) && (!sv.equals(""))) {
@@ -483,14 +484,15 @@ public class TiledMap {
 			tiles = new SpriteSheet(image , tileWidth, tileHeight, spacing);
 			tilesAcross = tiles.getHorizontalCount();
 			tilesDown = tiles.getVerticalCount();
-			
+
 			if (tilesAcross <= 0) {
 				tilesAcross = 1;
 			}
 			if (tilesDown <= 0) {
 				tilesDown = 1;
 			}
-			
+
+			lastGID = (tilesAcross * tilesDown) + firstGID - 1;
 			NodeList pElements = element.getElementsByTagName("tile");
 			for (int i=0;i<pElements.getLength();i++) {
 				Element tileElement = (Element) pElements.item(i);
@@ -679,7 +681,7 @@ public class TiledMap {
                 data[x][y][2] = 0;
             } else {
 	            TileSet set = findTileSet(tile);
-	
+	            
 	            data[x][y][0] = set.index;
 	            data[x][y][1] = tile - set.firstGID;
 	            data[x][y][2] = tile;
