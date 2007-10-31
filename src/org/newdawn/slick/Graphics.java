@@ -29,38 +29,52 @@ public class Graphics {
 
 	/** The normal drawing mode */
 	public static int MODE_NORMAL = 1;
+
 	/** Draw to the alpha map */
 	public static int MODE_ALPHA_MAP = 2;
+
 	/** Draw using the alpha blending */
 	public static int MODE_ALPHA_BLEND = 3;
 
 	/** The default number of segments that will be used when drawing an oval */
 	private static final int DEFAULT_SEGMENTS = 50;
+
 	/** The last graphics context in use */
 	protected static Graphics currentGraphics = null;
 
 	/** The font in use */
 	private Font font;
+
 	/** The default font to use */
 	private Font defaultFont;
+
 	/** The current color */
 	private Color currentColor = Color.white;
+
 	/** The width of the screen */
 	protected int screenWidth;
+
 	/** The height of the screen */
 	protected int screenHeight;
+
 	/** True if the matrix has been pushed to the stack */
 	private boolean pushed;
+
 	/** The graphics context clipping */
 	private Rectangle clip;
+
 	/** Buffer used for setting the world clip */
 	private DoubleBuffer worldClip = BufferUtils.createDoubleBuffer(4);
+
 	/** The buffer used to read a screen pixel */
 	private ByteBuffer readBuffer = BufferUtils.createByteBuffer(4);
+
 	/** True if we're antialias */
 	private boolean antialias;
+
 	/** The world clip recorded since last set */
 	private Rectangle worldClipRecord;
+
 	/** The current drawing mode */
 	private int currentDrawingMode = MODE_NORMAL;
 
@@ -1491,5 +1505,88 @@ public class Graphics {
 			float srcy, float srcx2, float srcy2, Color col) {
 		drawImage(image, x, y, x + image.getWidth(), y + image.getHeight(),
 				srcx, srcy, srcx2, srcy2, col);
+	}
+
+	/**
+	 * Draw a line with a gradient between the two points.
+	 * 
+	 * @param x1
+	 *            The starting x position to draw the line
+	 * @param y1
+	 *            The starting y position to draw the line
+	 * @param red1
+	 *            The starting position's shade of red
+	 * @param green1
+	 *            The starting position's shade of green
+	 * @param blue1
+	 *            The starting position's shade of blue
+	 * @param alpha1
+	 *            The starting position's alpha value
+	 * @param x2
+	 *            The ending x position to draw the line
+	 * @param y2
+	 *            The ending y position to draw the line
+	 * @param red2
+	 *            The ending position's shade of red
+	 * @param green2
+	 *            The ending position's shade of green
+	 * @param blue2
+	 *            The ending position's shade of blue
+	 * @param alpha2
+	 *            The ending position's alpha value
+	 */
+	public void drawGradientLine(float x1, float y1, float red1, float green1,
+									float blue1, float alpha1, float x2, float y2, float red2,
+									float green2, float blue2, float alpha2) {
+		predraw();
+
+		Texture.bindNone();
+
+		GL.glBegin(SGL.GL_LINES);
+
+		GL.glColor4f(red1, green1, blue1, alpha1);
+		GL.glVertex2f(x1, y1);
+
+		GL.glColor4f(red2, green2, blue2, alpha2);
+		GL.glVertex2f(x2, y2);
+
+		GL.glEnd();
+
+		postdraw();
+	}
+
+	/**
+	 * Draw a line with a gradient between the two points.
+	 * 
+	 * @param x1
+	 *            The starting x position to draw the line
+	 * @param y1
+	 *            The starting y position to draw the line
+	 * @param Color1
+	 *            The starting position's color
+	 * @param x2
+	 *            The ending x position to draw the line
+	 * @param y2
+	 *            The ending y position to draw the line
+	 * @param Color2
+	 *            The ending position's color
+	 */
+	public void drawGradientLine(float x1, float y1, Color Color1, float x2,
+								 float y2, Color Color2) {
+		predraw();
+
+		Texture.bindNone();
+
+		GL.glBegin(SGL.GL_LINES);
+
+		Color1.bind();
+		GL.glVertex2f(x1, y1);
+
+		Color2.bind();
+		GL.glVertex2f(x2, y2);
+
+		GL.glEnd();
+
+		postdraw();
 	}
 }
