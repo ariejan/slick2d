@@ -137,6 +137,8 @@ public class FBOGraphics extends Graphics {
 	 * @see org.newdawn.slick.Graphics#disable()
 	 */
 	protected void disable() {
+		GL.flush();
+		
 		unbind();
 		GL11.glPopClientAttrib();
 		GL11.glPopAttrib();

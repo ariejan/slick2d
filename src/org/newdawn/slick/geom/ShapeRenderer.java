@@ -1,9 +1,10 @@
 package org.newdawn.slick.geom;
 
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.ShapeFill;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * @author Mark Bernard
@@ -11,6 +12,9 @@ import org.newdawn.slick.opengl.Texture;
  * Use this class to render shpaes directly to OpenGL.  Allows you to bypass the Graphics class.
  */
 public final class ShapeRenderer {
+	/** The renderer to use for all GL operations */
+	private static SGL GL = Renderer.get();
+	
     /**
      * Draw the outline of the given shape.  Only the vertices are set.  
      * The colour has to be set independently of this method.
@@ -23,16 +27,16 @@ public final class ShapeRenderer {
         
         float points[] = shape.getPoints();
         
-        GL11.glBegin(GL11.GL_LINE_STRIP);
+        GL.glBegin(SGL.GL_LINE_STRIP);
         for(int i=0;i<points.length;i+=2) {
-            GL11.glVertex2f(points[i], points[i + 1]);
+            GL.glVertex2f(points[i], points[i + 1]);
         }
         
         if (shape.closed()) {
-        	GL11.glVertex2f(points[0], points[1]);
+        	GL.glVertex2f(points[0], points[1]);
         }
         
-        GL11.glEnd();
+        GL.glEnd();
         
         if (t == null) {
         	Texture.bindNone();
@@ -55,19 +59,19 @@ public final class ShapeRenderer {
         Texture.bindNone();
 
         float center[] = shape.getCenter();
-        GL11.glBegin(GL11.GL_LINE_STRIP);
+        GL.glBegin(SGL.GL_LINE_STRIP);
         for(int i=0;i<points.length;i+=2) {
             fill.colorAt(shape, points[i]-center[0], points[i + 1]-center[1]).bind();
             Vector2f offset = fill.getOffsetAt(shape, points[i], points[i + 1]);
-            GL11.glVertex2f(points[i] + offset.x, points[i + 1] + offset.y);
+            GL.glVertex2f(points[i] + offset.x, points[i + 1] + offset.y);
         }
         
         if (shape.closed()) {
 	        fill.colorAt(shape, points[0]-center[0], points[1]-center[1]).bind();
 	        Vector2f offset = fill.getOffsetAt(shape, points[0], points[1]);
-	        GL11.glVertex2f(points[0] + offset.x, points[1] + offset.y);
+	        GL.glVertex2f(points[0] + offset.x, points[1] + offset.y);
         }
-        GL11.glEnd();
+        GL.glEnd();
         
         if (t == null) {
         	Texture.bindNone();
@@ -130,32 +134,20 @@ public final class ShapeRenderer {
     private static final void fill(Shape shape, PointCallback callback) {
     	Triangulator tris = shape.getTriangles();
 
-        GL11.glBegin(GL11.GL_TRIANGLES);
+        GL.glBegin(SGL.GL_TRIANGLES);
         for (int i=0;i<tris.getTriangleCount();i++) {
-//            GL11.glBegin(GL11.GL_LINE_STRIP);
         	for (int p=0;p<3;p++) {
         		float[] pt = tris.getTrianglePoint(i, p);
         		float[] np = callback.preRenderPoint(pt[0],pt[1]);
         		
         		if (np == null) {
-        			GL11.glVertex2f(pt[0],pt[1]);
+        			GL.glVertex2f(pt[0],pt[1]);
         		} else {
-        			GL11.glVertex2f(np[0],np[1]);
+        			GL.glVertex2f(np[0],np[1]);
         		}
         	}
-        	
-//        	int p = 0;
-//    		float[] pt = tris.getTrianglePoint(i, p);
-//    		float[] np = callback.preRenderPoint(pt[0],pt[1]);
-//    		
-//    		if (np == null) {
-//    			GL11.glVertex2f(pt[0],pt[1]);
-//    		} else {
-//    			GL11.glVertex2f(np[0],np[1]);
-//    		}
-//            GL11.glEnd();
         }
-        GL11.glEnd();
+        GL.glEnd();
     }
 
     /**
@@ -203,7 +195,7 @@ public final class ShapeRenderer {
     		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
     		 */
 			public float[] preRenderPoint(float x, float y) {
-	            GL11.glTexCoord2f(x * scaleX, y * scaleY);
+	            GL.glTexCoord2f(x * scaleX, y * scaleY);
 	            return null;
 			}
     	});
@@ -247,8 +239,8 @@ public final class ShapeRenderer {
     		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
     		 */
 			public float[] preRenderPoint(float x, float y) {
-	            GL11.glTexCoord2f(((x - minX) / maxX) * scaleX, ((y - minY) / maxY) * scaleY);
-	            GL11.glTexCoord2f(x * scaleX, y * scaleY);
+	            GL.glTexCoord2f(((x - minX) / maxX) * scaleX, ((y - minY) / maxY) * scaleY);
+	            GL.glTexCoord2f(x * scaleX, y * scaleY);
 	            return null;
 			}
     	});
@@ -322,7 +314,7 @@ public final class ShapeRenderer {
 			public float[] preRenderPoint(float x, float y) {
 	            fill.colorAt(shape, x - center[0], y - center[1]).bind();
 	            Vector2f offset = fill.getOffsetAt(shape, x, y);
-	            GL11.glTexCoord2f(x * scaleX, y * scaleY);
+	            GL.glTexCoord2f(x * scaleX, y * scaleY);
 
 	            return new float[] {offset.x + x,offset.y + y};
 			}

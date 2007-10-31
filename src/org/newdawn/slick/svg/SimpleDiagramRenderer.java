@@ -1,8 +1,9 @@
 package org.newdawn.slick.svg;
 
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A very primtive implementation for rendering a diagram. This simply
@@ -11,6 +12,9 @@ import org.newdawn.slick.opengl.Texture;
  * @author kevin
  */
 public class SimpleDiagramRenderer {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
+	
 	/** The diagram to be rendered */
 	public Diagram diagram;
 	/** The display list representing the diagram */
@@ -33,13 +37,13 @@ public class SimpleDiagramRenderer {
 	public void render(Graphics g) {
 		// last list generation
 		if (list == -1) {
-			list = GL11.glGenLists(1);
-			GL11.glNewList(list, GL11.GL_COMPILE);
+			list = GL.glGenLists(1);
+			GL.glNewList(list, SGL.GL_COMPILE);
 				render(g, diagram);
-			GL11.glEndList();
+			GL.glEndList();
 		}
 		
-		GL11.glCallList(list);
+		GL.glCallList(list);
 		Texture.bindNone();
 	}
 	

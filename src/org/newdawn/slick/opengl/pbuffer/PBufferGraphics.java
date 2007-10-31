@@ -62,7 +62,7 @@ public class PBufferGraphics extends Graphics {
 			pbuffer.makeCurrent();
 
 			initGL();
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureID());
+			GL.glBindTexture(GL11.GL_TEXTURE_2D, tex.getTextureID());
 			pbuffer.releaseTexImage(Pbuffer.FRONT_LEFT_BUFFER);
 			image.draw(0,0);
 			image.setTexture(tex);
@@ -78,8 +78,10 @@ public class PBufferGraphics extends Graphics {
 	 * @see org.newdawn.slick.Graphics#disable()
 	 */
 	protected void disable() {
+		GL.flush();
+		
 		// Bind the texture after rendering.
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, image.getTexture().getTextureID());
+		GL.glBindTexture(GL11.GL_TEXTURE_2D, image.getTexture().getTextureID());
 		pbuffer.bindTexImage(Pbuffer.FRONT_LEFT_BUFFER);
 		
 		try {
@@ -110,7 +112,7 @@ public class PBufferGraphics extends Graphics {
 		}
 		
 		// Put the renderer contents to the texture
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, image.getTexture().getTextureID());
+		GL.glBindTexture(GL11.GL_TEXTURE_2D, image.getTexture().getTextureID());
 		pbuffer.releaseTexImage(Pbuffer.FRONT_LEFT_BUFFER);
 		Texture.unbind();
 		initGL();

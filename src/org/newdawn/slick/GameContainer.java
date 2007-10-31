@@ -5,10 +5,11 @@ import java.util.Properties;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.ImageData;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -19,6 +20,9 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author kevin
  */
 public abstract class GameContainer implements GUIContext {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
+	
 	/** The time the last frame was rendered */
 	private long lastFrame;
 	/** The last time the FPS recorded */
@@ -408,10 +412,10 @@ public abstract class GameContainer implements GUIContext {
 		
 		if (hasFocus() || alwaysRender()) {
 			if (clearEachFrame) {
-				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+				GL.glClear(SGL.GL_COLOR_BUFFER_BIT | SGL.GL_DEPTH_BUFFER_BIT);
 			} 
 			
-			GL11.glLoadIdentity();
+			GL.glLoadIdentity();
 			
 			graphics.resetFont();
 			graphics.resetLineWidth();
@@ -427,6 +431,8 @@ public abstract class GameContainer implements GUIContext {
 			if (showFPS) {
 				defaultFont.drawString(10, 10, "FPS: "+recordedFPS);
 			}
+			
+			GL.flush();
 			
 			if (targetFPS != -1) {
 				Display.sync(targetFPS);
@@ -457,22 +463,8 @@ public abstract class GameContainer implements GUIContext {
 	 */
 	protected void initGL() {
 		Log.info("Starting display "+width+"x"+height);
-		String extensions = GL11.glGetString(GL11.GL_EXTENSIONS);
+		GL.initDisplay(width, height);
 		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glShadeModel(GL11.GL_SMOOTH);        
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_LIGHTING);                    
-        
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);                
-        GL11.glClearDepth(1);                                       
-        
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        
-        GL11.glViewport(0,0,width,height);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-
 		if (input == null) {
 			input = new Input(height);
 		}
@@ -590,12 +582,6 @@ public abstract class GameContainer implements GUIContext {
 	 * @param ysize The size of the panel being used
 	 */
 	protected void enterOrtho(int xsize, int ysize) {
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, width, height, 0, 1, -1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		
-		GL11.glTranslatef((width-xsize)/2,
-						  (height-ysize)/2,0);
+		GL.enterOrtho(xsize, ysize);
 	}
 }

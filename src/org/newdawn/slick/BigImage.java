@@ -5,11 +5,12 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.ImageDataFactory;
 import org.newdawn.slick.opengl.LoadableImageData;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.util.OperationNotSupportedException;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -29,6 +30,9 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author kevin
  */
 public class BigImage extends Image {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
+	
 	/**
 	 * Get the maximum size of an image supported by the underlying
 	 * hardware.
@@ -38,7 +42,7 @@ public class BigImage extends Image {
 	 */
 	public static final int getMaxSingleImageSize() {
 		IntBuffer buffer = BufferUtils.createIntBuffer(16);
-		GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE, buffer);
+		GL.glGetInteger(SGL.GL_MAX_TEXTURE_SIZE, buffer);
 		
 		return buffer.get(0);
 	}
@@ -260,8 +264,8 @@ public class BigImage extends Image {
 		float sx = width / realWidth;
 		float sy = height / realHeight;
 		
-		GL11.glTranslatef(x,y,0);
-		GL11.glScalef(sx,sy,0);
+		GL.glTranslatef(x,y,0);
+		GL.glScalef(sx,sy,0);
 
 		float xp = 0;
 		float yp = 0;
@@ -281,8 +285,8 @@ public class BigImage extends Image {
 			
 		}
 		
-		GL11.glScalef(1.0f/sx,1.0f/sy,0);
-		GL11.glTranslatef(-x,-y,0);
+		GL.glScalef(1.0f/sx,1.0f/sy,0);
+		GL.glTranslatef(-x,-y,0);
 	}
 
 	/**
@@ -371,8 +375,8 @@ public class BigImage extends Image {
 		float sx = width / realWidth;
 		float sy = height / realHeight;
 		
-		GL11.glTranslatef(x,y,0);
-		GL11.glScalef(sx,sy,0);
+		GL.glTranslatef(x,y,0);
+		GL.glScalef(sx,sy,0);
 
 		float xp = 0;
 		float yp = 0;
@@ -392,8 +396,8 @@ public class BigImage extends Image {
 			
 		}
 		
-		GL11.glScalef(1.0f/sx,1.0f/sy,0);
-		GL11.glTranslatef(-x,-y,0);
+		GL.glScalef(1.0f/sx,1.0f/sy,0);
+		GL.glTranslatef(-x,-y,0);
 	}
 
 	/**

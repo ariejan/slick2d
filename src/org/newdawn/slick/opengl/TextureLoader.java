@@ -90,7 +90,7 @@ public class TextureLoader {
      *
      * @return A new texture ID
      */
-    private int createTextureID() 
+    public static int createTextureID() 
     { 
        IntBuffer tmp = createIntBuffer(1); 
        GL11.glGenTextures(tmp); 
@@ -432,7 +432,7 @@ public class TextureLoader {
      * @param fold The target number
      * @return The power of 2
      */
-    private int get2Fold(int fold) {
+    public static int get2Fold(int fold) {
         int ret = 2;
         while (ret < fold) {
             ret *= 2;
@@ -447,7 +447,7 @@ public class TextureLoader {
      * @param size how many int to contain
      * @return created IntBuffer
      */
-    protected IntBuffer createIntBuffer(int size) {
+    public static IntBuffer createIntBuffer(int size) {
       ByteBuffer temp = ByteBuffer.allocateDirect(4 * size);
       temp.order(ByteOrder.nativeOrder());
 

@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -24,6 +25,9 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class ParticleSystem {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
+	
 	/** The blending mode for the glowy style */
 	public static final int BLEND_ADDITIVE = 1;
 	/** The blending mode for the normal style */
@@ -360,13 +364,13 @@ public class ParticleSystem {
 			return;
 		}
 		
-		GL11.glTranslatef(x,y,0);
+		GL.glTranslatef(x,y,0);
 		
 		if (blendingMode == BLEND_ADDITIVE) {
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+			GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE);
 		}
 		if (usePoints()) {
-			GL11.glEnable( GL11.GL_POINT_SMOOTH ); 
+			GL.glEnable( SGL.GL_POINT_SMOOTH ); 
 			Texture.bindNone();
 		}
 		
@@ -379,7 +383,7 @@ public class ParticleSystem {
 			// check for additive override and enable when set
 			if( emitter instanceof ConfigurableEmitter )
 				if( ((ConfigurableEmitter)emitter).useAdditive )
-					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+					GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE);
 			
 			// now get the particle pool for this emitter and render all particles that are in use
 			ParticlePool pool= (ParticlePool)particlesByEmitter.get( emitter );
@@ -392,18 +396,18 @@ public class ParticleSystem {
 			// reset additive blend mode
 			if( emitter instanceof ConfigurableEmitter )
 				if( ((ConfigurableEmitter)emitter).useAdditive )
-					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE_MINUS_SRC_ALPHA);
 		}
 
 		if (usePoints()) {
-			GL11.glDisable( GL11.GL_POINT_SMOOTH ); 
+			GL.glDisable( SGL.GL_POINT_SMOOTH ); 
 		}
 		if (blendingMode == BLEND_ADDITIVE) {
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE_MINUS_SRC_ALPHA);
 		}
 		
 		Color.white.bind();
-		GL11.glTranslatef(-x,-y,0);
+		GL.glTranslatef(-x,-y,0);
 	}
 	
 	/**

@@ -2,7 +2,8 @@ package org.newdawn.slick;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A simple wrapper round the values required for a colour
@@ -10,6 +11,9 @@ import org.lwjgl.opengl.GL11;
  * @author Kevin Glass
  */
 public class Color {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
+	
 	/** The fixed colour white */
 	public static final Color white = new Color(1.0f,1.0f,1.0f,1.0f);
 	/** The fixed colour yellow */
@@ -164,7 +168,7 @@ public class Color {
 	 * Bind this colour to the GL context
 	 */
 	public void bind() {
-		GL11.glColor4f(r,g,b,a);
+		GL.glColor4f(r,g,b,a);
 	}
 	
 	/**

@@ -1,9 +1,10 @@
 package org.newdawn.slick.particles;
 
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A single particle within a system
@@ -11,6 +12,9 @@ import org.newdawn.slick.opengl.Texture;
  * @author kevin
  */
 public class Particle {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
+	
 	/** Indicates the particle should inherit it's use of points */
 	public static final int INHERIT_POINTS = 1;
 	/** Indicates the particle should explicitly use points */
@@ -139,28 +143,28 @@ public class Particle {
 		if ((engine.usePoints() && (usePoints == INHERIT_POINTS))
 				|| (usePoints == USE_POINTS)) {
 			Texture.bindNone();
-			GL11.glEnable(GL11.GL_POINT_SMOOTH);
-			GL11.glPointSize(size / 2);
+			GL.glEnable(SGL.GL_POINT_SMOOTH);
+			GL.glPointSize(size / 2);
 			color.bind();
-			GL11.glBegin(GL11.GL_POINTS);
-			GL11.glVertex2f(x, y);
-			GL11.glEnd();
+			GL.glBegin(SGL.GL_POINTS);
+			GL.glVertex2f(x, y);
+			GL.glEnd();
 		} else if (oriented || scaleY != 1.0f) {
-			GL11.glPushMatrix();
+			GL.glPushMatrix();
 
-			GL11.glTranslatef(x, y, 0f);
+			GL.glTranslatef(x, y, 0f);
 
 			if (oriented) {
 				float angle = (float) (Math.atan2(y, x) * 180 / Math.PI);
-				GL11.glRotatef(angle, 0f, 0f, 1.0f);
+				GL.glRotatef(angle, 0f, 0f, 1.0f);
 			}
 
 			// scale
-			GL11.glScalef(1.0f, scaleY, 1.0f);
+			GL.glScalef(1.0f, scaleY, 1.0f);
 
 			image.draw((int) (-(size / 2)), (int) (-(size / 2)), (int) size,
 					(int) size, color);
-			GL11.glPopMatrix();
+			GL.glPopMatrix();
 		} else {
 			image.draw((int) (x - (size / 2)), (int) (y - (size / 2)),
 					(int) size, (int) size, color);

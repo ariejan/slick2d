@@ -7,11 +7,12 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.ShapeRenderer;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.util.FastTrig;
 import org.newdawn.slick.util.Log;
 
@@ -22,6 +23,9 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class Graphics {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
+	
 	/** The normal drawing mode */
 	public static int MODE_NORMAL = 1;
 	/** Draw to the alpha map */
@@ -98,18 +102,18 @@ public class Graphics {
 		if (currentDrawingMode != mode) {
 			currentDrawingMode = mode;
 			if (currentDrawingMode == MODE_NORMAL) {
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glColorMask(true, true, true, true);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GL.glEnable(SGL.GL_BLEND);
+				GL.glColorMask(true, true, true, true);
+				GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE_MINUS_SRC_ALPHA);
 			}
 			if (currentDrawingMode == MODE_ALPHA_MAP) {
-				GL11.glDisable(GL11.GL_BLEND);
-				GL11.glColorMask(false, false, false, true);
+				GL.glDisable(SGL.GL_BLEND);
+				GL.glColorMask(false, false, false, true);
 			}
 			if (currentDrawingMode == MODE_ALPHA_BLEND) {
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glColorMask(true, true, true, true);
-				GL11.glBlendFunc(GL11.GL_DST_ALPHA, GL11.GL_ONE_MINUS_DST_ALPHA);
+				GL.glEnable(SGL.GL_BLEND);
+				GL.glColorMask(true, true, true, true);
+				GL.glBlendFunc(SGL.GL_DST_ALPHA, SGL.GL_ONE_MINUS_DST_ALPHA);
 			}
 		}
 		postdraw();
@@ -133,9 +137,6 @@ public class Graphics {
 	 * context for dynamic images
 	 */
 	private void predraw() {
-//		if (Image.inUse != null) {
-//			throw new RuntimeException("Attempt to access the graphics context within a renderInUse() block. This will fail on some hardware and drivers.");
-//		}
 		if (currentGraphics != this) {
 			if (currentGraphics != null) {
 				currentGraphics.disable();
@@ -190,7 +191,7 @@ public class Graphics {
  	 */
 	public void setBackground(Color color) {
 		predraw();
-		GL11.glClearColor(color.r, color.g, color.b, color.a);     
+		GL.glClearColor(color.r, color.g, color.b, color.a);     
 		postdraw();  
 	}
 	
@@ -202,7 +203,7 @@ public class Graphics {
 	public Color getBackground() {
 		predraw();
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-		GL11.glGetFloat(GL11.GL_COLOR_CLEAR_VALUE, buffer);
+		GL.glGetFloat(SGL.GL_COLOR_CLEAR_VALUE, buffer);
 		postdraw();
 		
 		return new Color(buffer);
@@ -213,7 +214,7 @@ public class Graphics {
 	 */
 	public void clear() {
 		predraw();
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		GL.glClear(SGL.GL_COLOR_BUFFER_BIT);
 		postdraw();  
 	}
 	
@@ -223,7 +224,7 @@ public class Graphics {
 	public void resetTransform() {	
 		if (pushed) {
 			predraw();
-			GL11.glPopMatrix();
+			GL.glPopMatrix();
 			pushed = false;
 			postdraw();  
 		}
@@ -236,7 +237,7 @@ public class Graphics {
 	private void checkPush() {
 		if (!pushed) {
 			predraw();
-			GL11.glPushMatrix();
+			GL.glPushMatrix();
 			pushed = true;
 			postdraw();  
 		}
@@ -252,7 +253,7 @@ public class Graphics {
 		checkPush();
 
 		predraw();
-		GL11.glScalef(sx,sy,0);
+		GL.glScalef(sx,sy,0);
 		postdraw();  
 	}
 	
@@ -268,7 +269,7 @@ public class Graphics {
 
 		predraw();
 		translate(rx,ry);
-		GL11.glRotatef(ang,0,0,1);
+		GL.glRotatef(ang,0,0,1);
 		translate(-rx,-ry);
 		postdraw();  
 	}
@@ -283,7 +284,7 @@ public class Graphics {
 		checkPush();
 
 		predraw();
-		GL11.glTranslatef(x,y,0);
+		GL.glTranslatef(x,y,0);
 		postdraw();  
 	}
 	
@@ -339,14 +340,14 @@ public class Graphics {
 
 		// make sure the start and end points are drawn - GL implementations
 		// seem a bit flakey on this
-		GL11.glBegin(GL11.GL_POINTS);
-			GL11.glVertex2f(x1,y1);
-			GL11.glVertex2f(x2,y2);
-		GL11.glEnd();
-		GL11.glBegin(GL11.GL_LINES);
-			GL11.glVertex2f(x1,y1);
-			GL11.glVertex2f(x2,y2);
-		GL11.glEnd();
+		GL.glBegin(SGL.GL_POINTS);
+			GL.glVertex2f(x1,y1);
+			GL.glVertex2f(x2,y2);
+		GL.glEnd();
+		GL.glBegin(SGL.GL_LINES);
+			GL.glVertex2f(x1,y1);
+			GL.glVertex2f(x2,y2);
+		GL.glEnd();
 		postdraw();
 	}
 
@@ -511,13 +512,13 @@ public class Graphics {
 		Texture.bindNone();
 		currentColor.bind();
 		
-		GL11.glBegin(GL11.GL_LINE_STRIP);
-			GL11.glVertex2f(x1,y1);
-			GL11.glVertex2f(x1+width,y1);
-			GL11.glVertex2f(x1+width,y1+height);
-			GL11.glVertex2f(x1,y1+height);
-			GL11.glVertex2f(x1,y1);
-		GL11.glEnd();
+		GL.glBegin(SGL.GL_LINE_STRIP);
+			GL.glVertex2f(x1,y1);
+			GL.glVertex2f(x1+width,y1);
+			GL.glVertex2f(x1+width,y1+height);
+			GL.glVertex2f(x1,y1+height);
+			GL.glVertex2f(x1,y1);
+		GL.glEnd();
 		postdraw();
 	}
 	
@@ -528,7 +529,7 @@ public class Graphics {
 	public void clearClip() {
 		clip = null;
 		predraw();
-		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		GL.glDisable(SGL.GL_SCISSOR_TEST);
 		postdraw();
 	}
 	
@@ -546,19 +547,19 @@ public class Graphics {
 	 */
 	public void setWorldClip(float x,float y,float width,float height) {
 		worldClipRecord = new Rectangle(x,y,width,height);
-		GL11.glEnable(GL11.GL_CLIP_PLANE0);
+		GL.glEnable(SGL.GL_CLIP_PLANE0);
 		worldClip.put(1).put(0).put(0).put(-x).flip();
-		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, worldClip);
-		GL11.glEnable(GL11.GL_CLIP_PLANE1);
+		GL.glClipPlane(SGL.GL_CLIP_PLANE0, worldClip);
+		GL.glEnable(SGL.GL_CLIP_PLANE1);
 		worldClip.put(-1).put(0).put(0).put(x+width).flip();
-		GL11.glClipPlane(GL11.GL_CLIP_PLANE1, worldClip);
+		GL.glClipPlane(SGL.GL_CLIP_PLANE1, worldClip);
 		
-		GL11.glEnable(GL11.GL_CLIP_PLANE2);
+		GL.glEnable(SGL.GL_CLIP_PLANE2);
 		worldClip.put(0).put(1).put(0).put(-y).flip();
-		GL11.glClipPlane(GL11.GL_CLIP_PLANE2, worldClip);
-		GL11.glEnable(GL11.GL_CLIP_PLANE3);
+		GL.glClipPlane(SGL.GL_CLIP_PLANE2, worldClip);
+		GL.glEnable(SGL.GL_CLIP_PLANE3);
 		worldClip.put(0).put(-1).put(0).put(y+height).flip();
-		GL11.glClipPlane(GL11.GL_CLIP_PLANE3, worldClip);
+		GL.glClipPlane(SGL.GL_CLIP_PLANE3, worldClip);
 	}
 	
 	/**
@@ -566,10 +567,10 @@ public class Graphics {
 	 */
 	public void clearWorldClip() {
 		worldClipRecord = null;
-		GL11.glDisable(GL11.GL_CLIP_PLANE0);
-		GL11.glDisable(GL11.GL_CLIP_PLANE1);
-		GL11.glDisable(GL11.GL_CLIP_PLANE2);
-		GL11.glDisable(GL11.GL_CLIP_PLANE3);
+		GL.glDisable(SGL.GL_CLIP_PLANE0);
+		GL.glDisable(SGL.GL_CLIP_PLANE1);
+		GL.glDisable(SGL.GL_CLIP_PLANE2);
+		GL.glDisable(SGL.GL_CLIP_PLANE3);
 	}
 	
 	/**
@@ -607,9 +608,9 @@ public class Graphics {
 	 */
 	public void setClip(int x,int y,int width,int height) {
 		predraw();
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		GL.glEnable(SGL.GL_SCISSOR_TEST);
 		clip = new Rectangle(x,y,width,height);
-		GL11.glScissor(x,screenHeight-y-height,width,height);
+		GL.glScissor(x,screenHeight-y-height,width,height);
 		postdraw();
 	}
 
@@ -683,12 +684,12 @@ public class Graphics {
 		Texture.bindNone();
 		currentColor.bind();
 		
-		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glVertex2f(x1,y1);
-			GL11.glVertex2f(x1+width,y1);
-			GL11.glVertex2f(x1+width,y1+height);
-			GL11.glVertex2f(x1,y1+height);
-		GL11.glEnd();
+		GL.glBegin(SGL.GL_QUADS);
+			GL.glVertex2f(x1,y1);
+			GL.glVertex2f(x1+width,y1);
+			GL.glVertex2f(x1+width,y1+height);
+			GL.glVertex2f(x1,y1+height);
+		GL.glEnd();
 		postdraw();
 	}
 
@@ -754,7 +755,7 @@ public class Graphics {
 		float cx = x1 + (width/2.0f);
 		float cy = y1 + (height/2.0f);
 		
-		GL11.glBegin(GL11.GL_LINE_STRIP);
+		GL.glBegin(SGL.GL_LINE_STRIP);
 			int step = 360 / segments;
 			
 			for (int a=(int) start;a<(int) (end+step);a+=step) {
@@ -765,9 +766,9 @@ public class Graphics {
 				float x = (float) (cx+(FastTrig.cos(Math.toRadians(ang))*width/2.0f));
 				float y = (float) (cy+(FastTrig.sin(Math.toRadians(ang))*height/2.0f));
 				
-				GL11.glVertex2f(x,y);
+				GL.glVertex2f(x,y);
 			}
-		GL11.glEnd();
+		GL.glEnd();
 		postdraw();
 	}
 
@@ -833,10 +834,10 @@ public class Graphics {
 		float cx = x1 + (width/2.0f);
 		float cy = y1 + (height/2.0f);
 		
-		GL11.glBegin(GL11.GL_TRIANGLE_FAN);
+		GL.glBegin(SGL.GL_TRIANGLE_FAN);
 			int step = 360 / segments;
 			
-			GL11.glVertex2f(cx,cy);
+			GL.glVertex2f(cx,cy);
 			
 			for (int a=(int) start;a<(int) (end+step);a+=step) {
 				float ang = a;
@@ -847,13 +848,13 @@ public class Graphics {
 				float x = (float) (cx+(FastTrig.cos(Math.toRadians(ang))*width/2.0f));
 				float y = (float) (cy+(FastTrig.sin(Math.toRadians(ang))*height/2.0f));
 				
-				GL11.glVertex2f(x,y);
+				GL.glVertex2f(x,y);
 			}
-		GL11.glEnd();
+		GL.glEnd();
 		
 		if (antialias) {
-			GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-				GL11.glVertex2f(cx,cy);
+			GL.glBegin(SGL.GL_TRIANGLE_FAN);
+				GL.glVertex2f(cx,cy);
 				if (end != 360) {
 					end -= 10;
 				}
@@ -867,9 +868,9 @@ public class Graphics {
 					float x = (float) (cx+(FastTrig.cos(Math.toRadians(ang+10))*width/2.0f));
 					float y = (float) (cy+(FastTrig.sin(Math.toRadians(ang+10))*height/2.0f));
 					
-					GL11.glVertex2f(x,y);
+					GL.glVertex2f(x,y);
 				}
-			GL11.glEnd();
+			GL.glEnd();
 		}
 		
 		postdraw();
@@ -990,8 +991,8 @@ public class Graphics {
 	 */
 	public void setLineWidth(float width) {
 		predraw();
-		GL11.glLineWidth(width);
-		GL11.glPointSize(width);
+		GL.glLineWidth(width);
+		GL.glPointSize(width);
 		postdraw();
 	}
 	
@@ -1003,7 +1004,7 @@ public class Graphics {
 	public float getLineWidth() {
 		predraw();
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-		GL11.glGetFloat(GL11.GL_LINE_WIDTH, buffer);
+		GL.glGetFloat(SGL.GL_LINE_WIDTH, buffer);
 		postdraw();
 		
 		return buffer.get(0);
@@ -1014,8 +1015,8 @@ public class Graphics {
 	 */
 	public void resetLineWidth() {
 		predraw();
-		GL11.glLineWidth(1.0f);
-		GL11.glPointSize(1.0f);
+		GL.glLineWidth(1.0f);
+		GL.glPointSize(1.0f);
 		postdraw();
 	}
 	
@@ -1028,11 +1029,11 @@ public class Graphics {
 		predraw();
 		antialias = anti;
 		if (anti) {
-			GL11.glEnable(GL11.GL_LINE_SMOOTH);
-			GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
+			GL.glEnable(SGL.GL_LINE_SMOOTH);
+			GL.glEnable(SGL.GL_POLYGON_SMOOTH);
 		} else {
-			GL11.glDisable(GL11.GL_LINE_SMOOTH);
-			GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+			GL.glDisable(SGL.GL_LINE_SMOOTH);
+			GL.glDisable(SGL.GL_POLYGON_SMOOTH);
 		}
 		postdraw();
 	}
@@ -1156,9 +1157,9 @@ public class Graphics {
 	 * @param y The y position to copy from
 	 */
 	public void copyArea(Image target, int x, int y) {
-		int format = target.getTexture().hasAlpha() ? GL11.GL_RGBA : GL11.GL_RGB;
+		int format = target.getTexture().hasAlpha() ? SGL.GL_RGBA : SGL.GL_RGB;
 		target.bind();
-		GL11.glCopyTexImage2D(GL11.GL_TEXTURE_2D, 0, format, x, screenHeight-(y+target.getHeight()), 
+		GL.glCopyTexImage2D(SGL.GL_TEXTURE_2D, 0, format, x, screenHeight-(y+target.getHeight()), 
 							  target.getTexture().getTextureWidth(),
 							  target.getTexture().getTextureHeight(), 0);
 		target.ensureInverted();
@@ -1186,7 +1187,7 @@ public class Graphics {
 	 * @return The colour of the pixel at the specified location
 	 */
 	public Color getPixel(int x, int y) {
-		GL11.glReadPixels(x,screenHeight-y,1,1,GL11.GL_RGBA,GL11.GL_UNSIGNED_BYTE,readBuffer);
+		GL.glReadPixels(x,screenHeight-y,1,1,SGL.GL_RGBA,SGL.GL_UNSIGNED_BYTE,readBuffer);
 		
 		return new Color(translate(readBuffer.get(0)),
 						 translate(readBuffer.get(1)),

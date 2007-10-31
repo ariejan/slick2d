@@ -7,7 +7,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -23,6 +24,9 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author kevin
  */
 public class AngelCodeFont implements Font {
+	/** The renderer to use for all GL operations */
+	private static SGL GL = Renderer.get();
+	
 	/** The line cache size, this is how many lines we can render before starting to regenerate lists */
 	private static final int LINE_CACHE_SIZE = 200;
 	
@@ -109,7 +113,7 @@ public class AngelCodeFont implements Font {
 	 */
 	private void parseFnt(InputStream fntFile) throws SlickException {
 		if (displayListCaching) {
-			int dlBase = GL11.glGenLists(LINE_CACHE_SIZE);
+			int dlBase = GL.glGenLists(LINE_CACHE_SIZE);
 			for (int i=0;i<LINE_CACHE_SIZE;i++) {
 				cache.add(new CachedString(dlBase+i));
 			}
@@ -218,18 +222,18 @@ public class AngelCodeFont implements Font {
 				cache.remove(index);
 				cache.add(cached);
 				
-				GL11.glTranslatef(x,y,0);
+				GL.glTranslatef(x,y,0);
 				cached.render();
-				GL11.glTranslatef(-x,-y,0);
+				GL.glTranslatef(-x,-y,0);
 			} else {
 				CachedString cached = (CachedString) cache.get(0);
 				cached.setString(text);
 				cache.remove(0);
 				cache.add(cached);
 				
-				GL11.glTranslatef(x,y,0);
+				GL.glTranslatef(x,y,0);
 				cached.render();
-				GL11.glTranslatef(-x,-y,0);
+				GL.glTranslatef(-x,-y,0);
 			}
 		} else {
 			key.render(x,y);
@@ -394,16 +398,16 @@ public class AngelCodeFont implements Font {
 		 */
 		public void setString(String text) {
 			this.text = text;
-			GL11.glNewList(list, GL11.GL_COMPILE);
+			GL.glNewList(list, SGL.GL_COMPILE);
 			render(0, 0);
-			GL11.glEndList();
+			GL.glEndList();
 		}
 		
 		/**
 		 * Render based on the display list
 		 */
 		public void render() {
-			GL11.glCallList(list);
+			GL.glCallList(list);
 		}
 		
 		/**
@@ -428,7 +432,7 @@ public class AngelCodeFont implements Font {
 		 */
 		private void render(float x, float y) {
 			font.init();
-			GL11.glBegin(GL11.GL_QUADS);
+			GL.glBegin(SGL.GL_QUADS);
 			for (int i=0;i<text.length();i++) {
 				int id = text.charAt(i);
 				if (id >= chars.length) {
@@ -447,7 +451,7 @@ public class AngelCodeFont implements Font {
 					}
 				}
 			}
-			GL11.glEnd();
+			GL.glEnd();
 		}
 	}
 }

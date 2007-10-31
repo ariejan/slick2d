@@ -2,6 +2,7 @@ package org.newdawn.slick.opengl;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A utility to allow performing GL operations without contaminating the
@@ -13,8 +14,8 @@ import org.newdawn.slick.SlickException;
  * <code>
  * SlickCallable callable = new SlickCallable() {
  * 	   public performGLOperations() throws SlickException {
- * 			GL11.glTranslate(0,0,1);
- * 			glBegin(GL11.GL_POLYGONS);
+ * 			GL.glTranslate(0,0,1);
+ * 			glBegin(GL.GL_POLYGONS);
  *  			glVertex(..);
  *              ...
  *          glEnd();
@@ -28,8 +29,8 @@ import org.newdawn.slick.SlickException;
  * <code>
  * SlickCallable.enterSafeBlock();
  * 
- * GL11.glTranslate(0,0,1);
- * glBegin(GL11.GL_POLYGONS);
+ * GL.glTranslate(0,0,1);
+ * glBegin(GL.GL_POLYGONS);
  *     glVertex(..);
  *     ...
  * glEnd();
@@ -56,6 +57,7 @@ public abstract class SlickCallable {
 			return;
 		}
 		
+		Renderer.get().flush();
 		lastUsed = Texture.getLastBind();
 		Texture.bindNone();
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);

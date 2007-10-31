@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.lwjgl.opengl.EXTSecondaryColor;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -18,6 +19,9 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class Image {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
+	
 	/** The sprite sheet currently in use */
 	protected static Image inUse;
 	/** Use Linear Filtering */
@@ -134,7 +138,7 @@ public class Image {
 				trans[1] = (int) (transparent.g * 255);
 				trans[2] = (int) (transparent.b * 255);
 			}
-			texture = TextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST, trans);
+			texture = TextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST, trans);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
@@ -222,7 +226,7 @@ public class Image {
 	 */
 	public Image(ImageData data, int filter) {
 		try {
-			texture = TextureLoader.get().getTexture(data, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST);
+			texture = TextureLoader.get().getTexture(data, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST);
 			ref = texture.toString();
 		} catch (IOException e) {
 			Log.error(e);
@@ -259,7 +263,7 @@ public class Image {
 				trans[1] = (int) (transparent.g * 255);
 				trans[2] = (int) (transparent.b * 255);
 			}
-			texture = TextureLoader.get().getTexture(in, ref, flipped, filter == FILTER_LINEAR ? GL11.GL_LINEAR : GL11.GL_NEAREST, trans);
+			texture = TextureLoader.get().getTexture(in, ref, flipped, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST, trans);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
@@ -350,15 +354,15 @@ public class Image {
 	public void drawEmbedded(float x,float y,float width,float height) {
 		init();
 		
-	    GL11.glTexCoord2f(textureOffsetX, textureOffsetY);
-		GL11.glVertex3f(x, y, 0);
-		GL11.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
-		GL11.glVertex3f(x, y + height, 0);
-		GL11.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY
+	    GL.glTexCoord2f(textureOffsetX, textureOffsetY);
+		GL.glVertex3f(x, y, 0);
+		GL.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
+		GL.glVertex3f(x, y + height, 0);
+		GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY
 				+ textureHeight);
-		GL11.glVertex3f(x + width, y + height, 0);
-		GL11.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY);
-		GL11.glVertex3f(x + width, y, 0);
+		GL.glVertex3f(x + width, y + height, 0);
+		GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY);
+		GL.glVertex3f(x + width, y, 0);
 	}
 
 	/**
@@ -421,17 +425,17 @@ public class Image {
         float centerX = x + (width / 2); 
         float centerY = y + (height / 2); 
         if(angle != 0.0f) { 
-            GL11.glTranslatef(centerX, centerY, 0.0f); 
-            GL11.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
-            GL11.glTranslatef(-centerX, -centerY, 0.0f); 
+            GL.glTranslatef(centerX, centerY, 0.0f); 
+            GL.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
+            GL.glTranslatef(-centerX, -centerY, 0.0f); 
         } 
-        GL11.glBegin(GL11.GL_QUADS); 
+        GL.glBegin(SGL.GL_QUADS); 
             drawEmbedded(x,y,width,height); 
-        GL11.glEnd(); 
+        GL.glEnd(); 
         if(angle != 0.0f) { 
-            GL11.glTranslatef(centerX, centerY, 0.0f); 
-            GL11.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
-            GL11.glTranslatef(-centerX, -centerY, 0.0f); 
+            GL.glTranslatef(centerX, centerY, 0.0f); 
+            GL.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
+            GL.glTranslatef(-centerX, -centerY, 0.0f); 
         } 
     } 
 
@@ -463,19 +467,19 @@ public class Image {
 		texture.bind();
 
 		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
-			GL11.glEnable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
+			GL.glEnable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
 			EXTSecondaryColor.glSecondaryColor3ubEXT((byte)(col.r * 255), 
 													 (byte)(col.g * 255), 
 													 (byte)(col.b * 255));
 		}
 		
-		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+		GL.glTexEnvi(SGL.GL_TEXTURE_ENV, SGL.GL_TEXTURE_ENV_MODE, SGL.GL_MODULATE);
 
-		GL11.glBegin(GL11.GL_QUADS);
+		GL.glBegin(SGL.GL_QUADS);
 			drawEmbedded(x,y,width,height);
-		GL11.glEnd();
+		GL.glEnd();
 		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
-			GL11.glDisable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
+			GL.glDisable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
 		}
 	}
 
@@ -616,19 +620,19 @@ public class Image {
 		float newTextureHeight = ((texheight) / (height))
 				* textureHeight;
 
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(newTextureOffsetX, newTextureOffsetY);
-		GL11.glVertex3f(x,y, 0.0f);
-		GL11.glTexCoord2f(newTextureOffsetX, newTextureOffsetY
+		GL.glBegin(SGL.GL_QUADS);
+		GL.glTexCoord2f(newTextureOffsetX, newTextureOffsetY);
+		GL.glVertex3f(x,y, 0.0f);
+		GL.glTexCoord2f(newTextureOffsetX, newTextureOffsetY
 				+ newTextureHeight);
-		GL11.glVertex3f(x,(y + myheight), 0.0f);
-		GL11.glTexCoord2f(newTextureOffsetX + newTextureWidth,
+		GL.glVertex3f(x,(y + myheight), 0.0f);
+		GL.glTexCoord2f(newTextureOffsetX + newTextureWidth,
 				newTextureOffsetY + newTextureHeight);
-		GL11.glVertex3f((x + mywidth),(y + myheight), 0.0f);
-		GL11.glTexCoord2f(newTextureOffsetX + newTextureWidth,
+		GL.glVertex3f((x + mywidth),(y + myheight), 0.0f);
+		GL.glTexCoord2f(newTextureOffsetX + newTextureWidth,
 				newTextureOffsetY);
-		GL11.glVertex3f((x + mywidth),y, 0.0f);
-		GL11.glEnd();
+		GL.glVertex3f((x + mywidth),y, 0.0f);
+		GL.glEnd();
 	}
 
 	
@@ -733,7 +737,7 @@ public class Image {
 			throw new RuntimeException("The sprite sheet is not currently in use");
 		}
 		inUse = null;
-		GL11.glEnd();
+		GL.glEnd();
 	}
 	
 	/**
@@ -751,7 +755,7 @@ public class Image {
 
 		Color.white.bind();
 		texture.bind();
-		GL11.glBegin(GL11.GL_QUADS);
+		GL.glBegin(SGL.GL_QUADS);
 	}
 	
 	/**

@@ -5,7 +5,8 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A texture to be bound within JOGL. This object is responsible for 
@@ -21,6 +22,9 @@ import org.lwjgl.opengl.GL11;
  * @author Brian Matzon
  */
 public class Texture {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
+	
 	/** The last texture that was bound to */
 	static Texture lastBind;
 	
@@ -106,7 +110,7 @@ public class Texture {
      */
     public static void bindNone() {
     	lastBind = null;
-    	GL11.glDisable(GL11.GL_TEXTURE_2D);
+    	GL.glDisable(SGL.GL_TEXTURE_2D);
     }
     
     /**
@@ -124,8 +128,8 @@ public class Texture {
     public void bind() {
     	if (lastBind != this) {
     		lastBind = this;
-    		GL11.glEnable(GL11.GL_TEXTURE_2D);
-    	    GL11.glBindTexture(target, textureID);
+    		GL.glEnable(SGL.GL_TEXTURE_2D);
+    	    GL.glBindTexture(target, textureID);
     	}
     }
     
@@ -251,7 +255,7 @@ public class Texture {
         texBuf.put(textureID);
         texBuf.flip();
         
-    	GL11.glDeleteTextures(texBuf);
+    	GL.glDeleteTextures(texBuf);
     }
     
     /**
@@ -293,7 +297,7 @@ public class Texture {
      */
     public byte[] getTextureData() {
     	ByteBuffer buffer = BufferUtils.createByteBuffer((hasAlpha() ? 4 : 3) * texWidth * texHeight);
-    	GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, hasAlpha() ? GL11.GL_RGBA : GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, 
+    	GL.glGetTexImage(SGL.GL_TEXTURE_2D, 0, hasAlpha() ? SGL.GL_RGBA : SGL.GL_RGB, SGL.GL_UNSIGNED_BYTE, 
     					   buffer);
     	byte[] data = new byte[buffer.limit()];
     	buffer.get(data);
