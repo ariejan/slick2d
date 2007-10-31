@@ -479,8 +479,13 @@ public class TiledMap {
 				
 				trans = new Color(c);
 			}
-			
+
+//	        SGL.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE); 
+//	        SGL.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE); 
 			Image image = new Image(tilesLocation+"/"+ref,false,Image.FILTER_NEAREST,trans);
+//			SGL.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT); 
+//			SGL.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT); 
+	        
 			tiles = new SpriteSheet(image , tileWidth, tileHeight, spacing);
 			tilesAcross = tiles.getHorizontalCount();
 			tilesDown = tiles.getVerticalCount();

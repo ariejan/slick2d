@@ -389,4 +389,13 @@ public interface SGL {
 	 */
 	public void glReadPixels(int x, int y, int width, int height, int format, int type,
 		     						ByteBuffer pixels);
+	
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 * 
+	 * @param target
+	 * @param param
+	 * @param value
+	 */
+	public void glTexParameteri(int target, int param, int value);
 }

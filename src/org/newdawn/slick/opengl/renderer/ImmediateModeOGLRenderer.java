@@ -299,4 +299,8 @@ public class ImmediateModeOGLRenderer implements SGL {
 	public void flush() {
 	}
 
+	public void glTexParameteri(int target, int param, int value) {
+		GL11.glTexParameteri(target, param, value);
+	}
+
 }
