@@ -605,7 +605,26 @@ public class Image {
 
 		filter.bind();
 		texture.bind();
+		GL.glBegin(SGL.GL_QUADS);
+		drawEmbedded(x,y,x2,y2,srcx,srcy,srcx2,srcy2,filter);
+		GL.glEnd();
+	}
 
+	/**
+	 * Draw a section of this image at a particular location and scale on the screen, while this
+	 * is image is "in use", @see startUse()
+	 * 
+	 * @param x The x position to draw the image
+	 * @param y The y position to draw the image
+	 * @param x2 The x position of the bottom right corner of the drawn image
+	 * @param y2 The y position of the bottom right corner of the drawn image
+	 * @param srcx The x position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy The y position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcx2 The x position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy2 The t position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 * @param filter The colour filter to apply when drawing
+	 */
+	public void drawEmbedded(float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2, Color filter) {
 		float mywidth = x2 - x;
 		float myheight = y2 - y;
 		float texwidth = srcx2 - srcx;
@@ -620,7 +639,6 @@ public class Image {
 		float newTextureHeight = ((texheight) / (height))
 				* textureHeight;
 
-		GL.glBegin(SGL.GL_QUADS);
 		GL.glTexCoord2f(newTextureOffsetX, newTextureOffsetY);
 		GL.glVertex3f(x,y, 0.0f);
 		GL.glTexCoord2f(newTextureOffsetX, newTextureOffsetY
@@ -632,9 +650,7 @@ public class Image {
 		GL.glTexCoord2f(newTextureOffsetX + newTextureWidth,
 				newTextureOffsetY);
 		GL.glVertex3f((x + mywidth),y, 0.0f);
-		GL.glEnd();
 	}
-
 	
 	/**
 	 * Get the width of this image
