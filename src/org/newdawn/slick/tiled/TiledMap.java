@@ -11,14 +11,10 @@ import java.util.zip.GZIPInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.opengl.renderer.Renderer;
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 import org.w3c.dom.Document;
@@ -35,8 +31,6 @@ import org.w3c.dom.NodeList;
  * @author kevin
  */
 public class TiledMap {
-	/** The renderer to use for all GL operations */
-	protected static SGL GL = Renderer.get();
 	/** The code used to decode Base64 encoding */
 	private static byte[] baseCodes = new byte[256];
 
@@ -486,11 +480,7 @@ public class TiledMap {
 				trans = new Color(c);
 			}
 
-	        GL.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE); 
-	        GL.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE); 
 			Image image = new Image(tilesLocation+"/"+ref,false,Image.FILTER_NEAREST,trans);
-			GL.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT); 
-			GL.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT); 
 	        
 			tiles = new SpriteSheet(image , tileWidth, tileHeight, spacing);
 			tilesAcross = tiles.getHorizontalCount();
