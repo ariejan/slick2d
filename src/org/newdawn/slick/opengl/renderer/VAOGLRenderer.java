@@ -212,7 +212,9 @@ public class VAOGLRenderer extends ImmediateModeOGLRenderer {
 		
 		if (vertIndex > MAX_VERTS - 50) {
 			if (isSplittable(vertIndex, currentType)) {
+				int type = currentType;
 				applyBuffer();
+				currentType = type;
 			}
 		}
 	}
