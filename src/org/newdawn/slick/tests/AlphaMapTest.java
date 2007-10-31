@@ -50,7 +50,9 @@ public class AlphaMapTest extends BasicGame {
 		g.clearAlphaMap();
 		g.setDrawMode(Graphics.MODE_NORMAL);
 		textureMap.draw(10,50);
-		
+		g.setColor(Color.red);
+		g.fillRect(290,40,200,200);
+		g.setColor(Color.white);
 		// write only alpha
 		g.setDrawMode(Graphics.MODE_ALPHA_MAP);
 		alphaMap.draw(300,50);
