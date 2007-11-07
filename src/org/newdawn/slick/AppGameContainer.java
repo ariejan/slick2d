@@ -138,6 +138,15 @@ public class AppGameContainer extends GameContainer {
 								freq = targetDisplayMode.getFrequency();
 							}
 						}
+
+						// if we've found a match for bpp and frequence against the 
+						// original display mode then it's probably best to go for this one
+						// since it's most likely compatible with the monitor
+						if ((current.getBitsPerPixel() == originalDisplayMode.getBitsPerPixel()) &&
+						    (current.getFrequency() == originalDisplayMode.getFrequency())) {
+							targetDisplayMode = current;
+							break;
+						}
 					}
 				}
 			} else {
