@@ -351,11 +351,21 @@ public class ParticleSystem {
 		this.x = x;
 		this.y = y;
 	}
-	
+
 	/**
 	 * Render the particles in the system
 	 */
 	public void render() {
+		render(x,y);
+	}
+	
+	/**
+	 * Render the particles in the system
+	 * 
+	 * @param x The x coordinate to render the particle system at (in the current coordinate space)
+	 * @param y The y coordinate to render the particle system at (in the current coordiante space)
+	 */
+	public void render(float x, float y) {
 		if ((sprite == null) && (defaultImageName != null)) {
 			loadSystemParticleImage();
 		}
