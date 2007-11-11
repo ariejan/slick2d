@@ -1,10 +1,10 @@
 package org.newdawn.slick.openal;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.newdawn.slick.loading.DeferredResource;
 import org.newdawn.slick.loading.LoadingList;
-import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -29,16 +29,24 @@ public class DeferredSound extends InternalSound implements DeferredResource {
 	private String ref;
 	/** The loaded sound if it's already been brought up */
 	private InternalSound target;
+	/** The input stream to load the sound this proxy wraps from (can be null) */
+	private InputStream in;
 	
 	/**
 	 * Create a new sound on request to load
 	 * 
 	 * @param ref The location of the sound to load
 	 * @param type The type of sound to load
+	 * @param in The input stream to load from
 	 */
-	public DeferredSound(String ref, int type) {
+	public DeferredSound(String ref, InputStream in, int type) {
 		this.ref = ref;
 		this.type = type;
+		
+		// nasty hack to detect when we're loading from a stream
+		if (ref.equals(in.toString())) {
+			this.in = in;
+		}
 		
 		LoadingList.get().add(this);
 	}
@@ -56,24 +64,44 @@ public class DeferredSound extends InternalSound implements DeferredResource {
 	 * @see org.newdawn.slick.loading.DeferredResource#load()
 	 */
 	public void load() throws IOException {
-		boolean before = TextureLoader.get().isDeferredLoading();
+		boolean before = SoundStore.get().isDeferredLoading();
 		SoundStore.get().setDeferredLoading(false);
-		switch (type) {
-		case OGG:
-			target = SoundStore.get().getOgg(ref);
-			break;
-		case WAV:
-			target = SoundStore.get().getWAV(ref);
-			break;
-		case MOD:
-			target = SoundStore.get().getMOD(ref);
-			break;
-		case AIF:
-			target = SoundStore.get().getAIF(ref);
-			break;
-		default:
-			Log.error("Unrecognised sound type: "+type);
-			break;
+		if (in != null) {
+			switch (type) {
+			case OGG:
+				target = SoundStore.get().getOgg(in);
+				break;
+			case WAV:
+				target = SoundStore.get().getWAV(in);
+				break;
+			case MOD:
+				target = SoundStore.get().getMOD(in);
+				break;
+			case AIF:
+				target = SoundStore.get().getAIF(in);
+				break;
+			default:
+				Log.error("Unrecognised sound type: "+type);
+				break;
+			}
+		} else {
+			switch (type) {
+			case OGG:
+				target = SoundStore.get().getOgg(ref);
+				break;
+			case WAV:
+				target = SoundStore.get().getWAV(ref);
+				break;
+			case MOD:
+				target = SoundStore.get().getMOD(ref);
+				break;
+			case AIF:
+				target = SoundStore.get().getAIF(ref);
+				break;
+			default:
+				Log.error("Unrecognised sound type: "+type);
+				break;
+			}
 		}
 		SoundStore.get().setDeferredLoading(before);
 	}
