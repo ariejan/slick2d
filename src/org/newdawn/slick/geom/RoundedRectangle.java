@@ -11,6 +11,17 @@ import org.newdawn.slick.util.FastTrig;
  * @author Mark Bernard
  */
 public class RoundedRectangle extends Rectangle {
+	/** Indicates the top left corner should be rounded */
+	public static final int TOP_LEFT  = 1;
+	/** Indicates the top right corner should be rounded */
+	public static final int TOP_RIGHT = 2; 
+	/** Indicates the bottom right corner should be rounded */
+	public static final int BOTTOM_RIGHT = 4;
+	/** Indicates the bottom left corner should be rounded */
+	public static final int BOTTOM_LEFT = 8;
+	/** Indicates the all cornders should be rounded */
+	public static final int ALL = TOP_LEFT | TOP_RIGHT | BOTTOM_RIGHT | BOTTOM_LEFT;
+	
     /** Default number of segments to draw the rounded corners with */
     private static final int DEFAULT_SEGMENT_COUNT = 25;
 
@@ -18,7 +29,9 @@ public class RoundedRectangle extends Rectangle {
     private float cornerRadius;
     /** number of segments for each corner */
     private int segmentCount;
-
+    /** The flags indicating which corners should be rounded */
+    private int cornerFlags;
+    
     /**
      * Construct a rectangle with rounded corners.
      * 
@@ -43,6 +56,22 @@ public class RoundedRectangle extends Rectangle {
      * @param segmentCount The number of segments to use to draw each corner arc.
      */
     public RoundedRectangle(float x, float y, float width, float height, float cornerRadius, int segmentCount) {
+    	this(x,y,width,height,cornerRadius,segmentCount,ALL);
+    }
+    	
+    /**
+     * Construct a rectangle with rounded corners.
+     * 
+     * @param x The x position of the rectangle.
+     * @param y The y position of the rectangle.
+     * @param width The width of the rectangle.
+     * @param height The hieght of the rectangle.
+     * @param cornerRadius The radius to use for the arc in each corner.
+     * @param segmentCount The number of segments to use to draw each corner arc.
+     * @param cornerFlags Indicates which corners should be rounded 
+     */
+    public RoundedRectangle(float x, float y, float width, float height, 
+    						float cornerRadius, int segmentCount, int cornerFlags) {
         super(x,y,width,height);
         
     	if(cornerRadius < 0) {
@@ -55,6 +84,7 @@ public class RoundedRectangle extends Rectangle {
         this.cornerRadius = cornerRadius;
         this.segmentCount = segmentCount;
         this.pointsDirty = true;
+        this.cornerFlags = cornerFlags;
     }
 
     /**
@@ -158,16 +188,36 @@ public class RoundedRectangle extends Rectangle {
             //straight sides, so the straight sides do not have to be added.
             
             //top left corner arc
-            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + cornerRadius, y + cornerRadius, 180, 270));
+            if ((cornerFlags & TOP_LEFT) != 0) {
+            	tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + cornerRadius, y + cornerRadius, 180, 270));
+            } else {
+            	tempPoints.add(new Float(x));
+            	tempPoints.add(new Float(y));
+            }
             
             //top right corner arc
-            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + useWidth - cornerRadius, y + cornerRadius, 270, 360));
+            if ((cornerFlags & TOP_RIGHT) != 0) {
+            	tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + useWidth - cornerRadius, y + cornerRadius, 270, 360));
+            } else {
+            	tempPoints.add(new Float(x+useWidth));
+            	tempPoints.add(new Float(y));
+            }
             
             //bottom right corner arc
-            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + useWidth - cornerRadius, y + useHeight - cornerRadius, 0, 90));
-
+            if ((cornerFlags & BOTTOM_RIGHT) != 0) {
+            	tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + useWidth - cornerRadius, y + useHeight - cornerRadius, 0, 90));
+            } else {
+            	tempPoints.add(new Float(x+useWidth));
+            	tempPoints.add(new Float(y+useHeight));
+            }
+            
             //bottom left corner arc
-            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + cornerRadius, y + useHeight - cornerRadius, 90, 180));
+            if ((cornerFlags & BOTTOM_LEFT) != 0) {
+	            tempPoints.addAll(createPoints(segmentCount, cornerRadius, x + cornerRadius, y + useHeight - cornerRadius, 90, 180));
+	        } else {
+	        	tempPoints.add(new Float(x));
+	        	tempPoints.add(new Float(y+useHeight));
+	        }
             
             points = new float[tempPoints.size()];
             for(int i=0;i<tempPoints.size();i++) {

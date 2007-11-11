@@ -42,6 +42,8 @@ public class GeomTest extends BasicGame {
                             Transform.createTranslateTransform(510, 350));
 	/** The RoundedRectangle tested */
     private Shape roundRect = new RoundedRectangle(50, 175, 100, 100, 20);
+	/** The RoundedRectangle tested - less cornders */
+    private Shape roundRect2 = new RoundedRectangle(50, 280, 50, 50, 20, 20, RoundedRectangle.TOP_LEFT | RoundedRectangle.BOTTOM_RIGHT);
 
     /**
 	 * Create a new test of graphics context rendering
@@ -82,7 +84,8 @@ public class GeomTest extends BasicGame {
 		g.draw(circle3);
 		g.setColor(circle4.intersects(circle) ? Color.red : Color.green);
 		g.draw(circle4);
-		
+
+        g.draw(roundRect2);
 		g.setColor(Color.blue);
 		g.draw(new Circle(100,100,50));
 		g.drawRect(50,50,100,100);
