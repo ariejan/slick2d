@@ -54,6 +54,7 @@ public class RoundedRectangle extends Rectangle {
         this.height = height;
         this.cornerRadius = cornerRadius;
         this.segmentCount = segmentCount;
+        this.pointsDirty = true;
     }
 
     /**
