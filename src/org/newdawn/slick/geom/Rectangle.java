@@ -43,10 +43,10 @@ public class Rectangle extends Shape {
 		if (yp <= getY()) {
 			return false;
 		}
-		if (xp >= getMaxX()) {
+		if (xp >= maxX) {
 			return false;
 		}
-		if (yp >= getMaxY()) {
+		if (yp >= maxY) {
 			return false;
 		}
 		
@@ -104,6 +104,7 @@ public class Rectangle extends Shape {
 		if (width != this.width) {
 	        pointsDirty = true;
 			this.width = width;
+			maxX = x+width;
 		}
 	}
 	
@@ -116,6 +117,7 @@ public class Rectangle extends Shape {
 		if (height != this.height) {
 	        pointsDirty = true;
 			this.height = height;
+			maxY = y+height;
 		}
 	}
 	
@@ -206,6 +208,7 @@ public class Rectangle extends Shape {
 		return (xp >= xr) && (yp >= yr) && (xp <= xr + widthr)
 				&& (yp <= yr + heightr);
 	}
+	
     /**
      * Apply a transformation and return a new shape.  This will not alter the current shape but will 
      * return the transformed shape.

@@ -186,6 +186,7 @@ public abstract class Shape implements Serializable {
      * @return The right most point of this shape.
      */
     public float getMaxX() {
+        checkPoints();
         return maxX;
     }
     /**
@@ -194,6 +195,7 @@ public abstract class Shape implements Serializable {
      * @return The bottom most point of this shape.
      */
     public float getMaxY() {
+        checkPoints();
         return maxY;
     }
     /**
