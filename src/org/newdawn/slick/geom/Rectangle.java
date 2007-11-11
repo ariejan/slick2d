@@ -72,6 +72,30 @@ public class Rectangle extends Shape {
 	}
 	
 	/**
+	 * Grow the rectangle at all edges by the given amounts. This will result in the
+	 * rectangle getting larger around it's centre.
+	 * 
+	 * @param h The amount to adjust horizontally
+	 * @param v The amount to ajust vertically
+	 */
+	public void grow(float h, float v) {
+		setX(getX() - h);
+		setY(getY() - v);
+		setWidth(getWidth() + (h*2));
+		setHeight(getHeight() + (v*2));
+	}
+
+	/**
+	 * Grow the rectangle based on scaling it's size
+	 * 
+	 * @param h The scale to apply to the horizontal 
+	 * @param v The scale to appy to the vertical
+	 */
+	public void scaleGrow(float h, float v) {
+		grow(getWidth() * (h-1), getHeight() * (v-1));
+	}
+	
+	/**
 	 * Set the width of this box
 	 * 
 	 * @param width The new width of this box
