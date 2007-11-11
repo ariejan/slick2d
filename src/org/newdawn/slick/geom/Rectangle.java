@@ -54,6 +54,41 @@ public class Rectangle extends Shape {
 	}
 	
 	/**
+	 * Set the bounds of this rectangle based on the given rectangle
+	 * 
+	 * @param other The other rectangle whose bounds should be applied
+	 */
+	public void setBounds(Rectangle other) {
+		setBounds(other.getX(), other.getY(), other.getWidth(), other.getHeight());
+	}
+	
+	/**
+	 * Set the bounds of this rectangle
+	 * 
+	 * @param x The x coordinate of this rectangle
+	 * @param y The y coordinate of this rectangle
+	 * @param width The width to set in this rectangle
+	 * @param height The height to set in this rectangle
+	 */
+	public void setBounds(float x, float y, float width, float height) {
+		setX(x);
+		setY(y);
+		setSize(width, height);
+	}
+
+	/**
+	 * Set the size (widtha and height) of this rectangle
+	 * 
+	 * @param width The width to set in this rectangle
+	 * @param height The height to set in this rectangle
+	 */
+	public void setSize(float width, float height) {
+		setWidth(width);
+		setHeight(height);
+	}
+	
+	
+	/**
 	 * Get the width of the box
 	 * 
 	 * @return The width of the box
