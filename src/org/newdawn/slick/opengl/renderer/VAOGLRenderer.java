@@ -391,4 +391,10 @@ public class VAOGLRenderer extends ImmediateModeOGLRenderer {
 		super.glNewList(id, option);
 	}
 
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#getCurrentColor()
+	 */
+	public float[] getCurrentColor() {
+		return color;
+	}
 }

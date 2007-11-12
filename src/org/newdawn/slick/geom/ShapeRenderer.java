@@ -3,8 +3,9 @@ package org.newdawn.slick.geom;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.ShapeFill;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.renderer.LineStripRenderer;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 
 /**
  * @author Mark Bernard
@@ -14,6 +15,8 @@ import org.newdawn.slick.opengl.renderer.Renderer;
 public final class ShapeRenderer {
 	/** The renderer to use for all GL operations */
 	private static SGL GL = Renderer.get();
+	/** The renderer to use line strips */
+	private static LineStripRenderer LSR = Renderer.getLineStripRenderer();
 	
     /**
      * Draw the outline of the given shape.  Only the vertices are set.  
@@ -27,16 +30,16 @@ public final class ShapeRenderer {
         
         float points[] = shape.getPoints();
         
-        GL.glBegin(SGL.GL_LINE_STRIP);
+        LSR.start();
         for(int i=0;i<points.length;i+=2) {
-            GL.glVertex2f(points[i], points[i + 1]);
+        	LSR.vertex(points[i], points[i + 1]);
         }
         
         if (shape.closed()) {
-        	GL.glVertex2f(points[0], points[1]);
+        	LSR.vertex(points[0], points[1]);
         }
         
-        GL.glEnd();
+        LSR.end();
         
         if (t == null) {
         	Texture.bindNone();

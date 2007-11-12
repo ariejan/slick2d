@@ -17,6 +17,8 @@ public class ImmediateModeOGLRenderer implements SGL {
 	private int width;
 	/** The height of the display */
 	private int height;
+	/** The current colour */
+	private float[] current = new float[] {1,1,1,1};
 	
 	/**
 	 * @see org.newdawn.slick.opengl.renderer.SGL#initDisplay(int, int)
@@ -108,6 +110,8 @@ public class ImmediateModeOGLRenderer implements SGL {
 	 * @see org.newdawn.slick.opengl.renderer.SGL#glColor4f(float, float, float, float)
 	 */
 	public void glColor4f(float r, float g, float b, float a) {
+		current = new float[] {r,g,b,a};
+		
 		GL11.glColor4f(r, g, b, a);
 	}
 
@@ -299,8 +303,18 @@ public class ImmediateModeOGLRenderer implements SGL {
 	public void flush() {
 	}
 
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glTexParameteri(int, int, int)
+	 */
 	public void glTexParameteri(int target, int param, int value) {
 		GL11.glTexParameteri(target, param, value);
+	}
+
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#getCurrentColor()
+	 */
+	public float[] getCurrentColor() {
+		return current;
 	}
 
 }

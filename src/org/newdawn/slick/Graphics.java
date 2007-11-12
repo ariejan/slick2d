@@ -12,6 +12,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.ShapeRenderer;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.renderer.LineStripRenderer;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.FastTrig;
@@ -26,6 +27,8 @@ import org.newdawn.slick.util.Log;
 public class Graphics {
 	/** The renderer to use for all GL operations */
 	protected static SGL GL = Renderer.get();
+	/** The renderer to use line strips */
+	private static LineStripRenderer LSR = Renderer.getLineStripRenderer();
 
 	/** The normal drawing mode */
 	public static int MODE_NORMAL = 1;
@@ -1183,7 +1186,7 @@ public class Graphics {
 	 */
 	public void setLineWidth(float width) {
 		predraw();
-		GL.glLineWidth(width);
+		LSR.setWidth(width);
 		GL.glPointSize(width);
 		postdraw();
 	}
@@ -1221,11 +1224,10 @@ public class Graphics {
 	public void setAntiAlias(boolean anti) {
 		predraw();
 		antialias = anti;
+		LSR.setAntiAlias(anti);
 		if (anti) {
-			GL.glEnable(SGL.GL_LINE_SMOOTH);
 			GL.glEnable(SGL.GL_POLYGON_SMOOTH);
 		} else {
-			GL.glDisable(SGL.GL_LINE_SMOOTH);
 			GL.glDisable(SGL.GL_POLYGON_SMOOTH);
 		}
 		postdraw();

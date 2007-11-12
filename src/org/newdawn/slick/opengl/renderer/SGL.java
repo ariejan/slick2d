@@ -398,4 +398,11 @@ public interface SGL {
 	 * @param value
 	 */
 	public void glTexParameteri(int target, int param, int value);
+	
+	/**
+	 * Get the current colour being rendered
+	 * 
+	 * @return The current colour being rendered
+	 */
+	public float[] getCurrentColor();
 }
