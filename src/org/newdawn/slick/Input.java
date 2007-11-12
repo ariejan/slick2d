@@ -575,6 +575,38 @@ public class Input {
 	}
 	
 	/**
+	 * Get the number of axis that are avaiable on a given controller
+	 * 
+	 * @param controller The index of the controller to check
+	 * @return The number of axis available on the controller
+	 */
+	public int getAxisCount(int controller) {
+		return ((Controller) controllers.get(controller)).getAxisCount();
+	}
+	
+	/**
+	 * Get the value of the axis with the given index
+	 *  
+	 * @param controller The index of the controller to check
+	 * @param axis The index of the axis to read
+	 * @return The axis value at time of reading
+	 */ 
+	public float getAxisValue(int controller, int axis) {
+		return ((Controller) controllers.get(controller)).getAxisValue(axis);
+	}
+
+	/**
+	 * Get the name of the axis with the given index
+	 *  
+	 * @param controller The index of the controller to check
+	 * @param axis The index of the axis to read
+	 * @return The name of the specified axis
+	 */ 
+	public String getAxisName(int controller, int axis) {
+		return ((Controller) controllers.get(controller)).getAxisName(axis);
+	}
+	
+	/**
 	 * Check if the controller has the left direction pressed
 	 * 
 	 * @param controller The index of the controller to check
