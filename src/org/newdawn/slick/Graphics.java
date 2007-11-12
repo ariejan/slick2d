@@ -581,9 +581,9 @@ public class Graphics {
 
 		GL.glBegin(SGL.GL_LINE_STRIP);
 		GL.glVertex2f(x1, y1);
-		GL.glVertex2f(x1 + width, y1);
-		GL.glVertex2f(x1 + width, y1 + height);
-		GL.glVertex2f(x1, y1 + height);
+		GL.glVertex2f(x1 + width - 1, y1);
+		GL.glVertex2f(x1 + width - 1, y1 + height - 1);
+		GL.glVertex2f(x1, y1 + height - 1);
 		GL.glVertex2f(x1, y1);
 		GL.glEnd();
 		postdraw();
@@ -778,9 +778,9 @@ public class Graphics {
 
 		GL.glBegin(SGL.GL_QUADS);
 		GL.glVertex2f(x1, y1);
-		GL.glVertex2f(x1 + width, y1);
-		GL.glVertex2f(x1 + width, y1 + height);
-		GL.glVertex2f(x1, y1 + height);
+		GL.glVertex2f(x1 + width - 1, y1);
+		GL.glVertex2f(x1 + width - 1, y1 + height - 1);
+		GL.glVertex2f(x1, y1 + height - 1);
 		GL.glEnd();
 		postdraw();
 	}
