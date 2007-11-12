@@ -229,6 +229,42 @@ public class Color {
 	}
 	
 	/**
+	 * Get the red byte component of this colour
+	 * 
+	 * @return The red component (range 0-255)
+	 */
+	public int getRedByte() {
+		return (int) (r * 255);
+	}
+
+	/**
+	 * Get the green byte component of this colour
+	 * 
+	 * @return The green component (range 0-255)
+	 */
+	public int getGreenByte() {
+		return (int) (g * 255);
+	}
+
+	/**
+	 * Get the blue byte component of this colour
+	 * 
+	 * @return The blue component (range 0-255)
+	 */
+	public int getBlueByte() {
+		return (int) (b * 255);
+	}
+
+	/**
+	 * Get the alpha byte component of this colour
+	 * 
+	 * @return The alpha component (range 0-255)
+	 */
+	public int getAlphaByte() {
+		return (int) (a * 255);
+	}
+	
+	/**
 	 * Make a brighter instance of this colour
 	 * 
 	 * @param scale The scale up of RGB (i.e. if you supply 0.03 the colour will be brightened by 3%)
