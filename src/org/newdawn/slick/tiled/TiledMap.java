@@ -113,6 +113,51 @@ public class TiledMap {
 	}
 	
 	/**
+     * Get the index of the layer with given name
+     * 
+     * @param name The name of the tile to search for
+     * @return The index of the layer or -1 if there is no layer with given name
+     */
+   public int getLayerIndex(String name) {
+      int idx = 0;
+      
+      for (int i=0;i<layers.size();i++) {
+         Layer layer = (Layer) layers.get(i);
+         
+         if (layer.name.equals(name)) {
+            return i;
+         }
+      }
+      
+      return -1;
+   }
+   
+   /**
+    * Gets the Image used to draw the tile at the given x and y coordinates.
+    * 
+    * @param x The x coordinate of the tile whose image should be retrieved
+    * @param y The y coordinate of the tile whose image should be retrieved
+    * @param layerIndex The index of the layer on which the tile whose image should be retrieve exists
+    * @return The image used to draw the specified tile or null if there is no image for the
+    * specified tile.
+    */
+   public Image getTileImage(int x, int y, int layerIndex) {
+      Layer layer = (Layer) layers.get(layerIndex);
+      
+      int tileSetIndex = layer.data[x][y][0];
+      if ((tileSetIndex >= 0) && (tileSetIndex < tileSets.size())) {
+    	  TileSet tileSet = (TileSet) tileSets.get(tileSetIndex);
+    	  
+          int sheetX = tileSet.getTileX(layer.data[x][y][1]);
+          int sheetY = tileSet.getTileY(layer.data[x][y][1]);
+          
+          return tileSet.tiles.getSprite(sheetX, sheetY);
+      }
+      
+      return null;
+   } 
+   
+	/**
 	 * Get the width of the map
 	 * 
 	 * @return The width of the map (in tiles)
