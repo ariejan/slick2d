@@ -141,7 +141,7 @@ public class Animation {
 	public Animation(SpriteSheet frames, int x1, int y1, int x2, int y2, boolean horizontalScan, int duration, boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
 		
-		if (horizontalScan) {
+		if (!horizontalScan) {
 			for (int x=x1;x<=x2;x++) {
 				for (int y=y1;y<=y2;y++) {
 					addFrame(frames.getSprite(x, y), duration);
