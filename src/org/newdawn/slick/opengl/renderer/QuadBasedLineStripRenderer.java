@@ -155,7 +155,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 			// draw the next segment
 			float dx = x2 - x1;
 			float dy = y2 - y1;
-			
+
 			if ((dx == 0) && (dy == 0)) {
 				continue;
 			}
@@ -178,13 +178,13 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 				GL.glVertex3f(x1+tx,y1+ty,0);
 				GL.glVertex3f(x1-tx,y1-ty,0);
 			}
-
+			
 			lastx1 = x2-tx;
 			lasty1 = y2-ty;
 			lastx2 = x2+tx;
 			lasty2 = y2+ty;
 			
-			if (i < count) {
+			if (i < count-1) {
 				bindColor(current);
 				GL.glVertex3f(x1+tx,y1+ty,0);
 				GL.glVertex3f(x1-tx,y1-ty,0);
