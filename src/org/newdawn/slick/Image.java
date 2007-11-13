@@ -475,9 +475,22 @@ public class Image {
 		
 		GL.glTexEnvi(SGL.GL_TEXTURE_ENV, SGL.GL_TEXTURE_ENV_MODE, SGL.GL_MODULATE);
 
+        float centerX = x + (width / 2); 
+        float centerY = y + (height / 2); 
+        if(angle != 0.0f) { 
+            GL.glTranslatef(centerX, centerY, 0.0f); 
+            GL.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
+            GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        } 
 		GL.glBegin(SGL.GL_QUADS);
 			drawEmbedded(x,y,width,height);
 		GL.glEnd();
+        if(angle != 0.0f) { 
+            GL.glTranslatef(centerX, centerY, 0.0f); 
+            GL.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
+            GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        } 
+        
 		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
 			GL.glDisable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
 		}
