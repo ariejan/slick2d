@@ -103,10 +103,9 @@ public class PathProcessor implements ElementProcessor {
 		
 		StringTokenizer tokens = new StringTokenizer(points, ", ");
 		Path path = processPoly(element, tokens);
+		NonGeometricData data = Util.getNonGeometricData(element);
 		if (path != null) {
 			Shape shape = path.transform(transform);
-			
-			NonGeometricData data = Util.getNonGeometricData(element);
 			
 			diagram.addFigure(new Figure(Figure.PATH, shape, data, transform));
 		}

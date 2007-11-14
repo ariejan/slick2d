@@ -46,8 +46,6 @@ public class PolygonProcessor implements ElementProcessor {
 			if (nextToken.equals("M")) {
 				if (!moved) {
 					moved = true;
-					tokens.nextToken();
-					tokens.nextToken();
 					continue;
 				}
 				
@@ -90,13 +88,13 @@ public class PolygonProcessor implements ElementProcessor {
 		StringTokenizer tokens = new StringTokenizer(points, ", ");
 		Polygon poly = new Polygon();
 		int count = processPoly(poly, element, tokens);
+		
+		NonGeometricData data = Util.getNonGeometricData(element);
 		if (count > 3) {
 			Shape shape = poly.transform(transform);
 			
-			NonGeometricData data = Util.getNonGeometricData(element);
-			
 			diagram.addFigure(new Figure(Figure.POLYGON, shape, data, transform));
-		}
+		} 
 	}
 
 	/**
