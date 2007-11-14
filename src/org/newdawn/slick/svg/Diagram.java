@@ -13,6 +13,8 @@ public class Diagram {
 	private ArrayList figures = new ArrayList();
 	/** The pattern definitions */
 	private HashMap patterns = new HashMap();
+	/** The linear gradients defined within the diagram */
+	private HashMap gradients = new HashMap();
 	
 	/**
 	 * Create a new empty diagram
@@ -32,6 +34,16 @@ public class Diagram {
 	}
 	
 	/**
+	 * Add gradient to the diagram 
+	 * 
+	 * @param name The name of the gradient
+	 * @param gradient The gradient to be added
+	 */
+	public void addGradient(String name, Gradient gradient) {
+		gradients.put(name, gradient);
+	}
+	
+	/**
 	 * Get a pattern definition from the diagram
 	 * 
 	 * @param name The name of the pattern
@@ -39,6 +51,16 @@ public class Diagram {
 	 */
 	public String getPatternDef(String name) {
 		return (String) patterns.get(name);
+	}
+	
+	/**
+	 * Get the gradient defined in this document
+	 * 
+	 * @param name The name of the gradient
+	 * @return The gradient definition
+	 */
+	public Gradient getGradient(String name) {
+		return (Gradient) gradients.get(name);
 	}
 	
 	/**
@@ -57,6 +79,16 @@ public class Diagram {
 	 */
 	public void addFigure(Figure figure) {
 		figures.add(figure);
+		
+		String fillRef = figure.getData().getAsReference(NonGeometricData.FILL);
+		Gradient gradient = getGradient(fillRef);
+		if (gradient != null) {
+			if (gradient.isRadial()) {
+				for (int i=0;i<InkscapeLoader.RADIAL_TRIANGULATION_LEVEL;i++) {
+					figure.getShape().increaseTriangulation();
+				}
+			}
+		}
 	}
 	
 	/**

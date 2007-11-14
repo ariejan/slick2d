@@ -329,6 +329,38 @@ public final class ShapeRenderer {
         	t.bind();
         }
     }
+    /**
+     * Draw the the given shape filled in with a texture.  Only the vertices are set.  
+     * The colour has to be set independently of this method.
+     * 
+     * @param shape The shape to texture.
+     * @param image The image to tile across the shape
+     * @param gen The texture coordinate generator to create coordiantes for the shape
+     */
+    public static final void texture(final Shape shape, Image image, final TexCoordGenerator gen) {
+        Texture t = Texture.getLastBind();
+
+        image.getTexture().bind();
+
+        final float center[] = shape.getCenter();
+        fill(shape, new PointCallback() {
+    		/**
+    		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
+    		 */
+			public float[] preRenderPoint(float x, float y) {
+				Vector2f tex = gen.getCoordFor(x, y);
+	            GL.glTexCoord2f(tex.x, tex.y);
+
+	            return new float[] {x,y};
+			}
+    	});
+        
+        if (t == null) {
+        	Texture.bindNone();
+        } else {
+        	t.bind();
+        }
+    }
     
     /**
      * Description of some feature that will be applied to each point render

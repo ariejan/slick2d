@@ -32,6 +32,9 @@ import org.xml.sax.SAXException;
  * @author kevin
  */
 public class InkscapeLoader implements Loader {
+	/** The number of times to over trigulate to get enough tesselation for smooth shading */
+	public static int RADIAL_TRIANGULATION_LEVEL = 1;
+	
 	/** The list of XML element processors */
 	private static ArrayList processors = new ArrayList();
 	/** The diagram loaded */

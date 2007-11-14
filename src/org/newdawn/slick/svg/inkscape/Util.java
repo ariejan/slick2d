@@ -94,7 +94,7 @@ public class Util {
 		
 		return "";
 	}
-	
+
 	/**
 	 * Get a transform defined in the XML
 	 * 
@@ -102,7 +102,18 @@ public class Util {
 	 * @return The transform to be applied
 	 */
 	static Transform getTransform(Element element) {
-		String str = element.getAttribute("transform");
+		return getTransform(element, "transform");
+	}
+	
+	/**
+	 * Get a transform defined in the XML
+	 * 
+	 * @param element The element from which the transform should be read
+	 * @param attribute The name of the attribute holding the transform
+	 * @return The transform to be applied
+	 */
+	static Transform getTransform(Element element, String attribute) {
+		String str = element.getAttribute(attribute);
 		if (str.equals("")) {
 			return new Transform();
 		} else if (str.startsWith("translate")) {

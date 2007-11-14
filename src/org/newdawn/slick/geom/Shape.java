@@ -542,6 +542,16 @@ public abstract class Shape implements Serializable {
     }
     
     /**
+     * Increase triangulation
+     */
+    public void increaseTriangulation() {
+    	checkPoints();
+    	calculateTriangles();
+    	
+    	tris = new OverTriangulator(tris);
+    }
+    
+    /**
      * The triangles that define the filled version of this shape
      * 
      * @return The triangles that define the 

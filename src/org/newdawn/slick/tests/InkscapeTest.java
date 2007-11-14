@@ -7,6 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.svg.InkscapeLoader;
 import org.newdawn.slick.svg.SimpleDiagramRenderer;
 
@@ -38,11 +39,13 @@ public class InkscapeTest extends BasicGame {
 	public void init(GameContainer container) throws SlickException {
 		container.getGraphics().setBackground(Color.white);
 		
-		renderer[0] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/orc.svg"));
-		renderer[1] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head2.svg"));
-		renderer[2] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head3.svg"));
-		renderer[3] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/santa.svg"));
-		renderer[4] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/cow.svg"));
+		InkscapeLoader.RADIAL_TRIANGULATION_LEVEL = 2;
+		
+//		renderer[0] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/orc.svg"));
+//		renderer[1] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head2.svg"));
+//		renderer[2] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head3.svg"));
+		renderer[3] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/gradients.svg"));
+//		renderer[4] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/cow.svg"));
 		
 		container.getGraphics().setBackground(new Color(0.5f,0.7f,1.0f));
 	}
@@ -84,20 +87,23 @@ public class InkscapeTest extends BasicGame {
 		g.scale(zoom,zoom);
 		g.translate(x, y);
 		g.scale(0.3f,0.3f);
-		renderer[0].render(g);
+		//renderer[0].render(g);
 		g.scale(1/0.3f,1/0.3f);
 		g.translate(400, 0);
-		renderer[1].render(g);
+		//renderer[1].render(g);
 		g.translate(100, 300);
 		g.scale(0.7f,0.7f);
-		renderer[2].render(g);
+		//renderer[2].render(g);
 		g.scale(1/0.7f,1/0.7f);
-		g.translate(-500, 80);
-		renderer[3].render(g);
 		
-		g.translate(200, -200);
 		g.scale(0.5f,0.5f);
-		renderer[4].render(g);
+		g.translate(-1100, -380);
+		renderer[3].render(g);
+		g.scale(1/0.5f,1/0.5f);
+		
+//		g.translate(280, 100);
+//		g.scale(0.5f,0.5f);
+//		renderer[4].render(g);
 		
 		g.resetTransform();
 	}
@@ -109,6 +115,8 @@ public class InkscapeTest extends BasicGame {
 	 */
 	public static void main(String argv[]) {
 		try {
+			Renderer.setLineStripRenderer(Renderer.QUAD_BASED_LINE_STRIP_RENDERER);
+			
 			AppGameContainer container = new AppGameContainer(new InkscapeTest());
 			container.setDisplayMode(800,600,false);
 			container.start();

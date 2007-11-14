@@ -197,6 +197,7 @@ public class Image {
 	 */
 	Image(ImageBuffer buffer) {
 		this(buffer, FILTER_LINEAR);
+        Texture.bindNone();
 	}
 	
 	/**
@@ -207,6 +208,7 @@ public class Image {
 	 */
 	Image(ImageBuffer buffer, int filter) {
 		this((ImageData) buffer, filter);
+        Texture.bindNone();
 	}
 
 	/**

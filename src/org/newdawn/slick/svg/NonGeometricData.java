@@ -146,6 +146,23 @@ public class NonGeometricData {
 	}
 	
 	/**
+	 * Get the attribute value as a reference to another entity
+	 * 
+	 * @param attribute The name of the attribute to retrieve
+	 * @return The reference part of the attribute value
+	 */
+	public String getAsReference(String attribute) {
+		String value = getAttribute(attribute);
+		if (value.length() < 7) {
+			return "";
+		}
+		
+		value = value.substring(5, value.length()-1);
+		
+		return value;
+	}
+	
+	/**
 	 * Get an attribute converted to a float value
 	 * 
 	 * @param attribute The attribute to retrieve
