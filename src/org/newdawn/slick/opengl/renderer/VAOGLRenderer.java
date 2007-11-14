@@ -144,15 +144,15 @@ public class VAOGLRenderer extends ImmediateModeOGLRenderer {
 	 * @see org.newdawn.slick.opengl.renderer.ImmediateModeOGLRenderer#glColor4f(float, float, float, float)
 	 */
 	public void glColor4f(float r, float g, float b, float a) {
-		if (listMode > 0) {
-			super.glColor4f(r,g,b,a);
-			return;
-		}
-		
 		color[0] = r;
 		color[1] = g;
 		color[2] = b;
 		color[3] = a;
+		
+		if (listMode > 0) {
+			super.glColor4f(r,g,b,a);
+			return;
+		}
 	}
 
 	/**

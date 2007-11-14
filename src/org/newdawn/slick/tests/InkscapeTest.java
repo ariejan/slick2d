@@ -115,6 +115,7 @@ public class InkscapeTest extends BasicGame {
 	 */
 	public static void main(String argv[]) {
 		try {
+			Renderer.setRenderer(Renderer.VERTEX_ARRAY_RENDERER);
 			Renderer.setLineStripRenderer(Renderer.QUAD_BASED_LINE_STRIP_RENDERER);
 			
 			AppGameContainer container = new AppGameContainer(new InkscapeTest());
