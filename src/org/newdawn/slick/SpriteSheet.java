@@ -114,7 +114,10 @@ public class SpriteSheet extends Image {
 		}
 		
 		int tilesAcross = ((getWidth() - tw) / (tw + spacing)) + 1;
-		int tilesDown = ((getHeight() - th) / (th + spacing)) + 2;
+		int tilesDown = ((getHeight() - th) / (th + spacing)) + 1;
+		if (getHeight() - th % (th+spacing) != 0) {
+			tilesDown++;
+		}
 		
 		subImages = new Image[tilesAcross][tilesDown];
 		for (int x=0;x<tilesAcross;x++) {
