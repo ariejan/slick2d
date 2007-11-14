@@ -11,6 +11,8 @@ import org.newdawn.slick.Color;
  * @author kevin
  */
 public class NonGeometricData {
+	/** The ID of the figure */
+	public static final String ID = "id";
 	/** The fill type */
 	public static final String FILL = "fill";
 	/** The stroke type */

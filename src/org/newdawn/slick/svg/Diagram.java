@@ -15,6 +15,8 @@ public class Diagram {
 	private HashMap patterns = new HashMap();
 	/** The linear gradients defined within the diagram */
 	private HashMap gradients = new HashMap();
+	/** The figures mapping */
+	private HashMap figureMap = new HashMap();
 	
 	/**
 	 * Create a new empty diagram
@@ -73,12 +75,23 @@ public class Diagram {
 	}
 	
 	/**
+	 * Get a figure by a given ID
+	 * 
+	 * @param id The ID of the figure
+	 * @return The figure with the given ID
+	 */
+	public Figure getFigureByID(String id) {
+		return (Figure) figureMap.get(id);
+	}
+	
+	/**
 	 * Add a figure to the diagram
 	 * 
 	 * @param figure The figure to add
 	 */
 	public void addFigure(Figure figure) {
 		figures.add(figure);
+		figureMap.put(figure.getData().getAttribute(NonGeometricData.ID), figure);
 		
 		String fillRef = figure.getData().getAsReference(NonGeometricData.FILL);
 		Gradient gradient = getGradient(fillRef);
@@ -117,5 +130,6 @@ public class Diagram {
 	 */
 	public void removeFigure(Figure figure) {
 		figures.remove(figure);
+		figureMap.remove(figure.getData().getAttribute("id"));
 	}
 }

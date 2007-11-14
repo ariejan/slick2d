@@ -18,6 +18,7 @@ import org.newdawn.slick.svg.inkscape.LineProcessor;
 import org.newdawn.slick.svg.inkscape.PathProcessor;
 import org.newdawn.slick.svg.inkscape.PolygonProcessor;
 import org.newdawn.slick.svg.inkscape.RectProcessor;
+import org.newdawn.slick.svg.inkscape.UseProcessor;
 import org.newdawn.slick.util.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,6 +49,7 @@ public class InkscapeLoader implements Loader {
 		processors.add(new LineProcessor());
 		processors.add(new GroupProcessor());
 		processors.add(new DefsProcessor());
+		processors.add(new UseProcessor());
 	}
 	
 	/**

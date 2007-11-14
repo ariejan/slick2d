@@ -30,6 +30,7 @@ public class Util {
 		String meta = getMetaData(element);
 		
 		NonGeometricData data = new NonGeometricData(meta);
+		data.addAttribute(NonGeometricData.ID, element.getAttribute("id"));
 		data.addAttribute(NonGeometricData.FILL, getStyle(element, NonGeometricData.FILL));
 		data.addAttribute(NonGeometricData.STROKE, getStyle(element, NonGeometricData.STROKE));
 		data.addAttribute(NonGeometricData.OPACITY, getStyle(element, NonGeometricData.OPACITY));
@@ -167,5 +168,21 @@ public class Util {
 		} catch (NumberFormatException e) {
 			throw new ParsingException(element, "Invalid value for: "+attr, e);
 		}
+	}
+	
+	/**
+	 * Get the attribute value as a reference to another entity
+	 * 
+	 * @param value The value to treat as reference
+	 * @return The reference part of the attribute value
+	 */
+	public static String getAsReference(String value) {
+		if (value.length() < 2) {
+			return "";
+		}
+		
+		value = value.substring(1, value.length());
+		
+		return value;
 	}
 }

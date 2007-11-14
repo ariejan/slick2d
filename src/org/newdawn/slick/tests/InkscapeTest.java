@@ -44,7 +44,7 @@ public class InkscapeTest extends BasicGame {
 //		renderer[0] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/orc.svg"));
 //		renderer[1] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head2.svg"));
 //		renderer[2] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/head3.svg"));
-		renderer[3] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/gradients.svg"));
+		renderer[3] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/clonetest.svg"));
 //		renderer[4] = new SimpleDiagramRenderer(InkscapeLoader.load("testdata/svg/cow.svg"));
 		
 		container.getGraphics().setBackground(new Color(0.5f,0.7f,1.0f));
