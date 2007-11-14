@@ -126,7 +126,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 	 */
 	public void renderLinesImpl(float[] points, int count, float w) {
 		float width = w / 2;
-		GL11.glBegin(GL11.GL_QUADS);
+		GL.glBegin(GL11.GL_QUADS);
 		
 		float lastx1 = 0;
 		float lasty1 = 0;
@@ -194,7 +194,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 			}
 		}
 		
-		GL11.glEnd();
+		GL.glEnd();
 	}
 
 	/**

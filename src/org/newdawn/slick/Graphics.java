@@ -581,14 +581,14 @@ public class Graphics {
 		predraw();
 		Texture.bindNone();
 		currentColor.bind();
-
-		GL.glBegin(SGL.GL_LINE_STRIP);
-		GL.glVertex2f(x1, y1);
-		GL.glVertex2f(x1 + width - 1, y1);
-		GL.glVertex2f(x1 + width - 1, y1 + height - 1);
-		GL.glVertex2f(x1, y1 + height - 1);
-		GL.glVertex2f(x1, y1);
-		GL.glEnd();
+		
+		LSR.start();
+		LSR.vertex(x1, y1);
+		LSR.vertex(x1 + width - 1, y1);
+		LSR.vertex(x1 + width - 1, y1 + height - 1);
+		LSR.vertex(x1, y1 + height - 1);
+		LSR.vertex(x1, y1);
+		LSR.end();
 		postdraw();
 	}
 
@@ -883,7 +883,7 @@ public class Graphics {
 		float cx = x1 + (width / 2.0f);
 		float cy = y1 + (height / 2.0f);
 
-		GL.glBegin(SGL.GL_LINE_STRIP);
+		LSR.start();
 		int step = 360 / segments;
 
 		for (int a = (int) start; a < (int) (end + step); a += step) {
@@ -894,9 +894,9 @@ public class Graphics {
 			float x = (float) (cx + (FastTrig.cos(Math.toRadians(ang)) * width / 2.0f));
 			float y = (float) (cy + (FastTrig.sin(Math.toRadians(ang)) * height / 2.0f));
 
-			GL.glVertex2f(x, y);
+			LSR.vertex(x,y);
 		}
-		GL.glEnd();
+		LSR.end();
 		postdraw();
 	}
 

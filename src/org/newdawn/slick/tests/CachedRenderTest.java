@@ -8,6 +8,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A simple test to show performance gains from cache operations in situtations where
@@ -36,7 +37,6 @@ public class CachedRenderTest extends BasicGame {
 	public void init(final GameContainer container) throws SlickException {
 		operations = new Runnable() {
 			public void run() {
-				
 				for (int i=0;i<100;i++) {
 					int c = i+100;
 					container.getGraphics().setColor(new Color(c,c,c,c));
