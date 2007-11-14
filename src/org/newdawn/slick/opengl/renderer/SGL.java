@@ -405,4 +405,12 @@ public interface SGL {
 	 * @return The current colour being rendered
 	 */
 	public float[] getCurrentColor();
+
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 * 
+	 * @param list
+	 * @param count
+	 */
+	public void glDeleteLists(int list, int count);
 }

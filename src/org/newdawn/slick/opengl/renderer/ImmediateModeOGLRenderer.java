@@ -316,5 +316,12 @@ public class ImmediateModeOGLRenderer implements SGL {
 	public float[] getCurrentColor() {
 		return current;
 	}
+	
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glDeleteLists(int, int)
+	 */
+	public void glDeleteLists(int list, int count) {
+		GL11.glDeleteLists(list, count);
+	}
 
 }
