@@ -67,7 +67,7 @@ public class Util {
 	 * @return The style value
 	 */
 	static String getStyle(Element element, String styleName) {
-		if (element.getAttribute(styleName) != "") {
+		if (!"".equals(element.getAttribute(styleName))) {
 			return element.getAttribute(styleName);
 		}
 		
@@ -115,6 +115,10 @@ public class Util {
 	 */
 	static Transform getTransform(Element element, String attribute) {
 		String str = element.getAttribute(attribute);
+		if (str == null) {
+			return new Transform();
+		}
+		
 		if (str.equals("")) {
 			return new Transform();
 		} else if (str.startsWith("translate")) {
