@@ -75,6 +75,10 @@ public class NonGeometricData {
 	 * @param value The value to assign
 	 */
 	public void addAttribute(String attribute, String value) {
+		if (value == null) {
+			value = "";
+		}
+		
 		if (attribute.equals(FILL) ) {
 			value = morphColor(value);
 		}
