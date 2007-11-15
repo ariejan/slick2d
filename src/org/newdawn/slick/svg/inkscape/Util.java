@@ -67,8 +67,10 @@ public class Util {
 	 * @return The style value
 	 */
 	static String getStyle(Element element, String styleName) {
-		if (!"".equals(element.getAttribute(styleName))) {
-			return element.getAttribute(styleName);
+		String value = element.getAttribute(styleName);
+		
+		if ((value != null) && (value.length() > 0)) {
+			return value;
 		}
 		
 		String style = element.getAttribute("style");
