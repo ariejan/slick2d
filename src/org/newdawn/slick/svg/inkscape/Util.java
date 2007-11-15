@@ -52,7 +52,7 @@ public class Util {
 	 */
 	static String getMetaData(Element element) {
 		String label = element.getAttributeNS(INKSCAPE, "label");
-		if (!label.equals("")) {
+		if ((label != null) && (!label.equals(""))) {
 			return label;
 		}
 		
