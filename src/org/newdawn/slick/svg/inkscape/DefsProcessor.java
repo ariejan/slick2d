@@ -54,21 +54,21 @@ public class DefsProcessor implements ElementProcessor {
 
 			gradient.setTransform(Util.getTransform(lin, "gradientTransform"));
 			
-			if (lin.getAttribute("x1").length() > 0) {
+			if (stringLength(lin.getAttribute("x1")) > 0) {
 				gradient.setX1(Float.parseFloat(lin.getAttribute("x1")));
 			}
-			if (lin.getAttribute("x2").length() > 0) {
+			if (stringLength(lin.getAttribute("x2")) > 0) {
 				gradient.setX2(Float.parseFloat(lin.getAttribute("x2")));
 			}
-			if (lin.getAttribute("y1").length() > 0) {
+			if (stringLength(lin.getAttribute("y1")) > 0) {
 				gradient.setY1(Float.parseFloat(lin.getAttribute("y1")));
 			}
-			if (lin.getAttribute("y2").length() > 0) {
+			if (stringLength(lin.getAttribute("y2")) > 0) {
 				gradient.setY2(Float.parseFloat(lin.getAttribute("y2")));
 			}
 			
 			String ref = lin.getAttributeNS("http://www.w3.org/1999/xlink", "href");
-			if (ref.length() > 0) {
+			if (stringLength(ref) > 0) {
 				Gradient grad = diagram.getGradient(ref.substring(1));
 				if (grad == null) {
 					throw new ParsingException(lin, "Can't find referenced gradient: "+ref);
@@ -104,24 +104,24 @@ public class DefsProcessor implements ElementProcessor {
 			
 			gradient.setTransform(Util.getTransform(rad, "gradientTransform"));
 			
-			if (rad.getAttribute("cx").length() > 0) {
+			if (stringLength(rad.getAttribute("cx")) > 0) {
 				gradient.setX1(Float.parseFloat(rad.getAttribute("cx")));
 			}
-			if (rad.getAttribute("cy").length() > 0) {
+			if (stringLength(rad.getAttribute("cy")) > 0) {
 				gradient.setY1(Float.parseFloat(rad.getAttribute("cy")));
 			}
-			if (rad.getAttribute("fx").length() > 0) {
+			if (stringLength(rad.getAttribute("fx")) > 0) {
 				gradient.setX2(Float.parseFloat(rad.getAttribute("fx")));
 			}
-			if (rad.getAttribute("fy").length() > 0) {
+			if (stringLength(rad.getAttribute("fy")) > 0) {
 				gradient.setY2(Float.parseFloat(rad.getAttribute("fy")));
 			}
-			if (rad.getAttribute("r").length() > 0) {
+			if (stringLength(rad.getAttribute("r")) > 0) {
 				gradient.setR(Float.parseFloat(rad.getAttribute("r")));
 			}
 			
 			String ref = rad.getAttributeNS("http://www.w3.org/1999/xlink", "href");
-			if (ref.length() > 0) {
+			if (stringLength(ref) > 0) {
 				Gradient grad = diagram.getGradient(ref.substring(1));
 				if (grad == null) {
 					throw new ParsingException(rad, "Can't find referenced gradient: "+ref);
@@ -150,4 +150,17 @@ public class DefsProcessor implements ElementProcessor {
 		}
 	}
 
+	/**
+	 * Utility to cope with null values
+	 * 
+	 * @param value The value to get the length of
+	 * @return The length of the string
+	 */
+	private int stringLength(String value) {
+		if (value == null) {
+			return 0;
+		}
+		
+		return value.length();
+	}
 }
