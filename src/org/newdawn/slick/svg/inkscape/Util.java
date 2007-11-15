@@ -83,6 +83,10 @@ public class Util {
 	 * @return The value for the given attribute
 	 */
 	static String extractStyle(String style, String attribute) {
+		if (style == null) {
+			return "";
+		}
+		
 		StringTokenizer tokens = new StringTokenizer(style,";");
 		
 		while (tokens.hasMoreTokens()) {

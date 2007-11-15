@@ -116,7 +116,7 @@ public class PathProcessor implements ElementProcessor {
 	 */
 	public boolean handles(Element element) {
 		if (element.getNodeName().equals("path")) {
-			if (!element.getAttributeNS(Util.SODIPODI, "type").equals("arc")) {
+			if (!"arc".equals(element.getAttributeNS(Util.SODIPODI, "type"))) {
 				return true;
 			}
 		}

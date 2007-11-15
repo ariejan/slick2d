@@ -49,7 +49,7 @@ public class EllipseProcessor implements ElementProcessor {
 			return true;
 		}
 		if (element.getNodeName().equals("path")) {
-			if (element.getAttributeNS(Util.SODIPODI, "type").equals("arc")) {
+			if ("arc".equals(element.getAttributeNS(Util.SODIPODI, "type"))) {
 				return true;
 			}
 		}
