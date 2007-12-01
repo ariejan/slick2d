@@ -135,6 +135,7 @@ public class SpriteSheet extends Image {
 	 * @return The subimage at that location on the sheet
 	 */
 	public Image getSubImage(int x, int y) {
+		init();
 		return subImages[x][y];
 	}
 	
