@@ -51,6 +51,8 @@ public class Image {
 	protected boolean inited = false;
 	/** A pixelData holding the pixel data if it's been read for this texture */
 	private byte[] pixelData;
+	/** True if the image has been destroyed */
+	private boolean destroyed;
 	
 	/**
 	 * Create a texture as a copy of another
@@ -863,5 +865,27 @@ public class Image {
 			return new Color(translate(pixelData[offset]),translate(pixelData[offset+1]),
 					 	     translate(pixelData[offset+2]));
 		}
+	}
+	
+	/**
+	 * Check if this image has been destroyed
+	 * 
+	 * @return True if this image has been destroyed
+	 */
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+	
+	/**
+	 * Destroy the image and release any native resources. 
+	 * Calls on a destroyed image have undefined results
+	 */
+	public void destroy() {
+		if (isDestroyed()) {
+			return;
+		}
+		
+		destroyed = true;
+		texture.release();
 	}
 }

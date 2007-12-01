@@ -653,4 +653,17 @@ public class BigImage extends Image {
 	public String toString() {
 		return "[BIG IMAGE]";
 	}
+	
+	/**
+	 * Destroy the image and release any native resources. 
+	 * Calls on a destroyed image have undefined results
+	 */
+	public void destroy() {
+		for (int tx=0;tx<xcount;tx++) {
+			for (int ty=0;ty<ycount;ty++) {
+				Image image = images[tx][ty];
+				image.destroy();
+			}
+		}
+	}
 }
