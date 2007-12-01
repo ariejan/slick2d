@@ -128,6 +128,17 @@ public class SpriteSheet extends Image {
 	}
 
 	/**
+	 * Get the sub image cached in this sprite sheet
+	 * 
+	 * @param x The x position in tiles of the image to get
+	 * @param y The y position in tiles of the image to get
+	 * @return The subimage at that location on the sheet
+	 */
+	public Image getSubImage(int x, int y) {
+		return subImages[x][y];
+	}
+	
+	/**
 	 * Get a sprite at a particular cell on the sprite sheet
 	 * 
 	 * @param x The x position of the cell on the sprite sheet
