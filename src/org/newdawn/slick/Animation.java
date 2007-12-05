@@ -11,7 +11,7 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  * @author DeX (speed updates)
  */
-public class Animation {
+public class Animation implements Renderable {
 	/** The list of frames to render in this animation */
 	private ArrayList frames = new ArrayList();
 	/** The frame currently being displayed */

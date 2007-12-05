@@ -18,7 +18,7 @@ import org.newdawn.slick.util.Log;
  *
  * @author kevin
  */
-public class Image {
+public class Image implements Renderable {
 	/** The renderer to use for all GL operations */
 	protected static SGL GL = Renderer.get();
 	
