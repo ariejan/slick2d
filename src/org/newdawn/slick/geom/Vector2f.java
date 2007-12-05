@@ -1,5 +1,7 @@
 package org.newdawn.slick.geom;
 
+import org.newdawn.slick.util.FastTrig;
+
 /**
  * A two dimensional vector
  * 
@@ -16,6 +18,69 @@ public strictfp class Vector2f {
 	 */
 	public Vector2f() {
 	}
+
+	/**
+	 * Create a new vector based on an angle
+	 * 
+	 * @param theta The angle of the vector in degrees
+	 */
+	public Vector2f(double theta) {
+		setTheta(theta);
+	}
+
+	/**
+	 * Calculate the components of the vectors based on a angle
+	 * 
+	 * @param theta The angle to calculate the components from (in degrees)
+	 */
+	public void setTheta(double theta) {
+	  // Next lines are to prevent numbers like -1.8369701E-16
+	  // when working with negative numbers
+	  if ((theta < -360) || (theta > 360)) { 
+		  theta = theta % 360;
+	  }
+	  if (theta < 0)  {
+		  theta = 360 + theta;
+	  }
+	  
+	  x = (float) FastTrig.cos(StrictMath.toRadians(theta));
+	  y = (float) FastTrig.sin(StrictMath.toRadians(theta));
+	}
+
+	/**
+	 * Adjust this vector by a given angle
+	 * 
+	 * @param theta The angle to adjust the angle by (in degrees)
+	 */
+	public void add(double theta) {
+		setTheta(getTheta() + theta);
+	}
+
+	/**
+	 * Adjust this vector by a given angle
+	 * 
+	 * @param theta The angle to adjust the angle by (in degrees)
+	 */
+	public void sub(double theta) {
+		setTheta(getTheta() + theta);
+	}
+	
+	/**
+	 * Get the angle this vector is at
+	 * 
+	 * @return The angle this vector is at (in degrees)
+	 */
+	public double getTheta() {
+		double theta = StrictMath.toDegrees(StrictMath.atan2(y, x));
+		if ((theta < -360) || (theta > 360)) {
+			theta = theta % 360;
+		}
+		if (theta < 0) {
+			theta = 360 + theta;
+		}
+
+		return theta;
+	} 
 	
 	/**
 	 * Get the x component
@@ -168,6 +233,7 @@ public strictfp class Vector2f {
 		
 		result.x = dp * b.getX();
 		result.y = dp * b.getY();
+		
 	}
 	
 	/**
