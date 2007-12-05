@@ -142,8 +142,7 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 	 */
 	private void createPlainSet() {
 		try {
-			BufferedImage imgTemp = new BufferedImage(512, 512,
-					BufferedImage.BITMASK);
+			BufferedImage imgTemp = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g = (Graphics2D) imgTemp.getGraphics();
 
 			int rowHeight = 0;
