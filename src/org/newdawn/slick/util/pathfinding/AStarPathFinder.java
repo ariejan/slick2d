@@ -28,6 +28,8 @@ public class AStarPathFinder implements PathFinder {
 	private boolean allowDiagMovement;
 	/** The heuristic we're applying to determine which nodes to search first */
 	private AStarHeuristic heuristic;
+	/** The node we're currently searching from */
+	private Node current;
 	
 	/**
 	 * Create a path finder with the default heuristic - closest to target.
@@ -87,7 +89,7 @@ public class AStarPathFinder implements PathFinder {
 		while ((maxDepth < maxSearchDistance) && (open.size() != 0)) {
 			// pull out the first node in our open list, this is determined to 
 			// be the most likely to be the next step based on our heuristic
-			Node current = getFirstInOpen();
+			current = getFirstInOpen();
 			if (current == nodes[tx][ty]) {
 				break;
 			}
@@ -172,6 +174,24 @@ public class AStarPathFinder implements PathFinder {
 		return path;
 	}
 
+	/**
+	 * Get the X coordinate of the node currently being evaluated
+	 * 
+	 * @return The X coordinate of the node currently being evaluated
+	 */
+	public int getCurrentX() {
+		return current.x;
+	}
+
+	/**
+	 * Get the Y coordinate of the node currently being evaluated
+	 * 
+	 * @return The Y coordinate of the node currently being evaluated
+	 */
+	public int getCurrentY() {
+		return current.y;
+	}
+	
 	/**
 	 * Get the first element from the open list. This is the next
 	 * one to be searched.
