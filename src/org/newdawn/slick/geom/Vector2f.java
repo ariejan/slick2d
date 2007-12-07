@@ -62,7 +62,7 @@ public strictfp class Vector2f {
 	 * @param theta The angle to adjust the angle by (in degrees)
 	 */
 	public void sub(double theta) {
-		setTheta(getTheta() + theta);
+		setTheta(getTheta() - theta);
 	}
 	
 	/**
