@@ -69,6 +69,8 @@ public class AStarPathFinder implements PathFinder {
 	 * @see PathFinder#findPath(Mover, int, int, int, int)
 	 */
 	public Path findPath(Mover mover, int sx, int sy, int tx, int ty) {
+		current = null;
+		
 		// easy first check, if the destination is blocked, we can't get there
 		if (map.blocked(mover, tx, ty)) {
 			return null;
@@ -180,6 +182,10 @@ public class AStarPathFinder implements PathFinder {
 	 * @return The X coordinate of the node currently being evaluated
 	 */
 	public int getCurrentX() {
+		if (current == null) {
+			return -1;
+		}
+		
 		return current.x;
 	}
 
@@ -189,6 +195,10 @@ public class AStarPathFinder implements PathFinder {
 	 * @return The Y coordinate of the node currently being evaluated
 	 */
 	public int getCurrentY() {
+		if (current == null) {
+			return -1;
+		}
+		
 		return current.y;
 	}
 	
