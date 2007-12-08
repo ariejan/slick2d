@@ -30,29 +30,29 @@ public class Image implements Renderable {
 	public static final int FILTER_NEAREST = 2;
 	
 	/** The OpenGL texture for this image */
-	private Texture texture;
+	protected Texture texture;
 	/** The width of the image */
 	protected int width;
 	/** The height of the image */
 	protected int height;
 	/** The texture coordinate width to use to find our image */
-	private float textureWidth;
+	protected float textureWidth;
 	/** The texture coordinate height to use to find our image */
-	private float textureHeight;
+	protected float textureHeight;
 	/** The x texture offset to use to find our image */
-	private float textureOffsetX;
+	protected float textureOffsetX;
 	/** The y texture offset to use to find our image */
-	private float textureOffsetY;
+	protected float textureOffsetY;
     /** Angle to rotate the image to. */
-    private float angle;
+	protected float angle;
 	/** The name given for the image */
-	private String ref;
+	protected String ref;
 	/** True if this image's state has been initialised */
 	protected boolean inited = false;
 	/** A pixelData holding the pixel data if it's been read for this texture */
-	private byte[] pixelData;
+	protected byte[] pixelData;
 	/** True if the image has been destroyed */
-	private boolean destroyed;
+	protected boolean destroyed;
 	
 	/**
 	 * Create a texture as a copy of another
