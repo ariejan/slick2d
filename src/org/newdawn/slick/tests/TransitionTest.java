@@ -1,6 +1,7 @@
 package org.newdawn.slick.tests;
 
 import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -13,6 +14,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.state.transition.HorizontalSplitTransition;
 import org.newdawn.slick.state.transition.RotateTransition;
+import org.newdawn.slick.state.transition.SelectTransition;
 import org.newdawn.slick.state.transition.Transition;
 import org.newdawn.slick.state.transition.VerticalSplitTransition;
 import org.newdawn.slick.util.Log;
@@ -30,6 +32,7 @@ public class TransitionTest extends StateBasedGame {
 			{null, VerticalSplitTransition.class},
 			{null, HorizontalSplitTransition.class},
 			{null, BlobbyTransition.class},
+			{null, SelectTransition.class},
 	};
 	/** The index of the next transition to use */
 	private int index;
@@ -124,6 +127,8 @@ public class TransitionTest extends StateBasedGame {
 		 */
 		public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 			image.draw(0,0,800,600);
+			g.setColor(Color.red);
+			g.fillRect(-50,200,50,50);
 		}
 
 		/**
