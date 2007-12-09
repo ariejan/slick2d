@@ -57,7 +57,7 @@
 	    </classpath>
 	</javac>
 	<jar destfile="lib/slick.jar" 
-		 basedir="${build.dir}/classes" includes="org/newdawn/slick/**" excludes="org/newdawn/slick/tests/**"/>
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/**"/>
 	<jar update="true" destfile="lib/slick.jar" 
 		 basedir="src" includes="org/newdawn/slick/data/*"/>
 	<jar update="true" destfile="lib/slick.jar" 
