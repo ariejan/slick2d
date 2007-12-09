@@ -19,6 +19,13 @@ public class FadeOutTransition implements Transition {
 
 	/**
 	 * Create a new fade out transition
+	 */
+	public FadeOutTransition() {
+		this(Color.black, 500);
+	}
+	
+	/**
+	 * Create a new fade out transition
 	 * 
 	 * @param color The color we're going to fade out to
 	 */

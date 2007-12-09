@@ -324,4 +324,25 @@ public class ImmediateModeOGLRenderer implements SGL {
 		GL11.glDeleteLists(list, count);
 	}
 
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glClearDepth(float)
+	 */
+	public void glClearDepth(float value) {
+		GL11.glClearDepth(value);
+	}
+
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glDepthFunc(int)
+	 */
+	public void glDepthFunc(int func) {
+		GL11.glDepthFunc(func);
+	}
+
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glDepthMask(boolean)
+	 */
+	public void glDepthMask(boolean mask) {
+		GL11.glDepthMask(mask);
+	}
+
 }

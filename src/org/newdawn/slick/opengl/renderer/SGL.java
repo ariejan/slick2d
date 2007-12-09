@@ -413,4 +413,26 @@ public interface SGL {
 	 * @param count
 	 */
 	public void glDeleteLists(int list, int count);
+	
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 * 
+	 * @param mask
+	 */
+	public void glDepthMask(boolean mask);
+	
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 * 
+	 * @param value
+	 */
+	public void glClearDepth(float value);
+	
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 * 
+	 * @param func
+	 */
+	public void glDepthFunc(int func);
+	
 }

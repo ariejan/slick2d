@@ -16,6 +16,13 @@ public class FadeInTransition implements Transition {
 	private Color color;
 	/** The time it takes to fade in */
 	private int fadeTime = 500;
+
+	/**
+	 * Create a new fade in transition
+	 */
+	public FadeInTransition() {
+		this(Color.black, 500);
+	}
 	
 	/**
 	 * Create a new fade in transition
