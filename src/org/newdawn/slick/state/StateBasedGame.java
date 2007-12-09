@@ -145,6 +145,8 @@ public abstract class StateBasedGame implements Game, InputListener {
 				Log.error(e);
 			}
 		}
+		
+		leaveTransition.init(currentState, nextState);
 	}
 	
 	/**
@@ -202,11 +204,14 @@ public abstract class StateBasedGame implements Game, InputListener {
 			leaveTransition.update(this, container, delta);
 			if (leaveTransition.isComplete()) {
 				currentState.leave(container, this);
+				GameState prevState = currentState;
 				currentState = nextState;
 				nextState = null;
 				leaveTransition = null;
 				if (enterTransition == null) {
 					currentState.enter(container, this);
+				} else {
+					enterTransition.init(currentState, prevState);
 				}
 			} else {
 				return;

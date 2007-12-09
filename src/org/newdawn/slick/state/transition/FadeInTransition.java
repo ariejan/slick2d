@@ -3,6 +3,7 @@ package org.newdawn.slick.state.transition;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -68,6 +69,11 @@ public class FadeInTransition implements Transition {
 	 * @see org.newdawn.slick.state.transition.Transition#preRender(org.newdawn.slick.state.StateBasedGame, org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void preRender(StateBasedGame game, GameContainer container, Graphics g) {
+	}
+
+	public void init(GameState firstState, GameState secondState) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -74,6 +74,9 @@ public class TestState1 extends BasicGameState {
 				public boolean isComplete() {
 					return (System.currentTimeMillis() - start) > 2000;
 				}
+
+				public void init(GameState firstState, GameState secondState) {
+				}
 			};
 			
 			game.enterState(TestState2.ID, t, new EmptyTransition());

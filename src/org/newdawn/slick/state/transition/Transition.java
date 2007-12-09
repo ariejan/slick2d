@@ -3,6 +3,7 @@ package org.newdawn.slick.state.transition;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -47,4 +48,12 @@ public interface Transition {
 	 * @return True if the transition has been completed
 	 */
 	public boolean isComplete();
+	
+	/**
+	 * Initialise the transition
+	 * 
+	 * @param firstState The first state we're rendering (this will be rendered by the framework)
+	 * @param secondState The second stat we're transitioning to or from (this one won't be rendered)
+	 */
+	public void init(GameState firstState, GameState secondState);
 }
