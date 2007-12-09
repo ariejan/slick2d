@@ -57,7 +57,7 @@
 	    </classpath>
 	</javac>
 	<jar destfile="lib/slick.jar" 
-		 basedir="${build.dir}/classes" includes="org/newdawn/slick/**"/>
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/**" excludes="org/newdawn/slick/tests/**"/>
 	<jar update="true" destfile="lib/slick.jar" 
 		 basedir="src" includes="org/newdawn/slick/data/*"/>
 	<jar update="true" destfile="lib/slick.jar" 
@@ -402,6 +402,7 @@
 	<createdemojnlp name="keyrepeat" title="Slick2D Key Repeat" mainclass="org.newdawn.slick.tests.KeyRepeatTest"/>
 	<createdemojnlp name="musiclistener" title="Slick2D Music Listener" mainclass="org.newdawn.slick.tests.MusicListenerTest"/>
 	<createdemojnlp name="gradient" title="Slick2D Gradients" mainclass="org.newdawn.slick.tests.GradientTest"/>
+	<createdemojnlp name="transition" title="Slick2D Transitions" mainclass="org.newdawn.slick.tests.TransitionTest"/>
 	
 	<!-- Examples under here please -->
 	<createdemojnlp template="slickexample.jnlp" name="scroller" title="Slick2D TileMap Scroll Example" mainclass="org.newdawn.slick.examples.scroller.Scroller"/>
