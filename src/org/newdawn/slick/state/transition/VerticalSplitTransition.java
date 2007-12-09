@@ -76,9 +76,10 @@ public class VerticalSplitTransition implements Transition {
 		prev.render(container, game, g);
 		GL.glPopMatrix();
 		g.clearClip();
+		g.resetTransform();
 		
-		g.translate(0, offset*2);
-		g.setClip(0,(int)((container.getHeight()/2)+(offset*2)),container.getWidth(),container.getHeight()/2);
+		g.translate(0, offset);
+		g.setClip(0,(int)((container.getHeight()/2)+(offset)),container.getWidth(),container.getHeight()/2);
 		if (background != null) {
 			Color c = g.getColor();
 			g.setColor(background);
