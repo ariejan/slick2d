@@ -66,29 +66,34 @@ public class GeomTest extends BasicGame {
 		g.drawString("Red indicates a collision, green indicates no collision", 50, 420);
         g.drawString("White are the targets", 50, 435);
 		
-		g.setColor(Color.white);
-		g.draw(rect);
-		g.draw(circle);
-		
-		g.setColor(rect1.intersects(rect) ? Color.red : Color.green);
-		g.draw(rect1);
-		g.setColor(rect2.intersects(rect) ? Color.red : Color.green);
-		g.draw(rect2);
-        g.setColor(roundRect.intersects(rect) ? Color.red : Color.green);
-        g.draw(roundRect);
-		g.setColor(circle1.intersects(rect) ? Color.red : Color.green);
-		g.draw(circle1);
-		g.setColor(circle2.intersects(rect) ? Color.red : Color.green);
-		g.draw(circle2);
-		g.setColor(circle3.intersects(circle) ? Color.red : Color.green);
-		g.draw(circle3);
-		g.setColor(circle4.intersects(circle) ? Color.red : Color.green);
-		g.draw(circle4);
-
-        g.draw(roundRect2);
-		g.setColor(Color.blue);
-		g.draw(new Circle(100,100,50));
-		g.drawRect(50,50,100,100);
+        g.setColor(Color.red);
+        g.fillRect(0,0,5,5);
+        g.setColor(Color.white);
+        g.drawRect(0,0,5,5);
+        
+//		g.setColor(Color.white);
+//		g.draw(rect);
+//		g.draw(circle);
+//		
+//		g.setColor(rect1.intersects(rect) ? Color.red : Color.green);
+//		g.draw(rect1);
+//		g.setColor(rect2.intersects(rect) ? Color.red : Color.green);
+//		g.draw(rect2);
+//        g.setColor(roundRect.intersects(rect) ? Color.red : Color.green);
+//        g.draw(roundRect);
+//		g.setColor(circle1.intersects(rect) ? Color.red : Color.green);
+//		g.draw(circle1);
+//		g.setColor(circle2.intersects(rect) ? Color.red : Color.green);
+//		g.draw(circle2);
+//		g.setColor(circle3.intersects(circle) ? Color.red : Color.green);
+//		g.draw(circle3);
+//		g.setColor(circle4.intersects(circle) ? Color.red : Color.green);
+//		g.draw(circle4);
+//
+//        g.draw(roundRect2);
+//		g.setColor(Color.blue);
+//		g.draw(new Circle(100,100,50));
+//		g.drawRect(50,50,100,100);
         
 	}
 
