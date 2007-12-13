@@ -583,11 +583,11 @@ public class Graphics {
 		currentColor.bind();
 		
 		LSR.start();
-		LSR.vertex(x1, y1);
-		LSR.vertex(x1 + width - 1, y1);
-		LSR.vertex(x1 + width - 1, y1 + height - 1);
-		LSR.vertex(x1, y1 + height - 1);
-		LSR.vertex(x1, y1);
+		LSR.vertex(x1, y1 + 1);
+		LSR.vertex(x1 + width, y1 + 1);
+		LSR.vertex(x1 + width - 1, y1 + height);
+		LSR.vertex(x1, y1 + height);
+		LSR.vertex(x1, y1 + 1);
 		LSR.end();
 		postdraw();
 	}
