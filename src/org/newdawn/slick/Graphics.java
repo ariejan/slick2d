@@ -585,7 +585,19 @@ public class Graphics {
 		LSR.start();
 		LSR.vertex(x1, y1 + 1);
 		LSR.vertex(x1 + width, y1 + 1);
+		LSR.end();
+
+		LSR.start();
+		LSR.vertex(x1 + width - 1, y1 + 1);
 		LSR.vertex(x1 + width - 1, y1 + height);
+		LSR.end();
+
+		LSR.start();
+		LSR.vertex(x1, y1 + height);
+		LSR.vertex(x1 + width - 1, y1 + height);
+		LSR.end();
+
+		LSR.start();
 		LSR.vertex(x1, y1 + height);
 		LSR.vertex(x1, y1 + 1);
 		LSR.end();
