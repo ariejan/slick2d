@@ -148,9 +148,7 @@
 	           use="true"
 	           windowtitle="Slick - The 2D Library">
 		<packageset dir="src" defaultexcludes="yes">
-		      <include name="org/newdawn/slick"/>
-		      <include name="org/newdawn/slick/*"/>
-		      <include name="org/newdawn/slick/state/*"/>
+		      <include name="org/newdawn/slick/**/**"/>
 		</packageset>
 		<classpath>
 		  <pathelement path="lib/slick.jar"/>
