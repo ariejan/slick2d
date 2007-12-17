@@ -1,6 +1,8 @@
 package org.newdawn.slick.util.pathfinding;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.newdawn.slick.util.pathfinding.heuristics.ClosestHeuristic;
 
@@ -333,7 +335,7 @@ public class AStarPathFinder implements PathFinder {
 	 */
 	private class PriorityList {
 		/** The list of elements */
-		private ArrayList list = new ArrayList();
+		private List list = new LinkedList();
 		
 		/**
 		 * Retrieve the first element from the list
