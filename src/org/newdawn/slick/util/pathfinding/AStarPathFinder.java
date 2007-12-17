@@ -1,7 +1,6 @@
 package org.newdawn.slick.util.pathfinding;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.newdawn.slick.util.pathfinding.heuristics.ClosestHeuristic;
 
@@ -15,7 +14,7 @@ public class AStarPathFinder implements PathFinder {
 	/** The set of nodes that have been searched through */
 	private ArrayList closed = new ArrayList();
 	/** The set of nodes that we do not yet consider fully searched */
-	private SortedList open = new SortedList();
+	private PriorityList open = new PriorityList();
 	
 	/** The map being searched */
 	private TileBasedMap map;
@@ -75,6 +74,12 @@ public class AStarPathFinder implements PathFinder {
 		if (map.blocked(mover, tx, ty)) {
 			return null;
 		}
+
+		for (int x=0;x<map.getWidthInTiles();x++) {
+			for (int y=0;y<map.getHeightInTiles();y++) {
+				nodes[x][y].reset();
+			}
+		}
 		
 		// initial state for A*. The closed group is empty. Only the starting
 		// tile is in the open list and it's cost is zero, i.e. we're already there
@@ -82,7 +87,7 @@ public class AStarPathFinder implements PathFinder {
 		nodes[sx][sy].depth = 0;
 		closed.clear();
 		open.clear();
-		open.add(nodes[sx][sy]);
+		addToOpen(nodes[sx][sy]);
 		
 		nodes[tx][ty].parent = null;
 		
@@ -218,6 +223,7 @@ public class AStarPathFinder implements PathFinder {
 	 * @param node The node to be added to the open list
 	 */
 	protected void addToOpen(Node node) {
+		node.setOpen(true);
 		open.add(node);
 	}
 	
@@ -228,7 +234,7 @@ public class AStarPathFinder implements PathFinder {
 	 * @return True if the node given is in the open list
 	 */
 	protected boolean inOpenList(Node node) {
-		return open.contains(node);
+		return node.isOpen();
 	}
 	
 	/**
@@ -237,6 +243,7 @@ public class AStarPathFinder implements PathFinder {
 	 * @param node The node to remove from the open list
 	 */
 	protected void removeFromOpen(Node node) {
+		node.setOpen(false);
 		open.remove(node);
 	}
 	
@@ -246,6 +253,7 @@ public class AStarPathFinder implements PathFinder {
 	 * @param node The node to add to the closed list
 	 */
 	protected void addToClosed(Node node) {
+		node.setClosed(true);
 		closed.add(node);
 	}
 	
@@ -256,7 +264,7 @@ public class AStarPathFinder implements PathFinder {
 	 * @return True if the node specified is in the closed list
 	 */
 	protected boolean inClosedList(Node node) {
-		return closed.contains(node);
+		return node.isClosed();
 	}
 	
 	/**
@@ -265,6 +273,7 @@ public class AStarPathFinder implements PathFinder {
 	 * @param node The node to remove from the closed list
 	 */
 	protected void removeFromClosed(Node node) {
+		node.setClosed(false);
 		closed.remove(node);
 	}
 	
@@ -318,11 +327,11 @@ public class AStarPathFinder implements PathFinder {
 	}
 	
 	/**
-	 * A simple sorted list
+	 * A list that sorts any element provided into the list
 	 *
 	 * @author kevin
 	 */
-	private class SortedList {
+	private class PriorityList {
 		/** The list of elements */
 		private ArrayList list = new ArrayList();
 		
@@ -349,7 +358,15 @@ public class AStarPathFinder implements PathFinder {
 		 */
 		public void add(Object o) {
 			list.add(o);
-			Collections.sort(list);
+			
+			// float the new entry 
+			for (int i=0;i<list.size();i++) {
+				if (((Comparable) list.get(i)).compareTo(o) > 0) {
+					list.set(i, o);
+					break;
+				}
+			}
+			//Collections.sort(list);
 		}
 		
 		/**
@@ -397,6 +414,10 @@ public class AStarPathFinder implements PathFinder {
 		private float heuristic;
 		/** The search depth of this node */
 		private int depth;
+		/** In the open list */
+		private boolean open;
+		/** In the closed list */
+		private boolean closed;
 		
 		/**
 		 * Create a new node
@@ -438,6 +459,52 @@ public class AStarPathFinder implements PathFinder {
 			} else {
 				return 0;
 			}
+		}
+		
+		/**
+		 * Indicate whether the node is in the open list
+		 * 
+		 * @param open True if the node is in the open list
+		 */
+		public void setOpen(boolean open) {
+			this.open = open;
+		}
+		
+		/**
+		 * Check if the node is in the open list
+		 * 
+		 * @return True if the node is in the open list
+		 */
+		public boolean isOpen() {
+			return open;
+		}
+		
+		/**
+		 * Indicate whether the node is in the closed list
+		 * 
+		 * @param closed True if the node is in the closed list
+		 */
+		public void setClosed(boolean closed) {
+			this.closed = closed;
+		}
+		
+		/**
+		 * Check if the node is in the closed list
+		 * 
+		 * @return True if the node is in the closed list
+		 */
+		public boolean isClosed() {
+			return closed;
+		}
+
+		/**
+		 * Reset the state of this node
+		 */
+		public void reset() {
+			closed = false;
+			open = false;
+			cost = 0;
+			depth = 0;
 		}
 	}
 }
