@@ -286,4 +286,28 @@ public class Color {
 	public Color multiply(Color c) {
 		return new Color(r * c.r, g * c.g, b * c.b, a * c.a);
 	}
+
+	/**
+	 * Add another colour to this one
+	 * 
+	 * @param c The colour to add 
+	 */
+	public void add(Color c) {
+		r += c.r;
+		g += c.g;
+		b += c.b;
+		a += c.a;
+	}
+	
+	/**
+	 * Scale the components of the colour by the given value
+	 * 
+	 * @param value The value to scale by
+	 */
+	public void scale(float value) {
+		r *= value;
+		g *= value;
+		b *= value;
+		a *= value;
+	}
 }
