@@ -578,30 +578,10 @@ public class Graphics {
 	 *            The height of the rectangle to draw
 	 */
 	public void drawRect(float x1, float y1, float width, float height) {
-		predraw();
-		Texture.bindNone();
-		currentColor.bind();
-		
-		LSR.start();
-		LSR.vertex(x1, y1 + 1);
-		LSR.vertex(x1 + width, y1 + 1);
-		LSR.end();
-
-		LSR.start();
-		LSR.vertex(x1 + width - 1, y1 + 1);
-		LSR.vertex(x1 + width - 1, y1 + height);
-		LSR.end();
-
-		LSR.start();
-		LSR.vertex(x1, y1 + height);
-		LSR.vertex(x1 + width - 1, y1 + height);
-		LSR.end();
-
-		LSR.start();
-		LSR.vertex(x1, y1 + height);
-		LSR.vertex(x1, y1 + 1);
-		LSR.end();
-		postdraw();
+		fillRect(x1,y1,width,1);
+		fillRect(x1,y1+height-1,width,1);
+		fillRect(x1,y1,1,height);
+		fillRect(x1+width-1,y1,1,height);
 	}
 
 	/**
