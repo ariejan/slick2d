@@ -492,7 +492,11 @@ public class Animation implements Renderable {
 		
 		nextChange -= delta;
 		
-		while (nextChange < 0 && (currentFrame != stopAt)) {
+		while (nextChange < 0 && (!stopped)) {
+			if (currentFrame == stopAt) {
+				stopped = true;
+				break;
+			}
 			if ((currentFrame == frames.size() - 1) && (!loop)) {
 				break;
 			}
@@ -505,10 +509,6 @@ public class Animation implements Renderable {
 			}
 			int realDuration = (int) (((Frame) frames.get(currentFrame)).duration / speed);
 			nextChange = nextChange + realDuration;
-		}
-		
-		if (currentFrame == stopAt) {
-			stopped = true;
 		}
 	}
 	
@@ -548,6 +548,16 @@ public class Animation implements Renderable {
 	 */
 	public int getDuration(int index) {
 		return ((Frame) frames.get(index)).duration;
+	}
+	
+	/**
+	 * Set the duration of the given frame
+	 * 
+	 * @param index The index of the given frame
+	 * @param duration The duration in (ms) for the given frame
+	 */
+	public void setDuration(int index, int duration) {
+		((Frame) frames.get(index)).duration = duration;
 	}
 	
 	/**
