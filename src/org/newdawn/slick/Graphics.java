@@ -39,6 +39,9 @@ public class Graphics {
 	/** Draw using the alpha blending */
 	public static int MODE_ALPHA_BLEND = 3;
 
+	/** Draw multiplying the source and destination colours */
+	public static int MODE_COLOR_MULTIPLY = 4;
+	
 	/** The default number of segments that will be used when drawing an oval */
 	private static final int DEFAULT_SEGMENTS = 50;
 
@@ -136,6 +139,11 @@ public class Graphics {
 				GL.glEnable(SGL.GL_BLEND);
 				GL.glColorMask(true, true, true, false);
 				GL.glBlendFunc(GL11.GL_DST_ALPHA, GL11.GL_ONE_MINUS_DST_ALPHA);
+			}
+			if (currentDrawingMode == MODE_COLOR_MULTIPLY) {
+				GL.glEnable(SGL.GL_BLEND);
+				GL.glColorMask(true, true, true, true);
+				GL.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_COLOR);
 			}
 		}
 		postdraw();
