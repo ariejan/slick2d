@@ -45,6 +45,8 @@ public class ImageTest extends BasicGame {
 		image = tga = new Image("testdata/logo.png");
         rotImage = new Image("testdata/logo.png");
         rotImage = rotImage.getScaledCopy(rotImage.getWidth() / 2, rotImage.getHeight() / 2);
+        //rotImage.setCenterOfRotation(0,0);
+        
 		scaleMe = new Image("testdata/logo.tga", true, Image.FILTER_NEAREST);
 		gif = new Image("testdata/logo.gif");
 		scaled = gif.getScaledCopy(120, 120);

@@ -53,7 +53,12 @@ public class Image implements Renderable {
 	protected byte[] pixelData;
 	/** True if the image has been destroyed */
 	protected boolean destroyed;
-	
+
+	/** The x coordinate of the centre of rotation */
+    protected float centerX; 
+    /** The y coordinate of the centre of rotation */
+    protected float centerY; 
+    
 	/**
 	 * Create a texture as a copy of another
 	 * 
@@ -68,6 +73,9 @@ public class Image implements Renderable {
 		this.ref = other.ref;
 		this.textureOffsetX = other.textureOffsetX;
 		this.textureOffsetY = other.textureOffsetY;
+	
+		centerX = width / 2;
+		centerY = height / 2;
 		inited = true;
 	}
 	
@@ -145,6 +153,8 @@ public class Image implements Renderable {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
 		}
+		
+		init();
 	}
 	
 	/**
@@ -308,6 +318,9 @@ public class Image implements Renderable {
 		}
 		
 		initImpl();
+	
+		centerX = width / 2;
+		centerY = height / 2;
 	}
 
 	/**
@@ -436,21 +449,24 @@ public class Image implements Renderable {
         } 
        
         texture.bind(); 
-        float centerX = x + (width / 2); 
-        float centerY = y + (height / 2); 
-        if(angle != 0.0f) { 
-            GL.glTranslatef(centerX, centerY, 0.0f); 
-            GL.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
-            GL.glTranslatef(-centerX, -centerY, 0.0f); 
-        } 
+        
+        GL.glTranslatef(x, y, 0);
+        if (angle != 0) {
+	        GL.glTranslatef(centerX, centerY, 0.0f); 
+	        GL.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
+	        GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        }
+        
         GL.glBegin(SGL.GL_QUADS); 
-            drawEmbedded(x,y,width,height); 
+            drawEmbedded(0,0,width,height); 
         GL.glEnd(); 
-        if(angle != 0.0f) { 
-            GL.glTranslatef(centerX, centerY, 0.0f); 
-            GL.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
-            GL.glTranslatef(-centerX, -centerY, 0.0f); 
-        } 
+        
+        if (angle != 0) {
+	        GL.glTranslatef(centerX, centerY, 0.0f); 
+	        GL.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
+	        GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        }
+        GL.glTranslatef(-x, -y, 0);
     } 
 
 	/**
@@ -463,6 +479,17 @@ public class Image implements Renderable {
 	 */
 	public void drawFlash(float x,float y,float width,float height) {
 		drawFlash(x,y,width,height,Color.white);
+	}
+	
+	/**
+	 * Set the centre of the rotation when applied to this image
+	 * 
+	 * @param x The x coordinate of center of rotation relative to the top left corner of the image
+	 * @param y The y coordinate of center of rotation relative to the top left corner of the image
+	 */
+	public void setCenterOfRotation(float x, float y) {
+		centerX = x;
+		centerY = y;
 	}
 	
 	/**
@@ -489,21 +516,26 @@ public class Image implements Renderable {
 		
 		GL.glTexEnvi(SGL.GL_TEXTURE_ENV, SGL.GL_TEXTURE_ENV_MODE, SGL.GL_MODULATE);
 
-        float centerX = x + (width / 2); 
-        float centerY = y + (height / 2); 
-        if(angle != 0.0f) { 
-            GL.glTranslatef(centerX, centerY, 0.0f); 
-            GL.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
-            GL.glTranslatef(-centerX, -centerY, 0.0f); 
-        } 
+        float centerX = x + this.centerX;
+        float centerY = y + this.centerY;
+
+        GL.glTranslatef(x, y, 0);
+        if (angle != 0) {
+	        GL.glTranslatef(centerX, centerY, 0.0f); 
+	        GL.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
+	        GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        }
+        
 		GL.glBegin(SGL.GL_QUADS);
-			drawEmbedded(x,y,width,height);
+			drawEmbedded(0,0,width,height);
 		GL.glEnd();
-        if(angle != 0.0f) { 
-            GL.glTranslatef(centerX, centerY, 0.0f); 
-            GL.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
-            GL.glTranslatef(-centerX, -centerY, 0.0f); 
-        } 
+
+        if (angle != 0) {
+	        GL.glTranslatef(centerX, centerY, 0.0f); 
+	        GL.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
+	        GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        }
+        GL.glTranslatef(-x, -y, 0);
         
 		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
 			GL.glDisable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
@@ -580,6 +612,8 @@ public class Image implements Renderable {
 		sub.width = width;
 		sub.height = height;
 		sub.ref = ref;
+		sub.centerX = width / 2;
+		sub.centerY = height / 2;
 		
 		return sub;
 	}
@@ -733,7 +767,8 @@ public class Image implements Renderable {
 		Image image = copy();
 		image.width = width;
 		image.height = height;
-		
+		image.centerX = width / 2;
+		image.centerY = height / 2;
 		return image;
 	}
 	
