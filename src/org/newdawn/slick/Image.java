@@ -153,8 +153,6 @@ public class Image implements Renderable {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
 		}
-		
-		init();
 	}
 	
 	/**
