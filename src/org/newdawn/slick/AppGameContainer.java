@@ -446,4 +446,15 @@ public class AppGameContainer extends GameContainer {
 		
 		Display.setIcon(bufs);
 	}
+
+	/**
+	 * @see org.newdawn.slick.GameContainer#setDefaultMouseCursor()
+	 */
+	public void setDefaultMouseCursor() {
+		try {
+			Mouse.setNativeCursor(null);
+		} catch (LWJGLException e) {
+			Log.error("Failed to reset mouse cursor", e);
+		}
+	}
 }

@@ -332,5 +332,12 @@ public class AppletGameContainer extends Applet {
 			// unsupported in an applet
 		}
 
+		/**
+		 * @see org.newdawn.slick.GameContainer#setDefaultMouseCursor()
+		 */
+		public void setDefaultMouseCursor() {
+			// unsupported in an applet
+		}
+
 	}
 }

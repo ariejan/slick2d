@@ -292,5 +292,12 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		protected boolean alwaysRender() {
 			return true;
 		}
+
+		/**
+		 * @see org.newdawn.slick.GameContainer#setDefaultMouseCursor()
+		 */
+		public void setDefaultMouseCursor() {	
+			// unsupported in an canvas
+		}
 	}
 }

@@ -309,6 +309,12 @@ public abstract class GameContainer implements GUIContext {
 	public abstract void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY) throws SlickException;
 	
 	/**
+	 * Set the default mouse cursor - i.e. the original cursor before any native 
+	 * cursor was set
+	 */
+	public abstract void setDefaultMouseCursor();
+	
+	/**
 	 * Get the input system
 	 * 
 	 * @return The input system available to this game container

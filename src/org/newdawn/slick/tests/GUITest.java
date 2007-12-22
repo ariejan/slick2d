@@ -75,7 +75,7 @@ public class GUITest extends BasicGame implements ComponentListener {
 		this.container = container;
 		
 		image = new Image("testdata/logo.tga");
-		background = new Image("testdata/dungeontiles.gif", true);
+		background = new Image("testdata/dungeontiles.gif");
 		container.setMouseCursor("testdata/cursor.tga", 0, 0);
 		
 		for (int i=0;i<4;i++) {
@@ -113,6 +113,9 @@ public class GUITest extends BasicGame implements ComponentListener {
 	public void keyPressed(int key, char c) {
 		if (key == Input.KEY_ESCAPE) {
 			System.exit(0);
+		}
+		if (key == Input.KEY_F2) {
+			app.setDefaultMouseCursor();
 		}
 		if (key == Input.KEY_F1) {
 			if (app != null) {
