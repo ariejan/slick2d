@@ -31,6 +31,9 @@ public class FileSystemLocation implements ResourceLocation {
 		try {
 			File file = new File(root, ref);
 			if (!file.exists()) {
+				file = new File(ref);
+			}
+			if (!file.exists()) {
 				return null;
 			}
 			
@@ -45,7 +48,11 @@ public class FileSystemLocation implements ResourceLocation {
 	 */
 	public InputStream getResourceAsStream(String ref) {
 		try {
-			return new FileInputStream(new File(root, ref));
+			File file = new File(root, ref);
+			if (!file.exists()) {
+				file = new File(ref);
+			}
+			return new FileInputStream(file);
 		} catch (IOException e) {
 			return null;
 		}
