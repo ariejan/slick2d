@@ -61,6 +61,13 @@ public class SpriteSheetFont implements Font {
 	 * @see org.newdawn.slick.Font#drawString(float, float, java.lang.String, org.newdawn.slick.Color)
 	 */
 	public void drawString(float x, float y, String text, Color col) {
+		drawString(x,y,text,col,0,text.length()-1);
+	}
+	
+	/**
+	 * @see Font#drawString(float, float, String, Color, int, int)
+	 */
+	public void drawString(float x, float y, String text, Color col, int startIndex, int endIndex) {
 		try {
 			byte[] data = text.getBytes("US-ASCII");
 			for (int i = 0; i < data.length; i++) {
@@ -68,8 +75,11 @@ public class SpriteSheetFont implements Font {
 				if (index < numChars) {
 					int xPos = (index % horizontalCount);
 					int yPos = (index / horizontalCount);
-					font.getSprite(xPos, yPos)
-							.draw(x + (i * charWidth), y, col);
+					
+					if ((i >= startIndex) || (i <= endIndex)) {
+						font.getSprite(xPos, yPos)
+								.draw(x + (i * charWidth), y, col);
+					}
 				}
 			}
 		} catch (UnsupportedEncodingException e) {

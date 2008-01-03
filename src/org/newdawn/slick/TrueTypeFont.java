@@ -299,6 +299,14 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 	 */
 	public void drawString(float x, float y, String whatchars,
 			org.newdawn.slick.Color color) {
+		drawString(x,y,whatchars,color,0,whatchars.length()-1);
+	}
+	
+	/**
+	 * @see Font#drawString(float, float, String, org.newdawn.slick.Color, int, int)
+	 */
+	public void drawString(float x, float y, String whatchars,
+			org.newdawn.slick.Color color, int startIndex, int endIndex) {
 		color.bind();
 		fontTexture.bind();
 
@@ -313,11 +321,13 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 			if (charCurrent < 256) {
 				intObject = charArray[charCurrent];
 
-				drawQuad((int) (x + totalwidth), (int) y,
-						(int) (x + totalwidth + intObject.width),
-						(int) (y + intObject.height), intObject.storedX,
-						intObject.storedY, intObject.storedX + intObject.width,
-						intObject.storedY + intObject.height);
+				if ((i >= startIndex) || (i <= endIndex)) {
+					drawQuad((int) (x + totalwidth), (int) y,
+							(int) (x + totalwidth + intObject.width),
+							(int) (y + intObject.height), intObject.storedX,
+							intObject.storedY, intObject.storedX + intObject.width,
+							intObject.storedY + intObject.height);
+				}
 				totalwidth += intObject.width;
 			}
 		}

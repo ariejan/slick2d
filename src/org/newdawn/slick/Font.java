@@ -48,4 +48,18 @@ public interface Font {
 	 * @param col The colour to draw with
 	 */
 	public abstract void drawString(float x, float y, String text, Color col);
+
+
+	/**
+	 * Draw part of a string to the screen. Note that this will
+	 * still position the text as though it's part of the bigger string.
+	 * 
+	 * @param x The x location at which to draw the string
+	 * @param y The y location at which to draw the string
+	 * @param text The text to be displayed
+	 * @param col The colour to draw with
+	 * @param startIndex The index of the first character to draw
+	 * @param endIndex The index of the last character from the string to draw
+	 */
+	public abstract void drawString(float x, float y, String text, Color col, int startIndex, int endIndex);
 }

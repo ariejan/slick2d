@@ -211,11 +211,18 @@ public class AngelCodeFont implements Font {
 	 * @see org.newdawn.slick.Font#drawString(float, float, java.lang.String, org.newdawn.slick.Color)
 	 */
 	public void drawString(float x, float y, String text, Color col) {
+		drawString(x,y,text,col,0,text.length()-1);
+	}
+	
+	/**
+	 * @see Font#drawString(float, float, String, Color, int, int)
+	 */
+	public void drawString(float x, float y, String text, Color col, int startIndex, int endIndex) {
 		col.bind();
 		font.bind();
 
 		CachedString key = new CachedString(text);
-		if (displayListCaching) {
+		if ((displayListCaching) && (startIndex == 0) && (endIndex == text.length()-1)) {
 			if (cache.contains(key)) {
 				int index = cache.indexOf(key);
 				CachedString cached = (CachedString) cache.get(index);
@@ -236,7 +243,7 @@ public class AngelCodeFont implements Font {
 				GL.glTranslatef(-x,-y,0);
 			}
 		} else {
-			key.render(x,y);
+			key.render(x,y,startIndex,endIndex);
 		}
 	}
 
@@ -399,7 +406,7 @@ public class AngelCodeFont implements Font {
 		public void setString(String text) {
 			this.text = text;
 			GL.glNewList(list, SGL.GL_COMPILE);
-			render(0, 0);
+			render(0, 0, 0, text.length()-1);
 			GL.glEndList();
 		}
 		
@@ -429,8 +436,10 @@ public class AngelCodeFont implements Font {
 		 * 
 		 * @param x The x coordinate to render the string at
 		 * @param y The y coordinate to render the string at
+		 * @param start The index of the first character in the string to render
+		 * @param end The index of the last character in the string to render
 		 */
-		private void render(float x, float y) {
+		private void render(float x, float y, int start, int end) {
 			font.init();
 			GL.glBegin(SGL.GL_QUADS);
 			for (int i=0;i<text.length();i++) {
@@ -441,8 +450,10 @@ public class AngelCodeFont implements Font {
 				if (chars[id] == null) {
 					continue;
 				}
-				
-				chars[id].draw(x,y);
+
+				if ((i >= start) || (i <= end)) {
+					chars[id].draw(x,y);
+				}
 				x += chars[id].xadvance;
 				
 				if (i < text.length()-1) {
