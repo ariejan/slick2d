@@ -13,8 +13,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -388,25 +388,38 @@ public class ParticleSystem {
 		for( int emitterIdx=0; emitterIdx<emitters.size(); emitterIdx++ )
 		{
 			// get emitter
-			ParticleEmitter emitter= (ParticleEmitter)emitters.get( emitterIdx );
+			ParticleEmitter emitter = (ParticleEmitter) emitters.get(emitterIdx);
 			
 			// check for additive override and enable when set
-			if( emitter instanceof ConfigurableEmitter )
-				if( ((ConfigurableEmitter)emitter).useAdditive )
-					GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE);
+			if (emitter.useAdditive()) {
+				GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE);
+			}
 			
 			// now get the particle pool for this emitter and render all particles that are in use
-			ParticlePool pool= (ParticlePool)particlesByEmitter.get( emitter );
-			for( int i=0; i<pool.particles.length; i++ )
+			ParticlePool pool = (ParticlePool) particlesByEmitter.get(emitter);
+			Image image = emitter.getImage();
+			if (image == null) {
+				image = this.sprite;
+			}
+			
+			if (!emitter.isOriented() && !emitter.usePoints(this)) {
+				image.startUse();
+			}
+			
+			for (int i = 0; i < pool.particles.length; i++)
 			{
-				if( pool.particles[i].inUse() )
+				if (pool.particles[i].inUse())
 					pool.particles[i].render();
+			} 
+			
+			if (!emitter.isOriented() && !emitter.usePoints(this)) {
+				image.endUse();
 			}
 
 			// reset additive blend mode
-			if( emitter instanceof ConfigurableEmitter )
-				if( ((ConfigurableEmitter)emitter).useAdditive )
-					GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE_MINUS_SRC_ALPHA);
+			if (emitter.useAdditive()) {
+				GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE_MINUS_SRC_ALPHA);
+			}
 		}
 
 		if (usePoints()) {

@@ -1,10 +1,11 @@
 package org.newdawn.slick.particles;
 
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 
 /**
  * A single particle within a system
@@ -166,8 +167,9 @@ public class Particle {
 					(int) size, color);
 			GL.glPopMatrix();
 		} else {
-			image.draw((int) (x - (size / 2)), (int) (y - (size / 2)),
-					(int) size, (int) size, color);
+			color.bind();
+			image.drawEmbedded((int) (x - (size / 2)), (int) (y - (size / 2)),
+					(int) size, (int) size);
 		}
 	}
 

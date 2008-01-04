@@ -46,9 +46,13 @@ public class ParticleTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) {
-		system.render();
-		
+		for (int i=0;i<100;i++) {
+			g.translate(1,1);
+			system.render();
+		}
+		g.resetTransform();
 		g.drawString("Press space to toggle blending mode", 200, 500);
+		g.drawString("Particle Count: "+(system.getParticleCount()*100), 200, 520);
 	}
 
 	/**

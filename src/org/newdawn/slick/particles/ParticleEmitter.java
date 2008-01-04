@@ -1,5 +1,7 @@
 package org.newdawn.slick.particles;
 
+import org.newdawn.slick.Image;
+
 /**
  * An emitter is responsible for producing the particles and controlling them during
  * their life. An implementation of this interface can be considered a particle
@@ -45,4 +47,34 @@ public interface ParticleEmitter {
 	 * @param enabled True if the emitter should be enabled
 	 */
 	public void setEnabled(boolean enabled);
+	
+	/**
+	 * Check if this emitter should use additive blending
+	 * 
+	 * @return True if the emitter should use the right blending
+	 */
+	public boolean useAdditive();
+	
+	/**
+	 * Get the image to draw for each particle
+	 * 
+	 * @return The image to draw for each particle
+	 */
+	public Image getImage();
+
+	/**
+	 * Check if the particles produced should maintain orientation
+	 * 
+	 * @return True if the particles produced should maintain orientation
+	 */
+	public boolean isOriented();
+	
+	/**
+	 * Check if this emitter should use points based on it's own settings 
+	 * and those of the particle system
+	 * 
+	 * @param system The particle system to cross check agianst
+	 * @return True if we should use points
+	 */
+	public boolean usePoints(ParticleSystem system);
 }

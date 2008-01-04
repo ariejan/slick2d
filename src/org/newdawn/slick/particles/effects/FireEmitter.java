@@ -1,5 +1,6 @@
 package org.newdawn.slick.particles.effects;
 
+import org.newdawn.slick.Image;
 import org.newdawn.slick.particles.Particle;
 import org.newdawn.slick.particles.ParticleEmitter;
 import org.newdawn.slick.particles.ParticleSystem;
@@ -99,6 +100,22 @@ public class FireEmitter implements ParticleEmitter {
 	 * @see org.newdawn.slick.particles.ParticleEmitter#completed()
 	 */
 	public boolean completed() {
+		return false;
+	}
+
+	public boolean useAdditive() {
+		return false;
+	}
+
+	public Image getImage() {
+		return null;
+	}
+
+	public boolean usePoints(ParticleSystem system) {
+		return false;
+	}
+
+	public boolean isOriented() {
 		return false;
 	}
 }

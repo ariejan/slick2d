@@ -825,4 +825,21 @@ public class ConfigurableEmitter implements ParticleEmitter {
 			this.min = min;
 		}
 	}
+
+	public boolean useAdditive() {
+		return useAdditive;
+	}
+	
+	public boolean isOriented() {
+		return this.useOriented;
+	}
+	
+	public boolean usePoints(ParticleSystem system) {
+		return (this.usePoints == Particle.INHERIT_POINTS) && (system.usePoints()) ||
+			   (this.usePoints == Particle.USE_POINTS); 
+	}
+
+	public Image getImage() {
+		return image;
+	}
 }
