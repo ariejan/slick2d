@@ -1,6 +1,5 @@
 package org.newdawn.slick.particles;
 
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.opengl.Texture;
