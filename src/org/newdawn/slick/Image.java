@@ -391,6 +391,42 @@ public class Image implements Renderable {
 	}
 
 	/**
+	 * Get the x offset in texels into the source texture
+	 * 
+	 * @return The x offset 
+	 */
+	public float getTextureOffsetX() {
+		return textureOffsetX;
+	}
+
+	/**
+	 * Get the y offset in texels into the source texture
+	 * 
+	 * @return The y offset 
+	 */
+	public float getTexutreOffsetY() {
+		return textureOffsetY;
+	}
+
+	/**
+	 * Get the width in texels into the source texture
+	 * 
+	 * @return The width
+	 */
+	public float getTextureWidth() {
+		return textureWidth;
+	}
+
+	/**
+	 * Get the height in texels into the source texture
+	 * 
+	 * @return The height
+	 */
+	public float getTextureHeight() {
+		return textureHeight;
+	}
+	
+	/**
 	 * Draw the image with a given scale
 	 * 
 	 * @param x The x position to draw the image at
