@@ -1,0 +1,142 @@
+package org.newdawn.slick.tools.packulike;
+
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import javax.imageio.ImageIO;
+
+import org.newdawn.slick.util.Log;
+
+/**
+ * A daft image packer
+ * 
+ * @author kevin
+ */
+public class Pack {
+	/**
+	 * Pack the images provided
+	 * 
+	 * @param files The list of file objects pointing at the images to be packed
+	 * @param width The width of the sheet to be generated 
+	 * @param height The height of the sheet to be generated
+	 * @param border The border between sprites
+	 * @param out The file to write out to
+	 */
+	public void pack(ArrayList files, int width, int height, int border, File out) {
+		ArrayList images = new ArrayList();
+		
+		try {
+			for (int i=0;i<files.size();i++) {
+				File file = (File) files.get(i);
+				Sprite sprite = new Sprite();
+				sprite.image = ImageIO.read(file);
+				sprite.name = file.getName();
+				
+				images.add(sprite);
+			}
+		} catch (Exception e) {
+			Log.error(e);
+		}
+		
+		Collections.sort(images, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				Sprite a = (Sprite) o1;
+				Sprite b = (Sprite) o2;
+				
+				int asize = a.image.getHeight();
+				int bsize = b.image.getHeight();
+				return bsize - asize;
+			}
+		});
+		
+		int x = 0;
+		int y = 0;
+		
+		BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		Graphics g = result.getGraphics();
+		int rowHeight = 0;
+		
+		try {
+			PrintStream pout = new PrintStream(new FileOutputStream(new File(out.getParentFile(), out.getName()+".xml")));
+			pout.println("<sheet>");
+			
+			for (int i=0;i<images.size();i++) {
+				Sprite current = (Sprite) images.get(i);
+				if (x + current.image.getWidth() > width) {
+					x = 0;
+					y += rowHeight;
+					rowHeight = 0;
+				}
+				
+				if (rowHeight == 0) {
+					rowHeight = current.image.getHeight() + border;
+				}
+				
+				pout.print("\t<sprite ");
+				pout.print("name=\""+current.name+"\" ");
+				pout.print("x=\""+x+"\" ");
+				pout.print("y=\""+y+"\" ");
+				pout.print("width=\""+current.image.getWidth()+"\" ");
+				pout.print("height=\""+current.image.getHeight()+"\" ");
+				pout.println("/>");
+				
+				g.drawImage(current.image, x, y, null);
+				x += current.image.getWidth() + border;
+			}
+			g.dispose();
+			
+			pout.println("</sheet>");
+			pout.close();
+		} catch (Exception e) {
+			Log.error("Failed writing image XML", e);
+		}
+		try {
+			ImageIO.write(result, "PNG", out);
+		} catch (IOException e) {
+			Log.error(e);
+		}
+	}
+	
+	/**
+	 * A simple sprite holder that allows the tool to name images
+	 * 
+	 * @author kevin
+	 */
+	private class Sprite {
+		/** The name of the sprite */
+		public String name;
+		/** The image for the sprite */
+		public BufferedImage image;
+	}
+	
+	/**
+	 * Entry point to the tool, just pack the current directory of images
+	 * 
+	 * @param argv The arguments to the program
+	 */
+	public static void main(String[] argv) {
+		File dir = new File(".");
+		dir = new File("C:\\eclipse\\grobot-workspace\\anon\\res\\tiles\\indoor1");
+		
+		ArrayList list = new ArrayList();
+		File[] files = dir.listFiles();
+		for (int i=0;i<files.length;i++) {
+			if (files[i].getName().endsWith(".png")) {
+				if (!files[i].getName().startsWith("output")) {
+					list.add(files[i]);
+				}
+			}
+		}
+		
+		Pack packer = new Pack();
+		packer.pack(list, 512, 512, 1, new File(dir, "output.png"));
+		System.out.println("Output Generated.");
+	}
+}
