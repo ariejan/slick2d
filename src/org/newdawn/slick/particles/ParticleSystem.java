@@ -476,10 +476,10 @@ public class ParticleSystem {
 		
 		pCount = 0;
 		
-		if( !particlesByEmitter.isEmpty() )
+		if (!particlesByEmitter.isEmpty())
 		{
 			Iterator it= particlesByEmitter.values().iterator();
-			while( it.hasNext())
+			while (it.hasNext())
 			{
 				ParticlePool pool= (ParticlePool)it.next();
 				for (int i=0;i<pool.particles.length;i++) {
@@ -511,12 +511,13 @@ public class ParticleSystem {
 	 */
 	public Particle getNewParticle(ParticleEmitter emitter, float life)
 	{
-		ParticlePool pool= (ParticlePool)particlesByEmitter.get( emitter );
-		if( pool.available.size() > 0 )
+		ParticlePool pool = (ParticlePool) particlesByEmitter.get(emitter);
+		ArrayList available = pool.available;
+		if (available.size() > 0)
 		{
-			Particle p = (Particle) pool.available.remove( 0 );
-			p.init( emitter, life );
-			p.setImage( sprite );
+			Particle p = (Particle) available.remove(available.size()-1);
+			p.init(emitter, life);
+			p.setImage(sprite);
 			
 			return p;
 		}
@@ -533,8 +534,8 @@ public class ParticleSystem {
 	public void release(Particle particle) {
 		if (particle != dummy)
 		{
-			ParticlePool pool= (ParticlePool)particlesByEmitter.get( particle.getEmitter() );
-			pool.available.add( particle );
+			ParticlePool pool = (ParticlePool)particlesByEmitter.get( particle.getEmitter() );
+			pool.available.add(particle);
 		}
 	}
 	
