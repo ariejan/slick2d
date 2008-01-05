@@ -28,16 +28,16 @@ public class Pack {
 	 * @param height The height of the sheet to be generated
 	 * @param border The border between sprites
 	 * @param out The file to write out to
+	 * @return The generated sprite sheet
+	 * @throws IOException Indicates a failure to write out files
 	 */
-	public void pack(ArrayList files, int width, int height, int border, File out) {
+	public Sheet pack(ArrayList files, int width, int height, int border, File out) throws IOException {
 		ArrayList images = new ArrayList();
 		
 		try {
 			for (int i=0;i<files.size();i++) {
 				File file = (File) files.get(i);
-				Sprite sprite = new Sprite();
-				sprite.image = ImageIO.read(file);
-				sprite.name = file.getName();
+				Sprite sprite = new Sprite(file.getName(), ImageIO.read(file));
 				
 				images.add(sprite);
 			}
@@ -45,13 +45,28 @@ public class Pack {
 			Log.error(e);
 		}
 		
+		return packImages(images, width, height, border, out);
+	}
+
+	/**
+	 * Pack the images provided
+	 * 
+	 * @param images The list of sprite objects pointing at the images to be packed
+	 * @param width The width of the sheet to be generated 
+	 * @param height The height of the sheet to be generated
+	 * @param border The border between sprites
+	 * @param out The file to write out to
+	 * @return The generated sprite sheet
+	 * @throws IOException Indicates a failure to write out files
+	 */
+	public Sheet packImages(ArrayList images, int width, int height, int border, File out) throws IOException {
 		Collections.sort(images, new Comparator() {
 			public int compare(Object o1, Object o2) {
 				Sprite a = (Sprite) o1;
 				Sprite b = (Sprite) o2;
 				
-				int asize = a.image.getHeight();
-				int bsize = b.image.getHeight();
+				int asize = a.getHeight();
+				int bsize = b.getHeight();
 				return bsize - asize;
 			}
 		});
@@ -64,64 +79,75 @@ public class Pack {
 		int rowHeight = 0;
 		
 		try {
-			PrintStream pout = new PrintStream(new FileOutputStream(new File(out.getParentFile(), out.getName()+".xml")));
-			pout.println("<sheet>");
+			PrintStream pout = null;
+			if (out != null) {
+				pout = new PrintStream(new FileOutputStream(new File(out.getParentFile(), out.getName()+".xml")));
+				pout.println("<sheet>");
+			}
 			
 			for (int i=0;i<images.size();i++) {
 				Sprite current = (Sprite) images.get(i);
-				if (x + current.image.getWidth() > width) {
+				if (x + current.getWidth() > width) {
 					x = 0;
 					y += rowHeight;
 					rowHeight = 0;
 				}
 				
 				if (rowHeight == 0) {
-					rowHeight = current.image.getHeight() + border;
+					rowHeight = current.getHeight() + border;
 				}
 				
-				pout.print("\t<sprite ");
-				pout.print("name=\""+current.name+"\" ");
-				pout.print("x=\""+x+"\" ");
-				pout.print("y=\""+y+"\" ");
-				pout.print("width=\""+current.image.getWidth()+"\" ");
-				pout.print("height=\""+current.image.getHeight()+"\" ");
-				pout.println("/>");
+				if (out != null) {
+					pout.print("\t<sprite ");
+					pout.print("name=\""+current.getName()+"\" ");
+					pout.print("x=\""+x+"\" ");
+					pout.print("y=\""+y+"\" ");
+					pout.print("width=\""+current.getWidth()+"\" ");
+					pout.print("height=\""+current.getHeight()+"\" ");
+					pout.println("/>");
+				}
 				
-				g.drawImage(current.image, x, y, null);
-				x += current.image.getWidth() + border;
+				current.setPosition(x,y);
+				g.drawImage(current.getImage(), x, y, null);
+				x += current.getWidth() + border;
 			}
 			g.dispose();
 			
-			pout.println("</sheet>");
-			pout.close();
+			if (out != null) {
+				pout.println("</sheet>");
+				pout.close();
+			}
 		} catch (Exception e) {
 			Log.error("Failed writing image XML", e);
+			IOException io = new IOException("Failed writing image XML");
+			io.initCause(e);
+			
+			throw io;
 		}
-		try {
-			ImageIO.write(result, "PNG", out);
-		} catch (IOException e) {
-			Log.error(e);
+		
+		if (out != null) {
+			try {
+				ImageIO.write(result, "PNG", out);
+			} catch (IOException e) {
+				Log.error(e);
+				
+				IOException io = new IOException("Failed writing image");
+				io.initCause(e);
+				
+				throw io;
+			}
 		}
-	}
-	
-	/**
-	 * A simple sprite holder that allows the tool to name images
-	 * 
-	 * @author kevin
-	 */
-	private class Sprite {
-		/** The name of the sprite */
-		public String name;
-		/** The image for the sprite */
-		public BufferedImage image;
+		
+		return new Sheet(result, images);
 	}
 	
 	/**
 	 * Entry point to the tool, just pack the current directory of images
 	 * 
 	 * @param argv The arguments to the program
+	 * @throws IOException Indicates a failure to write out files
 	 */
-	public static void main(String[] argv) {
+	public static void main(String[] argv) throws IOException {
 		File dir = new File(".");
 		dir = new File("C:\\eclipse\\grobot-workspace\\anon\\res\\tiles\\indoor1");
 		
