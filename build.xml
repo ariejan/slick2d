@@ -324,7 +324,7 @@
 	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
-	<copyandsign jar="packer.jar"/>
+	<copyandsign jar="packulike.jar"/>
 	<createdemojnlp name="scalar" title="Slick2D Sprite Packer" mainclass="org.newdawn.slick.tools.packulike.Packer"/>
 </target>
 
