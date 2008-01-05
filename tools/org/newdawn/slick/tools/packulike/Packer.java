@@ -33,8 +33,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.newdawn.slick.util.Log;
-
 /**
  * A simple GUI on the front of the packing tool
  * 
@@ -183,7 +181,7 @@ public class Packer extends JFrame {
 						try {
 							sprites.addElement(new Sprite(selected[i]));
 						} catch (IOException x) {
-							Log.error(x);
+							x.printStackTrace();
 							JOptionPane.showMessageDialog(Packer.this, "Unable to load: "+selected[i].getName());
 						}
 					}
@@ -310,7 +308,7 @@ public class Packer extends JFrame {
 				pack.packImages(list, twidth, theight, b, null);
 			} catch (IOException e) {
 				// shouldn't happen 
-				Log.error(e);
+				e.printStackTrace();
 				JOptionPane.showMessageDialog(this, "Failed to write output");
 			}
 		}
@@ -331,7 +329,7 @@ public class Packer extends JFrame {
 			sheetPanel.setImage(sheet);
 		} catch (IOException e) {
 			// shouldn't happen 
-			Log.error(e);
+			e.printStackTrace();
 		}
 	}
 	

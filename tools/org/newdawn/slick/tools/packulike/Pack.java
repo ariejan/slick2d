@@ -12,8 +12,6 @@ import java.util.Comparator;
 
 import javax.imageio.ImageIO;
 
-import org.newdawn.slick.util.Log;
-
 /**
  * A daft image packer
  * 
@@ -42,7 +40,7 @@ public class Pack {
 				images.add(sprite);
 			}
 		} catch (Exception e) {
-			Log.error(e);
+			e.printStackTrace();
 		}
 		
 		return packImages(images, width, height, border, out);
@@ -118,7 +116,7 @@ public class Pack {
 				pout.close();
 			}
 		} catch (Exception e) {
-			Log.error("Failed writing image XML", e);
+			e.printStackTrace();
 			IOException io = new IOException("Failed writing image XML");
 			io.initCause(e);
 			
@@ -129,7 +127,7 @@ public class Pack {
 			try {
 				ImageIO.write(result, "PNG", out);
 			} catch (IOException e) {
-				Log.error(e);
+				e.printStackTrace();
 				
 				IOException io = new IOException("Failed writing image");
 				io.initCause(e);
