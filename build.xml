@@ -113,6 +113,19 @@
 	</jar>
 </target>
 
+<!-- build the sprite packer tool -->
+<target name="build-packer" depends="init">
+	<delete dir="lib/scalar.jar"/>
+	<javac includes="org/newdawn/slick/tools/packulike/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
+	</javac>
+	<jar destfile="lib/packulike.jar" 
+		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/packulike/**">
+		<manifest>
+	      <attribute name="Main-Class" value="org.newdawn.slick.tools.packulike.Packer"/>
+	    </manifest>
+	</jar>
+</target>
+
 <!-- build the examples -->
 <target name="build-examples" depends="init">
 	<delete dir="lib/slick-examples.jar"/>
@@ -298,6 +311,37 @@
 		 verbose="true"/>
 </target>
 
+<!--
+  Build packer distribution 
+-->
+<target name="dist-packer" depends="build-packer">
+	<zip destfile="${dist}/packulike.zip">
+	    <fileset dir="lib" includes="packulike.jar"/>
+	</zip>
+</target>
+
+<target name="build-webstart-packer" depends="build-packer">
+	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
+	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
+	
+	<copyandsign jar="packer.jar"/>
+	<createdemojnlp name="scalar" title="Slick2D Sprite Packer" mainclass="org.newdawn.slick.tools.packulike.Packer"/>
+</target>
+
+<target name="upload-packer" depends="build-webstart-packer, dist-packer">
+	<input message="Upload password:" addproperty="password"/>
+	
+	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
+		 file="dist/packulike.zip"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${demos}" 
+		 file="webstart/packulike.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+</target>
 <!--
  Create a keystore to use when signing your own games
 -->
@@ -489,7 +533,7 @@
 <!--
  Upload everything, i.e. create a complete update to the Slick stuff.
 -->
-<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero, upload-scalar">
+<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero, upload-scalar, upload-packer">
 </target>
 
 <!--
