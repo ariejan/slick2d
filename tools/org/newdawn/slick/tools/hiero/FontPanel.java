@@ -152,10 +152,14 @@ public class FontPanel extends JPanel {
         	g.setPaint(backgroundColor);
         }
         g.fillRect(0,0,getWidth(), getHeight());
-        g.drawImage(image, 0, 0, null);
+        if (image != null) {
+        	g.drawImage(image, 0, 0, null);
+        }
         
         if (showGrid) {
-        	g.drawImage(overlay, 0, 0, null);
+        	if (overlay != null) {
+        		g.drawImage(overlay, 0, 0, null);
+        	}
         }
     }
     
