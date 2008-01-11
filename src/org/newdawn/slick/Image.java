@@ -924,6 +924,12 @@ public class Image implements Renderable {
 			pixelData = texture.getTextureData();
 		}
 		
+		int xo = ((int) (textureOffsetX * texture.getTextureWidth()));
+		int yo = ((int) (textureOffsetY * texture.getTextureHeight()));
+		
+		x += xo;
+		y += yo;
+		
 		int offset = x + (y * texture.getTextureWidth());
 		offset *= texture.hasAlpha() ? 4 : 3;
 		
