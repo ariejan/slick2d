@@ -297,6 +297,7 @@ public class Texture {
      */
     public byte[] getTextureData() {
     	ByteBuffer buffer = BufferUtils.createByteBuffer((hasAlpha() ? 4 : 3) * texWidth * texHeight);
+    	bind();
     	GL.glGetTexImage(SGL.GL_TEXTURE_2D, 0, hasAlpha() ? SGL.GL_RGBA : SGL.GL_RGB, SGL.GL_UNSIGNED_BYTE, 
     					   buffer);
     	byte[] data = new byte[buffer.limit()];
