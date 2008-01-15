@@ -34,23 +34,33 @@ public strictfp class Vector2f {
 	 * @param theta The angle to calculate the components from (in degrees)
 	 */
 	public void setTheta(double theta) {
-	  // Next lines are to prevent numbers like -1.8369701E-16
-	  // when working with negative numbers
-	  if ((theta < -360) || (theta > 360)) { 
-		  theta = theta % 360;
-	  }
-	  if (theta < 0)  {
-		  theta = 360 + theta;
-	  }
-	  
-	  x = (float) FastTrig.cos(StrictMath.toRadians(theta));
-	  y = (float) FastTrig.sin(StrictMath.toRadians(theta));
-	}
+		// Next lines are to prevent numbers like -1.8369701E-16
+		// when working with negative numbers
+		if ((theta < -360) || (theta > 360)) {
+			theta = theta % 360;
+		}
+		if (theta < 0) {
+			theta = 360 + theta;
+		}
+		double oldTheta = getTheta();
+		if ((theta < -360) || (theta > 360)) {
+			oldTheta = oldTheta % 360;
+		}
+		if (theta < 0) {
+			oldTheta = 360 + oldTheta;
+		}
 
+		x = x / (float) FastTrig.cos(StrictMath.toRadians(oldTheta))
+				* (float) FastTrig.cos(StrictMath.toRadians(theta));
+		y = x / (float) FastTrig.sin(StrictMath.toRadians(oldTheta))
+				* (float) FastTrig.sin(StrictMath.toRadians(theta));
+	} 
+	
 	/**
 	 * Adjust this vector by a given angle
 	 * 
-	 * @param theta The angle to adjust the angle by (in degrees)
+	 * @param theta
+	 *            The angle to adjust the angle by (in degrees)
 	 */
 	public void add(double theta) {
 		setTheta(getTheta() + theta);
@@ -234,6 +244,15 @@ public strictfp class Vector2f {
 		result.x = dp * b.getX();
 		result.y = dp * b.getY();
 		
+	}
+	
+	/**
+	 * Return a copy of this vector
+	 * 
+	 * @return The new instance that copies this vector
+	 */
+	public Vector2f copy() {
+		return new Vector2f(x,y);
 	}
 	
 	/**
