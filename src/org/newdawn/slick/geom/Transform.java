@@ -209,4 +209,19 @@ public class Transform {
     public static Transform createScaleTransform(float xScale, float yScale) {   
         return new Transform(xScale, 0, 0, 0, yScale, 0);   
     }
+    
+    /**
+     * Transform the vector2f based on the matrix defined in this transform
+     * 
+     * @param pt The point to be transformed
+     * @return The resulting point transformed by this matrix
+     */
+    public Vector2f transform(Vector2f pt) {
+    	float[] in = new float[] {pt.x, pt.y};
+    	float[] out = new float[2];
+    	
+    	transform(in, 0, out, 0, 1);
+    	
+    	return new Vector2f(out[0], out[1]);
+    }
 }   
