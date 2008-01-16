@@ -7,6 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import org.newdawn.slick.opengl.GLUtils;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
@@ -80,6 +81,8 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 	 *            Whether or not to apply AntiAliasing to the cached font
 	 */
 	public TrueTypeFont(java.awt.Font font, boolean antiAlias) {
+		GLUtils.checkGLContext();
+		
 		this.font = font;
 		this.fontSize = font.getSize();
 		this.antiAlias = antiAlias;
