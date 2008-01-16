@@ -325,7 +325,7 @@
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
 	<copyandsign jar="packulike.jar"/>
-	<createdemojnlp name="scalar" title="Slick2D Sprite Packer" mainclass="org.newdawn.slick.tools.packulike.Packer"/>
+	<createdemojnlp name="packer" title="Slick2D Sprite Packer" mainclass="org.newdawn.slick.tools.packulike.Packer"/>
 </target>
 
 <target name="upload-packer" depends="build-webstart-packer, dist-packer">
