@@ -358,7 +358,6 @@ public class TextureLoader {
         
         boolean hasAlpha;
     	textureBuffer = dataSource.getImageBufferData();
-    	textureBuffer = null;
     	
     	width = dataSource.getWidth();
     	height = dataSource.getHeight();
