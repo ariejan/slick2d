@@ -6,7 +6,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
-import org.lwjgl.opengl.Pbuffer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -21,12 +20,13 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class FBOGraphics extends Graphics {
-	/** The pbuffer we're going to render to */
-	private Pbuffer pbuffer;
+
 	/** The image we're we're sort of rendering to */
 	private Image image;
 	/** The ID of the FBO in use */
 	private int FBO;
+	/** True if this context is valid */
+	private boolean valid = true;
 	
 	/**
 	 * Create a new graphics context around an FBO
@@ -88,7 +88,6 @@ public class FBOGraphics extends Graphics {
 	 */
 	private void init() throws SlickException {
 		IntBuffer buffer = BufferUtils.createIntBuffer(1);
-		Log.info("Buffer size:" + buffer.capacity());
 		EXTFramebufferObject.glGenFramebuffersEXT(buffer); 
 		FBO = buffer.get();
 
@@ -155,6 +154,9 @@ public class FBOGraphics extends Graphics {
 	 * @see org.newdawn.slick.Graphics#enable()
 	 */
 	protected void enable() {
+		if (!valid) {
+			throw new RuntimeException("Attempt to use a destroy()ed offscreen graphics context.");
+		}
 		SlickCallable.enterSafeBlock();
 		
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
@@ -198,5 +200,20 @@ public class FBOGraphics extends Graphics {
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, screenWidth, 0, screenHeight, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	}
+	
+	/**
+	 * @see org.newdawn.slick.Graphics#destroy()
+	 */
+	public void destroy() {
+		super.destroy();
+
+		System.out.println("DESTROY FBO");
+//		IntBuffer buffer = BufferUtils.createIntBuffer(1);
+//		buffer.put(FBO);
+//		buffer.flip();
+		
+//		EXTFramebufferObject.glDeleteFramebuffersEXT(buffer);
+//		valid = false;
 	}
 }

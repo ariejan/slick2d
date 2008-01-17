@@ -1591,4 +1591,12 @@ public class Graphics {
 
 		postdraw();
 	}
+	
+	/**
+	 * Dispose this graphis context, this will release any underlying resourses. However
+	 * this will also invalidate it's use
+	 */
+	public void destroy() {
+		
+	}
 }

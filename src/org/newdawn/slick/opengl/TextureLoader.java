@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
@@ -199,10 +200,16 @@ public class TextureLoader {
         if (transparent != null) {
         	resName += ":"+transparent[0]+":"+transparent[1]+":"+transparent[2];
         }
-    	Texture tex = (Texture) hash.get(resName);
-        if (tex != null) {
-        	return tex;
-        }
+        
+    	SoftReference ref = (SoftReference) hash.get(resName);
+    	if (ref != null) {
+	    	Texture tex = (Texture) ref.get();
+	        if (tex != null) {
+	        	return tex;
+	        } else {
+	        	hash.remove(resName);
+	        }
+    	}
         
         // horrible test until I can find something more suitable
         try {
@@ -211,12 +218,12 @@ public class TextureLoader {
         	throw new RuntimeException("Image based resources must be loaded as part of init() or the game loop. They cannot be loaded before initialisation.");
         }
         
-        tex = getTexture(in, resourceName,
+        Texture tex = getTexture(in, resourceName,
                          GL11.GL_TEXTURE_2D, 
                          filter, 
                          filter, flipped, transparent);
         
-        hash.put(resName,tex);
+        hash.put(resName, new SoftReference(tex));
         
         return tex;
     }
@@ -315,33 +322,7 @@ public class TextureLoader {
      * @throws IOException Indicates a failure to create the texture on the graphics hardware
      */
     public Texture createTexture(final int width, final int height) throws IOException {
-    	ImageData ds = new ImageData() {
-
-			public int getDepth() {
-				return 32;
-			}
-
-			public int getHeight() {
-				return height;
-			}
-
-			public ByteBuffer getImageBufferData() {
-				return BufferUtils.createByteBuffer(getTexWidth() * getTexHeight() * 4);
-			}
-
-			public int getTexHeight() {
-				return get2Fold(height);
-			}
-
-			public int getTexWidth() {
-				return get2Fold(width);
-			}
-
-			public int getWidth() {
-				return width;
-			}
-    		
-    	};
+    	ImageData ds = new EmptyImageData(width, height);
     	
     	return getTexture(ds, GL11.GL_NEAREST);
     }
@@ -377,6 +358,7 @@ public class TextureLoader {
         
         boolean hasAlpha;
     	textureBuffer = dataSource.getImageBufferData();
+    	textureBuffer = null;
     	
     	width = dataSource.getWidth();
     	height = dataSource.getHeight();

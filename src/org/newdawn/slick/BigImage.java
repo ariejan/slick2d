@@ -658,7 +658,7 @@ public class BigImage extends Image {
 	 * Destroy the image and release any native resources. 
 	 * Calls on a destroyed image have undefined results
 	 */
-	public void destroy() {
+	public void destroy() throws SlickException {
 		for (int tx=0;tx<xcount;tx++) {
 			for (int ty=0;ty<ycount;ty++) {
 				Image image = images[tx][ty];

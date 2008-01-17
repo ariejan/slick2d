@@ -20,6 +20,7 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class PBufferGraphics extends Graphics {
+
 	/** The pbuffer we're going to render to */
 	private Pbuffer pbuffer;
 	/** The image we're we're sort of rendering to */
@@ -148,5 +149,14 @@ public class PBufferGraphics extends Graphics {
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, screenWidth, 0, screenHeight, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	}
+	
+	/**
+	 * @see org.newdawn.slick.Graphics#destroy()
+	 */
+	public void destroy() {
+		super.destroy();
+		
+		pbuffer.destroy();
 	}
 }

@@ -145,4 +145,13 @@ public class PBufferUniqueGraphics extends Graphics {
 		GL11.glOrtho(0, screenWidth, 0, screenHeight, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
+	
+	/**
+	 * @see org.newdawn.slick.Graphics#destroy()
+	 */
+	public void destroy() {
+		super.destroy();
+		
+		pbuffer.destroy();
+	}
 }

@@ -256,6 +256,10 @@ public class Texture {
         texBuf.flip();
         
     	GL.glDeleteTextures(texBuf);
+    	
+        if (lastBind == this) {
+        	bindNone();
+        }
     }
     
     /**

@@ -84,6 +84,20 @@ public class GraphicsFactory {
 		return g;
 	}
 	
+	/**
+	 * Release any graphics context that is assocaited with the given image
+	 * 
+	 * @param image The image to release
+	 * @throws SlickException Indicates a failure to release the context
+	 */
+	public static void releaseGraphicsForImage(Image image) throws SlickException {
+		Graphics g = (Graphics) graphics.remove(image.getTexture());
+		
+		if (g != null) {
+			g.destroy();
+		}
+	}
+	
 	/** 
 	 * Create an underlying graphics context for the given image
 	 * 

@@ -954,13 +954,16 @@ public class Image implements Renderable {
 	/**
 	 * Destroy the image and release any native resources. 
 	 * Calls on a destroyed image have undefined results
+	 * 
+	 * @throws SlickException Indicates a failure to release resources on the graphics card
 	 */
-	public void destroy() {
+	public void destroy() throws SlickException {
 		if (isDestroyed()) {
 			return;
 		}
 		
 		destroyed = true;
 		texture.release();
+		GraphicsFactory.getGraphicsForImage(this);
 	}
 }
