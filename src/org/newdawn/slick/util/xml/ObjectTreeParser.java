@@ -139,6 +139,37 @@ public class ObjectTreeParser {
 		
 		return traverse(root);
 	}
+
+	/**
+	 * Parse the XML document located by the slick resource loader using the
+	 * reference given.
+	 * 
+	 * @param ref The reference to the XML document
+	 * @param target The top level object that represents the root node
+	 * @return The root element of the newly parse document
+	 * @throws SlickXMLException Indicates a failure to parse the XML, most likely the 
+	 * XML is malformed in some way.
+	 */
+	public Object parseOnto(String ref, Object target) throws SlickXMLException {
+		return parseOnto(ref, ResourceLoader.getResourceAsStream(ref), target);
+	}
+	
+	/**
+	 * Parse the XML document that can be read from the given input stream
+	 * 
+	 * @param name The name of the document
+	 * @param in The input stream from which the document can be read
+	 * @param target The top level object that represents the root node
+	 * @return The root element of the newly parse document
+	 * @throws SlickXMLException Indicates a failure to parse the XML, most likely the 
+	 * XML is malformed in some way.
+	 */
+	public Object parseOnto(String name, InputStream in, Object target) throws SlickXMLException {
+		XMLParser parser = new XMLParser();
+		XMLElement root = parser.parse(name, in);
+		
+		return traverse(root, target);
+	}
 	
 	/**
 	 * Deterine the name of the class that should be used for a given 
@@ -163,7 +194,7 @@ public class ObjectTreeParser {
 		
 		return null;
 	}
-	
+
 	/**
 	 * Traverse the XML element specified generating the appropriate object structure
 	 * for it and it's children
@@ -173,26 +204,48 @@ public class ObjectTreeParser {
 	 * @throws SlickXMLException 
 	 */
 	private Object traverse(XMLElement current) throws SlickXMLException {
+		return traverse(current, null);
+	}
+	
+	/**
+	 * Traverse the XML element specified generating the appropriate object structure
+	 * for it and it's children
+	 * 
+	 * @param current The XML element to process
+	 * @param instance The instance to parse onto, normally null
+	 * @return The object created for the given element
+	 * @throws SlickXMLException 
+	 */
+	private Object traverse(XMLElement current, Object instance) throws SlickXMLException {
 		String name = current.getName();
 		if (ignored.contains(name)) {
 			return null;
 		}
 		
-		Class clazz = getClassForElementName(name);
+		Class clazz;
+		
+		if (instance == null) {
+			clazz = getClassForElementName(name);
+		} else {
+			clazz = instance.getClass();
+		}
+		
 		if (clazz == null) {
 			throw new SlickXMLException("Unable to map element "+name+" to a class, define the mapping");
 		}
 		
 		try {
-			Object instance = clazz.newInstance();
-			
-			Method elementNameMethod = getMethod(clazz, "setXMLElementName", new Class[] {String.class});
-			if (elementNameMethod != null) {
-				invoke(elementNameMethod, instance, new Object[] {name});
-			}
-			Method contentMethod = getMethod(clazz, "setXMLElementContent", new Class[] {String.class});
-			if (contentMethod != null) {
-				invoke(contentMethod, instance, new Object[] {current.getContent()});
+			if (instance == null) {
+				instance = clazz.newInstance();
+				
+				Method elementNameMethod = getMethod(clazz, "setXMLElementName", new Class[] {String.class});
+				if (elementNameMethod != null) {
+					invoke(elementNameMethod, instance, new Object[] {name});
+				}
+				Method contentMethod = getMethod(clazz, "setXMLElementContent", new Class[] {String.class});
+				if (contentMethod != null) {
+					invoke(contentMethod, instance, new Object[] {current.getContent()});
+				}
 			}
 			
 			String[] attrs = current.getAttributeNames();
