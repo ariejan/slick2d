@@ -101,6 +101,37 @@
 	    <fileset dir="." includes="lib/jogg*.jar"/>
 	    <fileset dir="." includes="lib/lwjgl*.jar"/>
 	</zip>
+	
+	<delete dir="javadoc-util"/>
+	<mkdir dir="javadoc-util"/>
+	
+	<javadoc sourcepath="src"
+	           defaultexcludes="yes"
+	           destdir="javadoc-util"
+	           author="true"
+	           version="true"
+	           use="true"
+	           windowtitle="Slick Util - LWJGL Utilities extracted from Slick">
+		<fileset dir="src" defaultexcludes="yes">
+			<include name="org/newdawn/slick/opengl/*.java"/>
+			<include name="org/newdawn/slick/opengl/renderer/*.java"/>
+			<include name="org/newdawn/slick/openal/*.java"/>
+			<include name="org/newdawn/slick/util/ResourceLoader.java"/>
+			<include name="org/newdawn/slick/util/*Location.java"/>
+			<include name="org/newdawn/slick/loading/*.java"/>
+			<include name="org/newdawn/slick/SlickException.java"/>
+			<include name="org/newdawn/slick/tests/TestUtils.java"/>
+		</fileset>
+		<classpath>
+		  <pathelement path="lib/slick.jar"/>
+	      <pathelement path="lib/lwjgl.jar"/>
+	      <pathelement path="lib/ibxm.jar"/>
+	      <pathelement path="lib/jogg-0.0.7.jar"/>
+	      <pathelement path="lib/jorbis-0.0.15.jar"/>
+	    </classpath>
+	    <doctitle><![CDATA[<h1>Slick</h1>]]></doctitle>
+	    <bottom><![CDATA[<i>Copyright &#169; 2006 New Dawn Software. All Rights Reserved.</i>]]></bottom>
+    </javadoc>
 </target>
 
 <!-- build the pedigree tool -->
@@ -575,6 +606,12 @@
 		 port="122"
 		 verbose="true">
 		 <fileset dir="javadoc" includes="**/*"/>
+    </scp>
+	<scp todir="${username}:${password}@${host}:${dir}/javadoc-util" 
+		 trust="true"
+		 port="122"
+		 verbose="true">
+		 <fileset dir="javadoc-util" includes="**/*"/>
     </scp>
 </target>
 
