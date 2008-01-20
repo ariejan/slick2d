@@ -524,7 +524,7 @@
 <!--
  Upload the distrubtion ZIPs
 -->
-<target name="upload-dist" depends="dist">
+<target name="upload-dist" depends="dist, slick-util">
 	<input message="Upload password:" addproperty="password"/>
 	
 	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
@@ -618,7 +618,7 @@
 <!--
  Upload everything, i.e. create a complete update to the Slick stuff.
 -->
-<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero, upload-scalar, upload-packer, slick-util">
+<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero, upload-scalar, upload-packer">
 </target>
 
 <!--
