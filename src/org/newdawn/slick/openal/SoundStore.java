@@ -1,5 +1,6 @@
 package org.newdawn.slick.openal;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -611,6 +612,8 @@ public class SoundStore {
 	 * @throws IOException Indicates a failure to load the AIF
 	 */
 	public InternalSound getAIF(String ref, InputStream in) throws IOException {
+		in = new BufferedInputStream(in);
+		
 		if (!soundWorks) {
 			return new InternalSound(this, 0);
 		}
