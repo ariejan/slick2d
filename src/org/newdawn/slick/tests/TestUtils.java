@@ -104,7 +104,7 @@ public class TestUtils {
 		// allow for caching in the texture loader. The 3rd argument indicates whether
 		// the image should be flipped on loading
 		try {
-			texture = TextureLoader.getTexture(TextureLoader.PNG, new FileInputStream("testdata/rocks.png"));
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("testdata/rocks.png"));
 		
 			System.out.println("Texture loaded: "+texture);
 			System.out.println(">> Image width: "+texture.getImageWidth());
@@ -119,12 +119,12 @@ public class TestUtils {
 		try {
 			// you can play oggs by loading the complete thing into 
 			// a sound
-			oggEffect = AudioLoader.getAudio(AudioLoader.OGG, new FileInputStream("testdata/restart.ogg"));
+			oggEffect = AudioLoader.getAudio("OGG", new FileInputStream("testdata/restart.ogg"));
 			
 			// or setting up a stream to read from. Note that the argument becomes
 			// a URL here so it can be reopened when the stream is complete. Probably
 			// should have reset the stream by thats not how the original stuff worked
-			oggStream = AudioLoader.getStreamingAudio(AudioLoader.OGG, new File("testdata/bongos.ogg").toURL());
+			oggStream = AudioLoader.getStreamingAudio("OGG", new File("testdata/bongos.ogg").toURL());
 			
 			// playing as music uses that reserved source to play the sound. The first
 			// two arguments are pitch and gain, the boolean is whether to loop the content
@@ -132,15 +132,15 @@ public class TestUtils {
 			
 			// can load mods (XM, MOD) using ibxm which is then played through OpenAL. MODs
 			// are always streamed based on the way IBXM works
-			modStream = AudioLoader.getStreamingAudio(AudioLoader.MOD, new File("testdata/SMB-X.XM").toURL());
+			modStream = AudioLoader.getStreamingAudio("MOD", new File("testdata/SMB-X.XM").toURL());
 			
 			// you can play aifs by loading the complete thing into 
 			// a sound
-			aifEffect = AudioLoader.getAudio(AudioLoader.AIF, new FileInputStream("testdata/burp.aif"));
+			aifEffect = AudioLoader.getAudio("AIF", new FileInputStream("testdata/burp.aif"));
 
 			// you can play wavs by loading the complete thing into 
 			// a sound
-			wavEffect = AudioLoader.getAudio(AudioLoader.WAV, new FileInputStream("testdata/cbrown01.wav"));
+			wavEffect = AudioLoader.getAudio("WAV", new FileInputStream("testdata/cbrown01.wav"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

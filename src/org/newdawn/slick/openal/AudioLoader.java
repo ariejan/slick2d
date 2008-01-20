@@ -12,13 +12,15 @@ import java.net.URL;
  */
 public class AudioLoader {
 	/** AIF Format Indicator */
-	public static final String AIF = "AIF";
+	private static final String AIF = "AIF";
 	/** WAV Format Indicator */
-	public static final String WAV = "WAV";
+	private static final String WAV = "WAV";
 	/** OGG Format Indicator */
-	public static final String OGG = "OGG";
+	private static final String OGG = "OGG";
 	/** MOD/XM Format Indicator */
-	public static final String MOD = "MOD";
+	private static final String MOD = "MOD";
+	/** MOD/XM Format Indicator */
+	private static final String XM = "XM";
 
 	/** True if the audio loader has be initialised */
 	private static boolean inited = false;
@@ -37,8 +39,7 @@ public class AudioLoader {
 	 * Get audio data in a playable state by loading the complete audio into 
 	 * memory.
 	 * 
-	 * @param format The format of the audio to be loaded, should be one of {@link #AIF}, {@link #WAV},
-	 * {@link #OGG}
+	 * @param format The format of the audio to be loaded (something like "XM" or "OGG")
 	 * @param in The input stream from which to load the audio data
 	 * @return An object representing the audio data 
 	 * @throws IOException Indicates a failure to access the audio data
@@ -63,8 +64,7 @@ public class AudioLoader {
 	 * Get audio data in a playable state by setting up a stream that can be piped into
 	 * OpenAL - i.e. streaming audio
 	 * 
-	 * @param format The format of the audio to be loaded, should be one of {@link #MOD},
-	 * {@link #OGG}
+	 * @param format The format of the audio to be loaded (something like "XM" or "OGG")
 	 * @param url The location of the data that should be streamed
 	 * @return An object representing the audio data 
 	 * @throws IOException Indicates a failure to access the audio data
@@ -76,6 +76,9 @@ public class AudioLoader {
 			return SoundStore.get().getOggStream(url);
 		}
 		if (format.equals(MOD)) {
+			return SoundStore.get().getMOD(url.openStream());
+		}
+		if (format.equals(XM)) {
 			return SoundStore.get().getMOD(url.openStream());
 		}
 		
