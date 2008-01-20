@@ -92,6 +92,15 @@ public class OpenALStreamPlayer {
 	}
 	
 	/**
+	 * Get the source of this stream
+	 * 
+	 * @return The name of the source of string
+	 */
+	public String getSource() {
+		return (url == null) ? ref : url.toString();
+	}
+	
+	/**
 	 * Clean up the buffers applied to the sound source
 	 */
 	private void removeBuffers() {
