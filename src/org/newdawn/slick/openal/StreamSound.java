@@ -40,7 +40,7 @@ public class StreamSound extends InternalSound {
 			player.play(loop);
 			SoundStore.get().setStream(player);
 		} catch (IOException e) {
-			Log.error("Failed to read OGG source");
+			Log.error("Failed to read OGG source: "+player.getSource());
 		}
 	}
 
