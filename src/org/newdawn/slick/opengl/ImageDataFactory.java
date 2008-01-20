@@ -15,6 +15,8 @@ public class ImageDataFactory {
 	public static LoadableImageData getImageDataFor(String ref) {
 		LoadableImageData imageData;
 		
+		ref = ref.toLowerCase();
+		
         if (ref.endsWith(".tga")) {
         	imageData = new TGAImageData();
         } else {

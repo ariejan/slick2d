@@ -3,6 +3,7 @@ package org.newdawn.slick.geom;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.ShapeFill;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureImpl;
 import org.newdawn.slick.opengl.renderer.LineStripRenderer;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
@@ -25,8 +26,8 @@ public final class ShapeRenderer {
      * @param shape The shape to draw.
      */
     public static final void draw(Shape shape) {
-        Texture t = Texture.getLastBind();
-        Texture.bindNone();
+        Texture t = TextureImpl.getLastBind();
+        TextureImpl.bindNone();
         
         float points[] = shape.getPoints();
         
@@ -42,7 +43,7 @@ public final class ShapeRenderer {
         LSR.end();
         
         if (t == null) {
-        	Texture.bindNone();
+        	TextureImpl.bindNone();
         } else {
         	t.bind();
         }
@@ -58,8 +59,8 @@ public final class ShapeRenderer {
     public static final void draw(Shape shape, ShapeFill fill) {
         float points[] = shape.getPoints();
         
-        Texture t = Texture.getLastBind();
-        Texture.bindNone();
+        Texture t = TextureImpl.getLastBind();
+        TextureImpl.bindNone();
 
         float center[] = shape.getCenter();
         GL.glBegin(SGL.GL_LINE_STRIP);
@@ -77,7 +78,7 @@ public final class ShapeRenderer {
         GL.glEnd();
         
         if (t == null) {
-        	Texture.bindNone();
+        	TextureImpl.bindNone();
         } else {
         	t.bind();
         }
@@ -107,8 +108,8 @@ public final class ShapeRenderer {
     		return;
     	}
     	
-        Texture t = Texture.getLastBind();
-        Texture.bindNone();
+        Texture t = TextureImpl.getLastBind();
+        TextureImpl.bindNone();
         
     	fill(shape, new PointCallback() {
     		/**
@@ -121,7 +122,7 @@ public final class ShapeRenderer {
     	});
         
         if (t == null) {
-        	Texture.bindNone();
+        	TextureImpl.bindNone();
         } else {
         	t.bind();
         }
@@ -190,7 +191,7 @@ public final class ShapeRenderer {
     		return;
     	}
     	
-    	Texture t = Texture.getLastBind();
+    	Texture t = TextureImpl.getLastBind();
         image.getTexture().bind();
         
         fill(shape, new PointCallback() {
@@ -206,7 +207,7 @@ public final class ShapeRenderer {
         float points[] = shape.getPoints();
         
         if (t == null) {
-        	Texture.bindNone();
+        	TextureImpl.bindNone();
         } else {
         	t.bind();
         }
@@ -229,7 +230,7 @@ public final class ShapeRenderer {
     	
         float points[] = shape.getPoints();
         
-        Texture t = Texture.getLastBind();
+        Texture t = TextureImpl.getLastBind();
         image.getTexture().bind();
         
         final float minX = shape.getX();
@@ -249,7 +250,7 @@ public final class ShapeRenderer {
     	});
         
         if (t == null) {
-        	Texture.bindNone();
+        	TextureImpl.bindNone();
         } else {
         	t.bind();
         }
@@ -267,8 +268,8 @@ public final class ShapeRenderer {
     		return;
     	}
         
-        Texture t = Texture.getLastBind();
-        Texture.bindNone();
+        Texture t = TextureImpl.getLastBind();
+        TextureImpl.bindNone();
 
         final float center[] = shape.getCenter();
         fill(shape, new PointCallback() {
@@ -284,7 +285,7 @@ public final class ShapeRenderer {
     	});
         
         if (t == null) {
-        	Texture.bindNone();
+        	TextureImpl.bindNone();
         } else {
         	t.bind();
         }
@@ -306,7 +307,7 @@ public final class ShapeRenderer {
     		return;
     	}
         
-        Texture t = Texture.getLastBind();
+        Texture t = TextureImpl.getLastBind();
         image.getTexture().bind();
         
         final float center[] = shape.getCenter();
@@ -324,7 +325,7 @@ public final class ShapeRenderer {
     	});
         
         if (t == null) {
-        	Texture.bindNone();
+        	TextureImpl.bindNone();
         } else {
         	t.bind();
         }
@@ -338,7 +339,7 @@ public final class ShapeRenderer {
      * @param gen The texture coordinate generator to create coordiantes for the shape
      */
     public static final void texture(final Shape shape, Image image, final TexCoordGenerator gen) {
-        Texture t = Texture.getLastBind();
+        Texture t = TextureImpl.getLastBind();
 
         image.getTexture().bind();
 
@@ -356,7 +357,7 @@ public final class ShapeRenderer {
     	});
         
         if (t == null) {
-        	Texture.bindNone();
+        	TextureImpl.bindNone();
         } else {
         	t.bind();
         }

@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.ShapeRenderer;
-import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureImpl;
 import org.newdawn.slick.opengl.renderer.LineStripRenderer;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
@@ -380,7 +380,7 @@ public class Graphics {
 	public void drawLine(float x1, float y1, float x2, float y2) {
 		predraw();
 		currentColor.bind();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 
 		// make sure the start and end points are drawn - GL implementations
 		// seem a bit flakey on this
@@ -405,7 +405,7 @@ public class Graphics {
 	 */
 	public void draw(Shape shape, ShapeFill fill) {
 		predraw();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 
 		ShapeRenderer.draw(shape, fill);
 
@@ -423,7 +423,7 @@ public class Graphics {
 	 */
 	public void fill(Shape shape, ShapeFill fill) {
 		predraw();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 
 		ShapeRenderer.fill(shape, fill);
 
@@ -439,7 +439,7 @@ public class Graphics {
 	 */
 	public void draw(Shape shape) {
 		predraw();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 		currentColor.bind();
 
 		ShapeRenderer.draw(shape);
@@ -455,7 +455,7 @@ public class Graphics {
 	 */
 	public void fill(Shape shape) {
 		predraw();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 		currentColor.bind();
 
 		ShapeRenderer.fill(shape);
@@ -540,7 +540,7 @@ public class Graphics {
 	public void texture(Shape shape, Image image, float scaleX, float scaleY,
 			boolean fit) {
 		predraw();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 		currentColor.bind();
 
 		ShapeRenderer.texture(shape, image, scaleX, scaleY);
@@ -565,7 +565,7 @@ public class Graphics {
 	public void texture(Shape shape, Image image, float scaleX, float scaleY,
 			ShapeFill fill) {
 		predraw();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 		currentColor.bind();
 
 		ShapeRenderer.texture(shape, image, scaleX, scaleY, fill);
@@ -776,7 +776,7 @@ public class Graphics {
 	 */
 	public void fillRect(float x1, float y1, float width, float height) {
 		predraw();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 		currentColor.bind();
 
 		GL.glBegin(SGL.GL_QUADS);
@@ -873,7 +873,7 @@ public class Graphics {
 	public void drawArc(float x1, float y1, float width, float height,
 			int segments, float start, float end) {
 		predraw();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 		currentColor.bind();
 
 		while (end < start) {
@@ -985,7 +985,7 @@ public class Graphics {
 	public void fillArc(float x1, float y1, float width, float height,
 			int segments, float start, float end) {
 		predraw();
-		Texture.bindNone();
+		TextureImpl.bindNone();
 		currentColor.bind();
 
 		while (end < start) {
@@ -1542,7 +1542,7 @@ public class Graphics {
 									float green2, float blue2, float alpha2) {
 		predraw();
 
-		Texture.bindNone();
+		TextureImpl.bindNone();
 
 		GL.glBegin(SGL.GL_LINES);
 
@@ -1577,7 +1577,7 @@ public class Graphics {
 								 float y2, Color Color2) {
 		predraw();
 
-		Texture.bindNone();
+		TextureImpl.bindNone();
 
 		GL.glBegin(SGL.GL_LINES);
 

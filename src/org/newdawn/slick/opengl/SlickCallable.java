@@ -58,8 +58,8 @@ public abstract class SlickCallable {
 		}
 		
 		Renderer.get().flush();
-		lastUsed = Texture.getLastBind();
-		Texture.bindNone();
+		lastUsed = TextureImpl.getLastBind();
+		TextureImpl.bindNone();
 		GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		GL11.glPushClientAttrib(GL11.GL_ALL_CLIENT_ATTRIB_BITS);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -91,7 +91,7 @@ public abstract class SlickCallable {
 		if (lastUsed != null) {
 			lastUsed.bind();
 		} else {
-			Texture.bindNone();
+			TextureImpl.bindNone();
 		}
 		
 		inSafe = false;

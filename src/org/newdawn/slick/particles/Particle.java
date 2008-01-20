@@ -2,7 +2,7 @@ package org.newdawn.slick.particles;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureImpl;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
 
@@ -142,7 +142,7 @@ public class Particle {
 	public void render() {
 		if ((engine.usePoints() && (usePoints == INHERIT_POINTS))
 				|| (usePoints == USE_POINTS)) {
-			Texture.bindNone();
+			TextureImpl.bindNone();
 			GL.glEnable(SGL.GL_POINT_SMOOTH);
 			GL.glPointSize(size / 2);
 			color.bind();

@@ -51,14 +51,14 @@ public class EmptyImageData implements ImageData {
 	 * @see org.newdawn.slick.opengl.ImageData#getTexHeight()
 	 */
 	public int getTexHeight() {
-		return TextureLoader.get2Fold(height);
+		return InternalTextureLoader.get2Fold(height);
 	}
 
 	/**
 	 * @see org.newdawn.slick.opengl.ImageData#getTexWidth()
 	 */
 	public int getTexWidth() {
-		return TextureLoader.get2Fold(width);
+		return InternalTextureLoader.get2Fold(width);
 	}
 
 	/**

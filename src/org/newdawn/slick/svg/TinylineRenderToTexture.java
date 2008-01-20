@@ -12,7 +12,7 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureImpl;
 import org.newdawn.slick.util.ResourceLoader;
 
 import com.tinyline.svg.AnimationCallback;
@@ -219,7 +219,7 @@ public class TinylineRenderToTexture extends BasicGame implements SVGImageProduc
 		GL11.glVertex2f(786, 50);
 		GL11.glEnd();
 
-		Texture.unbind();
+		TextureImpl.unbind();
 	}
 
 	/**
@@ -273,7 +273,7 @@ public class TinylineRenderToTexture extends BasicGame implements SVGImageProduc
 		GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, dirty.xmin, dirty.ymin, width, height,
 				GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, textureBuffer);
 
-		Texture.unbind();
+		TextureImpl.unbind();
 	}
 
 	/**

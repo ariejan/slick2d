@@ -10,7 +10,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.opengl.TextureImpl;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -50,7 +51,7 @@ public class PBufferUniqueGraphics extends Graphics {
 	 */
 	private void init() throws SlickException {
 		try {
-			Texture tex = TextureLoader.get().createTexture(image.getWidth(), image.getHeight());
+			Texture tex = InternalTextureLoader.get().createTexture(image.getWidth(), image.getHeight());
 
 			pbuffer = new Pbuffer(screenWidth, screenHeight, new PixelFormat(8, 0, 0), null, null);
 			// Initialise state of the pbuffer context.
@@ -110,7 +111,7 @@ public class PBufferUniqueGraphics extends Graphics {
 		}
 		
 		// Put the renderer contents to the texture
-		Texture.unbind();
+		TextureImpl.unbind();
 		initGL();
 	}
 	

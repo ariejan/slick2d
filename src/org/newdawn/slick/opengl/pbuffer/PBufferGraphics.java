@@ -11,7 +11,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.opengl.TextureImpl;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -54,7 +55,7 @@ public class PBufferGraphics extends Graphics {
 	 */
 	private void init() throws SlickException {
 		try {
-			Texture tex = TextureLoader.get().createTexture(image.getWidth(), image.getHeight());
+			Texture tex = InternalTextureLoader.get().createTexture(image.getWidth(), image.getHeight());
 			
 			final RenderTexture rt = new RenderTexture(false, true, false, false, RenderTexture.RENDER_TEXTURE_2D, 0);
 			pbuffer = new Pbuffer(screenWidth, screenHeight, new PixelFormat(8, 0, 0), rt, null);
@@ -115,7 +116,7 @@ public class PBufferGraphics extends Graphics {
 		// Put the renderer contents to the texture
 		GL.glBindTexture(GL11.GL_TEXTURE_2D, image.getTexture().getTextureID());
 		pbuffer.releaseTexImage(Pbuffer.FRONT_LEFT_BUFFER);
-		Texture.unbind();
+		TextureImpl.unbind();
 		initGL();
 	}
 	

@@ -5,7 +5,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.ShapeRenderer;
 import org.newdawn.slick.geom.TexCoordGenerator;
-import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureImpl;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
 
@@ -49,7 +49,7 @@ public class SimpleDiagramRenderer {
 		
 		GL.glCallList(list);
 		
-		Texture.bindNone();
+		TextureImpl.bindNone();
 	}
 	
 	/**

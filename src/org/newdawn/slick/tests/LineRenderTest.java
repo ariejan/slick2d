@@ -7,7 +7,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureImpl;
 import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
@@ -50,7 +50,7 @@ public class LineRenderTest extends BasicGame {
 	 */
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.setColor(Color.red);
-		Texture.bindNone();
+		TextureImpl.bindNone();
 		g.setLineWidth(width);
 		g.setAntiAlias(true);
 		for (int i=0;i<10;i++) {

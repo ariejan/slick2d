@@ -24,16 +24,16 @@ import org.newdawn.slick.util.ResourceLoader;
  * 
  * @author kevin
  */
-public class TextureLoader {
+public class InternalTextureLoader {
 	/** The standard texture loaded used everywhere */
-	private static final TextureLoader loader = new TextureLoader();
+	private static final InternalTextureLoader loader = new InternalTextureLoader();
 	
 	/**
 	 * Get the single instance of this texture loader
 	 * 
 	 * @return The single instance of the texture loader
 	 */
-	public static TextureLoader get() {
+	public static InternalTextureLoader get() {
 		return loader;
 	}
 	
@@ -49,7 +49,7 @@ public class TextureLoader {
     /** 
      * Create a new texture loader based on the game panel
      */
-    public TextureLoader() {
+    private InternalTextureLoader() {
     }
     
     /**
@@ -97,7 +97,7 @@ public class TextureLoader {
        GL11.glGenTextures(tmp); 
        return tmp.get(0);
     } 
-
+    
     /**
      * Get a texture from a specific file
      * 
@@ -186,7 +186,7 @@ public class TextureLoader {
      * @return The texture loaded
      * @throws IOException Indicates a failure to load the image
      */
-    public Texture getTexture(InputStream in, String resourceName, boolean flipped, int filter, int[] transparent) throws IOException {
+    public TextureImpl getTexture(InputStream in, String resourceName, boolean flipped, int filter, int[] transparent) throws IOException {
     	if (deferred) {
 	    	return new DeferredTexture(in, resourceName, flipped, filter, transparent);
 	    }
@@ -203,7 +203,7 @@ public class TextureLoader {
         
     	SoftReference ref = (SoftReference) hash.get(resName);
     	if (ref != null) {
-	    	Texture tex = (Texture) ref.get();
+	    	TextureImpl tex = (TextureImpl) ref.get();
 	        if (tex != null) {
 	        	return tex;
 	        } else {
@@ -218,7 +218,7 @@ public class TextureLoader {
         	throw new RuntimeException("Image based resources must be loaded as part of init() or the game loop. They cannot be loaded before initialisation.");
         }
         
-        Texture tex = getTexture(in, resourceName,
+        TextureImpl tex = getTexture(in, resourceName,
                          GL11.GL_TEXTURE_2D, 
                          filter, 
                          filter, flipped, transparent);
@@ -241,7 +241,7 @@ public class TextureLoader {
      * @return The texture loaded
      * @throws IOException Indicates a failure to load the image
      */
-    private Texture getTexture(InputStream in, 
+    private TextureImpl getTexture(InputStream in, 
     						  String resourceName, 
                               int target, 
                               int magFilter, 
@@ -249,7 +249,7 @@ public class TextureLoader {
     { 
         // create the texture ID for this texture 
         int textureID = createTextureID(); 
-        Texture texture = new Texture(resourceName, target, textureID); 
+        TextureImpl texture = new TextureImpl(resourceName, target, textureID); 
         
         // bind this texture 
         GL11.glBindTexture(target, textureID); 
@@ -341,7 +341,7 @@ public class TextureLoader {
     	
         // create the texture ID for this texture 
         int textureID = createTextureID(); 
-        Texture texture = new Texture("generated:"+dataSource, target ,textureID); 
+        TextureImpl texture = new TextureImpl("generated:"+dataSource, target ,textureID); 
         
         int minFilter = filter;
         int magFilter = filter;

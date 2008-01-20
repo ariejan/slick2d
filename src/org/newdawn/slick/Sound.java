@@ -2,7 +2,7 @@ package org.newdawn.slick;
 
 import java.net.URL;
 
-import org.newdawn.slick.openal.InternalSound;
+import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.Log;
 
@@ -14,7 +14,7 @@ import org.newdawn.slick.util.Log;
  */
 public class Sound {
 	/** The internal sound effect represent this sound */
-	private InternalSound sound;
+	private Audio sound;
 
 	/**
 	 * Create a new Sound 

@@ -3,7 +3,7 @@ package org.newdawn.slick.loading;
 import java.util.ArrayList;
 
 import org.newdawn.slick.openal.SoundStore;
-import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -33,7 +33,7 @@ public class LoadingList {
 	public static void setDeferredLoading(boolean loading) {
 		single = new LoadingList();
 		
-		TextureLoader.get().setDeferredLoading(loading);
+		InternalTextureLoader.get().setDeferredLoading(loading);
 		SoundStore.get().setDeferredLoading(loading);
 	}
 	
@@ -43,7 +43,7 @@ public class LoadingList {
 	 * @return True if we're using deferred loading
 	 */
 	public static boolean isDeferredLoading() {
-		return TextureLoader.get().isDeferredLoading();
+		return InternalTextureLoader.get().isDeferredLoading();
 	}
 	
 	/** The list of deferred resources to load */

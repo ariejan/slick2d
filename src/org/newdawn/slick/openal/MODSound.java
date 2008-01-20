@@ -11,7 +11,7 @@ import java.io.InputStream;
  * 
  * @author Kevin Glass
  */
-public class MODSound extends InternalSound {
+public class MODSound extends AudioImpl {
 	/** The MOD play back system */
 	private static OpenALMODPlayer player = new OpenALMODPlayer();
 	
@@ -33,14 +33,16 @@ public class MODSound extends InternalSound {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#playAsMusic(float, float, boolean)
+	 * @see org.newdawn.slick.openal.AudioImpl#playAsMusic(float, float, boolean)
 	 */
-	public void playAsMusic(float pitch, float gain, boolean loop) {
-		player.play(module, store.getMusicSource(), loop, SoundStore.get().isMusicOn());
+	public int playAsMusic(float pitch, float gain, boolean loop) {
+		player.play(module, store.getSource(0), loop, SoundStore.get().isMusicOn());
 		player.setup(pitch, 1.0f);
 		store.setMusicVolume(gain);
 		
 		store.setMOD(this);
+		
+		return store.getSource(0);
 	}
 	
 	/**
@@ -51,9 +53,10 @@ public class MODSound extends InternalSound {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#playAsSoundEffect(float, float, boolean)
+	 * @see org.newdawn.slick.openal.AudioImpl#playAsSoundEffect(float, float, boolean)
 	 */
-	public void playAsSoundEffect(float pitch, float gain, boolean loop) {
+	public int playAsSoundEffect(float pitch, float gain, boolean loop) {
+		return -1;
 	}
 
 	public void stop() {

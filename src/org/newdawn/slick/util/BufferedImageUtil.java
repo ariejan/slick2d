@@ -18,7 +18,8 @@ import java.util.Hashtable;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.glu.GLU;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.opengl.TextureImpl;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 
 /**
  * This is a utility class that allows you to convert a BufferedImage into a
@@ -78,8 +79,8 @@ public class BufferedImageUtil {
 		int srcPixelFormat = 0;
 
 		// create the texture ID for this texture
-		int textureID = TextureLoader.createTextureID();
-		Texture texture = new Texture(resourceName, target, textureID);
+		int textureID = InternalTextureLoader.createTextureID();
+		TextureImpl texture = new TextureImpl(resourceName, target, textureID);
 
 		// Enable texturing
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -111,8 +112,8 @@ public class BufferedImageUtil {
 			GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter);
 		}
 
-		GLU.gluBuild2DMipmaps(target, dstPixelFormat, TextureLoader
-				.get2Fold(bufferedImage.getWidth()), TextureLoader
+		GLU.gluBuild2DMipmaps(target, dstPixelFormat, InternalTextureLoader
+				.get2Fold(bufferedImage.getWidth()), InternalTextureLoader
 				.get2Fold(bufferedImage.getHeight()), srcPixelFormat,
 				GL11.GL_UNSIGNED_BYTE, textureBuffer);
 
@@ -129,7 +130,7 @@ public class BufferedImageUtil {
 	 * @return A ByteBuffer containing the data
 	 */
 	private static ByteBuffer convertImageData(BufferedImage bufferedImage,
-			Texture texture) {
+			TextureImpl texture) {
 
 		/** The colour model including alpha for the GL image */
 		ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace

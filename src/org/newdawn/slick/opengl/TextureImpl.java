@@ -21,7 +21,7 @@ import org.newdawn.slick.opengl.renderer.Renderer;
  * @author Kevin Glass
  * @author Brian Matzon
  */
-public class Texture {
+public class TextureImpl implements Texture {
 	/** The renderer to use for all GL operations */
 	protected static SGL GL = Renderer.get();
 	
@@ -61,7 +61,7 @@ public class Texture {
     /**
      * For subclasses to utilise
      */
-    protected Texture() {	
+    protected TextureImpl() {	
     }
     
     /**
@@ -71,7 +71,7 @@ public class Texture {
      * @param target The GL target 
      * @param textureID The GL texture ID
      */
-    public Texture(String ref, int target,int textureID) {
+    public TextureImpl(String ref, int target,int textureID) {
         this.target = target;
         this.ref = ref;
         this.textureID = textureID;
@@ -79,19 +79,15 @@ public class Texture {
     }
     
     /**
-     * Check if the texture has alpha
-     * 
-     * @return True if the texture has alpha
-     */
+	 * @see org.newdawn.slick.opengl.Texture#hasAlpha()
+	 */
     public boolean hasAlpha() {
     	return alpha;
     }
     
     /**
-     * Get the reference from which this texture was loaded
-     * 
-     * @return The reference from which this texture was loaded
-     */
+	 * @see org.newdawn.slick.opengl.Texture#getTextureRef()
+	 */
     public String getTextureRef() {
     	return ref;
     }
@@ -123,8 +119,8 @@ public class Texture {
     }
     
     /**
-     * Bind the  GL context to a texture
-     */
+	 * @see org.newdawn.slick.opengl.Texture#bind()
+	 */
     public void bind() {
     	if (lastBind != this) {
     		lastBind = this;
@@ -154,55 +150,43 @@ public class Texture {
     }
     
     /**
-     * Get the height of the original image
-     *
-     * @return The height of the original image
-     */
+	 * @see org.newdawn.slick.opengl.Texture#getImageHeight()
+	 */
     public int getImageHeight() {
         return height;
     }
     
-    /** 
-     * Get the width of the original image
-     *
-     * @return The width of the original image
-     */
+    /**
+	 * @see org.newdawn.slick.opengl.Texture#getImageWidth()
+	 */
     public int getImageWidth() {
         return width;
     }
     
     /**
-     * Get the height of the physical texture
-     *
-     * @return The height of physical texture
-     */
+	 * @see org.newdawn.slick.opengl.Texture#getHeight()
+	 */
     public float getHeight() {
         return heightRatio;
     }
     
     /**
-     * Get the width of the physical texture
-     *
-     * @return The width of physical texture
-     */
+	 * @see org.newdawn.slick.opengl.Texture#getWidth()
+	 */
     public float getWidth() {
         return widthRatio;
     }
     
     /**
-     * Get the height of the actual texture
-     * 
-     * @return The height of the actual texture
-     */
+	 * @see org.newdawn.slick.opengl.Texture#getTextureHeight()
+	 */
     public int getTextureHeight() {
     	return texHeight;
     }
 
     /**
-     * Get the width of the actual texture
-     * 
-     * @return The width of the actual texture
-     */
+	 * @see org.newdawn.slick.opengl.Texture#getTextureWidth()
+	 */
     public int getTextureWidth() {
     	return texWidth;
     }
@@ -248,8 +232,8 @@ public class Texture {
     }
     
     /**
-     * Destroy the texture reference
-     */
+	 * @see org.newdawn.slick.opengl.Texture#release()
+	 */
     public void release() {
         IntBuffer texBuf = createIntBuffer(1); 
         texBuf.put(textureID);
@@ -263,10 +247,8 @@ public class Texture {
     }
     
     /**
-     * Get the OpenGL texture ID for this texture
-     * 
-     * @return The OpenGL texture ID
-     */
+	 * @see org.newdawn.slick.opengl.Texture#getTextureID()
+	 */
     public int getTextureID() {
     	return textureID;
     }
@@ -295,10 +277,8 @@ public class Texture {
     }    
     
     /**
-     * Get the pixel data from the card for this texture
-     * 
-     * @return The texture data from the card for this texture
-     */
+	 * @see org.newdawn.slick.opengl.Texture#getTextureData()
+	 */
     public byte[] getTextureData() {
     	ByteBuffer buffer = BufferUtils.createByteBuffer((hasAlpha() ? 4 : 3) * texWidth * texHeight);
     	bind();

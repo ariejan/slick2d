@@ -20,7 +20,7 @@ import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.ImageIOImageData;
 import org.newdawn.slick.opengl.LoadableImageData;
 import org.newdawn.slick.opengl.TGAImageData;
-import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -246,7 +246,7 @@ public class AppGameContainer extends GameContainer {
 	 * @see org.newdawn.slick.GameContainer#reinit()
 	 */
 	public void reinit() throws SlickException {
-		TextureLoader.get().clear();
+		InternalTextureLoader.get().clear();
 		SoundStore.get().clear();
 		initSystem();
 		enterOrtho();

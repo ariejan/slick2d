@@ -3,7 +3,8 @@ package org.newdawn.slick;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.newdawn.slick.openal.InternalSound;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioImpl;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.util.Log;
 
@@ -28,6 +29,7 @@ public class Music {
 		if (currentMusic != null) {
 			SoundStore.get().poll(delta);
 			if (!SoundStore.get().isMusicPlaying()) {
+				System.out.println("MUSIC STOPPED");
 				Music oldMusic = currentMusic;
 				currentMusic = null;
 				oldMusic.fireMusicEnded();
@@ -36,7 +38,7 @@ public class Music {
 	}
 	
 	/** The sound from FECK representing this music */
-	private InternalSound sound;
+	private Audio sound;
 	/** True if the music is playing */
 	private boolean playing;
 	/** the volume of this music */
@@ -229,7 +231,7 @@ public class Music {
 	 */
 	public void pause() {
 		playing = false;
-		InternalSound.pauseMusic();
+		AudioImpl.pauseMusic();
 	}
 	
 	/**
@@ -244,7 +246,7 @@ public class Music {
 	 */
 	public void resume() {
 		playing = true;
-		InternalSound.restartMusic();
+		AudioImpl.restartMusic();
 	}
 	
 	/**

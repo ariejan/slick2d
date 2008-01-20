@@ -24,6 +24,7 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author Kevin Glass
  */
 public class SoundStore {
+	
 	/** The single instance of this class */
 	private static SoundStore store = new SoundStore();
 	
@@ -478,7 +479,7 @@ public class SoundStore {
 	 * 
 	 * @return The open al source used for music
 	 */
-	public int getMusicSource() {
+	private int getMusicSource() {
 		if (AL10.alIsSource(sources.get(0))) {
 			AL10.alSourceStop(sources.get(0));
 			IntBuffer deleteMe = BufferUtils.createIntBuffer(1);
@@ -543,7 +544,7 @@ public class SoundStore {
 	 * @return The sound for play back 
 	 * @throws IOException Indicates a failure to read the data
 	 */
-	public InternalSound getMOD(String ref) throws IOException {
+	public Audio getMOD(String ref) throws IOException {
 		return getMOD(ref, ResourceLoader.getResourceAsStream(ref));
 	}
 
@@ -554,7 +555,7 @@ public class SoundStore {
 	 * @return The sound for play back 
 	 * @throws IOException Indicates a failure to read the data
 	 */
-	public InternalSound getMOD(InputStream in) throws IOException {
+	public Audio getMOD(InputStream in) throws IOException {
 		return getMOD(in.toString(), in);
 	}
 	
@@ -566,9 +567,9 @@ public class SoundStore {
 	 * @return The sound for play back 
 	 * @throws IOException Indicates a failure to read the data
 	 */
-	public InternalSound getMOD(String ref, InputStream in) throws IOException {
+	public Audio getMOD(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
-			return new InternalSound(this, 0);
+			return new AudioImpl(this, 0);
 		}
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
@@ -587,7 +588,7 @@ public class SoundStore {
 	 * @return The Sound read from the AIF file
 	 * @throws IOException Indicates a failure to load the AIF
 	 */
-	public InternalSound getAIF(String ref) throws IOException {
+	public Audio getAIF(String ref) throws IOException {
 		return getAIF(ref, ResourceLoader.getResourceAsStream(ref));
 	}
 	
@@ -599,7 +600,7 @@ public class SoundStore {
 	 * @return The Sound read from the AIF file
 	 * @throws IOException Indicates a failure to load the AIF
 	 */
-	public InternalSound getAIF(InputStream in) throws IOException {
+	public Audio getAIF(InputStream in) throws IOException {
 		return getAIF(in.toString(), in);
 	}
 	
@@ -611,11 +612,11 @@ public class SoundStore {
 	 * @return The Sound read from the AIF file
 	 * @throws IOException Indicates a failure to load the AIF
 	 */
-	public InternalSound getAIF(String ref, InputStream in) throws IOException {
+	public Audio getAIF(String ref, InputStream in) throws IOException {
 		in = new BufferedInputStream(in);
 		
 		if (!soundWorks) {
-			return new InternalSound(this, 0);
+			return new AudioImpl(this, 0);
 		}
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
@@ -651,7 +652,7 @@ public class SoundStore {
 			throw new IOException("Unable to load: "+ref);
 		}
 		
-		return new InternalSound(this, buffer);
+		return new AudioImpl(this, buffer);
 	}
 	
 
@@ -663,7 +664,7 @@ public class SoundStore {
 	 * @return The Sound read from the WAV file
 	 * @throws IOException Indicates a failure to load the WAV
 	 */
-	public InternalSound getWAV(String ref) throws IOException {
+	public Audio getWAV(String ref) throws IOException {
 		return getWAV(ref, ResourceLoader.getResourceAsStream(ref));
 	}
 	
@@ -674,7 +675,7 @@ public class SoundStore {
 	 * @return The Sound read from the WAV file
 	 * @throws IOException Indicates a failure to load the WAV
 	 */
-	public InternalSound getWAV(InputStream in) throws IOException {
+	public Audio getWAV(InputStream in) throws IOException {
 		return getWAV(in.toString(), in);
 	}
 	
@@ -686,9 +687,9 @@ public class SoundStore {
 	 * @return The Sound read from the WAV file
 	 * @throws IOException Indicates a failure to load the WAV
 	 */
-	public InternalSound getWAV(String ref, InputStream in) throws IOException {
+	public Audio getWAV(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
-			return new InternalSound(this, 0);
+			return new AudioImpl(this, 0);
 		}
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
@@ -724,7 +725,7 @@ public class SoundStore {
 			throw new IOException("Unable to load: "+ref);
 		}
 		
-		return new InternalSound(this, buffer);
+		return new AudioImpl(this, buffer);
 	}
 
 	/**
@@ -784,7 +785,7 @@ public class SoundStore {
 	 * @return The Sound read from the OGG file
 	 * @throws IOException Indicates a failure to load the OGG
 	 */
-	public InternalSound getOgg(String ref) throws IOException {
+	public Audio getOgg(String ref) throws IOException {
 		return getOgg(ref, ResourceLoader.getResourceAsStream(ref));
 	}
 	
@@ -795,7 +796,7 @@ public class SoundStore {
 	 * @return The Sound read from the OGG file
 	 * @throws IOException Indicates a failure to load the OGG
 	 */
-	public InternalSound getOgg(InputStream in) throws IOException {
+	public Audio getOgg(InputStream in) throws IOException {
 		return getOgg(in.toString(), in);
 	}
 	
@@ -807,9 +808,9 @@ public class SoundStore {
 	 * @return The Sound read from the OGG file
 	 * @throws IOException Indicates a failure to load the OGG
 	 */
-	public InternalSound getOgg(String ref, InputStream in) throws IOException {
+	public Audio getOgg(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
-			return new InternalSound(this, 0);
+			return new AudioImpl(this, 0);
 		}
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
@@ -846,7 +847,7 @@ public class SoundStore {
 			throw new IOException("Unable to load: "+ref);
 		}
 		
-		return new InternalSound(this, buffer);
+		return new AudioImpl(this, buffer);
 	}
 	
 	/**

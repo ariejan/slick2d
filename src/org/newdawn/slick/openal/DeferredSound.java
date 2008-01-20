@@ -13,7 +13,7 @@ import org.newdawn.slick.util.Log;
  *
  * @author kevin
  */
-public class DeferredSound extends InternalSound implements DeferredResource {
+public class DeferredSound extends AudioImpl implements DeferredResource {
 	/** Indicate a OGG to be loaded */
 	public static final int OGG = 1;
 	/** Indicate a WAV to be loaded */
@@ -28,7 +28,7 @@ public class DeferredSound extends InternalSound implements DeferredResource {
 	/** The location of the sound this proxy wraps */
 	private String ref;
 	/** The loaded sound if it's already been brought up */
-	private InternalSound target;
+	private Audio target;
 	/** The input stream to load the sound this proxy wraps from (can be null) */
 	private InputStream in;
 	
@@ -107,7 +107,7 @@ public class DeferredSound extends InternalSound implements DeferredResource {
 	}
 
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#isPlaying()
+	 * @see org.newdawn.slick.openal.AudioImpl#isPlaying()
 	 */
 	public boolean isPlaying() {
 		checkTarget();
@@ -116,19 +116,19 @@ public class DeferredSound extends InternalSound implements DeferredResource {
 	}
 
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#playAsMusic(float, float, boolean)
+	 * @see org.newdawn.slick.openal.AudioImpl#playAsMusic(float, float, boolean)
 	 */
-	public void playAsMusic(float pitch, float gain, boolean loop) {
+	public int playAsMusic(float pitch, float gain, boolean loop) {
 		checkTarget();
-		target.playAsMusic(pitch, gain, loop);
+		return target.playAsMusic(pitch, gain, loop);
 	}
 
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#playAsSoundEffect(float, float, boolean)
+	 * @see org.newdawn.slick.openal.AudioImpl#playAsSoundEffect(float, float, boolean)
 	 */
-	public void playAsSoundEffect(float pitch, float gain, boolean loop) {
+	public int playAsSoundEffect(float pitch, float gain, boolean loop) {
 		checkTarget();
-		target.playAsSoundEffect(pitch, gain, loop);
+		return target.playAsSoundEffect(pitch, gain, loop);
 	}
 
 	/**
@@ -141,13 +141,13 @@ public class DeferredSound extends InternalSound implements DeferredResource {
 	 * @param y The y position of the sound
 	 * @param z The z position of the sound
 	 */
-	public void playAsSoundEffect(float pitch, float gain, boolean loop, float x, float y, float z) {
+	public int playAsSoundEffect(float pitch, float gain, boolean loop, float x, float y, float z) {
 		checkTarget();
-		target.playAsSoundEffect(pitch, gain, loop, x, y, z);
+		return target.playAsSoundEffect(pitch, gain, loop, x, y, z);
 	}
 	
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#stop()
+	 * @see org.newdawn.slick.openal.AudioImpl#stop()
 	 */
 	public void stop() {
 		checkTarget();

@@ -65,6 +65,44 @@
 	<copy file="lib/slick.jar" toDir="applet"/>
 </target>
 
+<target name="slick-util" depends="build-slick">
+	<jar destfile="lib/slick-util.jar">
+		<fileset dir="${build.dir}/classes">
+			<include name="org/newdawn/slick/opengl/*.class"/>
+			<include name="org/newdawn/slick/opengl/renderer/*.class"/>
+			<include name="org/newdawn/slick/openal/*.class"/>
+			<include name="org/newdawn/slick/util/ResourceLoader.class"/>
+			<include name="org/newdawn/slick/util/*Location.class"/>
+			<include name="org/newdawn/slick/util/Log.class"/>
+			<include name="org/newdawn/slick/loading/*.class"/>
+			<include name="org/newdawn/slick/SlickException.class"/>
+			<include name="org/newdawn/slick/tests/TestUtils.class"/>
+		</fileset>
+	</jar>
+	
+	<zip destfile="lib/slick-util-src.zip">
+		<fileset dir="src">
+			<include name="org/newdawn/slick/opengl/*.java"/>
+			<include name="org/newdawn/slick/opengl/renderer/*.java"/>
+			<include name="org/newdawn/slick/openal/*.java"/>
+			<include name="org/newdawn/slick/util/ResourceLoader.java"/>
+			<include name="org/newdawn/slick/util/*Location.java"/>
+			<include name="org/newdawn/slick/loading/*.java"/>
+			<include name="org/newdawn/slick/SlickException.java"/>
+			<include name="org/newdawn/slick/tests/TestUtils.java"/>
+		</fileset>
+	</zip>
+	
+	<zip destfile="${dist}/slick-util.zip">
+	    <fileset dir="." includes="lib/slick-util.jar"/>
+	    <fileset dir="." includes="lib/slick-util-src.jar"/>
+	    <fileset dir="." includes="lib/ibxm.jar"/>
+	    <fileset dir="." includes="lib/jorbis*.jar"/>
+	    <fileset dir="." includes="lib/jogg*.jar"/>
+	    <fileset dir="." includes="lib/lwjgl*.jar"/>
+	</zip>
+</target>
+
 <!-- build the pedigree tool -->
 <target name="build-pedigree" depends="build-slick">
 	<delete dir="lib/pedigree.jar"/>
@@ -463,8 +501,18 @@
 		 trust="true"
 		 port="122"
 		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${dir}/downloads/util" 
+		 file="dist/slick-util.zip"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
 	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
 		 file="lib/slick.jar"
+		 trust="true"
+		 port="122"
+		 verbose="true"/>
+	<scp todir="${username}:${password}@${host}:${dir}/downloads/util" 
+		 file="dist/slick-util.jar"
 		 trust="true"
 		 port="122"
 		 verbose="true"/>

@@ -5,7 +5,7 @@ package org.newdawn.slick.openal;
  * 
  * @author Kevin Glass
  */
-public class InternalSound {
+public class AudioImpl implements Audio {
 	/** The store from which this sound was loaded */
 	private SoundStore store;
 	/** The buffer containing the sound */
@@ -19,20 +19,30 @@ public class InternalSound {
 	 * @param store The sound store from which the sound was created
 	 * @param buffer The buffer containing the sound data
 	 */
-	InternalSound(SoundStore store, int buffer) {
+	AudioImpl(SoundStore store, int buffer) {
 		this.store = store;
 		this.buffer = buffer;
 	}
 	
 	/**
+	 * Get the ID of the OpenAL buffer holding this data (if any). This method
+	 * is not valid with streaming resources.
+	 * 
+	 * @return The ID of the OpenAL buffer holding this data 
+	 */
+	public int getBufferID() {
+		return buffer;
+	}
+	
+	/**
 	 *
 	 */
-	protected InternalSound() {
+	protected AudioImpl() {
 		
 	}
 	
 	/**
-	 * Stop the sound effect
+	 * @see org.newdawn.slick.openal.Audio#stop()
 	 */
 	public void stop() {
 		if (index != -1) {
@@ -41,9 +51,7 @@ public class InternalSound {
 	}
 	
 	/**
-	 * Check if the sound is playing as sound fx
-	 * 
-	 * @return True if the sound is playing
+	 * @see org.newdawn.slick.openal.Audio#isPlaying()
 	 */
 	public boolean isPlaying() {
 		if (index != -1) {
@@ -54,41 +62,29 @@ public class InternalSound {
 	}
 	
 	/**
-	 * Play this sound as a sound effect
-	 * 
-	 * @param pitch The pitch of the play back
-	 * @param gain The gain of the play back
-	 * @param loop True if we should loop
+	 * @see org.newdawn.slick.openal.Audio#playAsSoundEffect(float, float, boolean)
 	 */
-	public void playAsSoundEffect(float pitch, float gain, boolean loop) {
+	public int playAsSoundEffect(float pitch, float gain, boolean loop) {
 		index = store.playAsSound(buffer, pitch, gain, loop);
+		return store.getSource(index);
 	}
 
 
 	/**
-	 * Play this sound as a sound effect
-	 * 
-	 * @param pitch The pitch of the play back
-	 * @param gain The gain of the play back
-	 * @param loop True if we should loop
-	 * @param x The x position of the sound
-	 * @param y The y position of the sound
-	 * @param z The z position of the sound
+	 * @see org.newdawn.slick.openal.Audio#playAsSoundEffect(float, float, boolean, float, float, float)
 	 */
-	public void playAsSoundEffect(float pitch, float gain, boolean loop, float x, float y, float z) {
+	public int playAsSoundEffect(float pitch, float gain, boolean loop, float x, float y, float z) {
 		index = store.playAsSoundAt(buffer, pitch, gain, loop, x, y, z);
+		return store.getSource(index);
 	}
 	
 	/**
-	 * Play this sound as music
-	 * 
-	 * @param pitch The pitch of the play back
-	 * @param gain The gain of the play back
-	 * @param loop True if we should loop
+	 * @see org.newdawn.slick.openal.Audio#playAsMusic(float, float, boolean)
 	 */
-	public void playAsMusic(float pitch, float gain, boolean loop) {
+	public int playAsMusic(float pitch, float gain, boolean loop) {
 		store.playAsMusic(buffer, pitch, gain, loop);
 		index = 0;
+		return store.getSource(0);
 	}
 	
 	/**

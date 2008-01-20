@@ -12,7 +12,7 @@ import java.util.Iterator;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureImpl;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
@@ -381,7 +381,7 @@ public class ParticleSystem {
 		}
 		if (usePoints()) {
 			GL.glEnable( SGL.GL_POINT_SMOOTH ); 
-			Texture.bindNone();
+			TextureImpl.bindNone();
 		}
 		
 		// iterate over all emitters

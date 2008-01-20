@@ -14,7 +14,7 @@ import org.lwjgl.opengl.AWTInputAdapter;
 import org.lwjgl.util.applet.LWJGLInstaller;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.ImageData;
-import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -142,7 +142,7 @@ public class AppletGameContainer extends Applet {
 		 */
 		protected void initGL() {
 			try {
-				TextureLoader.get().clear();
+				InternalTextureLoader.get().clear();
 				SoundStore.get().clear();
 
 				setVSyncEnabled(true);

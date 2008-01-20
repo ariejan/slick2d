@@ -7,7 +7,8 @@ import org.lwjgl.opengl.EXTSecondaryColor;
 import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.opengl.TextureImpl;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
 import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.opengl.renderer.Renderer;
@@ -148,7 +149,7 @@ public class Image implements Renderable {
 				trans[1] = (int) (transparent.g * 255);
 				trans[2] = (int) (transparent.b * 255);
 			}
-			texture = TextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST, trans);
+			texture = InternalTextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST, trans);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
@@ -166,7 +167,7 @@ public class Image implements Renderable {
 		ref = super.toString();
 		
 		try {
-			texture = TextureLoader.get().createTexture(width, height);
+			texture = InternalTextureLoader.get().createTexture(width, height);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to create empty image "+width+"x"+height);
@@ -207,7 +208,7 @@ public class Image implements Renderable {
 	 */
 	Image(ImageBuffer buffer) {
 		this(buffer, FILTER_LINEAR);
-        Texture.bindNone();
+        TextureImpl.bindNone();
 	}
 	
 	/**
@@ -218,7 +219,7 @@ public class Image implements Renderable {
 	 */
 	Image(ImageBuffer buffer, int filter) {
 		this((ImageData) buffer, filter);
-        Texture.bindNone();
+        TextureImpl.bindNone();
 	}
 
 	/**
@@ -238,7 +239,7 @@ public class Image implements Renderable {
 	 */
 	public Image(ImageData data, int filter) {
 		try {
-			texture = TextureLoader.get().getTexture(data, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST);
+			texture = InternalTextureLoader.get().getTexture(data, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST);
 			ref = texture.toString();
 		} catch (IOException e) {
 			Log.error(e);
@@ -275,7 +276,7 @@ public class Image implements Renderable {
 				trans[1] = (int) (transparent.g * 255);
 				trans[2] = (int) (transparent.b * 255);
 			}
-			texture = TextureLoader.get().getTexture(in, ref, flipped, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST, trans);
+			texture = InternalTextureLoader.get().getTexture(in, ref, flipped, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST, trans);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);

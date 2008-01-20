@@ -10,7 +10,7 @@ import org.newdawn.slick.util.Log;
  *
  * @author kevin
  */
-public class StreamSound extends InternalSound {
+public class StreamSound extends AudioImpl {
 	/** The player we're going to ask to stream data */
 	private OpenALStreamPlayer player;
 	
@@ -24,16 +24,16 @@ public class StreamSound extends InternalSound {
 	}
 	
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#isPlaying()
+	 * @see org.newdawn.slick.openal.AudioImpl#isPlaying()
 	 */
 	public boolean isPlaying() {
 		return SoundStore.get().isPlaying(player);
 	}
 
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#playAsMusic(float, float, boolean)
+	 * @see org.newdawn.slick.openal.AudioImpl#playAsMusic(float, float, boolean)
 	 */
-	public void playAsMusic(float pitch, float gain, boolean loop) {
+	public int playAsMusic(float pitch, float gain, boolean loop) {
 		try {
 			player.setup(pitch, 1.0f);
 			SoundStore.get().setMusicVolume(gain);
@@ -42,24 +42,26 @@ public class StreamSound extends InternalSound {
 		} catch (IOException e) {
 			Log.error("Failed to read OGG source: "+player.getSource());
 		}
+		
+		return SoundStore.get().getSource(0);
 	}
 
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#playAsSoundEffect(float, float, boolean, float, float, float)
+	 * @see org.newdawn.slick.openal.AudioImpl#playAsSoundEffect(float, float, boolean, float, float, float)
 	 */
-	public void playAsSoundEffect(float pitch, float gain, boolean loop, float x, float y, float z) {
-		playAsMusic(pitch, gain, loop);
+	public int playAsSoundEffect(float pitch, float gain, boolean loop, float x, float y, float z) {
+		return playAsMusic(pitch, gain, loop);
 	}
 
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#playAsSoundEffect(float, float, boolean)
+	 * @see org.newdawn.slick.openal.AudioImpl#playAsSoundEffect(float, float, boolean)
 	 */
-	public void playAsSoundEffect(float pitch, float gain, boolean loop) {
-		playAsMusic(pitch, gain, loop);
+	public int playAsSoundEffect(float pitch, float gain, boolean loop) {
+		return playAsMusic(pitch, gain, loop);
 	}
 
 	/**
-	 * @see org.newdawn.slick.openal.InternalSound#stop()
+	 * @see org.newdawn.slick.openal.AudioImpl#stop()
 	 */
 	public void stop() {
 		SoundStore.get().setStream(null);

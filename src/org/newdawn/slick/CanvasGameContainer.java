@@ -13,7 +13,7 @@ import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.AWTInputAdapter;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.ImageData;
-import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -88,7 +88,7 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		container = new Container(game);
 		
 		try {
-			TextureLoader.get().clear();
+			InternalTextureLoader.get().clear();
 			SoundStore.get().clear();
 
 			setVSyncEnabled(true);
