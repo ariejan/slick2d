@@ -543,7 +543,7 @@
 		 port="122"
 		 verbose="true"/>
 	<scp todir="${username}:${password}@${host}:${dir}/downloads/util" 
-		 file="dist/slick-util.jar"
+		 file="lib/slick-util.jar"
 		 trust="true"
 		 port="122"
 		 verbose="true"/>
