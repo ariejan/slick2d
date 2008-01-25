@@ -971,12 +971,12 @@ public class Input {
 			for (int i=0;i<getControllerCount();i++) {
 				int count = ((Controller) controllers.get(i)).getButtonCount()+3;
 				count = Math.min(count, 24);
-				
 				for (int c=0;c<=count;c++) {
-					if (controls[i][c] && !isControlPressed(c, i)) {
+					if (controls[i][c] && !isControlDwn(c, i)) {
 						controls[i][c] = false;
 						fireControlRelease(c, i);
-					} else if (!controls[i][c] && isControlPressed(c, i)) {
+					} else if (!controls[i][c] && isControlDwn(c, i)) {
+						controllerPressed[c] = true;
 						controls[i][c] = true;
 						fireControlPress(c, i);
 					}
@@ -1123,7 +1123,7 @@ public class Input {
 	 * @param controllerIndex The index of the control to which the control belongs
 	 * @return True if the control is pressed
 	 */
-	private boolean isControlPressed(int index, int controllerIndex) {
+	private boolean isControlDwn(int index, int controllerIndex) {
 		switch (index) {
 		case LEFT:
 			return isControllerLeft(controllerIndex);

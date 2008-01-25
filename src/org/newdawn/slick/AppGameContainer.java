@@ -18,9 +18,9 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.CursorLoader;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.ImageIOImageData;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.LoadableImageData;
 import org.newdawn.slick.opengl.TGAImageData;
-import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -403,6 +403,14 @@ public class AppGameContainer extends GameContainer {
 	 */
 	public int getScreenWidth() {
 		return originalDisplayMode.getWidth();
+	}
+	
+	/**
+	 * Destroy the app game container
+	 */
+	public void destroy() {
+		Display.destroy();
+		AL.destroy();
 	}
 	
 	/**
