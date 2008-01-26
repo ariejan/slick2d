@@ -305,7 +305,7 @@ public class Packer extends JFrame {
 			
 			try {
 				int b = ((Integer) border.getValue()).intValue();
-				pack.packImages(list, twidth, theight, b, null);
+				pack.packImages(list, twidth, theight, b, out);
 			} catch (IOException e) {
 				// shouldn't happen 
 				e.printStackTrace();
