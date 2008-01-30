@@ -223,6 +223,9 @@ public class SoundStore {
 	 * @return The ID of the given source
 	 */
 	public int getSource(int index) {
+		if (index < 0) {
+			return -1;
+		}
 		return sources.get(index);
 	}
 	
