@@ -864,6 +864,8 @@ public class SoundStore {
 		}
 		
 		currentMusic = sources.get(0);
+		stopSource(0);
+		
 		this.mod = sound;
 		if (sound != null) {
 			this.stream = null;
