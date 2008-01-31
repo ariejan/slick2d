@@ -66,7 +66,6 @@ public class ResourceLoader {
 		
 		if (in == null)
 		{
-			Log.error("Resource not found: "+ref);
 			throw new RuntimeException("Resource not found: "+ref);
 		}
 			
@@ -93,7 +92,6 @@ public class ResourceLoader {
 		
 		if (url == null)
 		{
-			Log.error("Resource not found: "+ref);
 			throw new RuntimeException("Resource not found: "+ref);
 		}
 			
