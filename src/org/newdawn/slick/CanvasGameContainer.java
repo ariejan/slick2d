@@ -28,6 +28,8 @@ public class CanvasGameContainer extends AWTGLCanvas {
 	protected Game game;
 	/** True if a reinit is required */
 	protected boolean reinit = false;
+	/** True if we've already created the AWTInputAdapter */
+	protected boolean createdAdapter = false;
 	
 	/**
 	 * Create a new panel
@@ -70,6 +72,7 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		Mouse.destroy();
 		Keyboard.destroy();
 		AL.destroy();
+		createdAdapter = false;
 	}
 	
 	/**
@@ -92,7 +95,10 @@ public class CanvasGameContainer extends AWTGLCanvas {
 			SoundStore.get().clear();
 
 			setVSyncEnabled(true);
-			AWTInputAdapter.create(this);
+			if (!createdAdapter) { 
+				AWTInputAdapter.create(this);
+				createdAdapter = true;
+			}
 			container.initLocal();
 		} catch (Exception e) {
 			Log.error(e);
