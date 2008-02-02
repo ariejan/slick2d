@@ -4,6 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.geom.Rectangle;
 
 /**
  * A single text field supporting text entry
@@ -181,19 +182,16 @@ public class TextField extends AbstractComponent {
 	 * @see org.newdawn.slick.gui.AbstractComponent#render(org.newdawn.slick.gui.GUIContext,
 	 *      org.newdawn.slick.Graphics)
 	 */
-	// TODO clipping?!
 	public void render(GUIContext container, Graphics g) {
+		Rectangle oldClip = g.getClip();
+		g.setClip(x,y,width, height);
+		
 		// Someone could have set a color for me to blend...
 		Color clr = g.getColor();
 
-		// g.setClip(x, y - 1, width + 1, height + 1);
 		if (background != null) {
 			g.setColor(background.multiply(clr));
 			g.fillRect(x, y, width, height);
-		}
-		if (border != null) {
-			g.setColor(border.multiply(clr));
-			g.drawRect(x, y, width, height);
 		}
 		g.setColor(text.multiply(clr));
 		Font temp = g.getFont();
@@ -214,10 +212,13 @@ public class TextField extends AbstractComponent {
 
 		g.translate(-tx - 2, 0);
 
-		// g.clearClip();
-
+		if (border != null) {
+			g.setColor(border.multiply(clr));
+			g.drawRect(x, y, width, height);
+		}
 		g.setColor(clr);
 		g.setFont(temp);
+		g.setClip(oldClip);
 	}
 
 	/**
