@@ -29,7 +29,6 @@ public class Music {
 		if (currentMusic != null) {
 			SoundStore.get().poll(delta);
 			if (!SoundStore.get().isMusicPlaying()) {
-				System.out.println("MUSIC STOPPED");
 				Music oldMusic = currentMusic;
 				currentMusic = null;
 				oldMusic.fireMusicEnded();
