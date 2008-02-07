@@ -22,6 +22,9 @@ public class Input {
 	/** The controller index to pass to check all controllers */
 	public static final int ANY_CONTROLLER = -1;
 	
+	/** The maximum number of buttons on controllers */
+	private static final int MAX_BUTTONS = 30;
+	
 	/** */
 	public static final int KEY_ESCAPE          = 0x01;
 	/** */
@@ -317,7 +320,7 @@ public class Input {
 	/** THe state of the mouse buttons */
 	private boolean[] mousePressed = new boolean[10];
 	/** THe state of the controller buttons */
-	private boolean[] controllerPressed = new boolean[20];
+	private boolean[] controllerPressed = new boolean[MAX_BUTTONS];
 	
 	/** The character values representing the pressed keys */
 	private char[] keys = new char[1024];
@@ -327,7 +330,7 @@ public class Input {
 	private long[] nextRepeat = new long[1024];
 	
 	/** The control states from the controllers */
-	private boolean[][] controls = new boolean[10][30];
+	private boolean[][] controls = new boolean[10][MAX_BUTTONS+10];
 	/** True if the event has been consumed */
 	private boolean consumed = false;
 	/** A list of listeners to be notified of input events */
@@ -779,7 +782,7 @@ public class Input {
 			for (int i = 0; i < count; i++) {
 				Controller controller = Controllers.getController(i);
 
-				if ((controller.getButtonCount() >= 3) && (controller.getButtonCount() < 20)) {
+				if ((controller.getButtonCount() >= 3) && (controller.getButtonCount() < MAX_BUTTONS)) {
 					controllers.add(controller);
 				}
 			}
