@@ -30,7 +30,7 @@ public abstract class AbstractComponent extends InputAdapter {
 	private boolean focus = false;
 
 	/** The input we're responding to */
-	private Input input;
+	protected Input input;
 	
 	/**
 	 * Create a new component

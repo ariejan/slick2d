@@ -1,5 +1,6 @@
 package org.newdawn.slick.gui;
 
+import org.lwjgl.Sys;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
@@ -12,6 +13,11 @@ import org.newdawn.slick.geom.Rectangle;
  * @author kevin
  */
 public class TextField extends AbstractComponent {
+	/** The key repeat interval */
+	private static final int INITIAL_KEY_REPEAT_INTERVAL = 400;
+	/** The key repeat interval */
+	private static final int KEY_REPEAT_INTERVAL = 50;
+	
 	/** The width of the field */
 	private int width;
 
@@ -48,6 +54,21 @@ public class TextField extends AbstractComponent {
 	/** True if the cursor should be visible */
 	private boolean visibleCursor = true;
 
+	/** The last key pressed */
+	private int lastKey = -1;
+	
+	/** The last character pressed */
+	private char lastChar = 0;
+	
+	/** The time since last key repeat */
+	private long repeatTimer;
+	
+	/** The text before the paste in */
+	private String oldText;
+	
+	/** The cursor position before the paste */
+	private int oldCursorPos;
+	
 	/**
 	 * Create a new text field
 	 * 
@@ -183,6 +204,16 @@ public class TextField extends AbstractComponent {
 	 *      org.newdawn.slick.Graphics)
 	 */
 	public void render(GUIContext container, Graphics g) {
+		if (lastKey != -1) {
+			if (input.isKeyDown(lastKey)) {
+				if (repeatTimer < System.currentTimeMillis()) {
+					repeatTimer = System.currentTimeMillis() + KEY_REPEAT_INTERVAL;
+					keyPressed(lastKey, lastChar);
+				}
+			} else {
+				lastKey = -1;
+			}
+		}
 		Rectangle oldClip = g.getClip();
 		g.setClip(x,y,width, height);
 		
@@ -280,10 +311,63 @@ public class TextField extends AbstractComponent {
 	}
 
 	/**
+	 * Do the paste into the field, overrideable for custom behaviour
+	 * 
+	 * @param text The text to be pasted in
+	 */
+	protected void doPaste(String text) {
+		recordOldPosition();
+		
+		for (int i=0;i<text.length();i++) {
+			keyPressed(-1, text.charAt(i));
+		}
+	}
+	
+	/**
+	 * Record the old position and content
+	 */
+	protected void recordOldPosition() {
+		oldText = getText();
+		oldCursorPos = cursorPos;
+	}
+	
+	/**
+	 * Do the undo of the paste, overrideable for custom behaviour
+	 * 
+	 * @param oldCursorPos before the paste
+	 * @param oldText The text before the last paste
+	 */
+	protected void doUndo(int oldCursorPos, String oldText) {
+		if (oldText != null) {
+			setText(oldText);
+			setCursorPos(oldCursorPos);
+		}
+	}
+	
+	/**
 	 * @see org.newdawn.slick.gui.AbstractComponent#keyPressed(int, char)
 	 */
 	public void keyPressed(int key, char c) {
 		if (hasFocus()) {
+			if ((key == Input.KEY_V) && 
+			   ((input.isKeyDown(Input.KEY_LCONTROL)) || (input.isKeyDown(Input.KEY_RCONTROL)))) {
+				doPaste(Sys.getClipboard());
+				return;
+			}
+			if ((key == Input.KEY_Z) && 
+			   ((input.isKeyDown(Input.KEY_LCONTROL)) || (input.isKeyDown(Input.KEY_RCONTROL)))) {
+				doUndo(oldCursorPos, oldText);
+				return;
+			}
+			
+			if (lastKey != key) {
+				lastKey = key;
+				repeatTimer = System.currentTimeMillis() + INITIAL_KEY_REPEAT_INTERVAL;
+			} else {
+				repeatTimer = System.currentTimeMillis() + KEY_REPEAT_INTERVAL;
+			}
+			lastChar = c;
+			
 			if (key == Input.KEY_LEFT) {
 				if (cursorPos > 0) {
 					cursorPos--;
@@ -301,6 +385,10 @@ public class TextField extends AbstractComponent {
 						value = value.substring(0, cursorPos - 1);
 					}
 					cursorPos--;
+				}
+			} else if (key == Input.KEY_DELETE) {
+				if (value.length() > cursorPos) {
+					value = value.substring(0,cursorPos) + value.substring(cursorPos+1);
 				}
 			} else if ((c < 127) && (c > 31) && (value.length() < maxCharacter)) {
 				if (cursorPos < value.length()) {
