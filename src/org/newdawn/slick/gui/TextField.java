@@ -351,12 +351,17 @@ public class TextField extends AbstractComponent {
 		if (hasFocus()) {
 			if ((key == Input.KEY_V) && 
 			   ((input.isKeyDown(Input.KEY_LCONTROL)) || (input.isKeyDown(Input.KEY_RCONTROL)))) {
-				doPaste(Sys.getClipboard());
+				String text = Sys.getClipboard();
+				if (text != null) {
+					doPaste(text);
+				}
 				return;
 			}
 			if ((key == Input.KEY_Z) && 
 			   ((input.isKeyDown(Input.KEY_LCONTROL)) || (input.isKeyDown(Input.KEY_RCONTROL)))) {
-				doUndo(oldCursorPos, oldText);
+				if (oldText != null) {
+					doUndo(oldCursorPos, oldText);
+				}
 				return;
 			}
 			
@@ -405,5 +410,14 @@ public class TextField extends AbstractComponent {
 			// Nobody more will be notified
 			container.getInput().consumeEvent();
 		}
+	}
+
+	/**
+	 * @see org.newdawn.slick.gui.AbstractComponent#setFocus(boolean)
+	 */
+	public void setFocus(boolean focus) {
+		lastKey = -1;
+		
+		super.setFocus(focus);
 	}
 }
