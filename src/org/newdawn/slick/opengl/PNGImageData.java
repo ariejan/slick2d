@@ -403,7 +403,6 @@ public class PNGImageData implements LoadableImageData {
         if(paletteEntries < 1 || paletteEntries > 256 || (chunkLength % 3) != 0) {
             throw new IOException("PLTE chunk has wrong length");
         }
-        System.out.println(paletteEntries);
         
         palette = new byte[paletteEntries*3];
         readChunk(palette, 0, palette.length);
