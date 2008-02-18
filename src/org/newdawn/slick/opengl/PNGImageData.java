@@ -210,10 +210,8 @@ public class PNGImageData implements LoadableImageData {
      */
     private void copyExpand(ByteBuffer buffer, byte[] curLine) {
     	for (int i=1;i<curLine.length;i++) {
-    		int v = curLine[i];
-    		if (v < 0) {
-    			v += 256;
-    		}
+    		int v = curLine[i] & 255;
+    
     		int index = v * 3;
     		for (int j=0;j<3;j++) {
     			buffer.put(palette[index+j]);
@@ -701,6 +699,7 @@ public class PNGImageData implements LoadableImageData {
 	    }
 	
 		scratch.position(0);
+		
 		return scratch;
 	}
 	

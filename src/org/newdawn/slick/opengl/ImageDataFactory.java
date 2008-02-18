@@ -18,11 +18,16 @@ public class ImageDataFactory {
 		ref = ref.toLowerCase();
 		
         if (ref.endsWith(".tga")) {
-        	imageData = new TGAImageData();
-        } else {
-        	imageData = new ImageIOImageData();
-        }
+        	return new TGAImageData();
+        } 
+        if (ref.endsWith(".png")) {
+        	CompositeImageData data = new CompositeImageData();
+        	data.add(new PNGImageData());
+        	data.add(new ImageIOImageData());
+        	
+        	return data;
+        } 
         
-        return imageData;
+        return new ImageIOImageData();
 	}
 }
