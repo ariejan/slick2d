@@ -156,7 +156,7 @@ public class AStarPathFinder implements PathFinder {
 							neighbour.heuristic = getHeuristicCost(mover, xp, yp, tx, ty);
 							maxDepth = Math.max(maxDepth, neighbour.setParent(current));
 							addToOpen(neighbour);
-						}
+						} 
 					}
 				}
 			}
@@ -359,14 +359,15 @@ public class AStarPathFinder implements PathFinder {
 		 * @param o The element to add
 		 */
 		public void add(Object o) {
-			list.add(o);
-			
 			// float the new entry 
 			for (int i=0;i<list.size();i++) {
 				if (((Comparable) list.get(i)).compareTo(o) > 0) {
-					list.set(i, o);
+					list.add(i, o);
 					break;
 				}
+			}
+			if (!list.contains(o)) {
+				list.add(o);
 			}
 			//Collections.sort(list);
 		}
@@ -397,6 +398,16 @@ public class AStarPathFinder implements PathFinder {
 		 */
 		public boolean contains(Object o) {
 			return list.contains(o);
+		}
+		
+		public String toString() {
+			String temp = "{";
+			for (int i=0;i<size();i++) {
+				temp += list.get(i).toString()+",";
+			}
+			temp += "}";
+			
+			return temp;
 		}
 	}
 	
@@ -507,6 +518,13 @@ public class AStarPathFinder implements PathFinder {
 			open = false;
 			cost = 0;
 			depth = 0;
+		}
+		
+		/**
+		 * @see java.lang.Object#toString()
+		 */
+		public String toString() {
+			return "[Node "+x+","+y+"]";
 		}
 	}
 }
