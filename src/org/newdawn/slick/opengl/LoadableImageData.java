@@ -13,7 +13,7 @@ public interface LoadableImageData extends ImageData {
 
 
 	/**
-	 * Load a TGA image from the specified stream
+	 * Load a image from the specified stream
 	 * 
 	 * @param fis The stream from which we'll load the TGA
 	 * @throws IOException Indicates a failure to read the TGA
@@ -22,7 +22,7 @@ public interface LoadableImageData extends ImageData {
 	public ByteBuffer loadImage(InputStream fis) throws IOException;
 
 	/**
-	 * Load a TGA image from the specified stream
+	 * Load a image from the specified stream
 	 * 
 	 * @param fis The stream from which we'll load the TGA
 	 * @param flipped True if we loading in flipped mode (used for cursors)
@@ -34,7 +34,7 @@ public interface LoadableImageData extends ImageData {
 			throws IOException;
 	
 	/**
-	 * Load a TGA image from the specified stream
+	 * Load a image from the specified stream
 	 * 
 	 * @param fis The stream from which we'll load the TGA
 	 * @param flipped True if we loading in flipped mode (used for cursors)
@@ -45,5 +45,4 @@ public interface LoadableImageData extends ImageData {
 	 */
 	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha, int[] transparent)
 			throws IOException;
-	
 }
