@@ -308,6 +308,13 @@ public class Input {
 	/** Control index */
 	private static final int BUTTON10 = 13;
 	
+	/** The left mouse button indicator */
+	public static final int MOUSE_LEFT_BUTTON = 0;
+	/** The right mouse button indicator */
+	public static final int MOUSE_RIGHT_BUTTON = 1;
+	/** The middle mouse button indicator */
+	public static final int MOUSE_MIDDLE_BUTTON = 2;
+	
 	/** True if the controllers system has been initialised */
 	private static boolean controllersInited = false;
 	/** The list of controllers */
