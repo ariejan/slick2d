@@ -697,6 +697,21 @@ public class PNGImageData implements LoadableImageData {
 	        }
 	    }
 	
+		if (!hasAlpha() && forceAlpha) {
+			ByteBuffer temp = BufferUtils.createByteBuffer(texWidth * texHeight * 4);
+			for (int x=0;x<texWidth;x++) {
+				for (int y=0;y<texHeight;y++) {
+					int srcOffset = (x*3)+(y*texHeight*3);
+					int dstOffset = (x*4)+(y*texHeight*4);
+					
+					temp.put(dstOffset, scratch.get(srcOffset));
+					temp.put(dstOffset+1, scratch.get(srcOffset+1));
+					temp.put(dstOffset+2, scratch.get(srcOffset+2));
+					temp.put(dstOffset+3, (byte) 255);
+				}
+			}
+		}
+		
 		scratch.position(0);
 		
 		return scratch;
