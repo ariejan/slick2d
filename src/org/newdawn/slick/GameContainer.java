@@ -2,14 +2,18 @@ package org.newdawn.slick;
 
 import java.util.Properties;
 
+import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.Drawable;
+import org.lwjgl.opengl.Pbuffer;
+import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.ImageData;
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -22,6 +26,8 @@ import org.newdawn.slick.util.ResourceLoader;
 public abstract class GameContainer implements GUIContext {
 	/** The renderer to use for all GL operations */
 	protected static SGL GL = Renderer.get();
+	/** The shared drawable if any */
+	protected static Drawable SHARED_DRAWABLE;
 	
 	/** The time the last frame was rendered */
 	private long lastFrame;
@@ -74,6 +80,20 @@ public abstract class GameContainer implements GUIContext {
 		
 		getBuildVersion();
 		Log.checkVerboseLogSetting();
+	}
+	
+	/**
+	 * Enable shared OpenGL context. After calling this all containers created 
+	 * will shared a single parent context
+	 * 
+	 * @throws SlickException Indicates a failure to create the shared drawable
+	 */
+	public static void enableSharedContext() throws SlickException {
+		try {
+			SHARED_DRAWABLE = new Pbuffer(64, 64, new PixelFormat(8, 0, 0), null);
+		} catch (LWJGLException e) {
+			throw new SlickException("Unable to create the pbuffer used for shard context, buffers not supported", e);
+		}
 	}
 	
 	/**

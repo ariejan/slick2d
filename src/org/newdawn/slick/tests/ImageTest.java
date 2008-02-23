@@ -30,6 +30,8 @@ public class ImageTest extends BasicGame {
     private Image rotImage;
 	/** The current rotation of our test image */
 	private float rot;
+	/** True if the test should just exit first time round, used for testing shared contexts */
+	public static boolean exitMe = true;
 	
 	/**
 	 * Create a new image rendering test
@@ -52,6 +54,10 @@ public class ImageTest extends BasicGame {
 		scaled = gif.getScaledCopy(120, 120);
 		subImage = image.getSubImage(200,0,70,260);
 		rot = 0;
+		
+		if (exitMe) {
+			container.exit();
+		}
 	}
 
 	/**
@@ -100,14 +106,32 @@ public class ImageTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
+		boolean sharedContextTest = true;
+		
 		try {
+			exitMe = false;
+			if (sharedContextTest) {
+				GameContainer.enableSharedContext();
+				exitMe = true;
+			}
+			
 			AppGameContainer container = new AppGameContainer(new ImageTest());
+			container.setForceExit(!sharedContextTest);
 			container.setDisplayMode(800,600,false);
 			container.start();
+			
+			if (sharedContextTest) {
+				System.out.println("Exit first instance");
+				exitMe = false;
+				container = new AppGameContainer(new ImageTest());
+				container.setDisplayMode(800,600,false);
+				container.start();
+			}
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 	}
+	
 
 	/**
 	 * @see org.newdawn.slick.BasicGame#keyPressed(int, char)

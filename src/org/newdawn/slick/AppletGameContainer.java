@@ -2,6 +2,7 @@ package org.newdawn.slick;
 
 import java.applet.Applet;
 import java.awt.BorderLayout;
+import java.awt.GraphicsEnvironment;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
@@ -11,6 +12,8 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.AWTInputAdapter;
+import org.lwjgl.opengl.Drawable;
+import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.applet.LWJGLInstaller;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.ImageData;
@@ -75,7 +78,11 @@ public class AppletGameContainer extends Applet {
 					.newInstance();
 
 			container = new Container(game);
-			canvas = new ContainerPanel(container);
+			if (GameContainer.SHARED_DRAWABLE == null) {
+				canvas = new ContainerPanel(container);
+			} else {
+				canvas = new ContainerPanel(container, GameContainer.SHARED_DRAWABLE);
+			}
 			canvas.setSize(getWidth(),getHeight());
 			
 			add(canvas);
@@ -123,10 +130,26 @@ public class AppletGameContainer extends Applet {
 		 */
 		public ContainerPanel(Container container) throws LWJGLException {
 			super();
-
+			
 			this.container = container;
 		}
 
+		/**
+		 * Create a new panel
+		 * 
+		 * @param container
+		 *            The container proxied by this canvas
+		 * @param drawable The context which this container should share
+		 * @throws LWJGLException
+		 */
+		public ContainerPanel(Container container, Drawable drawable) throws LWJGLException {
+			super(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(),
+			      new PixelFormat(),
+			      drawable);
+			
+			this.container = container;
+		}
+		
 		/**
 		 * Set the container held by this canvas
 		 * 

@@ -280,7 +280,14 @@ public class AppGameContainer extends GameContainer {
 	            public Object run() {
 	        		try {
 	        			PixelFormat format = new PixelFormat(8,8,0);
-	        			Display.create(format);
+	        			if (SHARED_DRAWABLE == null) 
+	        			{
+	        				Display.create(format);
+	        			}
+	        			else
+	        			{
+	        				Display.create(format, SHARED_DRAWABLE);
+	        			}
 	        		} catch (Exception e) {
 	        			Log.error(e);
 	        			
@@ -288,7 +295,14 @@ public class AppGameContainer extends GameContainer {
 	        			Display.destroy();
 	        			// if we couldn't get alpha, let us know
 		        		try {
-		        			Display.create();
+		        			if (SHARED_DRAWABLE == null) 
+		        			{
+		        				Display.create();
+		        			}
+		        			else
+		        			{
+		        				Display.create(new PixelFormat(), SHARED_DRAWABLE);
+		        			}
 		        		} catch (Exception x) {
 		        			Log.error(x);
 		        		}
