@@ -27,7 +27,7 @@ public abstract class GameContainer implements GUIContext {
 	/** The renderer to use for all GL operations */
 	protected static SGL GL = Renderer.get();
 	/** The shared drawable if any */
-	private static Drawable SHARED_DRAWABLE;
+	protected static Drawable SHARED_DRAWABLE;
 	
 	/** The time the last frame was rendered */
 	private long lastFrame;
