@@ -27,7 +27,7 @@ public abstract class GameContainer implements GUIContext {
 	/** The renderer to use for all GL operations */
 	protected static SGL GL = Renderer.get();
 	/** The shared drawable if any */
-	protected static Drawable SHARED_DRAWABLE;
+	private static Drawable SHARED_DRAWABLE;
 	
 	/** The time the last frame was rendered */
 	private long lastFrame;
@@ -94,6 +94,15 @@ public abstract class GameContainer implements GUIContext {
 		} catch (LWJGLException e) {
 			throw new SlickException("Unable to create the pbuffer used for shard context, buffers not supported", e);
 		}
+	}
+	
+	/**
+	 * Get the context shared by all containers 
+	 * 
+	 * @return The context shared by all the containers or null if shared context isn't enabled
+	 */
+	public static Drawable getSharedContext() {
+		return SHARED_DRAWABLE;
 	}
 	
 	/**
