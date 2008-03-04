@@ -77,6 +77,10 @@
 			<include name="org/newdawn/slick/loading/*.class"/>
 			<include name="org/newdawn/slick/SlickException.class"/>
 			<include name="org/newdawn/slick/tests/TestUtils.class"/>
+			<include name="org/newdawn/slick/Font.class"/>
+			<include name="org/newdawn/slick/Color.class"/>
+			<include name="org/newdawn/slick/TrueTypeFont*.class"/>
+			<include name="org/newdawn/slick/util/BufferedImageUtil.class"/>
 		</fileset>
 	</jar>
 	
@@ -90,6 +94,10 @@
 			<include name="org/newdawn/slick/loading/*.java"/>
 			<include name="org/newdawn/slick/SlickException.java"/>
 			<include name="org/newdawn/slick/tests/TestUtils.java"/>
+			<include name="org/newdawn/slick/Font.java"/>
+			<include name="org/newdawn/slick/Color.java"/>
+			<include name="org/newdawn/slick/TrueTypeFont.java"/>
+			<include name="org/newdawn/slick/util/BufferedImageUtil.java"/>
 		</fileset>
 	</zip>
 	
@@ -121,6 +129,11 @@
 			<include name="org/newdawn/slick/loading/*.java"/>
 			<include name="org/newdawn/slick/SlickException.java"/>
 			<include name="org/newdawn/slick/tests/TestUtils.java"/>
+			<include name="org/newdawn/slick/tests/TestUtils.java"/>
+			<include name="org/newdawn/slick/Font.java"/>
+			<include name="org/newdawn/slick/Color.java"/>
+			<include name="org/newdawn/slick/TrueTypeFont.java"/>
+			<include name="org/newdawn/slick/util/BufferedImageUtil.java"/>
 		</fileset>
 		<classpath>
 		  <pathelement path="lib/slick.jar"/>

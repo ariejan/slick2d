@@ -9,6 +9,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Font;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.openal.SoundStore;
@@ -35,6 +38,8 @@ public class TestUtils {
 	private Audio oggStream;
 	/** The mod stream thats been loaded */
 	private Audio modStream;
+	/** The font to draw to the screen */
+	private Font font;
 	
 	/**
 	 * Start the test 
@@ -99,6 +104,9 @@ public class TestUtils {
 	public void init() {
 		// turn off all but errors
 		Log.setVerbose(false);
+
+		java.awt.Font awtFont = new java.awt.Font("Times New Roman", java.awt.Font.BOLD, 16);
+		font = new TrueTypeFont(awtFont, false);
 		
 		// texture load, the second argument is a name assigned to the texture to
 		// allow for caching in the texture loader. The 3rd argument indicates whether
@@ -126,13 +134,13 @@ public class TestUtils {
 			// should have reset the stream by thats not how the original stuff worked
 			oggStream = AudioLoader.getStreamingAudio("OGG", new File("testdata/bongos.ogg").toURL());
 			
-			// playing as music uses that reserved source to play the sound. The first
-			// two arguments are pitch and gain, the boolean is whether to loop the content
-			oggStream.playAsMusic(1.0f, 1.0f, true);
-			
 			// can load mods (XM, MOD) using ibxm which is then played through OpenAL. MODs
 			// are always streamed based on the way IBXM works
 			modStream = AudioLoader.getStreamingAudio("MOD", new File("testdata/SMB-X.XM").toURL());
+
+			// playing as music uses that reserved source to play the sound. The first
+			// two arguments are pitch and gain, the boolean is whether to loop the content
+			modStream.playAsMusic(1.0f, 1.0f, true);
 			
 			// you can play aifs by loading the complete thing into 
 			// a sound
@@ -186,6 +194,7 @@ public class TestUtils {
 	 * Game loop render
 	 */
 	public void render() {
+		Color.white.bind();
 		texture.bind(); // or GL11.glBind(texture.getTextureID());
 		
 		GL11.glBegin(GL11.GL_QUADS);
@@ -198,6 +207,8 @@ public class TestUtils {
 			GL11.glTexCoord2f(0,1);
 			GL11.glVertex2f(100,100+texture.getTextureHeight());
 		GL11.glEnd();
+		
+		font.drawString(150, 300, "HELLO LWJGL WORLD", Color.yellow);
 	}
 	
 	/**

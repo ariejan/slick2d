@@ -5,6 +5,10 @@ import ibxm.OpenALMODPlayer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.openal.AL10;
 
 /**
  * A sound as a MOD file - can only be played as music
@@ -36,6 +40,8 @@ public class MODSound extends AudioImpl {
 	 * @see org.newdawn.slick.openal.AudioImpl#playAsMusic(float, float, boolean)
 	 */
 	public int playAsMusic(float pitch, float gain, boolean loop) {
+		cleanUpSource();
+		
 		player.play(module, store.getSource(0), loop, SoundStore.get().isMusicOn());
 		player.setup(pitch, 1.0f);
 		store.setMusicVolume(gain);
@@ -43,6 +49,21 @@ public class MODSound extends AudioImpl {
 		store.setMOD(this);
 		
 		return store.getSource(0);
+	}
+
+	/**
+	 * Clean up the buffers applied to the sound source
+	 */
+	private void cleanUpSource() {
+		AL10.alSourceStop(store.getSource(0));
+		IntBuffer buffer = BufferUtils.createIntBuffer(1);
+		int queued = AL10.alGetSourcei(store.getSource(0), AL10.AL_BUFFERS_QUEUED);
+		
+		while (queued > 0)
+		{
+			AL10.alSourceUnqueueBuffers(store.getSource(0), buffer);
+			queued--;
+		}
 	}
 	
 	/**
