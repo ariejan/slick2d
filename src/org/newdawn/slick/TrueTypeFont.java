@@ -17,7 +17,7 @@ import org.newdawn.slick.util.BufferedImageUtil;
  * A TrueType font implementation for Slick
  * 
  * @author James Chambers (Jimmy)
- * @author Jeremy Adams (elias_naur)
+ * @author Jeremy Adams (elias4444)
  * @author Kevin Glass (kevglass)
  */
 public class TrueTypeFont implements org.newdawn.slick.Font {
