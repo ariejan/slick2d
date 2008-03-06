@@ -69,6 +69,9 @@ public abstract class GameContainer implements GUIContext {
 	/** True if we should clear the screen each frame */
 	private boolean clearEachFrame = true;
 	
+	/** True if the game is paused */
+	private boolean paused;
+	
 	/**
 	 * Create a new game container wrapping a given game
 	 * 
@@ -142,6 +145,33 @@ public abstract class GameContainer implements GUIContext {
 	 * @throws SlickException Indicates a failure rerun initialisation routines
 	 */
 	public void reinit() throws SlickException {
+	}
+	
+	/**
+	 * Pause the game - i.e. suspend updates
+	 */
+	public void pause()
+	{
+		setPaused(true);
+	}
+	
+	/**
+	 * Resumt the game - i.e. continue updates
+	 */
+	public void resume()
+	{
+		setPaused(false);
+	}
+	
+	/**
+	 * Indicates if the game should be paused, i.e. if updates
+	 * should be propogated through to the game.
+	 * 
+	 * @param paused True if the game should be paused
+	 */
+	public void setPaused(boolean paused)
+	{
+		this.paused = paused;
 	}
 	
 	/** 
@@ -456,26 +486,29 @@ public abstract class GameContainer implements GUIContext {
 	 * @throws SlickException Indicates an internal fault to the game.
 	 */
 	protected void updateAndRender(int delta) throws SlickException {
-		storedDelta += delta;
 		input.poll(width, height);
 		
 		Music.poll(delta);
-		if (storedDelta >= minimumLogicInterval) {
-			try {
-				if (maximumLogicInterval != 0) {
-					long cycles = storedDelta / maximumLogicInterval;
-					for (int i=0;i<cycles;i++) {
-						game.update(this, (int) maximumLogicInterval);
+		if (!paused) {
+			storedDelta += delta;
+			
+			if (storedDelta >= minimumLogicInterval) {
+				try {
+					if (maximumLogicInterval != 0) {
+						long cycles = storedDelta / maximumLogicInterval;
+						for (int i=0;i<cycles;i++) {
+							game.update(this, (int) maximumLogicInterval);
+						}
+						game.update(this, (int) (delta % maximumLogicInterval));
+					} else {
+						game.update(this, (int) storedDelta);
 					}
-					game.update(this, (int) (delta % maximumLogicInterval));
-				} else {
-					game.update(this, (int) storedDelta);
+					
+					storedDelta = 0;
+				} catch (Throwable e) {
+					Log.error(e);
+					throw new SlickException("Game.update() failure - check the game code.");
 				}
-				
-				storedDelta = 0;
-			} catch (Throwable e) {
-				Log.error(e);
-				throw new SlickException("Game.update() failure - check the game code.");
 			}
 		}
 		
