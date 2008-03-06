@@ -611,7 +611,7 @@ public class BigImage extends Image {
 	/**
 	 * Not supported in BigImage
 	 * 
-	 * @see org.newdawn.slick.Image#setTexture(org.newdawn.slick.opengl.TextureImpl)
+	 * @see org.newdawn.slick.Image#setTexture(org.newdawn.slick.opengl.Texture)
 	 */
 	public void setTexture(Texture texture) {
 		throw new OperationNotSupportedException("Can't use big images as offscreen buffers");
