@@ -42,7 +42,7 @@ public class TrueTypeFontPerformanceTest extends BasicGame {
 	 * @see org.newdawn.slick.Game#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
-		awtFont = new java.awt.Font("Veranda", Font.PLAIN, 16);
+		awtFont = new java.awt.Font("Verdana", Font.PLAIN, 16);
 		font = new TrueTypeFont(awtFont, false);
 
 		for (int j = 0; j < 2; j++) {
