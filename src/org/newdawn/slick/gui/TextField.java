@@ -358,28 +358,31 @@ public class TextField extends AbstractComponent {
 	 */
 	public void keyPressed(int key, char c) {
 		if (hasFocus()) {
-			if ((key == Input.KEY_V) && 
-			   ((input.isKeyDown(Input.KEY_LCONTROL)) || (input.isKeyDown(Input.KEY_RCONTROL)))) {
-				String text = Sys.getClipboard();
-				if (text != null) {
-					doPaste(text);
+			if (key != -1)
+			{
+				if ((key == Input.KEY_V) && 
+				   ((input.isKeyDown(Input.KEY_LCONTROL)) || (input.isKeyDown(Input.KEY_RCONTROL)))) {
+					String text = Sys.getClipboard();
+					if (text != null) {
+						doPaste(text);
+					}
+					return;
 				}
-				return;
-			}
-			if ((key == Input.KEY_Z) && 
-			   ((input.isKeyDown(Input.KEY_LCONTROL)) || (input.isKeyDown(Input.KEY_RCONTROL)))) {
-				if (oldText != null) {
-					doUndo(oldCursorPos, oldText);
+				if ((key == Input.KEY_Z) && 
+				   ((input.isKeyDown(Input.KEY_LCONTROL)) || (input.isKeyDown(Input.KEY_RCONTROL)))) {
+					if (oldText != null) {
+						doUndo(oldCursorPos, oldText);
+					}
+					return;
 				}
-				return;
-			}
-			
-			// alt and control keys don't come through here
-			if (input.isKeyDown(Input.KEY_LCONTROL) || input.isKeyDown(Input.KEY_RCONTROL)) {
-				return;
-			}
-			if (input.isKeyDown(Input.KEY_LALT) || input.isKeyDown(Input.KEY_RALT)) {
-				return;
+				
+				// alt and control keys don't come through here
+				if (input.isKeyDown(Input.KEY_LCONTROL) || input.isKeyDown(Input.KEY_RCONTROL)) {
+					return;
+				}
+				if (input.isKeyDown(Input.KEY_LALT) || input.isKeyDown(Input.KEY_RALT)) {
+					return;
+				}
 			}
 			
 			if (lastKey != key) {
