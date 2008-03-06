@@ -362,5 +362,10 @@ public class AppletGameContainer extends Applet {
 			// unsupported in an applet
 		}
 
+		/**
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.Image, int, int)
+		 */
+		public void setMouseCursor(Image image, int hotSpotX, int hotSpotY) throws SlickException {
+		}
 	}
 }

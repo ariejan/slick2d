@@ -1433,14 +1433,38 @@ public class Graphics {
 	 * @return The colour of the pixel at the specified location
 	 */
 	public Color getPixel(int x, int y) {
+		predraw();
 		GL.glReadPixels(x, screenHeight - y, 1, 1, SGL.GL_RGBA,
 				SGL.GL_UNSIGNED_BYTE, readBuffer);
+		postdraw();
 
 		return new Color(translate(readBuffer.get(0)), translate(readBuffer
 				.get(1)), translate(readBuffer.get(2)), translate(readBuffer
 				.get(3)));
 	}
 
+	/**
+	 * Get an ara of pixels as RGBA values into a buffer
+	 * 
+	 * @param x The x position in the context to grab from
+	 * @param y The y position in the context to grab from
+	 * @param width The width of the area to grab from 
+	 * @param height The hiehgt of the area to grab from
+	 * @param target The target buffer to grab into
+	 */
+	public void getArea(int x, int y, int width, int height, ByteBuffer target)
+	{
+		if (target.capacity() < width * height) 
+		{
+			throw new IllegalArgumentException("Byte buffer provided to get area is not big enough");
+		}
+		
+		predraw();
+		GL.glReadPixels(x, screenHeight - y, width, height, SGL.GL_RGBA,
+				SGL.GL_UNSIGNED_BYTE, target);
+		postdraw();
+	}
+	
 	/**
 	 * Draw a section of an image at a particular location and scale on the
 	 * screen

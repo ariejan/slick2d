@@ -243,6 +243,21 @@ public class AppGameContainer extends GameContainer {
 	}
 	
 	/**
+	 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.Image, int, int)
+	 */
+	public void setMouseCursor(Image image, int hotSpotX, int hotSpotY) throws SlickException {
+		try {
+			ByteBuffer buffer = ByteBuffer.allocate(image.getWidth() * image.getHeight() * 4);
+			image.getGraphics().getArea(0,0,image.getWidth(),image.getHeight(),buffer);
+			
+			Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,image.getWidth(),image.getHeight());
+			Mouse.setNativeCursor(cursor);
+		} catch (Exception e) {
+			Log.error("Failed to load and apply cursor.", e);
+		}
+	}
+	
+	/**
 	 * @see org.newdawn.slick.GameContainer#reinit()
 	 */
 	public void reinit() throws SlickException {

@@ -305,5 +305,12 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		public void setDefaultMouseCursor() {	
 			// unsupported in an canvas
 		}
+
+		/**
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.Image, int, int)
+		 */
+		public void setMouseCursor(Image image, int hotSpotX, int hotSpotY) throws SlickException {
+			
+		}
 	}
 }

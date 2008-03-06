@@ -81,6 +81,26 @@ public abstract class GameContainer implements GUIContext {
 		getBuildVersion();
 		Log.checkVerboseLogSetting();
 	}
+
+	
+	/**
+	 * Check if the display is in fullscreen mode
+	 * 
+	 * @return True if the display is in fullscreen mode
+	 */
+	public boolean isFullscreen() {
+		return false;
+	}
+	
+	/**
+	 * Indicate whether we want to be in fullscreen mode. Note that the current
+	 * display mode must be valid as a fullscreen mode for this to work
+	 * 
+	 * @param fullscreen True if we want to be in fullscreen mode
+	 * @throws SlickException Indicates we failed to change the display mode
+	 */
+	public void setFullscreen(boolean fullscreen) throws SlickException {
+	}
 	
 	/**
 	 * Enable shared OpenGL context. After calling this all containers created 
@@ -326,6 +346,20 @@ public abstract class GameContainer implements GUIContext {
 	 */
 	public abstract void setMouseCursor(ImageData data, int hotSpotX, int hotSpotY) throws SlickException;
 
+	/**
+	 * Set the mouse cursor based on the contents of the image. Note that this will not take
+	 * account of render state type changes to images (rotation and such). If these effects
+	 * are required it is recommended that an offscreen buffer be used to produce an appropriate
+	 * image. An offscreen buffer will always be used to produce the new cursor and as such
+	 * this operation an be very expensive
+	 * 
+	 * @param image The image to use as the cursor
+	 * @param hotSpotX The x coordinate of the hotspot within the cursor image
+	 * @param hotSpotY The y coordinate of the hotspot within the cursor image
+	 * @throws SlickException Indicates a failure to load the cursor image or create the hardware cursor
+	 */
+	public abstract void setMouseCursor(Image image, int hotSpotX, int hotSpotY) throws SlickException;
+	
 	/**
 	 * Set the mouse cursor to be displayed - this is a hardware cursor and hence
 	 * shouldn't have any impact on FPS.
