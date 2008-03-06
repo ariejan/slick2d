@@ -702,13 +702,30 @@ public class Image implements Renderable {
 		filter.bind();
 		texture.bind();
 		GL.glBegin(SGL.GL_QUADS);
-		drawEmbedded(x,y,x2,y2,srcx,srcy,srcx2,srcy2,filter);
+		drawEmbedded(x,y,x2,y2,srcx,srcy,srcx2,srcy2);
 		GL.glEnd();
 	}
-
+	
 	/**
 	 * Draw a section of this image at a particular location and scale on the screen, while this
-	 * is image is "in use", @see startUse()
+	 * is image is "in use", i.e. between calls to startUse and endUse.
+	 * 
+	 * @param x The x position to draw the image
+	 * @param y The y position to draw the image
+	 * @param x2 The x position of the bottom right corner of the drawn image
+	 * @param y2 The y position of the bottom right corner of the drawn image
+	 * @param srcx The x position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy The y position of the rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcx2 The x position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 * @param srcy2 The t position of the bottom right cornder of rectangle to draw from this image (i.e. relative to this image)
+	 */
+	public void drawEmbedded(float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2) {
+		drawEmbedded(x,y,x2,y2,srcx,srcy,srcx2,srcy2,null);
+	}
+	
+	/**
+	 * Draw a section of this image at a particular location and scale on the screen, while this
+	 * is image is "in use", i.e. between calls to startUse and endUse.
 	 * 
 	 * @param x The x position to draw the image
 	 * @param y The y position to draw the image
@@ -721,6 +738,10 @@ public class Image implements Renderable {
 	 * @param filter The colour filter to apply when drawing
 	 */
 	public void drawEmbedded(float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2, Color filter) {
+		if (filter != null) {
+			filter.bind();
+		}
+		
 		float mywidth = x2 - x;
 		float myheight = y2 - y;
 		float texwidth = srcx2 - srcx;
