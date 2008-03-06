@@ -118,8 +118,17 @@ public class TextField extends AbstractComponent {
 		setLocation(x, y);
 		this.width = width;
 		this.height = height;
+		
+		input.removeListener(this);
 	}
 
+	/**
+	 * Deactivate the key input handling for this field
+	 */
+	public void deactivate() {
+		setFocus(false);
+	}
+	
 	/**
 	 * Moves the component.
 	 * 
@@ -365,6 +374,14 @@ public class TextField extends AbstractComponent {
 				return;
 			}
 			
+			// alt and control keys don't come through here
+			if (input.isKeyDown(Input.KEY_LCONTROL) || input.isKeyDown(Input.KEY_RCONTROL)) {
+				return;
+			}
+			if (input.isKeyDown(Input.KEY_LALT) || input.isKeyDown(Input.KEY_RALT)) {
+				return;
+			}
+			
 			if (lastKey != key) {
 				lastKey = key;
 				repeatTimer = System.currentTimeMillis() + INITIAL_KEY_REPEAT_INTERVAL;
@@ -377,10 +394,14 @@ public class TextField extends AbstractComponent {
 				if (cursorPos > 0) {
 					cursorPos--;
 				}
+				// Nobody more will be notified
+				container.getInput().consumeEvent();
 			} else if (key == Input.KEY_RIGHT) {
 				if (cursorPos < value.length()) {
 					cursorPos++;
 				}
+				// Nobody more will be notified
+				container.getInput().consumeEvent();
 			} else if (key == Input.KEY_BACK) {
 				if ((cursorPos > 0) && (value.length() > 0)) {
 					if (cursorPos < value.length()) {
@@ -391,10 +412,14 @@ public class TextField extends AbstractComponent {
 					}
 					cursorPos--;
 				}
+				// Nobody more will be notified
+				container.getInput().consumeEvent();
 			} else if (key == Input.KEY_DELETE) {
 				if (value.length() > cursorPos) {
 					value = value.substring(0,cursorPos) + value.substring(cursorPos+1);
 				}
+				// Nobody more will be notified
+				container.getInput().consumeEvent();
 			} else if ((c < 127) && (c > 31) && (value.length() < maxCharacter)) {
 				if (cursorPos < value.length()) {
 					value = value.substring(0, cursorPos) + c
@@ -403,12 +428,14 @@ public class TextField extends AbstractComponent {
 					value = value.substring(0, cursorPos) + c;
 				}
 				cursorPos++;
+				// Nobody more will be notified
+				container.getInput().consumeEvent();
 			} else if (key == Input.KEY_RETURN) {
 				notifyListeners();
+				// Nobody more will be notified
+				container.getInput().consumeEvent();
 			}
 
-			// Nobody more will be notified
-			container.getInput().consumeEvent();
 		}
 	}
 
@@ -417,6 +444,14 @@ public class TextField extends AbstractComponent {
 	 */
 	public void setFocus(boolean focus) {
 		lastKey = -1;
+		
+		if (hasFocus() != focus) {
+			if (focus) {
+				input.addPrimaryListener(this);
+			} else {
+				input.removeListener(this);
+			}
+		}
 		
 		super.setFocus(focus);
 	}
