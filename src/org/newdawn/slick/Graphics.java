@@ -42,6 +42,12 @@ public class Graphics {
 	/** Draw multiplying the source and destination colours */
 	public static int MODE_COLOR_MULTIPLY = 4;
 	
+	/** Draw adding the existing colour to the new colour */
+	public static int MODE_ADD = 5;
+	
+	/** Draw blending the new image into the old one by a factor of it's colour */
+	public static int MODE_SCREEN = 6;
+	
 	/** The default number of segments that will be used when drawing an oval */
 	private static final int DEFAULT_SEGMENTS = 50;
 
@@ -144,6 +150,16 @@ public class Graphics {
 				GL.glEnable(SGL.GL_BLEND);
 				GL.glColorMask(true, true, true, true);
 				GL.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_COLOR);
+			}
+			if (currentDrawingMode == MODE_ADD) {
+				GL.glEnable(SGL.GL_BLEND);
+				GL.glColorMask(true, true, true, true);
+				GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+			}
+			if (currentDrawingMode == MODE_SCREEN) {
+				GL.glEnable(SGL.GL_BLEND);
+				GL.glColorMask(true, true, true, true);
+				GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
 			}
 		}
 		postdraw();
