@@ -224,7 +224,7 @@ public class TextField extends AbstractComponent {
 			}
 		}
 		Rectangle oldClip = g.getClip();
-		g.setClip(x,y,width, height);
+		g.setWorldClip(x,y,width, height);
 		
 		// Someone could have set a color for me to blend...
 		Color clr = g.getColor();
@@ -258,6 +258,7 @@ public class TextField extends AbstractComponent {
 		}
 		g.setColor(clr);
 		g.setFont(temp);
+		g.clearWorldClip();
 		g.setClip(oldClip);
 	}
 
