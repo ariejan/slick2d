@@ -660,7 +660,7 @@ public class PNGImageData implements LoadableImageData {
 	 * @see org.newdawn.slick.opengl.LoadableImageData#loadImage(java.io.InputStream, boolean, int[])
 	 */
 	public ByteBuffer loadImage(InputStream fis, boolean flipped, int[] transparent) throws IOException {
-		return loadImage(fis, false, false, transparent);
+		return loadImage(fis, flipped, false, transparent);
 	}
 
 	/**
