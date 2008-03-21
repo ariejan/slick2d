@@ -162,17 +162,23 @@ public class PNGImageData implements LoadableImageData {
      * 
      * @param buffer The buffer to read the data into 
      * @param stride The image stride to read (i.e. the number of bytes to skip each line)
+     * @param flip True if the PNG should be flipped
      * @throws IOException Indicates a failure to read the PNG either invalid data or 
      * not enough room in the buffer
      */
-    private void decode(ByteBuffer buffer, int stride) throws IOException {
+    private void decode(ByteBuffer buffer, int stride, boolean flip) throws IOException {
         final int offset = buffer.position();
         byte[] curLine = new byte[width*bytesPerPixel+1];
         byte[] prevLine = new byte[width*bytesPerPixel+1];
         
         final Inflater inflater = new Inflater();
         try {
-            for(int y=0 ; y<height ; y++) {
+            for(int yIndex=0 ; yIndex<height ; yIndex++) {
+            	int y = yIndex;
+            	if (flip) {
+            		y = height - 1 - yIndex;
+            	}
+            	
                 readChunkUnzip(inflater, curLine, 0, curLine.length);
                 unfilter(curLine, prevLine);
 
@@ -680,7 +686,7 @@ public class PNGImageData implements LoadableImageData {
 		
 		// Get a pointer to the image memory
 		scratch = BufferUtils.createByteBuffer(texWidth * texHeight * perPixel);
-		decode(scratch, texWidth * perPixel);
+		decode(scratch, texWidth * perPixel, flipped);
 		
 		if (transparent != null) {
 	        for (int i=0;i<texWidth*texHeight;i+=4) {
@@ -700,7 +706,9 @@ public class PNGImageData implements LoadableImageData {
 		if (!hasAlpha() && forceAlpha) {
 			ByteBuffer temp = BufferUtils.createByteBuffer(texWidth * texHeight * 4);
 			for (int x=0;x<texWidth;x++) {
-				for (int y=0;y<texHeight;y++) {
+				for (int yIndex=0;yIndex<texHeight;yIndex++) {
+					int y = yIndex;
+					
 					int srcOffset = (x*3)+(y*texHeight*3);
 					int dstOffset = (x*4)+(y*texHeight*4);
 					
