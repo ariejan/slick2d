@@ -606,10 +606,12 @@ public class Graphics {
 	 *            The height of the rectangle to draw
 	 */
 	public void drawRect(float x1, float y1, float width, float height) {
-		fillRect(x1,y1,width,1);
-		fillRect(x1,y1+height-1,width,1);
-		fillRect(x1,y1,1,height);
-		fillRect(x1+width-1,y1,1,height);
+		float lineWidth = getLineWidth();
+		
+		fillRect(x1,y1,width,lineWidth);
+		fillRect(x1,y1+height-lineWidth,width,lineWidth);
+		fillRect(x1,y1,lineWidth,height);
+		fillRect(x1+width-lineWidth,y1,lineWidth,height);
 	}
 
 	/**
