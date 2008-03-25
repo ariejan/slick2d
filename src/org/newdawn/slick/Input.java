@@ -861,6 +861,8 @@ public class Input {
 			return;
 		}
 
+		this.height = height;
+		
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {
 				int eventKey = resolveEventKey(Keyboard.getEventKey(), Keyboard.getEventCharacter());
