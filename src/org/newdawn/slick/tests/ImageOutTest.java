@@ -67,7 +67,11 @@ public class ImageOutTest extends BasicGame {
 		g.drawString("T - TGA Snapshot", 10,50);
 		g.drawString("J - JPG Snapshot", 10,70);
 		g.drawString("P - PNG Snapshot", 10,90);
+
+		g.setDrawMode(Graphics.MODE_ADD);
 		g.drawImage(copy, 200, 300);
+		g.setDrawMode(Graphics.MODE_NORMAL);
+		
 		g.drawString(message, 10,400);
 		g.drawRect(200,0,400,300);
 		g.translate(400, 250);
