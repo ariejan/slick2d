@@ -39,7 +39,7 @@ public class CanvasContainerTest extends BasicGame {
 	 * Create a new image rendering test
 	 */
 	public CanvasContainerTest() {
-		super("Image Test");
+		super("Canvas Container Test");
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class CanvasContainerTest extends BasicGame {
 		try {
 			Frame frame = new Frame("Test");
 			frame.setLayout(new BorderLayout());
-			frame.add(new CanvasGameContainer(new ImageTest()));
+			frame.add(new CanvasGameContainer(new CanvasContainerTest()));
 			
 			frame.addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
