@@ -559,8 +559,12 @@ public class Graphics {
 		TextureImpl.bindNone();
 		currentColor.bind();
 
-		ShapeRenderer.texture(shape, image, scaleX, scaleY);
-
+		if (fit) {
+			ShapeRenderer.textureFit(shape, image, scaleX, scaleY);
+		} else {
+			ShapeRenderer.texture(shape, image, scaleX, scaleY);
+		}
+		
 		postdraw();
 	}
 
