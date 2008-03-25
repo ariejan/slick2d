@@ -204,7 +204,6 @@ public strictfp class Vector2f {
 
 	/**
 	 * Normalise the vector
-	 *
 	 */
 	public void normalise() {
 		float l = length();
@@ -213,6 +212,17 @@ public strictfp class Vector2f {
 		y /= l;
 	}
 	
+	/**
+     * The normal of the vector
+     * 
+     * @return A unit vector with the same direction as the vector
+     */
+    public Vector2f getNormal() {
+	   Vector2f cp = copy();
+	   cp.normalise();
+	   return cp;
+    } 
+    
 	/**
 	 * The length of the vector squared
 	 * 
