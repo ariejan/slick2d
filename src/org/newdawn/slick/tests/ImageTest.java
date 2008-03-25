@@ -106,7 +106,7 @@ public class ImageTest extends BasicGame {
 	 * @param argv The arguments to pass into the test
 	 */
 	public static void main(String[] argv) {
-		boolean sharedContextTest = true;
+		boolean sharedContextTest = false;
 		
 		try {
 			exitMe = false;
