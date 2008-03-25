@@ -551,9 +551,6 @@ public class Image implements Renderable {
 		
 		GL.glTexEnvi(SGL.GL_TEXTURE_ENV, SGL.GL_TEXTURE_ENV_MODE, SGL.GL_MODULATE);
 
-        float centerX = x + this.centerX;
-        float centerY = y + this.centerY;
-
         GL.glTranslatef(x, y, 0);
         if (angle != 0) {
 	        GL.glTranslatef(centerX, centerY, 0.0f); 
