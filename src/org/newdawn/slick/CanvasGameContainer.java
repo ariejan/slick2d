@@ -1,5 +1,6 @@
 package org.newdawn.slick;
 
+import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
@@ -18,28 +19,32 @@ import org.newdawn.slick.util.Log;
 
 /**
  * A game container that displays the game on an AWT Canvas.
- *
+ * 
  * @author kevin
  */
 public class CanvasGameContainer extends AWTGLCanvas {
 	/** The actual container implementation */
 	protected Container container;
+
 	/** The game being held in this container */
 	protected Game game;
+
 	/** True if a reinit is required */
 	protected boolean reinit = false;
+
 	/** True if we've already created the AWTInputAdapter */
 	protected boolean createdAdapter = false;
-	
+
 	/**
 	 * Create a new panel
 	 * 
-	 * @param game The game being held
+	 * @param game
+	 *            The game being held
 	 * @throws LWJGLException
 	 */
 	public CanvasGameContainer(Game game) throws LWJGLException {
 		super();
-		
+
 		this.game = game;
 		addComponentListener(new ComponentListener() {
 
@@ -57,16 +62,16 @@ public class CanvasGameContainer extends AWTGLCanvas {
 
 			public void componentShown(ComponentEvent e) {
 			}
-			
+
 		});
 	}
-	
+
 	/**
 	 * Dispose the container and any resources it holds
 	 */
 	public void dispose() {
 		container.stopRendering();
-		
+
 		Log.info("Clear up");
 		AWTInputAdapter.destroy();
 		Mouse.destroy();
@@ -74,7 +79,7 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		AL.destroy();
 		createdAdapter = false;
 	}
-	
+
 	/**
 	 * Get the GameContainer providing this canvas
 	 * 
@@ -83,19 +88,19 @@ public class CanvasGameContainer extends AWTGLCanvas {
 	public GameContainer getContainer() {
 		return container;
 	}
-		
+
 	/**
 	 * @see org.lwjgl.opengl.AWTGLCanvas#initGL()
 	 */
 	protected void initGL() {
 		container = new Container(game);
-		
+
 		try {
 			InternalTextureLoader.get().clear();
 			SoundStore.get().clear();
 
 			setVSyncEnabled(true);
-			if (!createdAdapter) { 
+			if (!createdAdapter) {
 				AWTInputAdapter.create(this);
 				createdAdapter = true;
 			}
@@ -115,31 +120,31 @@ public class CanvasGameContainer extends AWTGLCanvas {
 			container.enterOrtho();
 			reinit = false;
 		}
-		
+
 		Mouse.poll();
 		Keyboard.poll();
 		Controllers.poll();
-		
+
 		try {
 			container.pollContainer(isVisible());
 		} catch (SlickException e) {
 			Log.error(e);
 			container.stopRendering();
 		}
-		
+
 		try {
 			swapBuffers();
 			if (isVisible()) {
 				repaint();
 			}
-		} catch (Exception e) {/*OK*/
+		} catch (Exception e) {/* OK */
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * A game container to provide the canvas context
-	 *
+	 * 
 	 * @author kevin
 	 */
 	private class Container extends GameContainer {
@@ -147,11 +152,12 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		/**
 		 * Create a new container wrapped round the game
 		 * 
-		 * @param game The game to be held in this container
+		 * @param game
+		 *            The game to be held in this container
 		 */
 		public Container(Game game) {
 			super(game);
-			
+
 			width = CanvasGameContainer.this.getWidth();
 			height = CanvasGameContainer.this.getHeight();
 		}
@@ -164,11 +170,12 @@ public class CanvasGameContainer extends AWTGLCanvas {
 			height = CanvasGameContainer.this.getHeight();
 			reinit = true;
 		}
-		
+
 		/**
 		 * Initiliase based on Canvas init
 		 * 
-		 * @throws SlickException Indicates a failure to inialise the basic framework
+		 * @throws SlickException
+		 *             Indicates a failure to inialise the basic framework
 		 */
 		public void initLocal() throws SlickException {
 			initSystem();
@@ -181,40 +188,45 @@ public class CanvasGameContainer extends AWTGLCanvas {
 			} catch (Throwable e) {
 				Log.info("Controllers not available");
 			}
-			
+
 			game.init(this);
 			getDelta();
 		}
-		
+
 		/**
 		 * Stop the canvas play back
 		 */
 		public void stopRendering() {
 			running = false;
 		}
-		
+
 		/**
 		 * Poll the canvas update and render loops
 		 * 
-		 * @param visible True if the canvas is currently visible
-		 * @throws SlickException Indicates a failure the internal game
+		 * @param visible
+		 *            True if the canvas is currently visible
+		 * @throws SlickException
+		 *             Indicates a failure the internal game
 		 */
 		public void pollContainer(boolean visible) throws SlickException {
 			if (!running) {
 				return;
 			}
-			
+
 			int delta = getDelta();
-			
+
 			if (!visible) {
-				try { Thread.sleep(100); } catch (Exception e) {}
+				try {
+					Thread.sleep(100);
+				} catch (Exception e) {
+				}
 			} else {
 				updateAndRender(delta);
 			}
-			
+
 			updateFPS();
 		}
-		
+
 		/**
 		 * @see org.newdawn.slick.GameContainer#getHeight()
 		 */
@@ -233,14 +245,14 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		 * @see org.newdawn.slick.GameContainer#getScreenHeight()
 		 */
 		public int getScreenHeight() {
-			return 0;
+			return Toolkit.getDefaultToolkit().getScreenSize().width;
 		}
 
 		/**
 		 * @see org.newdawn.slick.GameContainer#getScreenWidth()
 		 */
 		public int getScreenWidth() {
-			return 0;
+			return Toolkit.getDefaultToolkit().getScreenSize().height;
 		}
 
 		/**
@@ -265,9 +277,11 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		}
 
 		/**
-		 * @see org.newdawn.slick.GameContainer#setMouseCursor(java.lang.String, int, int)
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(java.lang.String,
+		 *      int, int)
 		 */
-		public void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException {
+		public void setMouseCursor(String ref, int hotSpotX, int hotSpotY)
+				throws SlickException {
 			// unsupported in an canvas
 		}
 
@@ -279,16 +293,20 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		}
 
 		/**
-		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.opengl.ImageData, int, int)
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.opengl.ImageData,
+		 *      int, int)
 		 */
-		public void setMouseCursor(ImageData data, int hotSpotX, int hotSpotY) throws SlickException {
+		public void setMouseCursor(ImageData data, int hotSpotX, int hotSpotY)
+				throws SlickException {
 			// unsupported in an canvas
 		}
 
 		/**
-		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.lwjgl.input.Cursor, int, int)
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.lwjgl.input.Cursor,
+		 *      int, int)
 		 */
-		public void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY) throws SlickException {
+		public void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY)
+				throws SlickException {
 			// unsupported in an canvas
 		}
 
@@ -302,15 +320,17 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		/**
 		 * @see org.newdawn.slick.GameContainer#setDefaultMouseCursor()
 		 */
-		public void setDefaultMouseCursor() {	
+		public void setDefaultMouseCursor() {
 			// unsupported in an canvas
 		}
 
 		/**
-		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.Image, int, int)
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.Image,
+		 *      int, int)
 		 */
-		public void setMouseCursor(Image image, int hotSpotX, int hotSpotY) throws SlickException {
-			
+		public void setMouseCursor(Image image, int hotSpotX, int hotSpotY)
+				throws SlickException {
+
 		}
 	}
 }
