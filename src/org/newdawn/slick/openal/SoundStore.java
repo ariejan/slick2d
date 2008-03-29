@@ -432,7 +432,7 @@ public class SoundStore {
 		for (int i=1;i<sourceCount-1;i++) {
 			int state = AL10.alGetSourcei(sources.get(i), AL10.AL_SOURCE_STATE);
 			
-			if (state != AL10.AL_PLAYING) {
+			if ((state != AL10.AL_PLAYING) && (state != AL10.AL_PAUSED)) {
 				return i;
 			}
 		}
