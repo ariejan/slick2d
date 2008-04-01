@@ -1,8 +1,13 @@
 package org.newdawn.slick;
 
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controllers;
@@ -16,6 +21,7 @@ import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.util.Log;
+import org.newdawn.slick.util.ResourceLoader;
 
 /**
  * A game container that displays the game on an AWT Canvas.
@@ -282,7 +288,13 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		 */
 		public void setMouseCursor(String ref, int hotSpotX, int hotSpotY)
 				throws SlickException {
-			// unsupported in an canvas
+			try {
+				BufferedImage image = ImageIO.read(ResourceLoader.getResourceAsStream(ref));
+				java.awt.Cursor cursor = Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(hotSpotX, hotSpotY), ref);
+				setCursor(cursor);
+			} catch (IOException e) { 
+				throw new SlickException("Unable to create cursor for : "+ref, e);
+			}
 		}
 
 		/**
