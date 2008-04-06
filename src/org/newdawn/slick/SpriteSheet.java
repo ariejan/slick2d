@@ -164,6 +164,14 @@ public class SpriteSheet extends Image {
 	 */
 	public Image getSubImage(int x, int y) {
 		init();
+		
+		if ((x < 0) || (x >= subImages.length)) {
+			throw new RuntimeException("SubImage out of sheet bounds: "+x+","+y);
+		}
+		if ((y < 0) || (y >= subImages[0].length)) {
+			throw new RuntimeException("SubImage out of sheet bounds: "+x+","+y);
+		}
+		
 		return subImages[x][y];
 	}
 	
@@ -177,6 +185,13 @@ public class SpriteSheet extends Image {
 	public Image getSprite(int x, int y) {
 		target.init();
 		initImpl();
+
+		if ((x < 0) || (x >= subImages.length)) {
+			throw new RuntimeException("SubImage out of sheet bounds: "+x+","+y);
+		}
+		if ((y < 0) || (y >= subImages[0].length)) {
+			throw new RuntimeException("SubImage out of sheet bounds: "+x+","+y);
+		}
 		
 		return target.getSubImage(x*(tw+spacing),y*(th+spacing),tw,th);
 	}
