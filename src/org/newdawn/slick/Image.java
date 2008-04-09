@@ -983,6 +983,6 @@ public class Image implements Renderable {
 		
 		destroyed = true;
 		texture.release();
-		GraphicsFactory.getGraphicsForImage(this);
+		GraphicsFactory.releaseGraphicsForImage(this);
 	}
 }
