@@ -208,12 +208,11 @@ public class FBOGraphics extends Graphics {
 	public void destroy() {
 		super.destroy();
 
-		System.out.println("DESTROY FBO");
-//		IntBuffer buffer = BufferUtils.createIntBuffer(1);
-//		buffer.put(FBO);
-//		buffer.flip();
+		IntBuffer buffer = BufferUtils.createIntBuffer(1);
+		buffer.put(FBO);
+		buffer.flip();
 		
-//		EXTFramebufferObject.glDeleteFramebuffersEXT(buffer);
-//		valid = false;
+		EXTFramebufferObject.glDeleteFramebuffersEXT(buffer);
+		valid = false;
 	}
 }
