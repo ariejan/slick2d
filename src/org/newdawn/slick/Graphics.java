@@ -57,6 +57,21 @@ public class Graphics {
 	/** The default font to use */
 	private static Font DEFAULT_FONT;
 
+	/**
+	 * Set the current graphics context in use
+	 * 
+	 * @param current The graphics context that should be considered current
+	 */
+	public static void setCurrent(Graphics current) {
+		if (currentGraphics != current) {
+			if (currentGraphics != null) {
+				currentGraphics.disable();
+			}
+			currentGraphics = current;
+			currentGraphics.enable();
+		}
+	}
+	
 	/** The font in use */
 	private Font font;
 
@@ -186,13 +201,7 @@ public class Graphics {
 	 * dynamic images
 	 */
 	private void predraw() {
-		if (currentGraphics != this) {
-			if (currentGraphics != null) {
-				currentGraphics.disable();
-			}
-			currentGraphics = this;
-			currentGraphics.enable();
-		}
+		setCurrent(this);
 	}
 
 	/**
