@@ -53,12 +53,12 @@ public class Graphics {
 
 	/** The last graphics context in use */
 	protected static Graphics currentGraphics = null;
+	
+	/** The default font to use */
+	private static Font DEFAULT_FONT;
 
 	/** The font in use */
 	private Font font;
-
-	/** The default font to use */
-	private Font defaultFont;
 
 	/** The current color */
 	private Color currentColor = Color.white;
@@ -100,20 +100,22 @@ public class Graphics {
 	 *            The height of the screen for this context
 	 */
 	public Graphics(int width, int height) {
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				try {
-					defaultFont = new AngelCodeFont(
-							"org/newdawn/slick/data/default.fnt",
-							"org/newdawn/slick/data/default_00.tga");
-				} catch (SlickException e) {
-					Log.error(e);
+		if (DEFAULT_FONT == null) {
+			AccessController.doPrivileged(new PrivilegedAction() {
+				public Object run() {
+					try {
+						DEFAULT_FONT = new AngelCodeFont(
+								"org/newdawn/slick/data/default.fnt",
+								"org/newdawn/slick/data/default_00.tga");
+					} catch (SlickException e) {
+						Log.error(e);
+					}
+					return null; // nothing to return
 				}
-				return null; // nothing to return
-			}
-		});
-
-		this.font = defaultFont;
+			});
+		}
+		
+		this.font = DEFAULT_FONT;
 		screenWidth = width;
 		screenHeight = height;
 	}
@@ -356,7 +358,7 @@ public class Graphics {
 	 * Reset to using the default font for this context
 	 */
 	public void resetFont() {
-		font = defaultFont;
+		font = DEFAULT_FONT;
 	}
 
 	/**

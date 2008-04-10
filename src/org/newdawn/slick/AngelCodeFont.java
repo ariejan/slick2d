@@ -5,10 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
@@ -38,7 +39,7 @@ public class AngelCodeFont implements Font {
 	/** The characters building up the font */
 	private CharDef[] chars = new CharDef[1000];
 	/** The kerning information */
-	private int[][] kerning = new int[1000][1000];
+	private HashMap kerning = new HashMap();
 	/** The height of a line */
 	private int lineHeight;
 	/** The caches for rendered lines */
@@ -104,6 +105,44 @@ public class AngelCodeFont implements Font {
 		displayListCaching = caching;
 		parseFnt(fntFile);
 	}
+
+	/**
+	 * Get kerning information for a particular character pair
+	 * 
+	 * @param first The first character being drawn
+	 * @param second The second character being drawn
+	 * @param value The kerning distance between the two characters
+	 */
+	private void setKerning(int first, int second, int value) {
+		HashMap secondMap = (HashMap) kerning.get(new Integer(first));
+		if (secondMap == null) {
+			secondMap = new HashMap();
+			kerning.put(new Integer(first), secondMap);
+		}
+		
+		secondMap.put(new Integer(second), new Integer(value));
+	}
+	
+	/**
+	 * Get kerning information for a particular character pair
+	 * 
+	 * @param first The first character being drawn
+	 * @param second The second character being drawn
+	 * @return The kerning distance between the two characters
+	 */
+	public int getKerning(int first, int second) {
+		HashMap secondMap = (HashMap) kerning.get(new Integer(first));
+		if (secondMap == null) {
+			return 0;
+		}
+		
+		Integer value = (Integer) secondMap.get(new Integer(second));
+		if (value == null) {
+			return 0;
+		}
+		
+		return value.intValue();
+	}
 	
 	/**
 	 * Parse the font definition file
@@ -152,7 +191,7 @@ public class AngelCodeFont implements Font {
 						tokens.nextToken(); // offset
 						int offset = Integer.parseInt(tokens.nextToken()); // offset value
 						
-						kerning[first][second] = offset;
+						setKerning(first, second, offset);
 					}
 				}
 			}
@@ -295,15 +334,17 @@ public class AngelCodeFont implements Font {
 	public int getWidth(String text) {
 		int width = 0;
 		
-		for (int i=0;i<text.length();i++) {
-			int id = text.charAt(i);
+		char[] data = text.toCharArray();
+		
+		for (int i=0;i<data.length;i++) {
+			int id = data[i];
 			if (chars[id] == null) {
 				continue;
 			}
 			width += chars[id].xadvance;
 			
-			if (i < text.length()-1) {
-				width += kerning[id][text.charAt(i+1)];
+			if (i < data.length-1) {
+				width += getKerning(id, data[i+1]);
 			}
 		}
 		
@@ -442,8 +483,11 @@ public class AngelCodeFont implements Font {
 		private void render(float x, float y, int start, int end) {
 			font.init();
 			GL.glBegin(SGL.GL_QUADS);
-			for (int i=0;i<text.length();i++) {
-				int id = text.charAt(i);
+			
+			char[] data = text.toCharArray();
+			
+			for (int i=0;i<data.length;i++) {
+				int id = data[i];
 				if (id >= chars.length) {
 					continue;
 				}
@@ -456,10 +500,8 @@ public class AngelCodeFont implements Font {
 				}
 				x += chars[id].xadvance;
 				
-				if (i < text.length()-1) {
-					if ((text.charAt(i+1) < 1000) && (id < 1000)) {
-						x += kerning[id][text.charAt(i+1)];
-					}
+				if (i < data.length-1) {
+					x += getKerning(id, data[i+1]);
 				}
 			}
 			GL.glEnd();
