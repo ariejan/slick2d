@@ -185,6 +185,9 @@ public class MorphShape extends Shape {
 	 * @see MorphShape#transform(Transform)
 	 */
 	public Shape transform(Transform transform) {
-		throw new UnsupportedOperationException("Unable to transform a morphing shape");
+		createPoints();
+		Polygon poly = new Polygon(points);
+		
+		return poly;
 	}
 }
