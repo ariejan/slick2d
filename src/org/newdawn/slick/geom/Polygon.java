@@ -8,6 +8,9 @@ import java.util.ArrayList;
  * @author Mark
  */
 public class Polygon extends Shape {
+	/** Allow duplicated points */
+	private boolean allowDups = false;
+	
     /**
      * Construct a new polygon with 3 or more points. 
      * This constructor will take the first set of points and copy them after
@@ -57,7 +60,16 @@ public class Polygon extends Shape {
         maxX = Float.MIN_VALUE;
         maxY = Float.MIN_VALUE;
     }
-
+    
+    /**
+     * Indicate if duplicate points are allow
+     * 
+     * @param allowDups True if duplicate points are allowed
+     */
+    public void setAllowDuplicatePoints(boolean allowDups) {
+    	this.allowDups = allowDups;
+    }
+    
     /**
      * Add a point to the polygon
      * 
@@ -65,7 +77,7 @@ public class Polygon extends Shape {
      * @param y The y coordinate of the point
      */
     public void addPoint(float x, float y) {
-    	if (includes(x,y)) {
+    	if (includes(x,y) && (!allowDups)) {
     		return;
     	}
     	
