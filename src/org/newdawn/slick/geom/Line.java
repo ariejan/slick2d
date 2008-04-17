@@ -69,6 +69,19 @@ public strictfp class Line extends Shape {
 	public Line(float x1, float y1, float x2, float y2) {
 		this(new Vector2f(x1,y1), new Vector2f(x2,y2));
 	}
+
+	/**
+	 * Create a line with relative second point
+	 * 
+	 * @param x1 The x coordinate of the start point
+	 * @param y1 The y coordinate of the start point
+	 * @param dx The x change to get to the second point
+	 * @param dy The y change to get to the second point
+	 * @param dummy A dummy value
+	 */
+	public Line(float x1, float y1, float dx, float dy, boolean dummy) {
+		this(new Vector2f(x1,y1), new Vector2f(x1+dx,y1+dy));
+	}
 	
 	/**
 	 * Create a new line based on two points
