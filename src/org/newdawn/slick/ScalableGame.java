@@ -1,7 +1,8 @@
 package org.newdawn.slick;
 
-import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 
 /**
  * A wrapper to allow any game to be scalable. This relies on knowing the 
@@ -131,7 +132,7 @@ public class ScalableGame implements Game {
 			xoffset = (container.getWidth() - targetWidth) / 2;
 		}
 		
-		renderOverlay(container, g);
+		SlickCallable.enterSafeBlock();
 		g.setClip(xoffset, yoffset, targetWidth, targetHeight);
 		GL.glTranslatef(xoffset, yoffset, 0);
 		GL.glScalef(targetWidth / normalWidth, targetHeight / normalHeight,0);
@@ -139,6 +140,9 @@ public class ScalableGame implements Game {
 		held.render(container, g);
 		GL.glPopMatrix();
 		g.clearClip();
+		SlickCallable.leaveSafeBlock();
+		
+		renderOverlay(container, g);
 	}
 
 	/**
