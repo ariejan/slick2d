@@ -33,6 +33,8 @@ public class Gradient {
 	private boolean radial;
 	/** The transform specified for the gradient */
 	private Transform transform;
+	/** The name of the referenced gradient */
+	private String ref;
 	
 	/**
 	 * Create a new gradient definition
@@ -75,9 +77,24 @@ public class Gradient {
 	/**
 	 * Reference another gradient, i.e. use it's colour stops
 	 * 
-	 * @param other The other gradient to reference
+	 * @param ref The name of the other gradient to reference
 	 */
-	public void reference(Gradient other) {
+	public void reference(String ref) {
+		this.ref = ref;
+	}
+	
+	/**
+	 * Resolve the gradient reference
+	 * 
+	 * @param diagram The diagram to resolve against
+	 */
+	public void resolve(Diagram diagram) {
+		if (ref == null) {
+			return;
+		}
+		
+		Gradient other = diagram.getGradient(ref);
+		
 		for (int i=0;i<other.steps.size();i++) {
 			steps.add(other.steps.get(i));
 		}

@@ -1,5 +1,7 @@
 package org.newdawn.slick.svg.inkscape;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.svg.Diagram;
@@ -47,6 +49,8 @@ public class DefsProcessor implements ElementProcessor {
 		}
 		
 		NodeList linear = element.getElementsByTagName("linearGradient");
+		ArrayList toResolve = new ArrayList();
+		
 		for (int i=0;i<linear.getLength();i++) {
 			Element lin = (Element) linear.item(i);
 			String name = lin.getAttribute("id");
@@ -74,7 +78,8 @@ public class DefsProcessor implements ElementProcessor {
 					throw new ParsingException(lin, "Can't find referenced gradient: "+ref);
 				}
 				
-				gradient.reference(grad);
+				gradient.reference(ref.substring(1));
+				toResolve.add(gradient);
 			} else {
 				NodeList steps = lin.getElementsByTagName("stop");
 				for (int j=0;j<steps.getLength();j++) {
@@ -126,8 +131,9 @@ public class DefsProcessor implements ElementProcessor {
 				if (grad == null) {
 					throw new ParsingException(rad, "Can't find referenced gradient: "+ref);
 				}
-				
-				gradient.reference(grad);
+
+				gradient.reference(ref.substring(1));
+				toResolve.add(gradient);
 			} else {
 				NodeList steps = rad.getElementsByTagName("stop");
 				for (int j=0;j<steps.getLength();j++) {
@@ -147,6 +153,10 @@ public class DefsProcessor implements ElementProcessor {
 			
 			gradient.getImage();
 			diagram.addGradient(name, gradient);
+		}
+		
+		for (int i=0;i<toResolve.size();i++) {
+			((Gradient) toResolve.get(i)).resolve(diagram);
 		}
 	}
 
