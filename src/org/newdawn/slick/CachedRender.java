@@ -41,9 +41,12 @@ public class CachedRender {
 	private void build() {
 		if (list == -1) {
 			list = GL.glGenLists(1);
+			
+			SlickCallable.enterSafeBlock();
 			GL.glNewList(list, SGL.GL_COMPILE);
 			runnable.run();
 			GL.glEndList();
+			SlickCallable.leaveSafeBlock();
 		} else {
 			throw new RuntimeException("Attempt to build the display list more than once in CachedRender");
 		}
