@@ -118,8 +118,6 @@ public class TextField extends AbstractComponent {
 		setLocation(x, y);
 		this.width = width;
 		this.height = height;
-		
-		input.removeListener(this);
 	}
 
 	/**
@@ -448,14 +446,6 @@ public class TextField extends AbstractComponent {
 	 */
 	public void setFocus(boolean focus) {
 		lastKey = -1;
-		
-		if (hasFocus() != focus) {
-			if (focus) {
-				input.addPrimaryListener(this);
-			} else {
-				input.removeListener(this);
-			}
-		}
 		
 		super.setFocus(focus);
 	}
