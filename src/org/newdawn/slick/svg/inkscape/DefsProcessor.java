@@ -95,9 +95,10 @@ public class DefsProcessor implements ElementProcessor {
 					
 					gradient.addStep(offset, stopColor);
 				}
+				
+				gradient.getImage();
 			}
 			
-			gradient.getImage();
 			diagram.addGradient(name, gradient);
 		}
 		
@@ -149,14 +150,16 @@ public class DefsProcessor implements ElementProcessor {
 					
 					gradient.addStep(offset, stopColor);
 				}
+				
+				gradient.getImage();
 			}
 			
-			gradient.getImage();
 			diagram.addGradient(name, gradient);
 		}
 		
 		for (int i=0;i<toResolve.size();i++) {
 			((Gradient) toResolve.get(i)).resolve(diagram);
+			((Gradient) toResolve.get(i)).getImage();
 		}
 	}
 
