@@ -105,6 +105,9 @@ public class Graphics {
 	/** The current drawing mode */
 	private int currentDrawingMode = MODE_NORMAL;
 
+	/** The current line width */
+	private float lineWidth = 1;
+	
 	/**
 	 * Create a new graphics context. Only the container should be doing this
 	 * really
@@ -1219,6 +1222,7 @@ public class Graphics {
 	 */
 	public void setLineWidth(float width) {
 		predraw();
+		this.lineWidth = width;
 		LSR.setWidth(width);
 		GL.glPointSize(width);
 		postdraw();
@@ -1230,12 +1234,7 @@ public class Graphics {
 	 * @return The width of lines being draw in this context
 	 */
 	public float getLineWidth() {
-		predraw();
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-		GL.glGetFloat(SGL.GL_LINE_WIDTH, buffer);
-		postdraw();
-
-		return buffer.get(0);
+		return lineWidth;
 	}
 
 	/**
