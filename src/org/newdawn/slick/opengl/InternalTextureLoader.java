@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.glu.GLU;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
@@ -292,23 +291,16 @@ public class InternalTextureLoader {
         GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, minFilter); 
         GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter); 
         
-        if (minFilter == GL11.GL_LINEAR_MIPMAP_NEAREST) {
-        	// generate a mip map textur
-        	GLU.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D, componentCount, texWidth,
-        					      texHeight, srcPixelFormat, 
-        					      GL11.GL_UNSIGNED_BYTE, textureBuffer);
-        } else {
-	        // produce a texture from the byte buffer
-	        GL11.glTexImage2D(target, 
-	                      0, 
-	                      dstPixelFormat, 
-	                      get2Fold(width), 
-	                      get2Fold(height), 
-	                      0, 
-	                      srcPixelFormat, 
-	                      GL11.GL_UNSIGNED_BYTE, 
-	                      textureBuffer); 
-        }
+        // produce a texture from the byte buffer
+        GL11.glTexImage2D(target, 
+                      0, 
+                      dstPixelFormat, 
+                      get2Fold(width), 
+                      get2Fold(height), 
+                      0, 
+                      srcPixelFormat, 
+                      GL11.GL_UNSIGNED_BYTE, 
+                      textureBuffer); 
         
         return texture; 
     } 
@@ -386,23 +378,16 @@ public class InternalTextureLoader {
         GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, minFilter); 
         GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter); 
         
-        if (minFilter == GL11.GL_LINEAR_MIPMAP_NEAREST) {
-        	// generate a mip map textur
-        	GLU.gluBuild2DMipmaps(GL11.GL_TEXTURE_2D, componentCount, texWidth,
-        					      texHeight, srcPixelFormat, 
-        					      GL11.GL_UNSIGNED_BYTE, textureBuffer);
-        } else {
-	        // produce a texture from the byte buffer
-	        GL11.glTexImage2D(target, 
-	                      0, 
-	                      dstPixelFormat, 
-	                      get2Fold(width), 
-	                      get2Fold(height), 
-	                      0, 
-	                      srcPixelFormat, 
-	                      GL11.GL_UNSIGNED_BYTE, 
-	                      textureBuffer); 
-        }
+        // produce a texture from the byte buffer
+        GL11.glTexImage2D(target, 
+                      0, 
+                      dstPixelFormat, 
+                      get2Fold(width), 
+                      get2Fold(height), 
+                      0, 
+                      srcPixelFormat, 
+                      GL11.GL_UNSIGNED_BYTE, 
+                      textureBuffer); 
         
         return texture; 
     } 

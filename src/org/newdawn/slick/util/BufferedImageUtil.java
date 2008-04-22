@@ -16,10 +16,9 @@ import java.nio.ByteOrder;
 import java.util.Hashtable;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.glu.GLU;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureImpl;
-import org.newdawn.slick.opengl.InternalTextureLoader;
 
 /**
  * This is a utility class that allows you to convert a BufferedImage into a
@@ -48,7 +47,7 @@ public class BufferedImageUtil {
 		Texture tex = getTexture(resourceName, resourceImage,
 				GL11.GL_TEXTURE_2D, // target
 				GL11.GL_RGBA, // dest pixel format
-				GL11.GL_LINEAR_MIPMAP_NEAREST, // min filter (unused)
+				GL11.GL_LINEAR, // min filter (unused)
 				GL11.GL_LINEAR);
 
 		return tex;
@@ -102,20 +101,23 @@ public class BufferedImageUtil {
 		ByteBuffer textureBuffer = convertImageData(bufferedImage, texture);
 
 		if (target == GL11.GL_TEXTURE_2D) {
-			GL11
-					.glTexParameteri(target, GL11.GL_TEXTURE_WRAP_S,
+			GL11.glTexParameteri(target, GL11.GL_TEXTURE_WRAP_S,
 							GL11.GL_REPEAT);
-			GL11
-					.glTexParameteri(target, GL11.GL_TEXTURE_WRAP_T,
+			GL11.glTexParameteri(target, GL11.GL_TEXTURE_WRAP_T,
 							GL11.GL_REPEAT);
 			GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, minFilter);
 			GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter);
 		}
 
-		GLU.gluBuild2DMipmaps(target, dstPixelFormat, InternalTextureLoader
-				.get2Fold(bufferedImage.getWidth()), InternalTextureLoader
-				.get2Fold(bufferedImage.getHeight()), srcPixelFormat,
-				GL11.GL_UNSIGNED_BYTE, textureBuffer);
+        GL11.glTexImage2D(target, 
+                      0, 
+                      dstPixelFormat, 
+                      InternalTextureLoader.get2Fold(bufferedImage.getWidth()), 
+                      InternalTextureLoader.get2Fold(bufferedImage.getHeight()), 
+                      0, 
+                      srcPixelFormat, 
+                      GL11.GL_UNSIGNED_BYTE, 
+                      textureBuffer); 
 
 		return texture;
 	}

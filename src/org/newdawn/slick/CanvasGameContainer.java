@@ -16,7 +16,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.AWTGLCanvas;
-import org.lwjgl.opengl.AWTInputAdapter;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.InternalTextureLoader;
@@ -79,7 +78,6 @@ public class CanvasGameContainer extends AWTGLCanvas {
 		container.stopRendering();
 
 		Log.info("Clear up");
-		AWTInputAdapter.destroy();
 		Mouse.destroy();
 		Keyboard.destroy();
 		AL.destroy();
@@ -107,7 +105,6 @@ public class CanvasGameContainer extends AWTGLCanvas {
 
 			setVSyncEnabled(true);
 			if (!createdAdapter) {
-				AWTInputAdapter.create(this);
 				createdAdapter = true;
 			}
 			container.initLocal();
