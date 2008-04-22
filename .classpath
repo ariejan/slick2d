@@ -3,7 +3,6 @@
 	<classpathentry path="src" kind="src"/>
 	<classpathentry path="examples" kind="src"/>
 	<classpathentry path="tools" kind="src"/>
-	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
 	<classpathentry path="lib/lwjgl.jar" exported="true" kind="lib"/>
 	<classpathentry path="lib/ibxm.jar" exported="true" kind="lib"/>
 	<classpathentry path="lib/jogg-0.0.7.jar" exported="true" kind="lib"/>
@@ -12,5 +11,6 @@
 	<classpathentry path="applet/lwjgl_util_applet.jar" exported="true" kind="lib"/>
 	<classpathentry path="lib/jnlp.jar" kind="lib"/>
 	<classpathentry path="lib/tinylinepp.jar" kind="lib"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/j2sdk1.4.2_12" kind="con"/>
 	<classpathentry path="bin" kind="output"/>
 </classpath>
