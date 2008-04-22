@@ -8,6 +8,7 @@
   javadoc - generate the javadoc for Slick
 -->
 <project name="slick" default="dist" basedir=".">
+	<taskdef name="pack200" classname="com.sun.tools.apache.ant.pack200.Pack200Task" classpath="Pack200Task.jar"/>
 	
 <!--
  Initialise the build script
@@ -33,6 +34,8 @@
 	<mkdir dir="${dist}"/>
 	<delete dir="webstart"/>
 	<mkdir dir="webstart"/>
+	<delete dir="lzma"/>
+	<mkdir dir="lzma"/>
 </target>
 	
 <!--
@@ -308,7 +311,7 @@
 	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
-	<copyandsign jar="pedigree.jar"/>
+	<copyandsign jar="pedigree"/>
 	<createdemojnlp name="pedigree" title="Slick2D Pedigree, Whiskas flavoured" mainclass="org.newdawn.slick.tools.peditor.ParticleEditor"/>
 </target>
 
@@ -341,7 +344,7 @@
 	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
-	<copyandsign jar="hiero.jar"/>
+	<copyandsign jar="hiero"/>
 	<createdemojnlp name="hiero" title="Slick2D Hiero Bitmap Font Generator" mainclass="org.newdawn.slick.tools.hiero.Hiero"/>
 </target>
 
@@ -374,7 +377,7 @@
 	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
-	<copyandsign jar="scalar.jar"/>
+	<copyandsign jar="scalar"/>
 	<createdemojnlp name="scalar" title="Slick2D Scalar Scale2/3X Tool" mainclass="org.newdawn.slick.tools.scalar.Scalar"/>
 </target>
 
@@ -406,7 +409,7 @@
 	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
-	<copyandsign jar="packulike.jar"/>
+	<copyandsign jar="packuliker"/>
 	<createdemojnlp name="packer" title="Slick2D Sprite Packer" mainclass="org.newdawn.slick.tools.packulike.Packer"/>
 </target>
 
@@ -450,17 +453,17 @@
 	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
-	<copyandsign jar="ibxm.jar"/>
-	<copyandsign jar="lwjgl.jar"/>
-	<copyandsign jar="jogg-0.0.7.jar"/>
-	<copyandsign jar="jinput.jar"/>
-	<copyandsign jar="jorbis-0.0.15.jar"/>
-	<copyandsign jar="natives-linux.jar"/>
-	<copyandsign jar="natives-win32.jar"/>
-	<copyandsign jar="natives-mac.jar"/>
-	<copyandsign jar="slick.jar"/>
+	<copyandsign jar="ibxm"/>
+	<copyandsign jar="lwjgl"/>
+	<copyandsign jar="jogg-0.0.7"/>
+	<copyandsign jar="jinput"/>
+	<copyandsign jar="jorbis-0.0.15"/>
+	<copyandsign jar="natives-linux"/>
+	<copyandsign jar="natives-win32"/>
+	<copyandsign jar="natives-mac"/>
+	<copyandsign jar="slick"/>
 	<copy file="webstart/slick.jar" toFile="webstart/slick-b${version.build}.jar"/>
-	<copyandsign jar="slick-examples.jar"/>
+	<copyandsign jar="slick-examples"/>
 </target>
 
 <!--
@@ -640,8 +643,13 @@
 <macrodef name="copyandsign">
    <attribute name="jar" default="NOT SET"/>
    <sequential>
-		<copy file="lib/@{jar}" toDir="webstart"/>
-   		<signjar jar="webstart/@{jar}" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/> 
+		<copy file="lib/@{jar}.jar" toDir="webstart"/>
+   		<signjar jar="webstart/@{jar}.jar" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/> 
+   		<copy file="lib/@{jar}.jar" toDir="lzma"/>
+   		<antcall target="compress-sign-class">
+   			<param name="dir" value="lzma/"/>
+   			<param name="jarfile" value="@{jar}"/>
+   		</antcall>
    </sequential>
 </macrodef>
 
@@ -679,4 +687,51 @@
    </sequential>
 </macrodef>
 
+<target name="repack200" description="Pack200-repack a jar file">
+	<pack200 src="${input}" destfile="${output}" repack="true"/>
+</target>
+   
+<target name="pack200" description="Pack200 a jar file">
+    <pack200 src="${input}" destfile="${output}"/>
+</target>
+  
+<target name="lzma" description="LZMA compress a file">
+	<java fork="true" classname="SevenZip.LzmaAlone">
+		<classpath>
+ 		<pathelement location="JLzma.jar"/>
+	</classpath>
+	<jvmarg value="-Xmx512m"/>
+	<arg value="e"/>
+	<arg value="${input}"/>
+	<arg value="${output}"/>
+		</java>
+	</target>
+	
+	<target name="compress-sign-class">
+		<antcall target="repack200">
+			<param name="input" value="${dir}${jarfile}.jar"/>
+   			<param name="output" value="${dir}${jarfile}-repack.jar"/>
+   		</antcall>
+   		<signjar jar="${dir}${jarfile}-repack.jar" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/>
+   		<antcall target="pack200">
+   			<param name="input" value="${dir}${jarfile}-repack.jar"/>
+  			<param name="output" value="${dir}${jarfile}.jar.pack"/>
+   		</antcall>
+   		<antcall target="lzma">
+   			<param name="input" value="${dir}${jarfile}.jar.pack"/>
+   			<param name="output" value="${dir}${jarfile}.jar.pack.lzma"/>
+   		</antcall>
+   		<delete file="${dir}${jarfile}-repack.jar"/>
+   		<delete file="${dir}${jarfile}.jar.pack"/>
+  		<delete file="${dir}${jarfile}.jar"/>
+	</target>
+  
+   	<target name="compress-resource">
+		<antcall target="lzma">
+  		 	<param name="input" value="${input}"/>
+			<param name="output" value="${output}"/>
+		</antcall>
+		<delete file="${input}"/>
+	</target>
+  
 </project>
