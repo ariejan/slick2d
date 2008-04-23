@@ -458,10 +458,11 @@
 	<copyandsign jar="jogg-0.0.7"/>
 	<copyandsign jar="jinput"/>
 	<copyandsign jar="jorbis-0.0.15"/>
-	<copyandsign jar="natives-linux"/>
-	<copyandsign jar="natives-win32"/>
-	<copyandsign jar="natives-mac"/>
+	<copyandsignres jar="natives-linux"/>
+	<copyandsignres jar="natives-win32"/>
+	<copyandsignres jar="natives-mac"/>
 	<copyandsign jar="slick"/>
+	<!-- copyandsign jar="lwjgl_util_applet"/ -->
 	<copy file="webstart/slick.jar" toFile="webstart/slick-b${version.build}.jar"/>
 	<copyandsign jar="slick-examples"/>
 </target>
@@ -649,6 +650,20 @@
    		<antcall target="compress-sign-class">
    			<param name="dir" value="lzma/"/>
    			<param name="jarfile" value="@{jar}"/>
+   		</antcall>
+   </sequential>
+</macrodef>
+
+<macrodef name="copyandsignres">
+   <attribute name="jar" default="NOT SET"/>
+   <sequential>
+		<copy file="lib/@{jar}.jar" toDir="webstart"/>
+   		<signjar jar="webstart/@{jar}.jar" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/> 
+   		<copy file="lib/@{jar}.jar" toDir="lzma"/>
+   		<signjar jar="lzma/@{jar}.jar" keystore="${keystore.alias}.ks" storepass="${keystore.password}" alias="${keystore.alias}"/> 
+   		<antcall target="compress-resource">
+   			<param name="input" value="lzma/@{jar}.jar"/>
+   			<param name="output" value="lzma/@{jar}.jar.lzma"/>
    		</antcall>
    </sequential>
 </macrodef>
