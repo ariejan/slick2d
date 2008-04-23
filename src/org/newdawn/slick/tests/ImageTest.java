@@ -2,6 +2,7 @@ package org.newdawn.slick.tests;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -58,6 +59,9 @@ public class ImageTest extends BasicGame {
 		if (exitMe) {
 			container.exit();
 		}
+		
+		Image test = tga.getSubImage(50,50,50,50);
+		System.out.println(test.getColor(50, 50));
 	}
 
 	/**
