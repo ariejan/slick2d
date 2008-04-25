@@ -308,7 +308,6 @@ public class ParticleSystem {
 	 */
 	public void removeEmitter(ParticleEmitter emitter) {
 		emitters.remove(emitter);
-		
 		particlesByEmitter.remove( emitter );
 	}
 	
@@ -468,6 +467,7 @@ public class ParticleSystem {
 				if (removeCompletedEmitters) {
 					if (emitter.completed()) {
 						removeMe.add(emitter);
+						particlesByEmitter.remove(emitter);
 					}
 				}
 			}
