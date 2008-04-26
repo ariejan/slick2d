@@ -315,16 +315,8 @@
 <target name="upload-pedigree" depends="build-webstart-pedigree, dist-pedigree">
 	<input message="Upload password:" addproperty="password"/>
 	
-	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
-		 file="dist/pedigree.zip"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${demos}" 
-		 file="webstart/pedigree.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
+	<copy todir="${dir}/downloads" file="dist/pedigree.zip"/>
+	<copy todir="${demos}" file="webstart/pedigree.jar"/>
 	
 </target>
 
@@ -348,16 +340,8 @@
 <target name="upload-hiero" depends="build-webstart-hiero, dist-hiero">
 	<input message="Upload password:" addproperty="password"/>
 	
-	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
-		 file="dist/hiero.zip"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${demos}" 
-		 file="webstart/hiero.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
+	<copy todir="${dir}/downloads" file="dist/hiero.zip"/>
+	<copy todir="${demos}" file="webstart/hiero.jar"/>
 </target>
 
 
@@ -381,16 +365,8 @@
 <target name="upload-scalar" depends="build-webstart-scalar, dist-scalar">
 	<input message="Upload password:" addproperty="password"/>
 	
-	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
-		 file="dist/scalar.zip"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${demos}" 
-		 file="webstart/scalar.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
+	<copy todir="${dir}/downloads" file="dist/scalar.zip"/>
+	<copy todir="${demos}" file="webstart/scalar.jar"/>
 </target>
 
 <!--
@@ -413,16 +389,8 @@
 <target name="upload-packer" depends="build-webstart-packer, dist-packer">
 	<input message="Upload password:" addproperty="password"/>
 	
-	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
-		 file="dist/packulike.zip"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${demos}" 
-		 file="webstart/packulike.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
+	<copy todir="${dir}/downloads" file="dist/packulike.zip""/>
+	<copy todir="${demos}" file="webstart/packulike.jar"/>
 </target>
 <!--
  Create a keystore to use when signing your own games
@@ -541,31 +509,11 @@
 <target name="upload-dist" depends="dist, slick-util">
 	<input message="Upload password:" addproperty="password"/>
 	
-	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
-		 file="dist/slick.zip"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${dir}/downloads/util" 
-		 file="dist/slick-util.zip"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
-		 file="lib/slick.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${dir}/downloads/util" 
-		 file="lib/slick-util.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${dir}/downloads" 
-		 file="src/version"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
+	<copy todir="${dir}/downloads" file="dist/slick.zip"/>
+	<copy todir="${dir}/downloads/util" file="dist/slick-util.zip"/>
+	<copy todir="${dir}/downloads" file="lib/slick.jar"/>
+	<copy todir="${dir}/downloads/util" file="lib/slick-util.jar"/>
+	<copy todir="${dir}/downloads" file="src/version"/>
 </target>
 
 <!--
@@ -574,39 +522,16 @@
 <target name="upload-test-webstarts" depends="dist">
 	<input message="Upload password:" addproperty="password"/>
 	
-	<scp todir="${username}:${password}@${host}:${demos}" 
-		 file="webstart/slick.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${demos}/versions" 
-		 file="webstart/slick-b${version.build}.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${demos}" 
-		 file="webstart/slick-examples.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${demos}" 
-		 file="webstart/testdata.jar"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
-	<scp todir="${username}:${password}@${host}:${demos}" 
-		 trust="true"
-		 port="122"
-		 verbose="true">
+	<copy todir="${demos}" file="webstart/slick.jar"/>
+	<copy todir="${demos}/versions" file="webstart/slick-b${version.build}.jar"/>
+	<copy todir="${demos}" file="webstart/slick-examples.jar"/>
+	<copy todir="${demos}" file="webstart/testdata.jar"/>
+	<copy todir="${demos}">
 		 <fileset dir="webstart">
       		<include name="*.jnlp"/>
     	</fileset>
-	</scp>
-	<scp todir="${username}:${password}@${host}:${dir}/content/static" 
-		 file="webstart/demos.txt"
-		 trust="true"
-		 port="122"
-		 verbose="true"/>
+	</copy>
+	<copy todir="${username}:${password}@${host}:${dir}/content/static" file="webstart/demos.txt"/>
 </target>
 
 <!--
@@ -615,18 +540,12 @@
 <target name="upload-javadoc" depends="dist">
 	<input message="Upload password:" addproperty="password"/>
 	
-	<scp todir="${username}:${password}@${host}:${dir}/javadoc" 
-		 trust="true"
-		 port="122"
-		 verbose="true">
+	<copy todir="${dir}/javadoc">
 		 <fileset dir="javadoc" includes="**/*"/>
-    </scp>
-	<scp todir="${username}:${password}@${host}:${dir}/javadoc-util" 
-		 trust="true"
-		 port="122"
-		 verbose="true">
+    </copy>
+	<copy todir="${dir}/javadoc-util">
 		 <fileset dir="javadoc-util" includes="**/*"/>
-    </scp>
+    </copy>
 </target>
 
 <!--
