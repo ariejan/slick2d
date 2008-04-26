@@ -398,6 +398,17 @@ public abstract class StateBasedGame implements Game, InputListener {
 	}
 
 	/**
+	 * @see org.newdawn.slick.InputListener#mouseClicked(int, int, int, int)
+	 */
+	public void mouseClicked(int button, int x, int y, int clickCount) {
+		if (transitioning()) {
+			return;
+		}
+		
+		currentState.mouseClicked(button, x, y, clickCount);
+	}
+	
+	/**
 	 * @see org.newdawn.slick.InputListener#mousePressed(int, int, int)
 	 */
 	public void mousePressed(int button, int x, int y) {

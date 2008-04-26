@@ -47,7 +47,21 @@ public interface InputListener {
 	 * @param change The amount of the wheel has moved
 	 */
 	public void mouseWheelMoved(int change);
-	
+
+	/**
+	 * Notification that a mouse button was clicked. Due to double click
+	 * handling the single click may be delayed slightly. For absolute notification
+	 * of single clicks use mousePressed().
+	 * 
+	 * To be absolute this method should only be used when considering double clicks
+	 * 
+	 * @param button The index of the button (starting at 0)
+	 * @param x The x position of the mouse when the button was pressed
+	 * @param y The y position of the mouse when the button was pressed
+	 * @param clickCount The number of times the button was clicked
+	 */
+	public void mouseClicked(int button, int x, int y, int clickCount);
+
 	/**
 	 * Notification that a mouse button was pressed
 	 * 

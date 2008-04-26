@@ -73,6 +73,12 @@ public abstract class BasicGame implements Game, InputListener {
 	}
 
 	/**
+	 * @see org.newdawn.slick.InputListener#mouseClicked(int, int, int, int)
+	 */
+	public void mouseClicked(int button, int x, int y, int clickCount) {
+	}
+	
+	/**
 	 * @see org.newdawn.slick.InputListener#mousePressed(int, int, int)
 	 */
 	public void mousePressed(int button, int x, int y) {

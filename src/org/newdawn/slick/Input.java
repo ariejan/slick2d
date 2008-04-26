@@ -368,6 +368,18 @@ public class Input {
 	/** The offset to apply to screen coordinates */
 	private float yoffset = 0;
 	
+	/** The delay before determining a single or double click */
+	private int doubleClickDelay = 250;
+	/** The timer running out for a single click */
+	private long doubleClickTimeout = 0;
+	
+	/** The clicked x position */
+	private int clickX;
+	/** The clicked y position */
+	private int clickY;
+	/** The clicked button */
+	private int clickButton;
+	
 	/**
 	 * Create a new input with the height of the screen
 	 * 
@@ -375,6 +387,17 @@ public class Input {
 	 */
 	public Input(int height) {
 		init(height);
+	}
+	
+	/**
+	 * Set the double click interval, the time between the first
+	 * and second clicks that should be interpreted as a 
+	 * double click.
+	 * 
+	 * @param delay The delay between clicks
+	 */
+	public void setDoubleClickInterval(int delay) {
+		doubleClickDelay = delay;
 	}
 	
 	/**
@@ -849,6 +872,33 @@ public class Input {
 	}
 	
 	/**
+	 * Notification that the mouse has been pressed and hence we
+	 * should consider what we're doing with double clicking
+	 * 
+	 * @param button The button pressed/released
+	 * @param x The location of the mouse
+	 * @param y The location of the mouse
+	 */
+	public void considerDoubleClick(int button, int x, int y) {
+		if (doubleClickTimeout == 0) {
+			clickX = x;
+			clickY = y;
+			clickButton = button;
+			doubleClickTimeout = System.currentTimeMillis() + doubleClickDelay;
+		} else {
+			if (clickButton != button) {
+				fireMouseClicked(button, x, y, 1);
+				doubleClickTimeout = 0;
+			} else {
+				if ((System.currentTimeMillis() < doubleClickTimeout)) {
+					fireMouseClicked(button, x, y, 2);
+					doubleClickTimeout = 0;
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Poll the state of the input
 	 * 
 	 * @param width The width of the game view
@@ -861,6 +911,13 @@ public class Input {
 			return;
 		}
 
+		if (doubleClickTimeout != 0) {
+			if (System.currentTimeMillis() > doubleClickTimeout) {
+				fireMouseClicked(clickButton, clickX, clickY, 1);
+				doubleClickTimeout = 0;
+			}
+		}
+		
 		this.height = height;
 		
 		while (Keyboard.next()) {
@@ -904,6 +961,7 @@ public class Input {
 				if (Mouse.getEventButtonState()) {
 					consumed = false;
 					mousePressed[Mouse.getEventButton()] = true;
+					
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
@@ -916,6 +974,8 @@ public class Input {
 				} else {
 					consumed = false;
 					mousePressed[Mouse.getEventButton()] = false;
+					considerDoubleClick(Mouse.getEventButton(), (int) (xoffset + (Mouse.getEventX() * scaleX)), (int) (yoffset + ((height-Mouse.getEventY()) * scaleY)));
+					
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
@@ -1172,5 +1232,26 @@ public class Input {
 	 */
 	public void resume() {
 		paused = false;
+	}
+	
+	/**
+	 * Notify listeners that the mouse button has been clicked
+	 * 
+	 * @param button The button that has been clicked 
+	 * @param x The location at which the button was clicked
+	 * @param y The location at which the button was clicked
+	 * @param clickCount The number of times the button was clicked (single or double click)
+	 */
+	private void fireMouseClicked(int button, int x, int y, int clickCount) {
+		consumed = false;
+		for (int i=0;i<listeners.size();i++) {
+			InputListener listener = (InputListener) listeners.get(i);
+			if (listener.isAcceptingInput()) {
+				listener.mouseClicked(button, x, y, clickCount);
+				if (consumed) {
+					break;
+				}
+			}
+		}
 	}
 }

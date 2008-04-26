@@ -136,4 +136,10 @@ public class InputAdapter implements InputListener {
 	public void setInput(Input input) {
 	}
 
+	/**
+	 * @see org.newdawn.slick.InputListener#mouseClicked(int, int, int, int)
+	 */
+	public void mouseClicked(int button, int x, int y, int clickCount) {
+	}
+
 }
