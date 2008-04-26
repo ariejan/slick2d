@@ -37,7 +37,7 @@ public class FileSystemLocation implements ResourceLocation {
 				return null;
 			}
 			
-			return file.toURL();
+			return file.toURI().toURL();
 		} catch (IOException e) {
 			return null;
 		}
