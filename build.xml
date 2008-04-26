@@ -313,8 +313,6 @@
 </target>
 
 <target name="upload-pedigree" depends="build-webstart-pedigree, dist-pedigree">
-	<input message="Upload password:" addproperty="password"/>
-	
 	<copy todir="${dir}/downloads" file="dist/pedigree.zip"/>
 	<copy todir="${demos}" file="webstart/pedigree.jar"/>
 	
@@ -338,8 +336,6 @@
 </target>
 
 <target name="upload-hiero" depends="build-webstart-hiero, dist-hiero">
-	<input message="Upload password:" addproperty="password"/>
-	
 	<copy todir="${dir}/downloads" file="dist/hiero.zip"/>
 	<copy todir="${demos}" file="webstart/hiero.jar"/>
 </target>
@@ -363,8 +359,6 @@
 </target>
 
 <target name="upload-scalar" depends="build-webstart-scalar, dist-scalar">
-	<input message="Upload password:" addproperty="password"/>
-	
 	<copy todir="${dir}/downloads" file="dist/scalar.zip"/>
 	<copy todir="${demos}" file="webstart/scalar.jar"/>
 </target>
@@ -387,8 +381,6 @@
 </target>
 
 <target name="upload-packer" depends="build-webstart-packer, dist-packer">
-	<input message="Upload password:" addproperty="password"/>
-	
 	<copy todir="${dir}/downloads" file="dist/packulike.zip""/>
 	<copy todir="${demos}" file="webstart/packulike.jar"/>
 </target>
@@ -507,8 +499,6 @@
  Upload the distrubtion ZIPs
 -->
 <target name="upload-dist" depends="dist, slick-util">
-	<input message="Upload password:" addproperty="password"/>
-	
 	<copy todir="${dir}/downloads" file="dist/slick.zip"/>
 	<copy todir="${dir}/downloads/util" file="dist/slick-util.zip"/>
 	<copy todir="${dir}/downloads" file="lib/slick.jar"/>
@@ -520,8 +510,6 @@
  Upload the test webstarts to the Slick website
 -->
 <target name="upload-test-webstarts" depends="dist">
-	<input message="Upload password:" addproperty="password"/>
-	
 	<copy todir="${demos}" file="webstart/slick.jar"/>
 	<copy todir="${demos}/versions" file="webstart/slick-b${version.build}.jar"/>
 	<copy todir="${demos}" file="webstart/slick-examples.jar"/>
@@ -538,8 +526,6 @@
  Upload the javadoc
 -->
 <target name="upload-javadoc" depends="dist">
-	<input message="Upload password:" addproperty="password"/>
-	
 	<copy todir="${dir}/javadoc">
 		 <fileset dir="javadoc" includes="**/*"/>
     </copy>
