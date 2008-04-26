@@ -376,7 +376,7 @@
 	<input message="KeyStore Alias, a username:" addproperty="keystore.alias"/>
 	<input message="KeyStore Password, a password:" addproperty="keystore.password"/>
 	
-	<copyandsign jar="packuliker"/>
+	<copyandsign jar="packulike"/>
 	<createdemojnlp name="packer" title="Slick2D Sprite Packer" mainclass="org.newdawn.slick.tools.packulike.Packer"/>
 </target>
 
@@ -519,7 +519,7 @@
       		<include name="*.jnlp"/>
     	</fileset>
 	</copy>
-	<copy todir="${username}:${password}@${host}:${dir}/content/static" file="webstart/demos.txt"/>
+	<copy todir="${dir}/content/static" file="webstart/demos.txt"/>
 </target>
 
 <!--
