@@ -381,7 +381,7 @@
 </target>
 
 <target name="upload-packer" depends="build-webstart-packer, dist-packer">
-	<copy todir="${dir}/downloads" file="dist/packulike.zip""/>
+	<copy todir="${dir}/downloads" file="dist/packulike.zip"/>
 	<copy todir="${demos}" file="webstart/packulike.jar"/>
 </target>
 <!--
