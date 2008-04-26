@@ -9,6 +9,11 @@ import java.io.FilenameFilter;
  * @author kevin
  */
 public class HieroConfig {
+	/** The default scan size for distance fields */
+	public static int DFIELD_SCAN_SIZE = 20;
+	/** The scale of the image used as source for distance fields */
+	public static int DFIELD_SCALE_UP = 8;
+	
 	/** The user's home directory */
 	private static File home = new File(System.getProperty("user.home"));
 	/** Hiero's configuration directory */

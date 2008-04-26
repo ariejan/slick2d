@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -166,6 +168,12 @@ public class Hiero extends JFrame {
         		saveFont(XML);
         	}
         });
+        JMenuItem saveDF = new JMenuItem("Save Distance Field..");
+        saveDF.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		saveDistanceField();
+        	}
+        });
         JMenuItem quit = new JMenuItem("Exit");
         quit.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -190,6 +198,7 @@ public class Hiero extends JFrame {
         file.addSeparator();
         file.add(saveText);
         file.add(saveXML);
+        file.add(saveDF);
         file.addSeparator();
         file.add(quit);
         
@@ -466,11 +475,11 @@ public class Hiero extends JFrame {
 	    	size.setValue(new Integer(Integer.parseInt(props.getProperty("font.size"))));
 	    	width.setSelectedItem(props.getProperty("texture.width"));
 	    	height.setSelectedItem(props.getProperty("texture.height"));
-	    	paddingAdvance.setValue(new Integer(Integer.parseInt(props.getProperty("padding.advance"))));
 	    	paddingTop.setValue(new Integer(Integer.parseInt(props.getProperty("padding.top"))));
 	    	paddingBottom.setValue(new Integer(Integer.parseInt(props.getProperty("padding.bottom"))));
 	    	paddingLeft.setValue(new Integer(Integer.parseInt(props.getProperty("padding.left"))));
 	    	paddingRight.setValue(new Integer(Integer.parseInt(props.getProperty("padding.right"))));
+	    	paddingAdvance.setValue(new Integer(Integer.parseInt(props.getProperty("padding.advance"))));
 	    	
 	    	effectsDialog.loadFrom(props);
     	} catch (Throwable e) {
@@ -566,6 +575,44 @@ public class Hiero extends JFrame {
 		        charsets.setSelectedItem(s);
 			}
 		}
+    }
+
+    /**
+     * Save the font out to the data file and image
+     */
+    private void saveDistanceField() {
+    	int resp = chooser.showSaveDialog(this);
+    	if (resp == JFileChooser.APPROVE_OPTION) {
+    		String path = chooser.getSelectedFile().getAbsolutePath();
+    		if (path.indexOf(".") >= 0) {
+    			path = path.substring(0, path.indexOf("."));
+    		}
+
+            if (!path.endsWith("-dis")) {
+            	path += "-dis";
+            }
+    		final String temp = path;
+    		final ProgressDialog progress = new ProgressDialog(this);
+    		
+    		Thread t = new Thread() {
+    			public void run() {
+    	    		try {
+    	                BufferedImage image = fontPanel.generateDistanceField(progress);
+    	            	FileOutputStream fout = new FileOutputStream(temp+".png");
+    	            	ImageIO.write(image, "PNG", fout);
+    	            	fout.close();
+    	    		} catch (IOException e) {
+    	    			e.printStackTrace();
+    	    			JOptionPane.showMessageDialog(progress, "Failed to save font, given reason: "+e.getMessage());
+    	    		}
+    	    		progress.setVisible(false);
+    			}
+    		};
+    		t.setDaemon(false);
+    		t.start();
+    		
+    		progress.setVisible(true);
+    	}
     }
     
     /**

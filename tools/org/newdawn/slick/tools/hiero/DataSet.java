@@ -71,6 +71,13 @@ public class DataSet
     }
 	
     /**
+     * Clear the kerning data
+     */
+    public void clearKerning() {
+    	kerning.clear();
+    }
+    
+    /**
      * Dump statistics on this set
      */
     public void dumpStats() {
@@ -80,9 +87,10 @@ public class DataSet
     /**
      * Output this data set as an angel code data file
      * 
+     * @param imageName The name of the image to reference
      * @param out The output stream to write to
      */
-	public void toAngelCodeText(PrintStream out) {
+	public void toAngelCodeText(PrintStream out, String imageName) {
 		out.println("info face=\""+fontName+"\" size="+size+" bold=0 italic=0 charset=\""+setName+"\" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=1,1");
 		out.println("common lineHeight="+lineHeight+" base=26 scaleW="+width+" scaleH="+height+" pages=1 packed=0");
 		out.println("page id=0 file=\""+imageName+"\"");
@@ -103,9 +111,10 @@ public class DataSet
 	 * Output this data set as an angle code XML data file
 	 * 
 	 * @param out The output stream to write to
+	 * @param imageName The name of the image
 	 * @throws IOException Indicates a failure to build the XML
 	 */
-	public void toAngelCodeXML(PrintStream out) throws IOException {
+	public void toAngelCodeXML(PrintStream out, String imageName) throws IOException {
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document document = builder.newDocument();

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import org.newdawn.slick.tools.hiero.distancemap.DistanceFieldFilter;
 import org.newdawn.slick.tools.hiero.effects.DrawingContext;
 import org.newdawn.slick.tools.hiero.effects.Effect;
 import org.newdawn.slick.tools.hiero.effects.Glyph;
@@ -101,6 +102,8 @@ public class FontTextureGenerator implements DrawingContext {
 		g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
 				RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
 
+		
+		data.clearKerning();
 		for (int i = 0; i < rects.size(); i++) {
 			GlyphRect rect = (GlyphRect) rects.get(i);
 			rect.storeData(data, set);
@@ -108,7 +111,7 @@ public class FontTextureGenerator implements DrawingContext {
 
 		data.dumpStats();
 	}
-
+	
 	/**
 	 * Generate the texture image
 	 * 
@@ -126,90 +129,153 @@ public class FontTextureGenerator implements DrawingContext {
 	 */
 	public void generate(FontData font, int width, int height, CharSet set, int[] padding, ArrayList effects) {
 		this.font = font;
-        int xp = 0;
-        int yp = 0;
-        
         this.set = set;
         this.width = width;
         this.height = height;
         
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = (Graphics2D) image.getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
-        overlay = new BufferedImage(width+1, height+1, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D og = (Graphics2D) overlay.getGraphics();
+        image = generate(font, width, height, set, padding, effects, 1);
+	}
+	
 
-        g.setFont(font.getJavaFont());
+	/**
+	 * Generate the texture image
+	 * 
+	 * @param font
+	 *            The font to be rendered
+	 * @param width
+	 *            The width of the texture to be generated
+	 * @param height
+	 *            The height of the texture to be generated
+	 * @param set
+	 *            The set to be generated
+	 * @param padding 
+	 *            The padding information
+	 * @param effects The list of effects to apply
+	 * @param scale The scale up of the image
+	 * @param listener The listener to report progress to
+	 * @return The buffered image generated
+	 */
+	public BufferedImage generateDistanceField(FontData font, int width, int height, CharSet set, int[] padding, ArrayList effects, int scale, ProgressListener listener) {
+		generate(font, width, height, set, padding, effects, 1);
+		BufferedImage image = generate(font, width, height, set, padding, effects, scale);
+	    image = DistanceFieldFilter.process(image, width, height, HieroConfig.DFIELD_SCAN_SIZE, listener);
+	
+	    return image;
+	}
+	
+	/**
+	 * Generate the texture image
+	 * 
+	 * @param font
+	 *            The font to be rendered
+	 * @param width
+	 *            The width of the texture to be generated
+	 * @param height
+	 *            The height of the texture to be generated
+	 * @param set
+	 *            The set to be generated
+	 * @param padding 
+	 *            The padding information
+	 * @param effects The list of effects to apply
+	 * @param scale The scale up of the image
+	 * @return The buffered image generated
+	 */
+	public BufferedImage generate(FontData font, int width, int height, CharSet set, int[] padding, ArrayList effects, int scale) {
+		int xp = 0;
+        int yp = 0;
         
-        g.setPaint(new Color(0,0,0,0));
+        width = (width * scale);
+        height = (height * scale);
+        for (int i=0;i<padding.length;i++) {
+        	padding[i] *= scale;
+        }
+        
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = (Graphics2D) image.getGraphics();
+        Graphics2D og = null;
+        
+        if (scale == 1) {
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+	        g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        	overlay = new BufferedImage(width+1, height+1, BufferedImage.TYPE_INT_ARGB);
+        	og = (Graphics2D) overlay.getGraphics();
+        } else {
+	        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+	        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+	        g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
+        }
+        
+        Font f = font.getJavaFont();
+        f = f.deriveFont(f.getSize2D() * scale);
+        g.setFont(f);
+        
+        g.setPaint(new Color(0,0,0,0f));
         g.fillRect(0,0,width,height);
-        og.setColor(Color.red);
-        og.drawRect(0,0,width,height);
-        
+		if (scale == 1) {
+        	og.setColor(Color.red);
+        	og.drawRect(0,0,width,height);
+        }
         int des = g.getFontMetrics().getMaxDescent();
         int lineHeight = des + g.getFontMetrics().getMaxAscent() + padding[BOTTOM] + padding[TOP];
         yp += lineHeight-des;
         maxHeight = g.getFontMetrics().getMaxAscent();
         maxDec = des;
         
-        data = new DataSet(font.getName(), (int) font.getSize(), lineHeight, width, height, set.getName(), "font.png");
-
-        rects = new ArrayList();
-        
-        for (int i=0;i<256;i++) {
-        	if (!set.includes((char) i)) {
-        		continue;
-        	}
-        	
-            g.setColor(Color.white);       
-            char first = (char) i;
-            String text = ""+first;
-            GlyphVector vector = g.getFont().layoutGlyphVector(g.getFontRenderContext(), text.toCharArray(), 0, text.length(), Font.LAYOUT_LEFT_TO_RIGHT);
-
-            int xoffset = 0;
-            int lsb = getGlyphLSB(g, vector);
-            int rsb = getGlyphRSB(g, vector);
-            int fontWidth = getGlyphAdvanceX(g, vector) + padding[LEFT] + padding[RIGHT] + 1;
-            int fontHeight = getGlyphHeight(g, vector)+2 + padding[TOP] + padding[BOTTOM];
-            int yoffset = getGlyphYOffset(g, vector)-1;
-            int advance = getGlyphAdvanceX(g, vector) + padding[ADVANCE];
-            
-            if (lsb < 0) {
-            	xoffset = -lsb + 1;
-            	fontWidth += xoffset;
-            }
-            if (rsb < 0) {
-            	fontWidth -= rsb - 1;
-            }
-            
-            if (xp + fontWidth >= width) {
-                xp = 0;
-                yp += lineHeight;
-            }
-            
-            GlyphRect rect = new GlyphRect();
-            rect.c = first;
-            rect.x = xp;
-            rect.y = yp+yoffset;
-            rect.xDrawOffset = xoffset + padding[LEFT] + 1;
-            rect.yDrawOffset = padding[TOP];
-            rect.width = fontWidth;
-            rect.height = fontHeight + 1;
-            rect.yoffset = yoffset;
-            rect.advance = advance;
-            rect.glyph = vector;
-            
-            maxHeight = Math.max(fontHeight, maxHeight);
-            
-            rects.add(rect);
-            xp += fontWidth;
+        if (scale == 1) {
+	        data = new DataSet(font.getName(), (int) font.getSize(), lineHeight, width, height, set.getName(), "font.png");
+	        rects = new ArrayList();
+	        
+	        for (int i=0;i<256;i++) {
+	        	if (!set.includes((char) i)) {
+	        		continue;
+	        	}
+	        	
+	            g.setColor(Color.white);       
+	            char first = (char) i;
+	            String text = ""+first;
+	            GlyphVector vector = g.getFont().layoutGlyphVector(g.getFontRenderContext(), text.toCharArray(), 0, text.length(), Font.LAYOUT_LEFT_TO_RIGHT);
+	
+	            int xoffset = 0;
+	            int lsb = getGlyphLSB(g, vector);
+	            int rsb = getGlyphRSB(g, vector);
+	            int fontWidth = getGlyphAdvanceX(g, vector) + padding[LEFT] + padding[RIGHT] + scale;
+	            int fontHeight = getGlyphHeight(g, vector)+(scale*2) + padding[TOP] + padding[BOTTOM];
+	            int yoffset = getGlyphYOffset(g, vector) - scale;
+	            int advance = getGlyphAdvanceX(g, vector) + padding[ADVANCE];
+	            
+	            if (lsb < 0) {
+	            	xoffset = -lsb + scale;
+	            	fontWidth += xoffset;
+	            }
+	            if (rsb < 0) {
+	            	fontWidth -= rsb - scale;
+	            }
+	            
+	            if (xp + fontWidth >= width) {
+	                xp = 0;
+	                yp += lineHeight;
+	            }
+	            
+	            GlyphRect rect = new GlyphRect();
+	            rect.c = first;
+	            rect.x = xp;
+	            rect.y = yp+yoffset;
+	            rect.xDrawOffset = xoffset + padding[LEFT] + scale;
+	            rect.yDrawOffset = padding[TOP];
+	            rect.width = fontWidth;
+	            rect.height = fontHeight + scale;
+	            rect.yoffset = yoffset;
+	            rect.advance = advance;
+	            rect.glyph = vector;
+	            
+	            maxHeight = Math.max(fontHeight, maxHeight);
+	            
+	            rects.add(rect);
+	            xp += fontWidth;
+	        }
         }
-        
-        xp = 0;
-        yp = 0;
-        
+
         Collections.sort(rects, new Comparator() {
 			public int compare(Object a, Object b) {
 				GlyphRect first = (GlyphRect) a;
@@ -219,6 +285,9 @@ public class FontTextureGenerator implements DrawingContext {
 			}
         });
         
+        xp = 0;
+        yp = 0;
+        
         int stripHeight = -1;
         int stripY = 0;
 
@@ -226,12 +295,13 @@ public class FontTextureGenerator implements DrawingContext {
         	Effect effect = (Effect) effects.get(i);
         	effect.prePageRender(g, this);
         }
+        g.scale(scale, scale);
         for (int i=0;i<rects.size();i++) {
         	GlyphRect rect = (GlyphRect) rects.get(i);
 
-        	if (xp+rect.width > width) {
+        	if (xp+rect.width > width / scale) {
         		xp = 0;
-        		stripY += stripHeight + 1;
+        		stripY += (stripHeight + 1);
         		stripHeight = -1;
         	}
         	
@@ -244,25 +314,28 @@ public class FontTextureGenerator implements DrawingContext {
         	
         	g.setColor(Color.white);
 
-            for (int j=0;j<effects.size();j++) {
-            	Effect effect = (Effect) effects.get(j);
-            	effect.preGlyphRender(g, this, rect);
-            }
+        	if (scale == 1) {
+	            for (int j=0;j<effects.size();j++) {
+	            	Effect effect = (Effect) effects.get(j);
+	            	effect.preGlyphRender(g, this, rect);
+	            }
+        	}
         	rect.drawGlyph(g);
-            for (int j=0;j<effects.size();j++) {
-            	Effect effect = (Effect) effects.get(j);
-            	effect.postGlyphRender((Graphics2D) g.create(), this, rect);
-            }
+	        if (scale == 1) {
+	            for (int j=0;j<effects.size();j++) {
+	            	Effect effect = (Effect) effects.get(j);
+	            	effect.postGlyphRender((Graphics2D) g.create(), this, rect);
+	            }
+	            
+	        	rect.drawOverlay(og);
+        	}
         	
-        	rect.drawOverlay(og);
-        
         	xp += rect.width + 1;
         }
         for (int i=0;i<effects.size();i++) {
         	Effect effect = (Effect) effects.get(i);
         	effect.postPageRender((Graphics2D) g.create(), this);
         }
-
 
         Collections.sort(rects, new Comparator() {
 			public int compare(Object a, Object b) {
@@ -272,6 +345,8 @@ public class FontTextureGenerator implements DrawingContext {
 				return first.c - second.c;
 			}
         });
+        
+        return image;
     }
 
 	/**

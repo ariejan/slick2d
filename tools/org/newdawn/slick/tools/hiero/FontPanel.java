@@ -211,6 +211,21 @@ public class FontPanel extends JPanel {
     	overlay = gen.getOverlay();
     	data = gen.getDataSet();
     }
+
+    /**
+     * Generate the distance field font image
+     * 
+     * @param listener The listener to report progress to
+     * @return The buffered image
+     */
+    public BufferedImage generateDistanceField(ProgressListener listener) {
+    	int[] temp = new int[6];
+    	System.arraycopy(padding, 0, temp, 0, padding.length);
+    	BufferedImage image = gen.generateDistanceField(font, width, height, set, temp, effects, HieroConfig.DFIELD_SCALE_UP, listener);
+    	generate();
+    	
+    	return image;
+    }
     
     /**
      * Save the image and font file out
@@ -220,15 +235,23 @@ public class FontPanel extends JPanel {
      * @throws IOException Indicates a failure to write to the file
      */
     public void save(String ref, int type) throws IOException {
-    	FileOutputStream fout = new FileOutputStream(ref+".png");
+    	String imageName = ref+".png";
+    	FileOutputStream fout = new FileOutputStream(imageName);
     	ImageIO.write(image, "PNG", fout);
     	fout.close();
     	
+    	if (imageName.indexOf("/") >= 0) {
+    		imageName = imageName.substring(imageName.lastIndexOf("/")+1);
+    	}
+    	if (imageName.indexOf("\\") >= 0) {
+    		imageName = imageName.substring(imageName.lastIndexOf("\\")+1);
+    	}
+    	
     	fout = new FileOutputStream(ref+".fnt");
     	if (type == Hiero.XML) {
-    		data.toAngelCodeXML(new PrintStream(fout));
+    		data.toAngelCodeXML(new PrintStream(fout), imageName);
     	} else {
-    		data.toAngelCodeText(new PrintStream(fout));
+    		data.toAngelCodeText(new PrintStream(fout), imageName);
     	}
     	
     	fout.close();
