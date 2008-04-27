@@ -55,16 +55,20 @@ public final class Log {
 	 * If this is the case we activate the verbose logging mode
 	 */
 	public static void checkVerboseLogSetting() {
-		AccessController.doPrivileged(new PrivilegedAction() {
-            public Object run() {
-				String val = System.getProperty(Log.forceVerboseProperty);
-				if ((val != null) && (val.equalsIgnoreCase(Log.forceVerbosePropertyOnValue))) {
-					Log.setForcedVerboseOn();
-				}
-				
-				return null;
-            }
-		});
+		try {
+			AccessController.doPrivileged(new PrivilegedAction() {
+	            public Object run() {
+					String val = System.getProperty(Log.forceVerboseProperty);
+					if ((val != null) && (val.equalsIgnoreCase(Log.forceVerbosePropertyOnValue))) {
+						Log.setForcedVerboseOn();
+					}
+					
+					return null;
+	            }
+			});
+		} catch (Throwable e) {
+			// ignore, security failure - probably an applet
+		}
 	}
 	
 	/**
