@@ -1,16 +1,20 @@
 package org.newdawn.slick;
 
+import java.io.Serializable;
 import java.nio.FloatBuffer;
 
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 
 /**
  * A simple wrapper round the values required for a colour
  * 
  * @author Kevin Glass
  */
-public class Color {
+public class Color implements Serializable {
+	/** The version ID for this calss  */
+	private static final long serialVersionUID = 1393939L;
+	
 	/** The renderer to use for all GL operations */
 	protected static SGL GL = Renderer.get();
 	
