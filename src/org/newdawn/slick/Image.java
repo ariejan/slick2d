@@ -539,7 +539,7 @@ public class Image implements Renderable {
 	public void drawFlash(float x,float y,float width,float height, Color col) {
 		init();
 		
-		Color.white.bind();
+		col.bind();
 		texture.bind();
 
 		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
