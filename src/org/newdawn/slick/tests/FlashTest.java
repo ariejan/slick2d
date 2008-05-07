@@ -2,6 +2,7 @@ package org.newdawn.slick.tests;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -45,7 +46,7 @@ public class FlashTest extends BasicGame {
 		if (flash) {
 			image.draw(100,100);
 		} else {
-			image.drawFlash(100,100);
+			image.drawFlash(100,100,image.getWidth(), image.getHeight(), new Color(1,0,1f,1f));
 		}
 	}
 
