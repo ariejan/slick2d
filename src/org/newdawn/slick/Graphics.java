@@ -55,7 +55,7 @@ public class Graphics {
 	protected static Graphics currentGraphics = null;
 	
 	/** The default font to use */
-	private static Font DEFAULT_FONT;
+	protected static Font DEFAULT_FONT;
 
 	/**
 	 * Set the current graphics context in use
@@ -107,6 +107,12 @@ public class Graphics {
 
 	/** The current line width */
 	private float lineWidth = 1;
+
+	/**
+	 * Default constructor for sub-classes
+	 */
+	public Graphics() {	
+	}
 	
 	/**
 	 * Create a new graphics context. Only the container should be doing this

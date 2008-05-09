@@ -30,13 +30,13 @@ public abstract class GameContainer implements GUIContext {
 	protected static Drawable SHARED_DRAWABLE;
 	
 	/** The time the last frame was rendered */
-	private long lastFrame;
+	protected long lastFrame;
 	/** The last time the FPS recorded */
-	private long lastFPS;
+	protected long lastFPS;
 	/** The last recorded FPS */
-	private int recordedFPS;
+	protected int recordedFPS;
 	/** The current count of FPS */
-	private int fps;
+	protected int fps;
 	/** True if we're currently running the game loop */
 	protected boolean running = true;
 	
@@ -53,24 +53,24 @@ public abstract class GameContainer implements GUIContext {
 	private Graphics graphics;
 	
 	/** The input system to pass to the game */
-	private Input input;
+	protected Input input;
 	/** The FPS we want to lock to */
-	private int targetFPS = -1;
+	protected int targetFPS = -1;
 	/** True if we should show the fps */
 	private boolean showFPS = true;
 	/** The minimum logic update interval */
-	private long minimumLogicInterval = 1;
+	protected long minimumLogicInterval = 1;
 	/** The stored delta */
-	private long storedDelta;
+	protected long storedDelta;
 	/** The maximum logic update interval */
-	private long maximumLogicInterval = 0;
+	protected long maximumLogicInterval = 0;
 	/** The last game started */
-	private Game lastGame;
+	protected Game lastGame;
 	/** True if we should clear the screen each frame */
-	private boolean clearEachFrame = true;
+	protected boolean clearEachFrame = true;
 	
 	/** True if the game is paused */
-	private boolean paused;
+	protected boolean paused;
 	
 	/**
 	 * Create a new game container wrapping a given game

@@ -44,6 +44,20 @@ public class AngelCodeFont implements Font {
 	private int lineHeight;
 	/** The caches for rendered lines */
 	private ArrayList cache = new ArrayList();
+
+	/**
+	 * Create a new font based on a font definition from AngelCode's tool and the font
+	 * image generated from the tool.
+	 * 
+	 * @param fntFile The location of the font defnition file
+	 * @param image The image to use for the font
+	 * @throws SlickException Indicates a failure to load either file
+	 */
+	public AngelCodeFont(String fntFile, Image image) throws SlickException {
+		font = image;
+	
+		parseFnt(ResourceLoader.getResourceAsStream(fntFile));
+	}
 	
 	/**
 	 * Create a new font based on a font definition from AngelCode's tool and the font
@@ -59,6 +73,21 @@ public class AngelCodeFont implements Font {
 		parseFnt(ResourceLoader.getResourceAsStream(fntFile));
 	}
 
+	/**
+	 * Create a new font based on a font definition from AngelCode's tool and the font
+	 * image generated from the tool.
+	 * 
+	 * @param fntFile The location of the font defnition file
+	 * @param image The image to use for the font
+	 * @param caching True if this font should use display list caching
+	 * @throws SlickException Indicates a failure to load either file
+	 */
+	public AngelCodeFont(String fntFile, Image image, boolean caching) throws SlickException {
+		font = image;
+		displayListCaching = caching;
+		parseFnt(ResourceLoader.getResourceAsStream(fntFile));
+	}
+	
 	/**
 	 * Create a new font based on a font definition from AngelCode's tool and the font
 	 * image generated from the tool.
