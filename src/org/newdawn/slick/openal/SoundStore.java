@@ -84,6 +84,13 @@ public class SoundStore {
 		store = new SoundStore();
 	}
 
+	/**
+	 * Disable use of the Sound Store
+	 */
+	public void disable() {
+		inited = true;
+	}
+	
     /**
      * True if we should only record the request to load in the intention
      * of loading the sound later
