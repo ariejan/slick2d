@@ -1,11 +1,10 @@
 package org.newdawn.slick.tests;
 
-import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import org.lwjgl.LWJGLException;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.CanvasGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -97,18 +96,21 @@ public class CanvasContainerTest extends BasicGame {
 	 */
 	public static void main(String[] argv) {
 		try {
+			CanvasGameContainer container = new CanvasGameContainer(new CanvasContainerTest());
+			
 			Frame frame = new Frame("Test");
-			frame.setLayout(new BorderLayout());
-			frame.add(new CanvasGameContainer(new CanvasContainerTest()));
+			frame.setLayout(new GridLayout(1,2));
+			frame.setSize(500,500);
+			frame.add(container);
 			
 			frame.addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
 					System.exit(0);
 				}
 			});
-			frame.setSize(500,500);
 			frame.setVisible(true);
-		} catch (LWJGLException e) {
+			container.start();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
