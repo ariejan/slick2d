@@ -23,7 +23,9 @@ public class DuplicateEmitterTest extends BasicGame {
 	private GameContainer container;
 	/** the particle system which contains an explosion emitter which we want to duplicate */
 	private ParticleSystem explosionSystem;
-
+	/** The original emitter we've duplicated */
+	private ConfigurableEmitter explosionEmitter;
+	
 	/**
 	 * Create a new DuplicateEmitterTest
 	 */
@@ -43,7 +45,7 @@ public class DuplicateEmitterTest extends BasicGame {
 			// load the particle system containing our explosion emitter
 			explosionSystem = ParticleIO.loadConfiguredSystem("testdata/endlessexplosion.xml");
 			// get the emitter, it's the first (and only one) in this particle system
-			ConfigurableEmitter explosionEmitter = (ConfigurableEmitter) explosionSystem.getEmitter(0);
+			explosionEmitter = (ConfigurableEmitter) explosionSystem.getEmitter(0);
 			// set the original emitter in the middle of the screen at the top
 			explosionEmitter.setPosition(400,100);
 			// create 5 duplicate emitters
@@ -85,6 +87,9 @@ public class DuplicateEmitterTest extends BasicGame {
 	public void keyPressed(int key, char c) {
 		if (key == Input.KEY_ESCAPE) {
 			container.exit();
+		}
+		if (key == Input.KEY_K) {
+			explosionEmitter.wrapUp();
 		}
 	}
 

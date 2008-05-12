@@ -103,19 +103,37 @@ public class FireEmitter implements ParticleEmitter {
 		return false;
 	}
 
+	/**
+	 * @see org.newdawn.slick.particles.ParticleEmitter#useAdditive()
+	 */
 	public boolean useAdditive() {
 		return false;
 	}
 
+	/**
+	 * @see org.newdawn.slick.particles.ParticleEmitter#getImage()
+	 */
 	public Image getImage() {
 		return null;
 	}
 
+	/**
+	 * @see org.newdawn.slick.particles.ParticleEmitter#usePoints(org.newdawn.slick.particles.ParticleSystem)
+	 */
 	public boolean usePoints(ParticleSystem system) {
 		return false;
 	}
 
+	/**
+	 * @see org.newdawn.slick.particles.ParticleEmitter#isOriented()
+	 */
 	public boolean isOriented() {
 		return false;
+	}
+
+	/**
+	 * @see org.newdawn.slick.particles.ParticleEmitter#wrapUp()
+	 */
+	public void wrapUp() {
 	}
 }

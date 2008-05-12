@@ -125,6 +125,11 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	/** The number of particles that are left ot emit */
 	private int leftToEmit;
 
+	/** True if we're wrapping up */
+	private boolean wrapUp = false;
+	/** True if the system has completed due to a wrap up */
+	private boolean completed = false;
+	
 	/**
 	 * Create a new emitter configurable externally
 	 * 
@@ -260,8 +265,19 @@ public class ConfigurableEmitter implements ParticleEmitter {
 			}
 		}
 
+		if ((wrapUp) || 
+		    ((length.isEnabled()) && (timeout < 0)) ||
+		    ((emitCount.isEnabled() && (leftToEmit <= 0)))) {
+			if (particleCount == 0) {
+				completed = true;
+			}
+		}
 		particleCount = 0;
-
+		
+		if (wrapUp) {
+			return;
+		}
+		
 		if (length.isEnabled()) {
 			if (timeout < 0) {
 				return;
@@ -398,15 +414,19 @@ public class ConfigurableEmitter implements ParticleEmitter {
 			if (timeout > 0) {
 				return false;
 			}
-			return (engine.getParticleCount() == 0);
+			return completed;
 		}
 		if (emitCount.isEnabled()) {
 			if (leftToEmit > 0) {
 				return false;
 			}
-			return (engine.getParticleCount() == 0);
+			return completed;
 		}
 
+		if (wrapUp) {
+			return completed;
+		}
+		
 		return false;
 	}
 
@@ -841,5 +861,9 @@ public class ConfigurableEmitter implements ParticleEmitter {
 
 	public Image getImage() {
 		return image;
+	}
+
+	public void wrapUp() {
+		wrapUp = true;
 	}
 }

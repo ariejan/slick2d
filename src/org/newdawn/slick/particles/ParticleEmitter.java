@@ -27,6 +27,12 @@ public interface ParticleEmitter {
 	public boolean completed();
 	
 	/**
+	 * Wrap up the particle emitter. This means the emitter will no longer produce
+	 * particles and will be marked as completed once the particles have expired
+	 */
+	public void wrapUp();
+	
+	/**
 	 * Update a single particle that this emitter produced
 	 * 
 	 * @param particle The particle to be updated
