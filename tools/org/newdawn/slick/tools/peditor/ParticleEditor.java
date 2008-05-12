@@ -32,9 +32,13 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import org.lwjgl.LWJGLException;
+import org.newdawn.slick.CanvasGameContainer;
+import org.newdawn.slick.InputListener;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.particles.ParticleIO;
 import org.newdawn.slick.particles.ParticleSystem;
+import org.newdawn.slick.util.InputAdapter;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -44,7 +48,7 @@ import org.newdawn.slick.util.Log;
  */
 public class ParticleEditor extends JFrame {
 	/** The canvas displaying the particles */
-	private ParticleCanvas canvas;
+	private ParticleGame game;
 	/** Create a new system */
 	private JMenuItem newSystem = new JMenuItem("New System");
 	/** Load a complete particle system */
@@ -184,7 +188,7 @@ public class ParticleEditor extends JFrame {
 		});
 		hud.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				canvas.setHud(!canvas.isHudOn());
+				game.setHud(!game.isHudOn());
 			}
 		});
 		load.addActionListener(new ActionListener() {
@@ -227,8 +231,9 @@ public class ParticleEditor extends JFrame {
 		bar.add(file);
 		setJMenuBar(bar);
 		
-		canvas = new ParticleCanvas(this);
-		canvas.setSize(500,600);
+		game = new ParticleGame(this);
+		final CanvasGameContainer container = new CanvasGameContainer(game);
+		container.setSize(500,600);
 		JPanel controls = new JPanel();
 		controls.setLayout(null);
 		emitters.setBounds(0,0,300,150);
@@ -247,7 +252,7 @@ public class ParticleEditor extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(null);
-		canvas.setBounds(0,0,500,600);
+		container.setBounds(0,0,500,600);
 		controls.setBounds(500,20,300,575);
 		reset.setBounds(90,500,90,25);
 		controls.add(reset);
@@ -259,12 +264,12 @@ public class ParticleEditor extends JFrame {
 		panel.add(additive);
 		pointsEnabled.setBounds(650,0,150,25);
 		panel.add(pointsEnabled);
-		panel.add(canvas);
+		panel.add(container);
 		panel.add(controls);
 
 		systemMove.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				canvas.setSystemMove(systemMove.getValue(),false);
+				game.setSystemMove(systemMove.getValue(),false);
 			}
 		});
 		
@@ -280,23 +285,23 @@ public class ParticleEditor extends JFrame {
 		});
 		pointsEnabled.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				canvas.getSystem().setUsePoints(pointsEnabled.isSelected());
+				game.getSystem().setUsePoints(pointsEnabled.isSelected());
 			}
 		});
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				canvas.resetCounts();
+				game.resetCounts();
 			}
 		});
 		pause.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				canvas.setPaused(!canvas.isPaused());
+				game.setPaused(!game.isPaused());
 			}
 		});
 		
 		ConfigurableEmitter test = new ConfigurableEmitter("Default");
 		emitters.add(test);
-		canvas.addEmitter(test);
+		game.addEmitter(test);
 		
 		additive.setSelected(true);
 		
@@ -305,35 +310,37 @@ public class ParticleEditor extends JFrame {
 		setResizable(false);
 		setVisible(true);
 
-		canvas.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.getButton() != 1) {
+		InputListener listener = new InputAdapter() {
+			public void mousePressed(int x, int y, int button) {
+				if (button != 0) {
 					positionControls.setPosition(0,0);
 				}
 				systemMove.setValue(0);
-				canvas.setSystemMove(0,true);
-			}
-		});
-		
-		canvas.addMouseMotionListener(new MouseMotionListener() {
-
-			public void mouseDragged(MouseEvent e) {
-				int xp = e.getX() - 250;
-				int yp = e.getY() - 300;
-				positionControls.setPosition(xp,yp);
-				systemMove.setValue(0);
-				canvas.setSystemMove(0,true);
-			}
-
-			public void mouseMoved(MouseEvent e) {
+				game.setSystemMove(0,true);
 			}
 			
-		});
-
+			public void mouseMoved(int x, int y, int nx, int ny) {
+				if (container.getContainer().getInput().isMouseButtonDown(0)) {
+					int xp = nx - 250;
+					int yp = ny - 300;
+					positionControls.setPosition(xp,yp);
+					systemMove.setValue(0);
+					game.setSystemMove(0,true);
+				}
+			}
+		};
+		game.setListener(listener);
+		
 		// init graph window
 		initGraphEditorWindow();
 
 		emitters.setSelected(0);
+		
+		try {
+			container.start();
+		} catch (SlickException e1) {
+			Log.error(e1);
+		}
 	}
 	
 	/**
@@ -344,7 +351,7 @@ public class ParticleEditor extends JFrame {
 		chooser.setDialogTitle("Open");
 		int resp = chooser.showOpenDialog(this);
 		if (resp == JFileChooser.APPROVE_OPTION) {
-			canvas.setBackgroundImage(chooser.getSelectedFile());
+			game.setBackgroundImage(chooser.getSelectedFile());
 		}
 	}
 	
@@ -352,7 +359,7 @@ public class ParticleEditor extends JFrame {
 	 * Clear the background image in use
 	 */
 	private void clearBackground() {
-		canvas.setBackgroundImage(null);
+		game.setBackgroundImage(null);
 	}
 	
 	/**
@@ -498,7 +505,7 @@ public class ParticleEditor extends JFrame {
 	 * Create a completely new particle system
 	 */
 	public void createNewSystem() {
-		canvas.clearSystem(additive.isSelected());
+		game.clearSystem(additive.isSelected());
 		pointsEnabled.setSelected(false);
 		emitters.clear();
 	}
@@ -515,7 +522,7 @@ public class ParticleEditor extends JFrame {
 			
 			try {
 				ParticleSystem system = ParticleIO.loadConfiguredSystem(file);
-				canvas.setSystem(system);
+				game.setSystem(system);
 				emitters.clear();
 				
 				for (int i=0;i<system.getEmitterCount();i++) {
@@ -579,7 +586,7 @@ public class ParticleEditor extends JFrame {
 			}
 			
 			try {
-				ParticleIO.saveConfiguredSystem(file, canvas.getSystem());
+				ParticleIO.saveConfiguredSystem(file, game.getSystem());
 			} catch (IOException e) {
 				Log.error(e);
 				JOptionPane.showMessageDialog(this, e.getMessage());
@@ -594,7 +601,7 @@ public class ParticleEditor extends JFrame {
 	 */
 	public void addEmitter(ConfigurableEmitter emitter) {
 		emitters.add(emitter);
-		canvas.addEmitter(emitter);
+		game.addEmitter(emitter);
 	}
 	
 	/**
@@ -604,7 +611,7 @@ public class ParticleEditor extends JFrame {
 	 */
 	public void removeEmitter(ConfigurableEmitter emitter) {
 		emitters.remove(emitter);
-		canvas.removeEmitter(emitter);
+		game.removeEmitter(emitter);
 	}
 	
 	/**
@@ -646,9 +653,9 @@ public class ParticleEditor extends JFrame {
 	 */
 	public void updateBlendMode() {
 		if (additive.isSelected()) {
-			canvas.getSystem().setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
+			game.getSystem().setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
  		} else {
-			canvas.getSystem().setBlendingMode(ParticleSystem.BLEND_COMBINE);
+			game.getSystem().setBlendingMode(ParticleSystem.BLEND_COMBINE);
  		}
 	}
 	
