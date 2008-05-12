@@ -147,8 +147,8 @@ public class Color implements Serializable {
 		int b =	(value & 0x000000FF);
 		int a = (value & 0xFF000000) >> 24;
 				
-		if (a == 0) {
-			a = 255;
+		if (a < 0) {
+			a += 255;
 		}
 		
 		this.r = r / 255.0f;
