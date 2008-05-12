@@ -340,11 +340,11 @@ public abstract class Shape implements Serializable {
      * @return True if the point is contained in the polygon
      */
     public boolean contains(float x, float y) {
+    	checkPoints();
     	if (points.length == 0) {
     		return false;
     	}
     	
-    	checkPoints();
         boolean result = false;
         float xnew,ynew;
         float xold,yold;
