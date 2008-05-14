@@ -493,17 +493,19 @@ public class SoundStore {
 	 * @return The open al source used for music
 	 */
 	private int getMusicSource() {
-		if (AL10.alIsSource(sources.get(0))) {
-			AL10.alSourceStop(sources.get(0));
-			IntBuffer deleteMe = BufferUtils.createIntBuffer(1);
-			deleteMe.put(sources.get(0));
-			deleteMe.flip();
-			AL10.alDeleteSources(deleteMe);
-		}
-		
-		IntBuffer musicChannel = BufferUtils.createIntBuffer(1);
-		AL10.alGenSources(musicChannel);
-		sources.put(0,musicChannel.get(0));
+		// WTF is this nonsense?
+		// TODO: Remove, it seems to be some old hack
+//		if (AL10.alIsSource(sources.get(0))) {
+//			AL10.alSourceStop(sources.get(0));
+//			IntBuffer deleteMe = BufferUtils.createIntBuffer(1);
+//			deleteMe.put(sources.get(0));
+//			deleteMe.flip();
+//			AL10.alDeleteSources(deleteMe);
+//		}
+//		
+//		IntBuffer musicChannel = BufferUtils.createIntBuffer(1);
+//		AL10.alGenSources(musicChannel);
+//		sources.put(0,musicChannel.get(0));
 		
 		return sources.get(0);
 	}

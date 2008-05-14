@@ -45,6 +45,10 @@ public class OpenALStreamPlayer {
 	private String ref;
 	/** The source of the data */
 	private URL url;
+	/** The pitch of the music */
+	private float pitch;
+	/** The gain of the music */
+	private float gain;
 	
 	/**
 	 * Create a new player to work on an audio stream
@@ -69,7 +73,7 @@ public class OpenALStreamPlayer {
 	public OpenALStreamPlayer(int source, URL url) {
 		this.source = source;
 		this.url = url;
-		
+
 		bufferNames = BufferUtils.createIntBuffer(BUFFER_COUNT);
 		AL10.alGenBuffers(bufferNames);
 	}
@@ -129,6 +133,8 @@ public class OpenALStreamPlayer {
 		AL10.alSourceStop(source);
 		removeBuffers();
 	    AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_FALSE);
+		AL10.alSourcef(source, AL10.AL_PITCH, pitch);
+		AL10.alSourcef(source, AL10.AL_GAIN, gain); 
 		
 		remainingBufferCount = BUFFER_COUNT;
 	
@@ -147,8 +153,8 @@ public class OpenALStreamPlayer {
 	 * @param gain The volume to play back at
 	 */
 	public void setup(float pitch, float gain) {
-		AL10.alSourcef(source, AL10.AL_PITCH, pitch);
-		AL10.alSourcef(source, AL10.AL_GAIN, gain); 
+		this.pitch = pitch;
+		this.gain = gain;
 	}
 	
 	/**
@@ -173,6 +179,7 @@ public class OpenALStreamPlayer {
 		}
 		
 		int processed = AL10.alGetSourcei(source, AL10.AL_BUFFERS_PROCESSED);
+		
 		while (processed > 0) {
 			unqueued.clear();
 			
