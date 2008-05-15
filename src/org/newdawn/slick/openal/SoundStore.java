@@ -151,7 +151,6 @@ public class SoundStore {
 		
 		musicVolume = volume;
 		if (soundWorks) {
-			System.out.println("GLOBAL SET TO: "+volume);
 			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastCurrentMusicVolume * musicVolume); 
 		}
 	}
