@@ -55,9 +55,9 @@ public class SoundStore {
 	private float musicVolume = 1.0f;
 	/** The global sound fx volume setting */
 	private float soundVolume = 1.0f;
-	/** The last "gain" applied to music */
-	private float lastMusicGain = 1.0f;
-
+	/** The volume given for the last current music */
+	private float lastCurrentMusicVolume = 1.0f;
+	
 	/** True if the music is paused */
 	private boolean paused;
 	/** True if we're returning deferred versions of resources */
@@ -145,16 +145,26 @@ public class SoundStore {
 		if (volume < 0) {
 			volume = 0;
 		}
-		musicVolume = volume;
+		if (volume > 1) {
+			volume = 1;
+		}
 		
+		musicVolume = volume;
 		if (soundWorks) {
-			if (volume == 0) {
-				volume = 0.001f;
-			}
-			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastMusicGain * volume); 
+			System.out.println("GLOBAL SET TO: "+volume);
+			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastCurrentMusicVolume * musicVolume); 
 		}
 	}
 
+	/**
+	 * Get the volume scalar of the music that is currently playing.
+	 * 
+	 * @return The volume of the music currently playing
+	 */
+	public float getCurrentMusicVolume() {
+		return lastCurrentMusicVolume;
+	}
+	
 	/**
 	 * Set the music volume of the current playing music. Does NOT affect the global volume
 	 * 
@@ -164,14 +174,13 @@ public class SoundStore {
 		if (volume < 0) {
 			volume = 0;
 		}
-		if (volume > 1)
+		if (volume > 1) {
 			volume = 1;
-		lastMusicGain = volume;
+		}
+		
 		if (soundWorks) {
-			if (volume == 0) {
-				volume = 0.001f;
-			}
-			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastMusicGain * musicVolume); 
+			lastCurrentMusicVolume = volume;
+			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, volume); 
 		}
 	}
 	
@@ -456,13 +465,8 @@ public class SoundStore {
 	 * @param loop True if we should loop the music
 	 */
 	void playAsMusic(int buffer,float pitch,float gain, boolean loop) {
-		lastMusicGain = gain;
 		paused = false;
 		
-		gain *= musicVolume;
-		if (gain == 0) {
-			gain = 0.001f;
-		}
 		setMOD(null);
 		
 		if (soundWorks) {
@@ -474,7 +478,6 @@ public class SoundStore {
 			
 			AL10.alSourcei(sources.get(0), AL10.AL_BUFFER, buffer);
 			AL10.alSourcef(sources.get(0), AL10.AL_PITCH, pitch);
-			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, gain); 
 		    AL10.alSourcei(sources.get(0), AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
 			
 			currentMusic = sources.get(0);
@@ -493,20 +496,6 @@ public class SoundStore {
 	 * @return The open al source used for music
 	 */
 	private int getMusicSource() {
-		// WTF is this nonsense?
-		// TODO: Remove, it seems to be some old hack
-//		if (AL10.alIsSource(sources.get(0))) {
-//			AL10.alSourceStop(sources.get(0));
-//			IntBuffer deleteMe = BufferUtils.createIntBuffer(1);
-//			deleteMe.put(sources.get(0));
-//			deleteMe.flip();
-//			AL10.alDeleteSources(deleteMe);
-//		}
-//		
-//		IntBuffer musicChannel = BufferUtils.createIntBuffer(1);
-//		AL10.alGenSources(musicChannel);
-//		sources.put(0,musicChannel.get(0));
-		
 		return sources.get(0);
 	}
 	

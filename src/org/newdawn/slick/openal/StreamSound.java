@@ -36,7 +36,7 @@ public class StreamSound extends AudioImpl {
 	public int playAsMusic(float pitch, float gain, boolean loop) {
 		try {
 			player.setup(pitch, 1.0f);
-			SoundStore.get().setMusicVolume(gain);
+			SoundStore.get().setCurrentMusicVolume(gain);
 			player.play(loop);
 			SoundStore.get().setStream(player);
 		} catch (IOException e) {

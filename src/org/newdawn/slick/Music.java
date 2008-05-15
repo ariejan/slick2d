@@ -40,10 +40,10 @@ public class Music {
 	private Audio sound;
 	/** True if the music is playing */
 	private boolean playing;
-	/** the volume of this music */
-	private float volume = 1.0f;
 	/** The list of listeners waiting for notification that the music ended */
 	private ArrayList listeners = new ArrayList();
+	/** The volume of this music */
+	private float volume = 1.0f;
 	
 	/**
 	 * Create and load a piece of music (either OGG or MOD/XM)
@@ -173,14 +173,14 @@ public class Music {
 	 * Loop the music
 	 */
 	public void loop() {
-		loop(1.0f, this.volume);
+		loop(1.0f, volume * SoundStore.get().getMusicVolume());
 	}
 	
 	/**
 	 * Play the music
 	 */
 	public void play() {
-		play(1.0f, this.volume);
+		play(1.0f, volume * SoundStore.get().getMusicVolume());
 	}
 
 	/**
@@ -220,8 +220,9 @@ public class Music {
 			volume = 0.0f;
 		if (volume > 1.0f)
 			volume = 1.0f;
-		this.volume = volume;
-		sound.playAsMusic(pitch, volume * SoundStore.get().getMusicVolume(), loop);
+
+		setVolume(volume);
+		sound.playAsMusic(pitch, volume, loop);
 		playing = true;
 	}
 	
@@ -258,7 +259,7 @@ public class Music {
 	}
 	
 	/**
-	 * Set the volume of the music
+	 * Set the volume of the music as a factor of the global volume setting
 	 * 
 	 * @param volume The volume to play music at. 0 - 1, 1 is Max
 	 */
@@ -269,10 +270,12 @@ public class Music {
 		} else if(volume < 0) {
 			volume = 0;
 		}
-		this.volume = volume;
 		
+		this.volume = volume;
 		// This sound is being played as music
-		 SoundStore.get().setCurrentMusicVolume(volume);
+		if (currentMusic == this) {
+			SoundStore.get().setCurrentMusicVolume(volume);
+		}
 	}
 
 	/**

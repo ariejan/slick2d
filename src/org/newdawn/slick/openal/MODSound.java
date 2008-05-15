@@ -44,7 +44,7 @@ public class MODSound extends AudioImpl {
 		
 		player.play(module, store.getSource(0), loop, SoundStore.get().isMusicOn());
 		player.setup(pitch, 1.0f);
-		store.setMusicVolume(gain);
+		store.setCurrentMusicVolume(gain);
 		
 		store.setMOD(this);
 		
