@@ -894,7 +894,7 @@ public class SoundStore {
 	/**
 	 * Poll the streaming system
 	 * 
-	 * @param delta The amount of time passed since last poll
+	 * @param delta The amount of time passed since last poll (in milliseconds)
 	 */
 	public void poll(int delta) {
 		if (!soundWorks) {
