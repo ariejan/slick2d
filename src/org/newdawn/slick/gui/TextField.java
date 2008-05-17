@@ -69,6 +69,9 @@ public class TextField extends AbstractComponent {
 	/** The cursor position before the paste */
 	private int oldCursorPos;
 	
+	/** True if events should be consumed by the field */
+	private boolean consume = true;
+	
 	/**
 	 * Create a new text field
 	 * 
@@ -120,6 +123,15 @@ public class TextField extends AbstractComponent {
 		this.height = height;
 	}
 
+	/**
+	 * Indicate if the input events should be consumed by this field
+	 * 
+	 * @param consume True if events should be consumed by this field
+	 */
+	public void setConsumeEvents(boolean consume) {
+		this.consume = consume;
+	}
+	
 	/**
 	 * Deactivate the key input handling for this field
 	 */
@@ -397,13 +409,17 @@ public class TextField extends AbstractComponent {
 					cursorPos--;
 				}
 				// Nobody more will be notified
-				container.getInput().consumeEvent();
+				if (consume) {
+					container.getInput().consumeEvent();
+				}
 			} else if (key == Input.KEY_RIGHT) {
 				if (cursorPos < value.length()) {
 					cursorPos++;
 				}
 				// Nobody more will be notified
-				container.getInput().consumeEvent();
+				if (consume) {
+					container.getInput().consumeEvent();
+				}
 			} else if (key == Input.KEY_BACK) {
 				if ((cursorPos > 0) && (value.length() > 0)) {
 					if (cursorPos < value.length()) {
@@ -415,13 +431,17 @@ public class TextField extends AbstractComponent {
 					cursorPos--;
 				}
 				// Nobody more will be notified
-				container.getInput().consumeEvent();
+				if (consume) {
+					container.getInput().consumeEvent();
+				}
 			} else if (key == Input.KEY_DELETE) {
 				if (value.length() > cursorPos) {
 					value = value.substring(0,cursorPos) + value.substring(cursorPos+1);
 				}
 				// Nobody more will be notified
-				container.getInput().consumeEvent();
+				if (consume) {
+					container.getInput().consumeEvent();
+				}
 			} else if ((c < 127) && (c > 31) && (value.length() < maxCharacter)) {
 				if (cursorPos < value.length()) {
 					value = value.substring(0, cursorPos) + c
@@ -431,11 +451,15 @@ public class TextField extends AbstractComponent {
 				}
 				cursorPos++;
 				// Nobody more will be notified
-				container.getInput().consumeEvent();
+				if (consume) {
+					container.getInput().consumeEvent();
+				}
 			} else if (key == Input.KEY_RETURN) {
 				notifyListeners();
 				// Nobody more will be notified
-				container.getInput().consumeEvent();
+				if (consume) {
+					container.getInput().consumeEvent();
+				}
 			}
 
 		}
