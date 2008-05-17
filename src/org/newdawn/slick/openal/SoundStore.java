@@ -949,4 +949,15 @@ public class SoundStore {
 	public static SoundStore get() {
 		return store;
 	}
+	
+	/**
+	 * Stop a playing sound identified by the ID returned from playing. This utility method
+	 * should only be used when needing to stop sound effects that may have been played 
+	 * more than once and need to be explicitly stopped. 
+	 * 
+	 * @param id The ID of the underlying OpenAL source as returned from playAsSoundEffect
+	 */
+	public void stopSoundEffect(int id) {
+		AL10.alSourceStop(id);
+	}
 }

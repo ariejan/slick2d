@@ -1,5 +1,7 @@
 package org.newdawn.slick.tests;
 
+import java.io.IOException;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
@@ -9,7 +11,10 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.openal.SoundStore;
+import org.newdawn.slick.util.ResourceLoader;
 
 /**
  * A test for the sound system of the library
@@ -33,9 +38,12 @@ public class SoundTest extends BasicGame {
 	/** second music that can be played */
 	private Music musicb;
 	/** The sound to be played */
-	private Sound engine;
+	private Audio engine;
 	/** The Volume of the playing music */
 	private int volume = 10;
+	
+	/** The IDs of the sources used for each engine noise */
+	private int[] engines = new int[3];
 	
 	/**
 	 * Create a new test for sounds
@@ -53,7 +61,11 @@ public class SoundTest extends BasicGame {
 		myContainer = container;
 		sound = new Sound("testdata/restart.ogg");
 		charlie = new Sound("testdata/cbrown01.wav");
-		engine = new Sound("testdata/engine.wav");
+		try {
+			engine = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("testdata/engine.wav"));
+		} catch (IOException e) {
+			throw new SlickException("Failed to load engine", e);
+		}
 		music = musica = new Music("testdata/SMB-X.XM");
 		//music = musica = new Music("testdata/theme.ogg", true);
 		musicb = new Music("testdata/kirby.ogg", true);
@@ -128,11 +140,16 @@ public class SoundTest extends BasicGame {
 			
 			music.loop();
 		}
-		if (key == Input.KEY_E) {
-			if (engine.playing()) {
-				engine.stop();
-			} else {
-				engine.loop();
+		for (int i=0;i<3;i++) {
+			if (key == Input.KEY_1+i) {
+				if (engines[i] != 0) {
+					System.out.println("Stop "+i);
+					SoundStore.get().stopSoundEffect(engines[i]);
+					engines[i] = 0;
+				} else {
+					System.out.println("Start "+i);
+					engines[i] = engine.playAsSoundEffect(1, 1, true);
+				}
 			}
 		}
 		
