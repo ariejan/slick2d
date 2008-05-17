@@ -52,7 +52,7 @@ public class Color implements Serializable {
 	/** The blue component of the colour */
 	public float b;
 	/** The alpha component of the colour */
-	public float a;
+	public float a = 1.0f;
 	
 	/**
 	 * Copy constructor
@@ -150,6 +150,9 @@ public class Color implements Serializable {
 		if (a < 0) {
 			a += 255;
 		}
+		if (a == 0) {
+			a = 255;
+		}
 		
 		this.r = r / 255.0f;
 		this.g = g / 255.0f;
@@ -230,6 +233,42 @@ public class Color implements Serializable {
 	 */
 	public Color brighter() {
 		return brighter(0.2f);
+	}
+
+	/**
+	 * Get the red byte component of this colour
+	 * 
+	 * @return The red component (range 0-255)
+	 */
+	public int getRed() {
+		return (int) (r * 255);
+	}
+
+	/**
+	 * Get the green byte component of this colour
+	 * 
+	 * @return The green component (range 0-255)
+	 */
+	public int getGreen() {
+		return (int) (g * 255);
+	}
+
+	/**
+	 * Get the blue byte component of this colour
+	 * 
+	 * @return The blue component (range 0-255)
+	 */
+	public int getBlue() {
+		return (int) (b * 255);
+	}
+
+	/**
+	 * Get the alpha byte component of this colour
+	 * 
+	 * @return The alpha component (range 0-255)
+	 */
+	public int getAlpha() {
+		return (int) (a * 255);
 	}
 	
 	/**

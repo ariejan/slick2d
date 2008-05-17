@@ -386,6 +386,10 @@ public class Graphics {
 	 *            The color to use when rendering to this context
 	 */
 	public void setColor(Color color) {
+		if (color == null) {
+			return;
+		}
+		
 		currentColor = color;
 		predraw();
 		color.bind();
