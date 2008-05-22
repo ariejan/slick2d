@@ -418,16 +418,18 @@ public class Graphics {
 	 *            The y coordinate of the end point
 	 */
 	public void drawLine(float x1, float y1, float x2, float y2) {
+		if (x1 == x2) {
+			fillRect(x1,y1,1,(y2-y1));
+			return;
+		} else if (y1 == y2) {
+			fillRect(x1,y1,(x2-x1),1);
+			return;
+		}
+		
 		predraw();
 		currentColor.bind();
 		TextureImpl.bindNone();
 
-		// make sure the start and end points are drawn - GL implementations
-		// seem a bit flakey on this
-		GL.glBegin(SGL.GL_POINTS);
-		GL.glVertex2f(x1, y1);
-		GL.glVertex2f(x2, y2);
-		GL.glEnd();
 		GL.glBegin(SGL.GL_LINES);
 		GL.glVertex2f(x1, y1);
 		GL.glVertex2f(x2, y2);
