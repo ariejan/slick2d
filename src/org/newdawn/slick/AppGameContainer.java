@@ -167,6 +167,10 @@ public class AppGameContainer extends GameContainer {
 				initGL();
 				enterOrtho();
 			} 
+			
+			if (targetDisplayMode.getBitsPerPixel() == 16) {
+				InternalTextureLoader.get().set16BitMode();
+			}
 		} catch (LWJGLException e) {
 			throw new SlickException("Unable to setup mode "+width+"x"+height+" fullscreen="+fullscreen, e);
 		}
