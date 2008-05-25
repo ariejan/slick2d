@@ -419,10 +419,20 @@ public class Graphics {
 	 */
 	public void drawLine(float x1, float y1, float x2, float y2) {
 		if (x1 == x2) {
-			fillRect(x1,y1,1,(y2-y1));
+			if (y1 > y2) {
+				float temp = y2;
+				y2 = y1;
+				y1 = y2;
+			}
+			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),lineWidth,(y2-y1)+lineWidth);
 			return;
 		} else if (y1 == y2) {
-			fillRect(x1,y1,(x2-x1),1);
+			if (x1 > x2) {
+				float temp = x2;
+				x2 = x1;
+				x1 = x2;
+			}
+			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),(x2-x1)+lineWidth,lineWidth);
 			return;
 		}
 		
