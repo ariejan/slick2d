@@ -510,6 +510,8 @@ public abstract class GameContainer implements GUIContext {
 					throw new SlickException("Game.update() failure - check the game code.");
 				}
 			}
+		} else {
+			game.update(this, 0);
 		}
 		
 		if (hasFocus() || alwaysRender()) {
