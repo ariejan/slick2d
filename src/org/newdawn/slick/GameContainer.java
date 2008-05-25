@@ -164,6 +164,15 @@ public abstract class GameContainer implements GUIContext {
 	}
 	
 	/**
+	 * Check if the container is currently paused.
+	 * 
+	 * @return True if the container is paused
+	 */
+	public boolean isPaused() {
+		return paused;
+	}
+	
+	/**
 	 * Indicates if the game should be paused, i.e. if updates
 	 * should be propogated through to the game.
 	 * 
