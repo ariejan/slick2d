@@ -39,11 +39,13 @@ public interface TileBasedMap {
 	 * 
 	 * @param mover The mover that is potentially moving through the specified
 	 * tile.
-	 * @param x The x coordinate of the tile to check
-	 * @param y The y coordinate of the tile to check
+	 * @param sx The x coordinate of the tile we're moving from
+	 * @param sy The y coordinate of the tile we're moving from
+	 * @param tx The x coordinate of the tile we're moving to
+	 * @param ty The y coordinate of the tile we're moving to
 	 * @return True if the location is blocked
 	 */
-	public boolean blocked(Mover mover, int x, int y);
+	public boolean blocked(Mover mover, int sx, int sy, int tx, int ty);
 	
 	/**
 	 * Get the cost of moving through the given tile. This can be used to 
