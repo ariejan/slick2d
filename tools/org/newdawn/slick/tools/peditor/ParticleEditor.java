@@ -2,9 +2,6 @@ package org.newdawn.slick.tools.peditor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
@@ -111,8 +108,9 @@ public class ParticleEditor extends JFrame {
 	 * Create a new editor
 	 * 
 	 * @throws LWJGLException Indicates a failure to create an OpenGL context
+	 * @throws SlickException 
 	 */
-	public ParticleEditor() throws LWJGLException {
+	public ParticleEditor() throws LWJGLException, SlickException {
 		super("Pedigree - Whiskas flavoured");
 
 		xmlFileFilter = new FileFilter() {
