@@ -418,13 +418,14 @@ public class Graphics {
 	 *            The y coordinate of the end point
 	 */
 	public void drawLine(float x1, float y1, float x2, float y2) {
+		float lineWidth = this.lineWidth - 1;
 		if (x1 == x2) {
 			if (y1 > y2) {
 				float temp = y2;
 				y2 = y1;
 				y1 = y2;
 			}
-			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),lineWidth,(y2-y1)+lineWidth);
+			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),lineWidth+1,(y2-y1)+lineWidth+1);
 			return;
 		} else if (y1 == y2) {
 			if (x1 > x2) {
@@ -432,7 +433,7 @@ public class Graphics {
 				x2 = x1;
 				x1 = x2;
 			}
-			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),(x2-x1)+lineWidth,lineWidth);
+			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),(x2-x1)+lineWidth+1,lineWidth+1);
 			return;
 		}
 		
