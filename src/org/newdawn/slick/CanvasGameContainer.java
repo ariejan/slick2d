@@ -1,12 +1,9 @@
 package org.newdawn.slick;
 
 import java.awt.Canvas;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -30,11 +27,10 @@ public class CanvasGameContainer extends Canvas {
 	/**
 	 * Create a new panel
 	 * 
-	 * @param game
-	 *            The game being held
-	 * @throws LWJGLException
+	 * @param game The game being held
+	 * @throws SlickException Indicates a failure during creation of the container
 	 */
-	public CanvasGameContainer(Game game) {
+	public CanvasGameContainer(Game game) throws SlickException {
 		super();
 
 		this.game = game;
@@ -42,6 +38,8 @@ public class CanvasGameContainer extends Canvas {
 		requestFocus();
 		setIgnoreRepaint(true);
 		setSize(500,500);
+		
+		container = new Container(game);
 	}
 
 	/**
@@ -50,8 +48,6 @@ public class CanvasGameContainer extends Canvas {
 	 * @throws SlickException Indicates a failure during game execution
 	 */
 	public void start() throws SlickException {
-		container = new Container(game);
-		
 		try {
 			Display.setParent(this);
 		} catch (LWJGLException e) {
