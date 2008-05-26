@@ -56,4 +56,10 @@ public class DefaultLineStripRenderer implements LineStripRenderer {
 		GL.glColor4f(r, g, b, a);
 	}
 
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.LineStripRenderer#setLineCaps(boolean)
+	 */
+	public void setLineCaps(boolean caps) {
+	}
+
 }

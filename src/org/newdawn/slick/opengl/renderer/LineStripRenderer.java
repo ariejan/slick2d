@@ -49,4 +49,11 @@ public interface LineStripRenderer {
 	 */
 	public abstract void setAntiAlias(boolean antialias);
 
+	/**
+	 * Indicate if we should render end caps
+	 * 
+	 * @param caps True if we should render end caps
+	 */
+	public void setLineCaps(boolean caps);
+
 }

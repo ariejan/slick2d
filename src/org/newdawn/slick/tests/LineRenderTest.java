@@ -6,8 +6,8 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Path;
 import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.opengl.TextureImpl;
 import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
@@ -18,6 +18,8 @@ import org.newdawn.slick.opengl.renderer.Renderer;
 public class LineRenderTest extends BasicGame {
 	/** The polygon to be rendered */
 	private Polygon polygon = new Polygon();
+	/** The path to be rendered */
+	private Path path = new Path(100,100);
 	/** The line width to render to */
 	private float width = 10;
 	
@@ -37,6 +39,10 @@ public class LineRenderTest extends BasicGame {
 		polygon.addPoint(320,150);
 		polygon.addPoint(230,210);
 		polygon.addPoint(170,260);
+		
+		path.curveTo(200,200,200,100,100,200);
+		path.curveTo(400,100,400,200,200,100);
+		path.curveTo(500,500,400,200,200,100);
 	}
 
 	/**
@@ -49,20 +55,25 @@ public class LineRenderTest extends BasicGame {
 	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) throws SlickException {
-		g.setColor(Color.red);
-		TextureImpl.bindNone();
-		g.setLineWidth(width);
 		g.setAntiAlias(true);
-		for (int i=0;i<10;i++) {
-			g.translate(35,35);
-			g.draw(polygon);
-		}
-		g.translate(-350,-350);
+		g.setLineWidth(10);
+		g.setColor(Color.red);
+		g.draw(path);
 		
-		g.setColor(Color.white);
-		g.setLineWidth(1);
-		g.setAntiAlias(false);
-		g.draw(polygon);
+//		g.setColor(Color.red);
+//		TextureImpl.bindNone();
+//		g.setLineWidth(width);
+//		g.setAntiAlias(true);
+//		for (int i=0;i<10;i++) {
+//			g.translate(35,35);
+//			g.draw(polygon);
+//		}
+//		g.translate(-350,-350);
+//		
+//		g.setColor(Color.white);
+//		g.setLineWidth(1);
+//		g.setAntiAlias(false);
+//		g.draw(polygon);
 	}
 
 	/**
@@ -73,6 +84,7 @@ public class LineRenderTest extends BasicGame {
 	public static void main(String[] argv) {
 		try {
 			Renderer.setLineStripRenderer(Renderer.QUAD_BASED_LINE_STRIP_RENDERER);
+			Renderer.getLineStripRenderer().setLineCaps(true);
 			
 			AppGameContainer container = new AppGameContainer(new LineRenderTest());
 			container.setDisplayMode(800,600,false);
