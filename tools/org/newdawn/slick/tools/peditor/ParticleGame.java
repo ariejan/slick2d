@@ -212,13 +212,6 @@ public class ParticleGame extends BasicGame {
 	}
 
 	/**
-	 * @see org.lwjgl.opengl.AWTGLCanvas#paintGL()
-	 */
-	protected void paintGL() {
-
-	}
-
-	/**
 	 * Get the particle system being displayed
 	 * 
 	 * @return The system being displayed
