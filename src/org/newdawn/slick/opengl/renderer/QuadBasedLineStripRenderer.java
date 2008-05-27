@@ -144,23 +144,6 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 		float lastx2 = 0;
 		float lasty2 = 0;
 
-
-		if (lineCaps) {
-			float dx = points[2] - points[0];
-			float dy = points[3] - points[1];
-			float fang = (float) Math.toDegrees(Math.atan2(dy,dx)) + 90;
-			
-			GL.glBegin(GL11.GL_TRIANGLE_FAN);
-			bindColor(0);
-			GL.glVertex2f(points[0], points[1]);
-			for (int i=0;i<181;i+=30) {
-				float ang = (float) Math.toRadians(fang+i);
-				GL.glVertex2f(points[0]+((float) (Math.cos(ang) * width)), 
-							  points[1]+((float) (Math.sin(ang) * width)));
-			}
-			GL.glEnd();
-		}
-		
 		GL.glBegin(GL11.GL_QUADS);
 		for (int i=0;i<count+1;i++) {
 			int current = i;
@@ -224,7 +207,27 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 		}
 		
 		GL.glEnd();
+
+		float step =  width <= 10 ?  5 : 180 / (float)Math.ceil(width / 2.5); 
 		
+		// start cap
+		if (lineCaps) {
+			float dx = points[2] - points[0];
+			float dy = points[3] - points[1];
+			float fang = (float) Math.toDegrees(Math.atan2(dy,dx)) + 90;
+			
+			GL.glBegin(GL11.GL_TRIANGLE_FAN);
+			bindColor(0);
+			GL.glVertex2f(points[0], points[1]);
+			for (int i=0;i<181;i+=step) {
+				float ang = (float) Math.toRadians(fang+i);
+				GL.glVertex2f(points[0]+((float) (Math.cos(ang) * width)), 
+							  points[1]+((float) (Math.sin(ang) * width)));
+			}
+			GL.glEnd();
+		}
+		
+		// end cap
 		if (lineCaps) {
 			float dx = points[2] - points[0];
 			float dy = points[3] - points[1];
@@ -236,7 +239,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 			GL.glBegin(GL11.GL_TRIANGLE_FAN);
 			bindColor(count-1);
 			GL.glVertex2f(points[(count*2)-2], points[(count*2)-1]);
-			for (int i=0;i<181;i+=30) {
+			for (int i=0;i<181;i+=step) {
 				float ang = (float) Math.toRadians(fang+i);
 				GL.glVertex2f(points[(count*2)-2]+((float) (Math.cos(ang) * width)), 
 							  points[(count*2)-1]+((float) (Math.sin(ang) * width)));
