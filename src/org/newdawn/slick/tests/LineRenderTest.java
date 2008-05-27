@@ -5,6 +5,7 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Path;
 import org.newdawn.slick.geom.Polygon;
@@ -22,6 +23,8 @@ public class LineRenderTest extends BasicGame {
 	private Path path = new Path(100,100);
 	/** The line width to render to */
 	private float width = 10;
+	/** True if antialiasing */
+	private boolean antialias = true;
 	
 	/**
 	 * Create a new test
@@ -49,14 +52,17 @@ public class LineRenderTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(GameContainer container, int delta) throws SlickException {
+		if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+			antialias = !antialias;
+		}
 	}
 
 	/**
 	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) throws SlickException {
-		g.setAntiAlias(true);
-		g.setLineWidth(10);
+		g.setAntiAlias(antialias);
+		g.setLineWidth(50);
 		g.setColor(Color.red);
 		g.draw(path);
 		

@@ -120,12 +120,17 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 	 */
 	public void renderLines(float[] points, int count) {
 		if (antialias) {
-			renderHalf = true;
+			renderHalf = false;
 			renderLinesImpl(points,count,width+1f);
 		}
 
 		renderHalf = false;
+		GL.glDisable(SGL.GL_POLYGON_SMOOTH);
 		renderLinesImpl(points,count,width);
+		
+		if (antialias) {
+			GL.glEnable(SGL.GL_POLYGON_SMOOTH);
+		}
 	}
 	
 	/**
