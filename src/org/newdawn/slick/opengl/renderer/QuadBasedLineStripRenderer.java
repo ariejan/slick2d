@@ -211,8 +211,8 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 		}
 		
 		GL.glEnd();
-
-		float step =  width <= 10 ?  5 : 180 / (float)Math.ceil(width / 2.5); 
+		
+		float step = width <= 12.5f ?  5 : 180 / (float)Math.ceil(width / 2.5); 
 		
 		// start cap
 		if (lineCaps) {
