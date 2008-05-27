@@ -583,10 +583,10 @@ public abstract class GameContainer implements GUIContext {
 		}
 		input.init(height);
 		// no need to remove listeners?
-//		input.removeAllListeners();
-//		if (game instanceof InputListener) {
-//			input.addListener((InputListener) game);
-//		}
+		//input.removeAllListeners();
+		if (game instanceof InputListener) {
+			input.addListener((InputListener) game);
+		}
 		
 		lastGame = game;
 	}
