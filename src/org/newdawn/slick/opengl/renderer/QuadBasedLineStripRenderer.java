@@ -120,11 +120,10 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 	 */
 	public void renderLines(float[] points, int count) {
 		if (antialias) {
-			renderHalf = false;
+			GL.glEnable(SGL.GL_POLYGON_SMOOTH);
 			renderLinesImpl(points,count,width+1f);
 		}
 
-		renderHalf = false;
 		GL.glDisable(SGL.GL_POLYGON_SMOOTH);
 		renderLinesImpl(points,count,width);
 		
@@ -223,7 +222,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 			GL.glBegin(GL11.GL_TRIANGLE_FAN);
 			bindColor(0);
 			GL.glVertex2f(points[0], points[1]);
-			for (int i=0;i<181;i+=step) {
+			for (int i=0;i<180+step;i+=step) {
 				float ang = (float) Math.toRadians(fang+i);
 				GL.glVertex2f(points[0]+((float) (Math.cos(ang) * width)), 
 							  points[1]+((float) (Math.sin(ang) * width)));
@@ -243,7 +242,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 			GL.glBegin(GL11.GL_TRIANGLE_FAN);
 			bindColor(count-1);
 			GL.glVertex2f(points[(count*2)-2], points[(count*2)-1]);
-			for (int i=0;i<181;i+=step) {
+			for (int i=0;i<180+step;i+=step) {
 				float ang = (float) Math.toRadians(fang+i);
 				GL.glVertex2f(points[(count*2)-2]+((float) (Math.cos(ang) * width)), 
 							  points[(count*2)-1]+((float) (Math.sin(ang) * width)));
