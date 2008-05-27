@@ -72,7 +72,7 @@ public class Path extends Shape {
 	}
 	
 	/**
-	 * Add a curve to the specified location
+	 * Add a curve to the specified location (using the default segments 10)
 	 * 
 	 * @param x The destination x coordinate
 	 * @param y The destination y coordiante
@@ -82,8 +82,22 @@ public class Path extends Shape {
 	 * @param cy2 The y coordinate of the second control point
 	 */
 	public void curveTo(float x, float y, float cx1, float cy1, float cx2, float cy2) {
+		curveTo(x,y,cx1,cy1,cx2,cy2,10);
+	}
+	
+	/**
+	 * Add a curve to the specified location (specifing the number of segments)
+	 * 
+	 * @param x The destination x coordinate
+	 * @param y The destination y coordiante
+	 * @param cx1 The x coordiante of the first control point
+	 * @param cy1 The y coordiante of the first control point
+	 * @param cx2 The x coordinate of the second control point
+	 * @param cy2 The y coordinate of the second control point
+	 * @param segments The number of segments to use for the new curve
+	 */
+	public void curveTo(float x, float y, float cx1, float cy1, float cx2, float cy2, int segments) {
 		Curve curve = new Curve(new Vector2f(cx,cy),new Vector2f(cx1,cy1),new Vector2f(cx2,cy2),new Vector2f(x,y));
-		int segments = 10;
 		float step = 1.0f / segments;
 		
 		for (int i=1;i<segments+1;i++) {
