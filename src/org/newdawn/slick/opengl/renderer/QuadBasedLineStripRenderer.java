@@ -108,8 +108,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 	 * @see org.newdawn.slick.opengl.renderer.LineStripRenderer#setAntiAlias(boolean)
 	 */
 	public void setAntiAlias(boolean antialias) {
-		def.setAntiAlias(true);
-		
+		def.setAntiAlias(antialias);
 		this.antialias = antialias;
 	}
 
