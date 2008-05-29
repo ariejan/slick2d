@@ -49,8 +49,6 @@ public class AppGameContainer extends GameContainer {
 	protected DisplayMode targetDisplayMode;
 	/** True if we should update the game only when the display is visible */
 	protected boolean updateOnlyOnVisible = true;
-	/** True if we should force exit */
-	protected boolean forceExit = true;
 	/** Alpha background supported */
 	protected boolean alphaSupport = true;
 	
@@ -88,16 +86,6 @@ public class AppGameContainer extends GameContainer {
 	 */
 	public boolean supportsAlphaInBackBuffer() {
 		return alphaSupport;
-	}
-	
-	/**
-	 * Indicate if we should force exitting the VM at the end
-	 * of the game (default = true)
-	 * 
-	 * @param forceExit True if we should force the VM exit
-	 */
-	public void setForceExit(boolean forceExit) {
-		this.forceExit = forceExit;
 	}
 	
 	/**

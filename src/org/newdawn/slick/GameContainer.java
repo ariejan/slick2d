@@ -71,6 +71,8 @@ public abstract class GameContainer implements GUIContext {
 	
 	/** True if the game is paused */
 	protected boolean paused;
+	/** True if we should force exit */
+	protected boolean forceExit = true;
 	
 	/**
 	 * Create a new game container wrapping a given game
@@ -84,7 +86,16 @@ public abstract class GameContainer implements GUIContext {
 		getBuildVersion();
 		Log.checkVerboseLogSetting();
 	}
-
+	
+	/**
+	 * Indicate if we should force exitting the VM at the end
+	 * of the game (default = true)
+	 * 
+	 * @param forceExit True if we should force the VM exit
+	 */
+	public void setForceExit(boolean forceExit) {
+		this.forceExit = forceExit;
+	}
 	
 	/**
 	 * Check if the display is in fullscreen mode
