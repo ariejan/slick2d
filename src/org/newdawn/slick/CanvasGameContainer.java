@@ -53,6 +53,7 @@ public class CanvasGameContainer extends Canvas {
 		} catch (LWJGLException e) {
 			throw new SlickException("Failed to setParent of canvas", e);
 		}
+		requestFocus();
 		container.start();
 	}
 	
@@ -113,7 +114,7 @@ public class CanvasGameContainer extends Canvas {
 		 * @see org.newdawn.slick.GameContainer#running()
 		 */
 		protected boolean running() {
-			return CanvasGameContainer.this.isDisplayable();
+			return super.running() && CanvasGameContainer.this.isDisplayable();
 		}
 	}
 }
