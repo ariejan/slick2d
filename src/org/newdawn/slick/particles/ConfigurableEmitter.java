@@ -866,4 +866,8 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	public void wrapUp() {
 		wrapUp = true;
 	}
+
+	public void resetState() {
+		replay();
+	}
 }

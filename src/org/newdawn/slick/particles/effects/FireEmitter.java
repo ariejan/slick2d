@@ -136,4 +136,10 @@ public class FireEmitter implements ParticleEmitter {
 	 */
 	public void wrapUp() {
 	}
+
+	/**
+	 * @see org.newdawn.slick.particles.ParticleEmitter#resetState()
+	 */
+	public void resetState() {
+	}
 }

@@ -83,4 +83,9 @@ public interface ParticleEmitter {
 	 * @return True if we should use points
 	 */
 	public boolean usePoints(ParticleSystem system);
+	
+	/**
+	 * Clear the state of emitter back to default
+	 */
+	public void resetState();
 }

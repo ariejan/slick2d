@@ -154,6 +154,11 @@ public class ParticleSystem {
 			ParticlePool pool = (ParticlePool) pools.next();
 			pool.reset(this);
 		}
+		
+		for (int i=0;i<emitters.size();i++) {
+			ParticleEmitter emitter = (ParticleEmitter) emitters.get(i);
+			emitter.resetState();
+		}
 	}
 	
 	/**
