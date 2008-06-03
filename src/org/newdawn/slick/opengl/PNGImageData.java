@@ -689,7 +689,7 @@ public class PNGImageData implements LoadableImageData {
 		decode(scratch, texWidth * perPixel, flipped);
 		
 		if (transparent != null) {
-	        for (int i=0;i<texWidth*texHeight;i+=4) {
+	        for (int i=0;i<texWidth*texHeight;i+=perPixel) {
 	        	boolean match = true;
 	        	for (int c=0;c<3;c++) {
 	        		if (scratch.get(i+c) != transparent[c]) {
