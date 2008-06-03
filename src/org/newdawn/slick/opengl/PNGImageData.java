@@ -673,6 +673,10 @@ public class PNGImageData implements LoadableImageData {
 	 * @see org.newdawn.slick.opengl.LoadableImageData#loadImage(java.io.InputStream, boolean, boolean, int[])
 	 */
 	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha, int[] transparent) throws IOException {
+		if (transparent != null) {
+			forceAlpha = true;
+		}
+		
 		init(fis);
 		
 		if (!isRGB()) {
@@ -688,21 +692,6 @@ public class PNGImageData implements LoadableImageData {
 		scratch = BufferUtils.createByteBuffer(texWidth * texHeight * perPixel);
 		decode(scratch, texWidth * perPixel, flipped);
 		
-		if (transparent != null) {
-	        for (int i=0;i<texWidth*texHeight;i+=perPixel) {
-	        	boolean match = true;
-	        	for (int c=0;c<3;c++) {
-	        		if (scratch.get(i+c) != transparent[c]) {
-	        			match = false;
-	        		}
-	        	}
-	  
-	        	if (match) {
-	        		scratch.put(i+3, (byte) 0);
-	           	}
-	        }
-	    }
-	
 		if (!hasAlpha() && forceAlpha) {
 			ByteBuffer temp = BufferUtils.createByteBuffer(texWidth * texHeight * 4);
 			for (int x=0;x<texWidth;x++) {
@@ -718,6 +707,21 @@ public class PNGImageData implements LoadableImageData {
 					temp.put(dstOffset+3, (byte) 255);
 				}
 			}
+			
+			if (transparent != null) {
+		        for (int i=0;i<texWidth*texHeight*4;i+=4) {
+		        	boolean match = true;
+		        	for (int c=0;c<3;c++) {
+		        		if (temp.get(i+c) != transparent[c]) {
+		        			match = false;
+		        		}
+		        	}
+		  
+		        	if (match) {
+		        		temp.put(i+3, (byte) 0);
+		           	}
+		        }
+		    }
 		}
 		
 		scratch.position(0);
