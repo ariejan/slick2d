@@ -14,15 +14,8 @@ import org.newdawn.slick.util.Log;
 public class CanvasGameContainer extends Canvas {
 	/** The actual container implementation */
 	protected Container container;
-
 	/** The game being held in this container */
 	protected Game game;
-
-	/** True if a reinit is required */
-	protected boolean reinit = false;
-
-	/** True if we've already created the AWTInputAdapter */
-	protected boolean createdAdapter = false;
 
 	/**
 	 * Create a new panel
@@ -34,7 +27,6 @@ public class CanvasGameContainer extends Canvas {
 		super();
 
 		this.game = game;
-		
 		requestFocus();
 		setIgnoreRepaint(true);
 		setSize(500,500);
@@ -53,6 +45,7 @@ public class CanvasGameContainer extends Canvas {
 		} catch (LWJGLException e) {
 			throw new SlickException("Failed to setParent of canvas", e);
 		}
+		
 		requestFocus();
 		container.start();
 	}
@@ -114,7 +107,8 @@ public class CanvasGameContainer extends Canvas {
 		 * @see org.newdawn.slick.GameContainer#running()
 		 */
 		protected boolean running() {
-			return super.running() && CanvasGameContainer.this.isDisplayable();
+			return CanvasGameContainer.this.isDisplayable();
+			//return super.running() && CanvasGameContainer.this.isDisplayable();
 		}
 	}
 }
