@@ -79,7 +79,8 @@ public class CombinedTransition implements Transition {
 	}
 
 	public void init(GameState firstState, GameState secondState) {
-		// TODO Auto-generated method stub
-		
+	   for (int i = transitions.size() - 1; i >= 0; i--) {
+	      ((Transition)transitions.get(i)).init(firstState, secondState);
+	   }
 	}
 }
