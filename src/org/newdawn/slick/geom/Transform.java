@@ -181,7 +181,7 @@ public class Transform {
     public static Transform createRotateTransform(float angle, float x, float y) {   
         Transform temp = Transform.createRotateTransform(angle);
         float sinAngle = temp.matrixPosition[3];
-        float oneMinusCosAngle = 1.0f - temp.matrixPosition[3];
+        float oneMinusCosAngle = 1.0f - temp.matrixPosition[4];
         temp.matrixPosition[2] = x * oneMinusCosAngle + y * sinAngle;
         temp.matrixPosition[5] = y * oneMinusCosAngle - x * sinAngle;
 
