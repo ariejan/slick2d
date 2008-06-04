@@ -166,6 +166,7 @@ public class ParticleIO {
 				system.addEmitter(emitter);
 			}
 
+			system.setRemoveCompletedEmitters(false);
 			return system;
 		} catch (IOException e) {
 			Log.error(e);
