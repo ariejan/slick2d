@@ -31,7 +31,6 @@ public class CanvasSizeTest extends BasicGame {
 	 */
 	public void init(GameContainer container) throws SlickException {
 		System.out.println(container.getWidth() + ", " + container.getHeight());
-		Thread.dumpStack();
 	}
 
 	/**

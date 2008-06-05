@@ -110,5 +110,19 @@ public class CanvasGameContainer extends Canvas {
 			return CanvasGameContainer.this.isDisplayable();
 			//return super.running() && CanvasGameContainer.this.isDisplayable();
 		}
+
+		/**
+		 * @see org.newdawn.slick.GameContainer#getHeight()
+		 */
+		public int getHeight() {
+			return CanvasGameContainer.this.getHeight();
+		}
+
+		/**
+		 * @see org.newdawn.slick.GameContainer#getWidth()
+		 */
+		public int getWidth() {
+			return CanvasGameContainer.this.getWidth();
+		}
 	}
 }
