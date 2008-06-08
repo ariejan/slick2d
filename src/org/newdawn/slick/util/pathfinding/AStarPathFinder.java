@@ -12,7 +12,7 @@ import org.newdawn.slick.util.pathfinding.heuristics.ClosestHeuristic;
  * 
  * @author Kevin Glass
  */
-public class AStarPathFinder implements PathFinder {
+public class AStarPathFinder implements PathFinder, PathFindingContext {
 	/** The set of nodes that have been searched through */
 	private ArrayList closed = new ArrayList();
 	/** The set of nodes that we do not yet consider fully searched */
@@ -31,6 +31,15 @@ public class AStarPathFinder implements PathFinder {
 	private AStarHeuristic heuristic;
 	/** The node we're currently searching from */
 	private Node current;
+	
+	/** The mover going through the path */
+	private Mover mover;
+	/** The x coordinate of the source tile we're moving from */
+	private int sourceX;
+	/** The y coordinate of the source tile we're moving from */
+	private int sourceY;
+	/** The distance searched so far */
+	private int distance;
 	
 	/**
 	 * Create a path finder with the default heuristic - closest to target.
@@ -73,7 +82,12 @@ public class AStarPathFinder implements PathFinder {
 		current = null;
 		
 		// easy first check, if the destination is blocked, we can't get there
-		if (map.blocked(mover, sx, sy, tx, ty)) {
+		this.mover = mover;
+		this.sourceX = sx;
+		this.sourceY = sy;
+		this.distance = 0;
+		
+		if (map.blocked(this, tx, ty)) {
 			return null;
 		}
 
@@ -103,6 +117,7 @@ public class AStarPathFinder implements PathFinder {
 				break;
 			}
 			
+			distance = current.depth;
 			removeFromOpen(current);
 			addToClosed(current);
 			
@@ -293,7 +308,10 @@ public class AStarPathFinder implements PathFinder {
 		boolean invalid = (x < 0) || (y < 0) || (x >= map.getWidthInTiles()) || (y >= map.getHeightInTiles());
 		
 		if ((!invalid) && ((sx != x) || (sy != y))) {
-			invalid = map.blocked(mover, sx, sy, x, y);
+			this.mover = mover;
+			this.sourceX = sx;
+			this.sourceY = sy;
+			invalid = map.blocked(this, x, y);
 		}
 		
 		return !invalid;
@@ -310,7 +328,11 @@ public class AStarPathFinder implements PathFinder {
 	 * @return The cost of movement through the given tile
 	 */
 	public float getMovementCost(Mover mover, int sx, int sy, int tx, int ty) {
-		return map.getCost(mover, sx, sy, tx, ty);
+		this.mover = mover;
+		this.sourceX = sx;
+		this.sourceY = sy;
+		
+		return map.getCost(this, tx, ty);
 	}
 
 	/**
@@ -526,5 +548,21 @@ public class AStarPathFinder implements PathFinder {
 		public String toString() {
 			return "[Node "+x+","+y+"]";
 		}
+	}
+
+	public Mover getMover() {
+		return mover;
+	}
+
+	public int getSearchDistance() {
+		return distance;
+	}
+
+	public int getSourceX() {
+		return sourceX;
+	}
+
+	public int getSourceY() {
+		return sourceY;
 	}
 }
