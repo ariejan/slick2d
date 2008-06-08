@@ -145,6 +145,17 @@ public class Graphics {
 	}
 
 	/**
+	 * Set the dimensions considered by the graphics context
+	 * 
+	 * @param width The width of the graphics context
+	 * @param height The height of the graphics context
+	 */
+	void setDimensions(int width, int height) {
+		screenWidth = width;
+		screenHeight = height;
+	}
+	
+	/**
 	 * Set the drawing mode to use. This mode defines how pixels are drawn to
 	 * the graphics context. It can be used to draw into the alpha map.
 	 * 

@@ -599,7 +599,10 @@ public abstract class GameContainer implements GUIContext {
 			input.removeListener((InputListener) game);
 			input.addListener((InputListener) game);
 		}
-		
+
+		if (graphics != null) {
+			graphics.setDimensions(getWidth(), getHeight());
+		}
 		lastGame = game;
 	}
 	
