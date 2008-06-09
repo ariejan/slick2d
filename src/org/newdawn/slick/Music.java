@@ -13,6 +13,7 @@ import org.newdawn.slick.util.Log;
  * play at any given time and a channel is reserved so music will always play. 
  *
  * @author kevin
+ * @author Nathan Sweet <misc@n4te.com>
  */
 public class Music {
 	/** The music currently being played or null if none */
@@ -32,6 +33,8 @@ public class Music {
 				Music oldMusic = currentMusic;
 				currentMusic = null;
 				oldMusic.fireMusicEnded();
+			} else {
+				currentMusic.update(delta);
 			}
 		}
 	}
@@ -44,6 +47,14 @@ public class Music {
 	private ArrayList listeners = new ArrayList();
 	/** The volume of this music */
 	private float volume = 1.0f;
+	/** Start gain for fading in/out */
+	private float fadeStartGain;
+	/** End gain for fading in/out */
+	private float fadeEndGain;
+	/** Countdown for fading in/out */
+	private int fadeTime;
+	/** Duration for faring in/out */
+	private int fadeDuration;
 	
 	/**
 	 * Create and load a piece of music (either OGG or MOD/XM)
@@ -284,5 +295,56 @@ public class Music {
 	 */
 	public float getVolume() {
 		return volume;
+	}
+
+	/**
+	 * Fade this music to the volume specified
+	 * 
+	 * @param duration Fade time in milliseconds.
+	 * @param endVolume The target volume
+	 */
+	public void fade (int duration, float endVolume) {
+		fadeStartGain = volume;
+		fadeEndGain = endVolume;
+		fadeDuration = duration;
+		fadeTime = duration;
+	}
+
+	/**
+	 * Update the current music applying any effects that need to updated per 
+	 * tick.
+	 * 
+	 * @param delta The amount of time in milliseconds thats passed since last update
+	 */
+	void update(int delta) {
+		if (fadeTime > 0) {
+			fadeTime -= delta;
+			if (fadeTime < 0) {
+				fadeTime = 0;
+			}
+			
+			float offset = (fadeEndGain - fadeStartGain) * (1 - (fadeTime / (float)fadeDuration));
+			setVolume(fadeStartGain + offset);
+		}
+	}
+
+	/**
+	 * Seeks to a position in the music. For streaming music, seeking before the current position causes 
+	 * the stream to be reloaded.
+	 * 
+	 * @param position Position in seconds.
+	 * @return True if the seek was successful
+	 */
+	public boolean setPosition (float position) {
+		return sound.setPosition(position);
+	}
+
+	/**
+	 * The position into the sound thats being played
+	 * 
+	 * @return The current position in seconds.
+	 */
+	public float getPosition () {
+		return sound.getPosition();
 	}
 }

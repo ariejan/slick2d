@@ -9,6 +9,7 @@ import org.newdawn.slick.util.Log;
  * a stream. This supplies streaming audio
  *
  * @author kevin
+ * @author Nathan Sweet <misc@n4te.com>
  */
 public class StreamSound extends AudioImpl {
 	/** The player we're going to ask to stream data */
@@ -67,4 +68,17 @@ public class StreamSound extends AudioImpl {
 		SoundStore.get().setStream(null);
 	}
 
+	/**
+	 * @see org.newdawn.slick.openal.AudioImpl#setPosition(float)
+	 */
+	public boolean setPosition(float position) {
+		return player.setPosition(position);
+	}
+
+	/**
+	 * @see org.newdawn.slick.openal.AudioImpl#getPosition()
+	 */
+	public float getPosition() {
+		return player.getPosition();
+	}
 }

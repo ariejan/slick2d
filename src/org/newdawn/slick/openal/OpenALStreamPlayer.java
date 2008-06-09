@@ -7,6 +7,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
 import org.lwjgl.openal.OpenALException;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
@@ -16,6 +17,7 @@ import org.newdawn.slick.util.ResourceLoader;
  * as required.
  * 
  * @author Kevin Glass
+ * @author Nathan Sweet <misc@n4te.com>
  */
 public class OpenALStreamPlayer {
 	/** The number of buffers to maintain */
@@ -49,6 +51,8 @@ public class OpenALStreamPlayer {
 	private float pitch;
 	/** The gain of the music */
 	private float gain;
+	/** Position in seconds of the previously played buffers */
+	private float positionOffset;
 	
 	/**
 	 * Create a new player to work on an audio stream
@@ -88,11 +92,16 @@ public class OpenALStreamPlayer {
 			audio.close();
 		}
 		
+		OggInputStream audio;
+		
 		if (url != null) {
 			audio = new OggInputStream(url.openStream());
 		} else {
 			audio = new OggInputStream(ResourceLoader.getResourceAsStream(ref));
 		}
+		
+		this.audio = audio;
+		positionOffset = 0;
 	}
 	
 	/**
@@ -183,6 +192,8 @@ public class OpenALStreamPlayer {
 		while (processed > 0) {
 			unqueued.clear();
 			
+			positionOffset += AL10.alGetSourcef(source, AL11.AL_SEC_OFFSET);
+			
 			AL10.alSourceUnqueueBuffers(source, unqueued);
 	        if (stream(unqueued.get(0))) {
 	        	AL10.alSourceQueueBuffers(source, unqueued);
@@ -221,11 +232,9 @@ public class OpenALStreamPlayer {
 				try {
 					AL10.alBufferData(bufferId, format, bufferData, audio.getRate());
 				} catch (OpenALException e) {
-					e.printStackTrace();
-					Log.error("Failed to loop buffer: "+bufferId+" "+format+" "+count+" "+audio.getRate());
+					Log.error("Failed to loop buffer: "+bufferId+" "+format+" "+count+" "+audio.getRate(), e);
 					return false;
 				}
-				 
 			} else {
 				if (loop) {
 					initStreams();
@@ -241,6 +250,57 @@ public class OpenALStreamPlayer {
 			Log.error(e);
 			return false;
 		}
+	}
+
+	/**
+	 * Seeks to a position in the music.
+	 * 
+	 * @param position Position in seconds.
+	 * @return True if the setting of the position was successful
+	 */
+	public boolean setPosition(float position) {
+		try {
+			if (getPosition() > position) {
+				initStreams();
+			}
+
+			float sampleRate = audio.getRate();
+			float sampleSize;
+			if (audio.getChannels() > 1) {
+				sampleSize = 4; // AL10.AL_FORMAT_STEREO16
+			} else {
+				sampleSize = 2; // AL10.AL_FORMAT_MONO16
+			}
+
+			while (positionOffset < position) {
+				int count = audio.read(buffer);
+				if (count != -1) {
+					float bufferLength = (count / sampleSize) / sampleRate;
+					positionOffset += bufferLength;
+				} else {
+					if (loop) {
+						initStreams();
+					} else {
+						done = true;
+					}
+					return false;
+				}
+			}
+			
+			return true;
+		} catch (IOException e) {
+			Log.error(e);
+			return false;
+		}
+	}
+
+	/**
+	 * Return the current playing position in the sound
+	 * 
+	 * @return The current position in seconds.
+	 */
+	public float getPosition() {
+		return positionOffset + AL10.alGetSourcef(source, AL11.AL_SEC_OFFSET);
 	}
 }
 

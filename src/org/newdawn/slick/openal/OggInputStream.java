@@ -67,6 +67,8 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	private int readIndex;
 	/** The byte array store used to hold the data read from the ogg */
 	private ByteBuffer pcmBuffer = BufferUtils.createByteBuffer(4096 * 200);
+	/** The total number of bytes */
+	private int total;
 	
 	/**
 	 * Create a new stream to decode OGG data
@@ -76,8 +78,18 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 	 */
 	public OggInputStream(InputStream input) throws IOException {
 		this.input = input;
+		total = input.available();
 		
 		init();
+	}
+	
+	/**
+	 * Get the number of bytes on the stream
+	 * 
+	 * @return The number of the bytes on the stream
+	 */
+	public int getLength() {
+		return total;
 	}
 	
 	/**
@@ -230,6 +242,7 @@ public class OggInputStream extends InputStream implements AudioInputStream {
 							endOfStream = true;
 							return false;
 						}
+						
 						oggInfo.synthesis_headerin(comment, packet);
 						i++;
 					}

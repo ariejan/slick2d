@@ -4,6 +4,7 @@ package org.newdawn.slick.openal;
  * The description of of audio data loaded by the AudioLoader
  * 
  * @author kevin
+ * @author Nathan Sweet <misc@n4te.com>
  */
 public interface Audio {
 
@@ -60,5 +61,19 @@ public interface Audio {
 	 * @return The ID of the source playing the sound
 	 */
 	public int playAsMusic(float pitch, float gain, boolean loop);
+	
+	/**
+	 * Seeks to a position in the music.
+	 * 
+	 * @param position Position in seconds.
+	 * @return True if the setting of the position was successful
+	 */
+	public boolean setPosition(float position);
 
+	/**
+	 * Return the current playing position in the sound
+	 * 
+	 * @return The current position in seconds.
+	 */
+	public float getPosition();
 }

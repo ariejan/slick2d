@@ -80,7 +80,24 @@ public class MODSound extends AudioImpl {
 		return -1;
 	}
 
+	/**
+	 * @see org.newdawn.slick.openal.AudioImpl#stop()
+	 */
 	public void stop() {
 		store.setMOD(null);
+	}
+
+	/**
+	 * @see org.newdawn.slick.openal.AudioImpl#getPosition()
+	 */
+	public float getPosition() {
+		throw new RuntimeException("Positioning on modules is not currently supported");
+	}
+
+	/**
+	 * @see org.newdawn.slick.openal.AudioImpl#setPosition(float)
+	 */
+	public boolean setPosition(float position) {
+		throw new RuntimeException("Positioning on modules is not currently supported");
 	}
 }

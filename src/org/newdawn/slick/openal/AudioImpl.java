@@ -1,9 +1,13 @@
 package org.newdawn.slick.openal;
 
+import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
+
 /**
  * A sound that can be played through OpenAL
  * 
  * @author Kevin Glass
+ * @author Nathan Sweet <misc@n4te.com>
  */
 public class AudioImpl implements Audio {
 	/** The store from which this sound was loaded */
@@ -12,6 +16,9 @@ public class AudioImpl implements Audio {
 	private int buffer;
 	/** The index of the source being used to play this sound */
 	private int index = -1;
+	
+	/** The length of the audio */
+	private float length;
 	
 	/**
 	 * Create a new sound
@@ -22,6 +29,14 @@ public class AudioImpl implements Audio {
 	AudioImpl(SoundStore store, int buffer) {
 		this.store = store;
 		this.buffer = buffer;
+		
+		int bytes = AL10.alGetBufferi(buffer, AL10.AL_SIZE);
+		int bits = AL10.alGetBufferi(buffer, AL10.AL_BITS);
+		int channels = AL10.alGetBufferi(buffer, AL10.AL_CHANNELS);
+		int freq = AL10.alGetBufferi(buffer, AL10.AL_FREQUENCY);
+		
+		int samples = bytes / (bits / 8);
+		length = (samples / (float) freq) / channels;
 	}
 	
 	/**
@@ -99,5 +114,25 @@ public class AudioImpl implements Audio {
 	 */
 	public static void restartMusic() {
 		SoundStore.get().restartLoop();
+	}
+	
+	/**
+	 * @see org.newdawn.slick.openal.Audio#setPosition(float)
+	 */
+	public boolean setPosition(float position) {
+		position = position % length;
+		
+		AL10.alSourcef(store.getSource(0), AL11.AL_SEC_OFFSET, position);
+		if (AL10.alGetError() != 0) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * @see org.newdawn.slick.openal.Audio#getPosition()
+	 */
+	public float getPosition() {
+		return AL10.alGetSourcef(store.getSource(0), AL11.AL_SEC_OFFSET);
 	}
 }
