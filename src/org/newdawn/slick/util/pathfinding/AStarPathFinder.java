@@ -83,8 +83,8 @@ public class AStarPathFinder implements PathFinder, PathFindingContext {
 		
 		// easy first check, if the destination is blocked, we can't get there
 		this.mover = mover;
-		this.sourceX = sx;
-		this.sourceY = sy;
+		this.sourceX = tx;
+		this.sourceY = ty;
 		this.distance = 0;
 		
 		if (map.blocked(this, tx, ty)) {
@@ -142,7 +142,7 @@ public class AStarPathFinder implements PathFinder, PathFindingContext {
 					int xp = x + current.x;
 					int yp = y + current.y;
 					
-					if (isValidLocation(mover,sx,sy,xp,yp)) {
+					if (isValidLocation(mover,current.x,current.y,xp,yp)) {
 						// the cost to get to this node is cost the current plus the movement
 						// cost to reach this node. Note that the heursitic value is only used
 						// in the sorted open list
