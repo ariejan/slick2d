@@ -122,7 +122,7 @@ public class AudioImpl implements Audio {
 	public boolean setPosition(float position) {
 		position = position % length;
 		
-		AL10.alSourcef(store.getSource(0), AL11.AL_SEC_OFFSET, position);
+		AL10.alSourcef(store.getSource(index), AL11.AL_SEC_OFFSET, position);
 		if (AL10.alGetError() != 0) {
 			return false;
 		}
@@ -133,6 +133,6 @@ public class AudioImpl implements Audio {
 	 * @see org.newdawn.slick.openal.Audio#getPosition()
 	 */
 	public float getPosition() {
-		return AL10.alGetSourcef(store.getSource(0), AL11.AL_SEC_OFFSET);
+		return AL10.alGetSourcef(store.getSource(index), AL11.AL_SEC_OFFSET);
 	}
 }

@@ -23,7 +23,7 @@ public class OpenALStreamPlayer {
 	/** The number of buffers to maintain */
 	public static final int BUFFER_COUNT = 3;
 	/** The size of the sections to stream from the stream */
-	private static final int sectionSize = 4096 * 10;
+	private static final int sectionSize = 4096 * 20;
 	
 	/** The buffer read from the data stream */
 	private byte[] buffer = new byte[sectionSize];
@@ -186,16 +186,26 @@ public class OpenALStreamPlayer {
 		if (done) {
 			return;
 		}
+
+		float sampleRate = audio.getRate();
+		float sampleSize;
+		if (audio.getChannels() > 1) {
+			sampleSize = 4; // AL10.AL_FORMAT_STEREO16
+		} else {
+			sampleSize = 2; // AL10.AL_FORMAT_MONO16
+		}
 		
 		int processed = AL10.alGetSourcei(source, AL10.AL_BUFFERS_PROCESSED);
-		
 		while (processed > 0) {
 			unqueued.clear();
-			
-			positionOffset += AL10.alGetSourcef(source, AL11.AL_SEC_OFFSET);
-			
 			AL10.alSourceUnqueueBuffers(source, unqueued);
-	        if (stream(unqueued.get(0))) {
+			
+			int bufferIndex = unqueued.get(0);
+
+			float bufferLength = (AL10.alGetBufferi(bufferIndex, AL10.AL_SIZE) / sampleSize) / sampleRate;
+			positionOffset += bufferLength;
+			
+	        if (stream(bufferIndex)) {			
 	        	AL10.alSourceQueueBuffers(source, unqueued);
 	        } else {
 	        	remainingBufferCount--;

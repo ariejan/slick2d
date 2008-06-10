@@ -53,8 +53,10 @@ public class Music {
 	private float fadeEndGain;
 	/** Countdown for fading in/out */
 	private int fadeTime;
-	/** Duration for faring in/out */
+	/** Duration for fading in/out */
 	private int fadeDuration;
+	/** True if music should be stopped after fading in/out */
+	private boolean stopAfterFade;
 	
 	/**
 	 * Create and load a piece of music (either OGG or MOD/XM)
@@ -302,8 +304,10 @@ public class Music {
 	 * 
 	 * @param duration Fade time in milliseconds.
 	 * @param endVolume The target volume
+	 * @param stopAfterFade True if music should be stopped after fading in/out
 	 */
-	public void fade (int duration, float endVolume) {
+	public void fade (int duration, float endVolume, boolean stopAfterFade) {
+		this.stopAfterFade = stopAfterFade;
 		fadeStartGain = volume;
 		fadeEndGain = endVolume;
 		fadeDuration = duration;
@@ -321,6 +325,10 @@ public class Music {
 			fadeTime -= delta;
 			if (fadeTime < 0) {
 				fadeTime = 0;
+				if (stopAfterFade) {
+					stop();
+					return;
+				}
 			}
 			
 			float offset = (fadeEndGain - fadeStartGain) * (1 - (fadeTime / (float)fadeDuration));
