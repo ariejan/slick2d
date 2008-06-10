@@ -253,7 +253,7 @@ public class ParticleGame extends BasicGame {
 			}
 		}
 
-		Display.sync2(100);
+		Display.sync(100);
 	}
 
 	public void render(GameContainer container, Graphics g)
