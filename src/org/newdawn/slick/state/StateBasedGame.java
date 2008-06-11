@@ -172,6 +172,8 @@ public abstract class StateBasedGame implements Game, InputListener {
 	 * @see org.newdawn.slick.Game#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public final void render(GameContainer container, Graphics g) throws SlickException {
+		preRenderState(container, g);
+		
 		if (leaveTransition != null) {
 			leaveTransition.preRender(this, container, g);
 		} else if (enterTransition != null) {
@@ -185,12 +187,40 @@ public abstract class StateBasedGame implements Game, InputListener {
 		} else if (enterTransition != null) {
 			enterTransition.postRender(this, container, g);
 		}
+		
+		postRenderState(container, g);
 	}
-
+	
+	/**
+	 * User hook for rendering at the before the current state
+	 * and/or transition have been rendered
+	 * 
+	 * @param container The container in which the game is hosted
+	 * @param g The graphics context on which to draw
+	 * @throws SlickException Indicates a failure within render
+	 */
+	protected void preRenderState(GameContainer container, Graphics g) throws SlickException {
+		// NO-OP
+	}
+	
+	/**
+	 * User hook for rendering at the game level after the current state
+	 * and/or transition have been rendered
+	 * 
+	 * @param container The container in which the game is hosted
+	 * @param g The graphics context on which to draw
+	 * @throws SlickException Indicates a failure within render
+	 */
+	protected void postRenderState(GameContainer container, Graphics g) throws SlickException {
+		// NO-OP
+	}
+	
 	/**
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public final void update(GameContainer container, int delta) throws SlickException {
+		preUpdateState(container, delta);
+		
 		if (leaveTransition != null) {
 			leaveTransition.update(this, container, delta);
 			if (leaveTransition.isComplete()) {
@@ -220,8 +250,34 @@ public abstract class StateBasedGame implements Game, InputListener {
 		}
 		
 		currentState.update(container, this, delta);
+		
+		postUpdateState(container, delta);
 	}
 
+	/**
+	 * User hook for updating at the game before the current state
+	 * and/or transition have been updated
+	 * 
+	 * @param container The container in which the game is hosted
+	 * @param delta The amount of time in milliseconds since last update
+	 * @throws SlickException Indicates a failure within render
+	 */
+	protected void preUpdateState(GameContainer container, int delta) throws SlickException {
+		// NO-OP
+	}
+	
+	/**
+	 * User hook for rendering at the game level after the current state
+	 * and/or transition have been updated
+	 * 
+	 * @param container The container in which the game is hosted
+	 * @param delta The amount of time in milliseconds since last update
+	 * @throws SlickException Indicates a failure within render
+	 */
+	protected void postUpdateState(GameContainer container, int delta) throws SlickException {
+		// NO-OP
+	}
+	
 	/**
 	 * Check if the game is transitioning between states
 	 * 
