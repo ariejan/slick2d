@@ -757,8 +757,14 @@ public class Graphics {
 	 */
 	public void setClip(int x, int y, int width, int height) {
 		predraw();
-		GL.glEnable(SGL.GL_SCISSOR_TEST);
-		clip = new Rectangle(x, y, width, height);
+		
+		if (clip == null) {
+			GL.glEnable(SGL.GL_SCISSOR_TEST);
+			clip = new Rectangle(x, y, width, height);
+		} else {
+			clip.setBounds(x,y,width,height);
+		}
+		
 		GL.glScissor(x, screenHeight - y - height, width, height);
 		postdraw();
 	}
