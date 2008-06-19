@@ -112,12 +112,22 @@ public class AStarPathFinder implements PathFinder, PathFindingContext {
 		while ((maxDepth < maxSearchDistance) && (open.size() != 0)) {
 			// pull out the first node in our open list, this is determined to 
 			// be the most likely to be the next step based on our heuristic
-			current = getFirstInOpen();
-			if (current == nodes[tx][ty]) {
-				break;
+			int lx = sx;
+			int ly = sy;
+			if (current != null) {
+				lx = current.x;
+				ly = current.y;
 			}
 			
+			current = getFirstInOpen();
 			distance = current.depth;
+			
+			if (current == nodes[tx][ty]) {
+				if (isValidLocation(mover,lx,ly,tx,ty)) {
+					break;
+				}
+			}
+			
 			removeFromOpen(current);
 			addToClosed(current);
 			
@@ -550,18 +560,30 @@ public class AStarPathFinder implements PathFinder, PathFindingContext {
 		}
 	}
 
+	/**
+	 * @see org.newdawn.slick.util.pathfinding.PathFindingContext#getMover()
+	 */
 	public Mover getMover() {
 		return mover;
 	}
 
+	/**
+	 * @see org.newdawn.slick.util.pathfinding.PathFindingContext#getSearchDistance()
+	 */
 	public int getSearchDistance() {
 		return distance;
 	}
 
+	/**
+	 * @see org.newdawn.slick.util.pathfinding.PathFindingContext#getSourceX()
+	 */
 	public int getSourceX() {
 		return sourceX;
 	}
 
+	/**
+	 * @see org.newdawn.slick.util.pathfinding.PathFindingContext#getSourceY()
+	 */
 	public int getSourceY() {
 		return sourceY;
 	}
