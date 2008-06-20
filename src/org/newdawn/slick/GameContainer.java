@@ -519,12 +519,19 @@ public abstract class GameContainer implements GUIContext {
 						for (int i=0;i<cycles;i++) {
 							game.update(this, (int) maximumLogicInterval);
 						}
-						game.update(this, (int) (delta % maximumLogicInterval));
+						
+						int remainder = (int) (delta % maximumLogicInterval);
+						if (remainder > minimumLogicInterval) {
+							game.update(this, (int) (delta % maximumLogicInterval));
+							storedDelta = 0;
+						} else {
+							storedDelta = remainder;
+						}
 					} else {
 						game.update(this, (int) storedDelta);
+						storedDelta = 0;
 					}
 					
-					storedDelta = 0;
 				} catch (Throwable e) {
 					Log.error(e);
 					throw new SlickException("Game.update() failure - check the game code.");
