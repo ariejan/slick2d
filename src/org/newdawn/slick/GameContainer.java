@@ -73,6 +73,10 @@ public abstract class GameContainer implements GUIContext {
 	protected boolean paused;
 	/** True if we should force exit */
 	protected boolean forceExit = true;
+	/** True if vsync has been requested */
+	protected boolean vsync;
+	/** Smoothed deltas requested */
+	protected boolean smoothDeltas;
 	
 	/**
 	 * Create a new game container wrapping a given game
@@ -95,6 +99,17 @@ public abstract class GameContainer implements GUIContext {
 	 */
 	public void setForceExit(boolean forceExit) {
 		this.forceExit = forceExit;
+	}
+	
+	/**
+	 * Indicate if we want to smooth deltas. This feature will report
+	 * a delta based on the FPS not the time passed. This works well with 
+	 * vsync.
+	 * 
+	 * @param smoothDeltas True if we should report smooth deltas
+	 */
+	public void setSmoothDeltas(boolean smoothDeltas) {
+		this.smoothDeltas = smoothDeltas;
 	}
 	
 	/**
@@ -506,6 +521,10 @@ public abstract class GameContainer implements GUIContext {
 	 * @throws SlickException Indicates an internal fault to the game.
 	 */
 	protected void updateAndRender(int delta) throws SlickException {
+		if (smoothDeltas) {
+			delta = 1000 / getFPS();
+		}
+		
 		input.poll(width, height);
 		
 		Music.poll(delta);
@@ -666,7 +685,17 @@ public abstract class GameContainer implements GUIContext {
 	 * @param vsync True if we want to sync to vertical refresh
 	 */
 	public void setVSync(boolean vsync) {
+		this.vsync = vsync;
 		Display.setVSyncEnabled(vsync);
+	}
+	
+	/**
+	 * True if vsync is requested
+	 * 
+	 * @return True if vsync is requested
+	 */
+	public boolean isVSyncRequested() {
+		return vsync;
 	}
 	
 	/**
