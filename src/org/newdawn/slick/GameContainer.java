@@ -522,7 +522,9 @@ public abstract class GameContainer implements GUIContext {
 	 */
 	protected void updateAndRender(int delta) throws SlickException {
 		if (smoothDeltas) {
-			delta = 1000 / getFPS();
+			if (getFPS() != 0) {
+				delta = 1000 / getFPS();
+			}
 		}
 		
 		input.poll(width, height);
