@@ -1,5 +1,6 @@
 package org.newdawn.slick.util.pathfinding;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,10 @@ import java.util.ArrayList;
  * 
  * @author Kevin Glass
  */
-public class Path {
+public class Path implements Serializable {
+	/** The serial identifier for this class */
+	private static final long serialVersionUID = 1L;
+	
 	/** The list of steps building up this path */
 	private ArrayList steps = new ArrayList();
 	
