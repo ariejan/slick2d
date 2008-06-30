@@ -106,7 +106,7 @@
 	
 	<zip destfile="${dist}/slick-util.zip">
 	    <fileset dir="." includes="lib/slick-util.jar"/>
-	    <fileset dir="." includes="lib/slick-util-src.jar"/>
+	    <fileset dir="." includes="lib/slick-util-src.zip"/>
 	    <fileset dir="." includes="lib/ibxm.jar"/>
 	    <fileset dir="." includes="lib/jorbis*.jar"/>
 	    <fileset dir="." includes="lib/jogg*.jar"/>
