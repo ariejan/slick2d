@@ -93,6 +93,7 @@
 			<include name="org/newdawn/slick/openal/*.java"/>
 			<include name="org/newdawn/slick/util/ResourceLoader.java"/>
 			<include name="org/newdawn/slick/util/*Location.java"/>
+			<include name="org/newdawn/slick/util/Log.java"/>
 			<include name="org/newdawn/slick/loading/*.java"/>
 			<include name="org/newdawn/slick/SlickException.java"/>
 			<include name="org/newdawn/slick/tests/TestUtils.java"/>
@@ -128,6 +129,7 @@
 			<include name="org/newdawn/slick/openal/*.java"/>
 			<include name="org/newdawn/slick/util/ResourceLoader.java"/>
 			<include name="org/newdawn/slick/util/*Location.java"/>
+			<include name="org/newdawn/slick/util/Log.java"/>
 			<include name="org/newdawn/slick/loading/*.java"/>
 			<include name="org/newdawn/slick/SlickException.java"/>
 			<include name="org/newdawn/slick/tests/TestUtils.java"/>
@@ -151,7 +153,7 @@
 
 <!-- build the pedigree tool -->
 <target name="build-pedigree" depends="build-slick">
-	<delete dir="lib/pedigree.jar"/>
+	<delete file="lib/pedigree.jar"/>
 	<javac includes="org/newdawn/slick/tools/peditor/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
 	    <classpath>
 	      <pathelement path="lib/slick.jar"/>
@@ -171,7 +173,7 @@
 
 <!-- build the hiero tool -->
 <target name="build-hiero" depends="init">
-	<delete dir="lib/hiero.jar"/>
+	<delete file="lib/hiero.jar"/>
 	<javac includes="org/newdawn/slick/tools/hiero/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
 	</javac>
 	<jar destfile="lib/hiero.jar" 
@@ -186,7 +188,7 @@
 
 <!-- build the scalar tool -->
 <target name="build-scalar" depends="init">
-	<delete dir="lib/scalar.jar"/>
+	<delete file="lib/scalar.jar"/>
 	<javac includes="org/newdawn/slick/tools/scalar/**" debug="true" srcdir="tools" destdir="${build.dir}/classes" target="1.4" source="1.4">
 	</javac>
 	<jar destfile="lib/scalar.jar" 
