@@ -405,7 +405,7 @@ public class Image implements Renderable {
 	 * 
 	 * @return The y offset 
 	 */
-	public float getTexutreOffsetY() {
+	public float getTextureOffsetY() {
 		return textureOffsetY;
 	}
 
