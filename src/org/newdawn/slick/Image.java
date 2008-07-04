@@ -468,7 +468,48 @@ public class Image implements Renderable {
 		init();
 		draw(x,y,width,height,Color.white);
 	}
-	
+
+	/**
+	 * Draw this image at a specified location and size
+	 * 
+	 * @param x The x location to draw the image at
+	 * @param y The y location to draw the image at
+	 * @param hshear The amount to shear the bottom points by horizontally
+	 * @param vshear The amount to shear the right points by vertically
+	 */
+    public void drawSheared(float x,float y, float hshear, float vshear) { 
+        Color.white.bind();
+        texture.bind(); 
+        
+        GL.glTranslatef(x, y, 0);
+        if (angle != 0) {
+	        GL.glTranslatef(centerX, centerY, 0.0f); 
+	        GL.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
+	        GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        }
+        
+        GL.glBegin(SGL.GL_QUADS); 
+        	init();
+		
+		    GL.glTexCoord2f(textureOffsetX, textureOffsetY);
+			GL.glVertex3f(x, y, 0);
+			GL.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
+			GL.glVertex3f(x+ hshear, y + height, 0);
+			GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY
+					+ textureHeight);
+			GL.glVertex3f(x + width + hshear, y + height + vshear, 0);
+			GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY);
+			GL.glVertex3f(x + width, y + vshear, 0);
+        GL.glEnd(); 
+        
+        if (angle != 0) {
+	        GL.glTranslatef(centerX, centerY, 0.0f); 
+	        GL.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
+	        GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        }
+        GL.glTranslatef(-x, -y, 0);
+    } 
+    
 	/**
 	 * Draw this image at a specified location and size
 	 * 
