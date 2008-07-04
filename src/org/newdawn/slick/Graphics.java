@@ -434,7 +434,7 @@ public class Graphics {
 			if (y1 > y2) {
 				float temp = y2;
 				y2 = y1;
-				y1 = y2;
+				y1 = temp;
 			}
 			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),lineWidth+1,(y2-y1)+lineWidth+1);
 			return;
@@ -442,7 +442,7 @@ public class Graphics {
 			if (x1 > x2) {
 				float temp = x2;
 				x2 = x1;
-				x1 = x2;
+				x1 = temp;
 			}
 			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),(x2-x1)+lineWidth+1,lineWidth+1);
 			return;
