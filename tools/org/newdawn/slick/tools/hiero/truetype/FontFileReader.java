@@ -73,6 +73,14 @@ public class FontFileReader {
         }
     }
 
+    public FontFileReader(byte[] data) throws IOException {
+    	file = data;
+        this.fsize = this.file.length;
+        if (fsize > 2000000) {
+        	throw new IOException("Font too big");
+        }
+        this.current = 0;
+    }
 
     /**
      * Constructor

@@ -341,10 +341,14 @@ public class FontData {
 	
 	/** The java font version of the font */
 	private Font javaFont;
-	/** The processed TTF file data */
-	private TTFFile rawFont;
 	/** The size of this instance of the font */
 	private float size;
+	/** The UPEM */
+	private int upem;
+	/** The mapping table from TTF */
+	private Map ansiKerning;
+	/** The width of the characters */
+	private int[] charWidth;
 	
 	/**
 	 * Create a new font data element
@@ -365,11 +369,14 @@ public class FontData {
 		this.size = size;
 		try {
 			javaFont = Font.createFont(Font.TRUETYPE_FONT, new ByteArrayInputStream(data));
-			rawFont = new TTFFile();
-			if (!rawFont.readFont(new FontFileReader(new ByteArrayInputStream(data)))) {
+			TTFFile rawFont = new TTFFile();
+			if (!rawFont.readFont(new FontFileReader(data))) {
 				throw new IOException("Invalid font file");
 			}
-
+			upem = rawFont.getUPEM();
+			ansiKerning = rawFont.getAnsiKerning();
+			charWidth = rawFont.getAnsiWidth();
+			
 			String name = getName();
 			System.err.println("Loaded: "+name+" ("+data.length+")");
 			boolean bo = false;
@@ -427,7 +434,9 @@ public class FontData {
 		FontData data = new FontData();
 		data.size = size;
 		data.javaFont = original.javaFont.deriveFont(style, size);
-		data.rawFont = original.rawFont;
+		data.upem = upem;
+		data.ansiKerning = ansiKerning;
+		data.charWidth = charWidth;
 		
 		return data;
 	}
@@ -438,7 +447,7 @@ public class FontData {
 	 * @return The full name of this font
 	 */
 	public String getName() {
-		return rawFont.getPostScriptName();
+		return javaFont.getName();
 	}
 	
 	/**
@@ -447,7 +456,7 @@ public class FontData {
 	 * @return The family name of this font
 	 */
 	public String getFamilyName() {
-		return rawFont.getFamilyName();
+		return javaFont.getFamily();
 	}
 	
 	/**
@@ -476,7 +485,7 @@ public class FontData {
 	 * @return The amount of kerning to apply between the two characters
 	 */
 	public int getKerning(char first, char second) {
-		Map toMap = (Map) rawFont.getAnsiKerning().get(new Integer(first));
+		Map toMap = (Map) ansiKerning.get(new Integer(first));
 		if (toMap == null) {
 			return 0;
 		}
@@ -486,9 +495,21 @@ public class FontData {
 			return 0;
 		}
 		
-		return Math.round(rawFont.convertUnitToEm(size, kerning.intValue()));
+		return Math.round(convertUnitToEm(size, kerning.intValue()));
 	}
-	
+
+    /**
+     * Covert a "units" value to a point value based on a given
+     * point size.
+     * 
+     * @param ptSize The point size of the font being rendered
+     * @param units The units to be converted
+     * @return The size in points
+     */
+    public float convertUnitToEm(float ptSize, int units) {
+    	return (units * ptSize) / upem;
+    }
+    
 	/**
 	 * Get the "advance" value for the given character
 	 * 
@@ -496,7 +517,7 @@ public class FontData {
 	 * @return The adavance value for the given character
 	 */
 	public float getAdvance(char c) {
-		return Math.round(rawFont.convertUnitToEm(size, rawFont.getCharWidth(c)));
+		return Math.round(convertUnitToEm(size, charWidth[c]));
 	}
 	
 	/**

@@ -230,6 +230,15 @@ public class TTFFile {
     }
     
     /**
+     * Get whatever UPEM is
+     * 
+     * @return The UPEM
+     */
+    public int getUPEM() {
+    	return upem;
+    }
+    
+    /**
      * Read the cmap table,
      * return false if the table is not present or only unsupported
      * tables are present. Currently only unicode cmaps are supported.
@@ -488,6 +497,15 @@ public class TTFFile {
         }
     }
 
+    /**
+     * Get the width of the characters
+     * 
+     * @return The width of the characters
+     */
+    public int[] getAnsiWidth() {
+    	return ansiWidth;
+    }
+    
     /**
      * Read the font data.
      * If the fontfile is a TrueType Collection (.ttc file)
