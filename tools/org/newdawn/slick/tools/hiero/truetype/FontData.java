@@ -349,6 +349,10 @@ public class FontData {
 	private Map ansiKerning;
 	/** The width of the characters */
 	private int[] charWidth;
+	/** The name of the font */
+	private String fontName;
+	/** The name of the font family */
+	private String familyName;
 	
 	/**
 	 * Create a new font data element
@@ -376,6 +380,8 @@ public class FontData {
 			upem = rawFont.getUPEM();
 			ansiKerning = rawFont.getAnsiKerning();
 			charWidth = rawFont.getAnsiWidth();
+			fontName = rawFont.getPostScriptName();
+			familyName = rawFont.getFamilyName();
 			
 			String name = getName();
 			System.err.println("Loaded: "+name+" ("+data.length+")");
@@ -447,7 +453,7 @@ public class FontData {
 	 * @return The full name of this font
 	 */
 	public String getName() {
-		return javaFont.getName();
+		return fontName;
 	}
 	
 	/**
@@ -456,7 +462,7 @@ public class FontData {
 	 * @return The family name of this font
 	 */
 	public String getFamilyName() {
-		return javaFont.getFamily();
+		return familyName;
 	}
 	
 	/**
