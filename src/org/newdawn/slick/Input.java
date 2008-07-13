@@ -1095,16 +1095,19 @@ public class Input {
 	 * @param interval The interval between key repeats in ms
 	 */
 	public void enableKeyRepeat(int initial, int interval) {
-		keyRepeat = true;
-		keyRepeatInitial = initial;
-		keyRepeatInterval = interval;
+//		keyRepeat = true;
+//		keyRepeatInitial = initial;
+//		keyRepeatInterval = interval;
+		
+		Keyboard.enableRepeatEvents(true);
 	}
 	
 	/**
 	 * Disable key repeat for this input context
 	 */
 	public void disableKeyRepeat() {
-		keyRepeat = false;
+		Keyboard.enableRepeatEvents(false);
+//		keyRepeat = false;
 	}
 	
 	/**
@@ -1113,7 +1116,7 @@ public class Input {
 	 * @return True if key repeat is enabled
 	 */
 	public boolean isKeyRepeatEnabled() {
-		return keyRepeat;
+		return Keyboard.areRepeatEventsEnabled();
 	}
 	
 	/**
