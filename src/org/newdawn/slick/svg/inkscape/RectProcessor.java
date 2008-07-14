@@ -29,7 +29,7 @@ public class RectProcessor implements ElementProcessor {
 		float x = Float.parseFloat(element.getAttribute("x"));
 		float y = Float.parseFloat(element.getAttribute("y"));
 		
-		Rectangle rect = new Rectangle(x,y,width,height);
+		Rectangle rect = new Rectangle(x,y,width+1,height+1);
 		Shape shape = rect.transform(transform);
 		
 		NonGeometricData data = Util.getNonGeometricData(element);
