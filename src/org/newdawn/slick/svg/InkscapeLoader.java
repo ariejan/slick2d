@@ -88,6 +88,18 @@ public class InkscapeLoader implements Loader {
 	 * @throws SlickException Indicates a failure to process the document
 	 */
 	private Diagram loadDiagram(InputStream in) throws SlickException {
+		return loadDiagram(in, false);
+	}
+	
+	/**
+	 * Load a SVG document into a diagram
+	 * 
+	 * @param in The input stream from which to read the SVG
+	 * @param offset Offset the diagram for the height of the document
+	 * @return The diagram loaded
+	 * @throws SlickException Indicates a failure to process the document
+	 */
+	private Diagram loadDiagram(InputStream in, boolean offset) throws SlickException {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setValidating(false);
@@ -103,8 +115,12 @@ public class InkscapeLoader implements Loader {
 			diagram = new Diagram();
 			Document doc = builder.parse(in);
 			Element root = doc.getDocumentElement();
-			
-			loadChildren(root, new Transform());
+
+			float docHeight = Float.parseFloat(root.getAttribute("height"));
+			if (!offset) {
+				docHeight = 0;
+			}
+			loadChildren(root, Transform.createTranslateTransform(0, -docHeight));
 			
 			return diagram;
 		} catch (Exception e) {
