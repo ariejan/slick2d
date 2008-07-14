@@ -51,6 +51,18 @@ public class InkscapeLoader implements Loader {
 		processors.add(new DefsProcessor());
 		processors.add(new UseProcessor());
 	}
+
+	/**
+	 * Load a SVG document into a diagram
+	 * 
+	 * @param ref The reference in the classpath to load the diagram from
+	 * @param offset Offset the diagram for the height of the document
+	 * @return The diagram loaded
+	 * @throws SlickException Indicates a failure to process the document
+	 */
+	public static Diagram load(String ref, boolean offset) throws SlickException {
+		return load(ResourceLoader.getResourceAsStream(ref), offset);
+	}
 	
 	/**
 	 * Load a SVG document into a diagram
@@ -60,18 +72,19 @@ public class InkscapeLoader implements Loader {
 	 * @throws SlickException Indicates a failure to process the document
 	 */
 	public static Diagram load(String ref) throws SlickException {
-		return load(ResourceLoader.getResourceAsStream(ref));
+		return load(ResourceLoader.getResourceAsStream(ref), false);
 	}
 
 	/**
 	 * Load a SVG document into a diagram
 	 * 
+	 * @param offset Offset the diagram for the height of the document
 	 * @param in The input stream from which to read the SVG
 	 * @return The diagram loaded
 	 * @throws SlickException Indicates a failure to process the document
 	 */
-	public static Diagram load(InputStream in) throws SlickException {
-		return new InkscapeLoader().loadDiagram(in);
+	public static Diagram load(InputStream in, boolean offset) throws SlickException {
+		return new InkscapeLoader().loadDiagram(in, offset);
 	}
 
 	/**
