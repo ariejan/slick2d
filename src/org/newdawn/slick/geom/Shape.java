@@ -269,6 +269,13 @@ public abstract class Shape implements Serializable {
     	float[] t1 = getNormal(prev, current);
     	float[] t2 = getNormal(current, next);
     	
+    	if ((index == 0) && (!closed())) {
+    		return t2;
+    	}
+    	if ((index == getPointCount()-1) && (!closed())) {
+    		return t1;
+    	}
+    	
     	float tx = (t1[0]+t2[0])/2;
     	float ty = (t1[1]+t2[1])/2;
     	float len = (float) Math.sqrt((tx*tx)+(ty*ty));

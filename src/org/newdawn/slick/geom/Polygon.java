@@ -10,6 +10,8 @@ import java.util.ArrayList;
 public class Polygon extends Shape {
 	/** Allow duplicated points */
 	private boolean allowDups = false;
+	/** True if the polygon is closed */
+	private boolean closed = true;
 	
     /**
      * Construct a new polygon with 3 or more points. 
@@ -121,6 +123,7 @@ public class Polygon extends Shape {
         transform.transform(points, 0, result, 0, points.length / 2);
         resultPolygon.points = result;
         resultPolygon.findCenter();
+        resultPolygon.closed = closed;
 
         return resultPolygon;
     }
@@ -149,4 +152,20 @@ public class Polygon extends Shape {
     protected void createPoints() {
 //    	This is empty since a polygon must have it's points all the time.
     }
+    
+    /**
+     * @see org.newdawn.slick.geom.Shape#closed()
+     */
+	public boolean closed() {
+		return closed;
+	}
+	
+	/**
+	 * Indicate if the polygon should be closed
+	 * 
+	 * @param closed True if the polygon should be closed
+	 */
+	public void setClosed(boolean closed) {
+		this.closed = closed;
+	}
 }

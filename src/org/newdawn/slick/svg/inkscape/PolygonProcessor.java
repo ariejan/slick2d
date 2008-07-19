@@ -34,6 +34,7 @@ public class PolygonProcessor implements ElementProcessor {
 		
 		ArrayList pts = new ArrayList();
 		boolean moved = false;
+		boolean closed = false;
 		
 		while (tokens.hasMoreTokens()) {
 			String nextToken = tokens.nextToken();
@@ -41,6 +42,7 @@ public class PolygonProcessor implements ElementProcessor {
 				continue;
 			}
 			if (nextToken.equals("z")) {
+				closed = true;
 				break;
 			}
 			if (nextToken.equals("M")) {
@@ -69,6 +71,7 @@ public class PolygonProcessor implements ElementProcessor {
 			}
 		}
 		
+		poly.setClosed(closed);
 		return count;
 	}
 
