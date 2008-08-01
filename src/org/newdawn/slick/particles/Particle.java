@@ -179,11 +179,9 @@ public class Particle {
 	 *            The time since the last update
 	 */
 	public void update(int delta) {
-		if (emitter.isEnabled()) {
-			emitter.updateParticle(this, delta);
-		}
-
+		emitter.updateParticle(this, delta);
 		life -= delta;
+		
 		if (life > 0) {
 			x += delta * velx;
 			y += delta * vely;
