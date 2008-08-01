@@ -29,18 +29,21 @@ import org.xml.sax.SAXException;
 
 /**
  * A loader specifically for the SVG that is produced from Inkscape
- *
+ * 
  * @author kevin
  */
 public class InkscapeLoader implements Loader {
-	/** The number of times to over trigulate to get enough tesselation for smooth shading */
+	/**
+	 * The number of times to over trigulate to get enough tesselation for
+	 * smooth shading
+	 */
 	public static int RADIAL_TRIANGULATION_LEVEL = 1;
-	
+
 	/** The list of XML element processors */
 	private static ArrayList processors = new ArrayList();
 	/** The diagram loaded */
 	private Diagram diagram;
-	
+
 	static {
 		processors.add(new RectProcessor());
 		processors.add(new EllipseProcessor());
@@ -55,21 +58,27 @@ public class InkscapeLoader implements Loader {
 	/**
 	 * Load a SVG document into a diagram
 	 * 
-	 * @param ref The reference in the classpath to load the diagram from
-	 * @param offset Offset the diagram for the height of the document
+	 * @param ref
+	 *            The reference in the classpath to load the diagram from
+	 * @param offset
+	 *            Offset the diagram for the height of the document
 	 * @return The diagram loaded
-	 * @throws SlickException Indicates a failure to process the document
+	 * @throws SlickException
+	 *             Indicates a failure to process the document
 	 */
-	public static Diagram load(String ref, boolean offset) throws SlickException {
+	public static Diagram load(String ref, boolean offset)
+			throws SlickException {
 		return load(ResourceLoader.getResourceAsStream(ref), offset);
 	}
-	
+
 	/**
 	 * Load a SVG document into a diagram
 	 * 
-	 * @param ref The reference in the classpath to load the diagram from
+	 * @param ref
+	 *            The reference in the classpath to load the diagram from
 	 * @return The diagram loaded
-	 * @throws SlickException Indicates a failure to process the document
+	 * @throws SlickException
+	 *             Indicates a failure to process the document
 	 */
 	public static Diagram load(String ref) throws SlickException {
 		return load(ResourceLoader.getResourceAsStream(ref), false);
@@ -78,50 +87,63 @@ public class InkscapeLoader implements Loader {
 	/**
 	 * Load a SVG document into a diagram
 	 * 
-	 * @param offset Offset the diagram for the height of the document
-	 * @param in The input stream from which to read the SVG
+	 * @param offset
+	 *            Offset the diagram for the height of the document
+	 * @param in
+	 *            The input stream from which to read the SVG
 	 * @return The diagram loaded
-	 * @throws SlickException Indicates a failure to process the document
+	 * @throws SlickException
+	 *             Indicates a failure to process the document
 	 */
-	public static Diagram load(InputStream in, boolean offset) throws SlickException {
+	public static Diagram load(InputStream in, boolean offset)
+			throws SlickException {
 		return new InkscapeLoader().loadDiagram(in, offset);
 	}
 
 	/**
 	 * Private, you should be using the static method
 	 */
-	private InkscapeLoader() {	
+	private InkscapeLoader() {
 	}
 
 	/**
 	 * Load a SVG document into a diagram
 	 * 
-	 * @param in The input stream from which to read the SVG
+	 * @param in
+	 *            The input stream from which to read the SVG
 	 * @return The diagram loaded
-	 * @throws SlickException Indicates a failure to process the document
+	 * @throws SlickException
+	 *             Indicates a failure to process the document
 	 */
 	private Diagram loadDiagram(InputStream in) throws SlickException {
 		return loadDiagram(in, false);
 	}
-	
+
 	/**
 	 * Load a SVG document into a diagram
 	 * 
-	 * @param in The input stream from which to read the SVG
-	 * @param offset Offset the diagram for the height of the document
+	 * @param in
+	 *            The input stream from which to read the SVG
+	 * @param offset
+	 *            Offset the diagram for the height of the document
 	 * @return The diagram loaded
-	 * @throws SlickException Indicates a failure to process the document
+	 * @throws SlickException
+	 *             Indicates a failure to process the document
 	 */
-	private Diagram loadDiagram(InputStream in, boolean offset) throws SlickException {
+	private Diagram loadDiagram(InputStream in, boolean offset)
+			throws SlickException {
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilderFactory factory = DocumentBuilderFactory
+					.newInstance();
 			factory.setValidating(false);
 			factory.setNamespaceAware(true);
-			
+
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			builder.setEntityResolver(new EntityResolver() {
-				public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-					return new InputSource(new ByteArrayInputStream(new byte[0]));
+				public InputSource resolveEntity(String publicId,
+						String systemId) throws SAXException, IOException {
+					return new InputSource(
+							new ByteArrayInputStream(new byte[0]));
 				}
 			});
 
@@ -129,41 +151,55 @@ public class InkscapeLoader implements Loader {
 			Document doc = builder.parse(in);
 			Element root = doc.getDocumentElement();
 
-			float docHeight = Float.parseFloat(root.getAttribute("height"));
+			String heightString = root.getAttribute("height");
+			while (Character.isLetter(heightString
+					.charAt(heightString.length() - 1))) {
+				heightString = heightString.substring(0,
+						heightString.length() - 1);
+			}
+
+			float docHeight = Float.parseFloat(heightString);
 			if (!offset) {
 				docHeight = 0;
 			}
-			loadChildren(root, Transform.createTranslateTransform(0, -docHeight));
-			
+			loadChildren(root, Transform
+					.createTranslateTransform(0, -docHeight));
+
 			return diagram;
 		} catch (Exception e) {
 			throw new SlickException("Failed to load inkscape document", e);
 		}
 	}
-	
+
 	/**
-	 * @see org.newdawn.slick.svg.Loader#loadChildren(org.w3c.dom.Element, org.newdawn.slick.geom.Transform)
+	 * @see org.newdawn.slick.svg.Loader#loadChildren(org.w3c.dom.Element,
+	 *      org.newdawn.slick.geom.Transform)
 	 */
-	public void loadChildren(Element element, Transform t) throws ParsingException   {
+	public void loadChildren(Element element, Transform t)
+			throws ParsingException {
 		NodeList list = element.getChildNodes();
-		for (int i=0;i<list.getLength();i++) {
+		for (int i = 0; i < list.getLength(); i++) {
 			if (list.item(i) instanceof Element) {
 				loadElement((Element) list.item(i), t);
 			}
 		}
 	}
-	
+
 	/**
 	 * Load a single element into the diagram
 	 * 
-	 * @param element The element ot be loaded
-	 * @param t The transform to apply to the loaded element from the parent
-	 * @throws ParsingException Indicates a failure to parse the element
+	 * @param element
+	 *            The element ot be loaded
+	 * @param t
+	 *            The transform to apply to the loaded element from the parent
+	 * @throws ParsingException
+	 *             Indicates a failure to parse the element
 	 */
-	private void loadElement(Element element, Transform t) throws ParsingException {
-		for (int i=0;i<processors.size();i++) {
+	private void loadElement(Element element, Transform t)
+			throws ParsingException {
+		for (int i = 0; i < processors.size(); i++) {
 			ElementProcessor processor = (ElementProcessor) processors.get(i);
-			
+
 			if (processor.handles(element)) {
 				processor.process(this, element, diagram, t);
 			}
