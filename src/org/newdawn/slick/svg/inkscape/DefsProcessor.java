@@ -8,6 +8,7 @@ import org.newdawn.slick.svg.Diagram;
 import org.newdawn.slick.svg.Gradient;
 import org.newdawn.slick.svg.Loader;
 import org.newdawn.slick.svg.ParsingException;
+import org.newdawn.slick.util.Log;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -39,7 +40,8 @@ public class DefsProcessor implements ElementProcessor {
 			Element pattern = (Element) patterns.item(i);
 			NodeList list = pattern.getElementsByTagName("image");
 			if (list.getLength() == 0) {
-				throw new ParsingException(pattern, "No image specified for pattern");
+				Log.warn("Pattern 1981 does not specify an image. Only image patterns are supported.");
+				continue;
 			}
 			Element image = (Element) list.item(0);
 			
@@ -73,11 +75,6 @@ public class DefsProcessor implements ElementProcessor {
 			
 			String ref = lin.getAttributeNS("http://www.w3.org/1999/xlink", "href");
 			if (stringLength(ref) > 0) {
-				Gradient grad = diagram.getGradient(ref.substring(1));
-				if (grad == null) {
-					throw new ParsingException(lin, "Can't find referenced gradient: "+ref);
-				}
-				
 				gradient.reference(ref.substring(1));
 				toResolve.add(gradient);
 			} else {
@@ -128,11 +125,6 @@ public class DefsProcessor implements ElementProcessor {
 			
 			String ref = rad.getAttributeNS("http://www.w3.org/1999/xlink", "href");
 			if (stringLength(ref) > 0) {
-				Gradient grad = diagram.getGradient(ref.substring(1));
-				if (grad == null) {
-					throw new ParsingException(rad, "Can't find referenced gradient: "+ref);
-				}
-
 				gradient.reference(ref.substring(1));
 				toResolve.add(gradient);
 			} else {
