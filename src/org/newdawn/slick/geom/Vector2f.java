@@ -154,10 +154,13 @@ public strictfp class Vector2f {
 	 * 
 	 * @param x The x component to set
 	 * @param y The y component to set
+	 * @return This vector - useful for chaning operations
 	 */
-	public void set(float x, float y) { 
+	public Vector2f set(float x, float y) { 
 		this.x = x; 
 		this.y = y; 
+		
+		return this;
 	}
 
 	/**
@@ -168,48 +171,72 @@ public strictfp class Vector2f {
 	public Vector2f negate() {
 		return new Vector2f(-x, -y); 
 	}
+
+	/**
+	 * Negate this vector without creating a new copy
+	 * 
+	 * @return This vector - useful for chaning operations
+	 */
+	public Vector2f negateLocal() {
+		x = -x;
+		y = -y;
+		
+		return this;
+	}
 	
 	/**
 	 * Add a vector to this vector
 	 * 
 	 * @param v The vector to add
+	 * @return This vector - useful for chaning operations
 	 */
-	public void add(Vector2f v)
+	public Vector2f add(Vector2f v)
 	{
 		x += v.getX(); 
 		y += v.getY();
+		
+		return this;
 	}
 	
 	/**
 	 * Subtract a vector from this vector
 	 * 
 	 * @param v The vector subtract
+	 * @return This vector - useful for chaning operations
 	 */
-	public void sub(Vector2f v)
+	public Vector2f sub(Vector2f v)
 	{
 		x -= v.getX(); 
 		y -= v.getY();
+		
+		return this;
 	}
 
 	/**
 	 * Scale this vector by a value
 	 * 
 	 * @param a The value to scale this vector by
+	 * @return This vector - useful for chaning operations
 	 */
-	public void scale(float a)
+	public Vector2f scale(float a)
 	{
 		x *= a; 
 		y *= a;
+		
+		return this;
 	}
 
 	/**
 	 * Normalise the vector
+	 * 
+	 * @return This vector - useful for chaning operations
 	 */
-	public void normalise() {
+	public Vector2f normalise() {
 		float l = length();
 		
 		x /= l;
 		y /= l;
+		return this;
 	}
 	
 	/**
