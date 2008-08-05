@@ -218,10 +218,10 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 	 * @param srcY2
 	 *            The bottom source y position to draw from
 	 */
-	private void drawQuad(int drawX, int drawY, int drawX2, int drawY2,
-			int srcX, int srcY, int srcX2, int srcY2) {
-		int DrawWidth = drawX2 - drawX;
-		int DrawHeight = drawY2 - drawY;
+	private void drawQuad(float drawX, float drawY, float drawX2, float drawY2,
+			float srcX, float srcY, float srcX2, float srcY2) {
+		float DrawWidth = drawX2 - drawX;
+		float DrawHeight = drawY2 - drawY;
 		float TextureSrcX = srcX / textureWidth;
 		float TextureSrcY = srcY / textureHeight;
 		float SrcWidth = srcX2 - srcX;
@@ -325,9 +325,9 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 				intObject = charArray[charCurrent];
 
 				if ((i >= startIndex) || (i <= endIndex)) {
-					drawQuad((int) (x + totalwidth), (int) y,
-							(int) (x + totalwidth + intObject.width),
-							(int) (y + intObject.height), intObject.storedX,
+					drawQuad((x + totalwidth), y,
+							(x + totalwidth + intObject.width),
+							(y + intObject.height), intObject.storedX,
 							intObject.storedY, intObject.storedX + intObject.width,
 							intObject.storedY + intObject.height);
 				}
