@@ -18,11 +18,38 @@ public class Diagram {
 	/** The figures mapping */
 	private HashMap figureMap = new HashMap();
 	
+	/** The width of the diagram */
+	private float width;
+	/** The height of the diagram */
+	private float height;
+	
 	/**
 	 * Create a new empty diagram
+	 * 
+	 * @param width The width of the diagram
+	 * @param height The height of the diagram
 	 */
-	public Diagram() {
-		
+	public Diagram(float width, float height) {
+		this.width = width;
+		this.height = height;
+	}
+
+	/**
+	 * Get the width of the diagram
+	 * 
+	 * @return The width of the diagram
+	 */
+	public float getWidth() {
+		return width;
+	}
+	
+	/**
+	 * Get the height of the diagram
+	 * 
+	 * @return The height of the diagram
+	 */
+	public float getHeight() {
+		return height;
 	}
 	
 	/**

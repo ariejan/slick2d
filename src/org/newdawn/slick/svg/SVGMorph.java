@@ -19,6 +19,8 @@ public class SVGMorph extends Diagram {
 	 * @param diagram The base diagram which provides the first step of the morph
 	 */
 	public SVGMorph(Diagram diagram) {
+		super(diagram.getWidth(), diagram.getHeight());
+		
 		for (int i=0;i<diagram.getFigureCount();i++) {
 			Figure figure = diagram.getFigure(i);
 			Figure copy = new Figure(figure.getType(), new MorphShape(figure.getShape()), figure.getData(), figure.getTransform());

@@ -41,6 +41,7 @@ public class InkscapeLoader implements Loader {
 
 	/** The list of XML element processors */
 	private static ArrayList processors = new ArrayList();
+
 	/** The diagram loaded */
 	private Diagram diagram;
 
@@ -147,18 +148,25 @@ public class InkscapeLoader implements Loader {
 				}
 			});
 
-			diagram = new Diagram();
 			Document doc = builder.parse(in);
 			Element root = doc.getDocumentElement();
+
+			String widthString = root.getAttribute("width");
+			while (Character.isLetter(widthString
+					.charAt(widthString.length() - 1))) {
+				widthString = widthString.substring(0, widthString.length() - 1);
+			}
 
 			String heightString = root.getAttribute("height");
 			while (Character.isLetter(heightString
 					.charAt(heightString.length() - 1))) {
-				heightString = heightString.substring(0,
-						heightString.length() - 1);
+				heightString = heightString.substring(0,heightString.length() - 1);
 			}
 
+			float docWidth = Float.parseFloat(widthString);
 			float docHeight = Float.parseFloat(heightString);
+
+			diagram = new Diagram(docWidth, docHeight);
 			if (!offset) {
 				docHeight = 0;
 			}
