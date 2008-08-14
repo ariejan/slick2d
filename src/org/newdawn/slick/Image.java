@@ -492,14 +492,14 @@ public class Image implements Renderable {
         	init();
 		
 		    GL.glTexCoord2f(textureOffsetX, textureOffsetY);
-			GL.glVertex3f(x, y, 0);
+			GL.glVertex3f(0, 0, 0);
 			GL.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
-			GL.glVertex3f(x+ hshear, y + height, 0);
+			GL.glVertex3f(hshear, height, 0);
 			GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY
 					+ textureHeight);
-			GL.glVertex3f(x + width + hshear, y + height + vshear, 0);
+			GL.glVertex3f(width + hshear, height + vshear, 0);
 			GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY);
-			GL.glVertex3f(x + width, y + vshear, 0);
+			GL.glVertex3f(width, vshear, 0);
         GL.glEnd(); 
         
         if (angle != 0) {
