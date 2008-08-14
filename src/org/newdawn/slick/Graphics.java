@@ -57,6 +57,11 @@ public class Graphics {
 	/** The default font to use */
 	protected static Font DEFAULT_FONT;
 
+	/** The last set scale */
+	private float sx = 1;
+	/** The last set scale */
+	private float sy = 1;
+	
 	/**
 	 * Set the current graphics context in use
 	 * 
@@ -301,6 +306,9 @@ public class Graphics {
 	 * Reset the transformation on this graphics context
 	 */
 	public void resetTransform() {
+		sx = 1;
+		sy = 1;
+		
 		if (pushed) {
 			predraw();
 			GL.glPopMatrix();
@@ -330,6 +338,9 @@ public class Graphics {
 	 *            The scaling factor to apply to the y axis
 	 */
 	public void scale(float sx, float sy) {
+		this.sx = sx;
+		this.sy = sy;
+		
 		checkPush();
 
 		predraw();
@@ -430,13 +441,16 @@ public class Graphics {
 	 */
 	public void drawLine(float x1, float y1, float x2, float y2) {
 		float lineWidth = this.lineWidth - 1;
+		
 		if (x1 == x2) {
 			if (y1 > y2) {
 				float temp = y2;
 				y2 = y1;
 				y1 = temp;
 			}
-			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),lineWidth+1,(y2-y1)+lineWidth+1);
+			float step = 1 / sy;
+			lineWidth = lineWidth / sy;
+			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),lineWidth+step,(y2-y1)+lineWidth+step);
 			return;
 		} else if (y1 == y2) {
 			if (x1 > x2) {
@@ -444,7 +458,9 @@ public class Graphics {
 				x2 = x1;
 				x1 = temp;
 			}
-			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),(x2-x1)+lineWidth+1,lineWidth+1);
+			float step = 1 / sx;
+			lineWidth = lineWidth / sx;
+			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),(x2-x1)+lineWidth+step,lineWidth+step);
 			return;
 		}
 		
