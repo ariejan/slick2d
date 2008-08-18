@@ -672,10 +672,10 @@ public class Graphics {
 	public void drawRect(float x1, float y1, float width, float height) {
 		float lineWidth = getLineWidth();
 		
-		fillRect(x1,y1,width,lineWidth);
-		fillRect(x1,y1+height-lineWidth,width,lineWidth);
-		fillRect(x1,y1,lineWidth,height);
-		fillRect(x1+width-lineWidth,y1,lineWidth,height);
+		drawLine(x1,y1,x1+width,y1);
+		drawLine(x1+width,y1,x1+width,y1+height);
+		drawLine(x1+width,y1+height,x1,y1+height);
+		drawLine(x1,y1+height,x1,y1);
 	}
 
 	/**
