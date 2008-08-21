@@ -265,7 +265,7 @@ public class BigImage extends Image {
 		float sy = height / realHeight;
 		
 		GL.glTranslatef(x,y,0);
-		GL.glScalef(sx,sy,0);
+		GL.glScalef(sx,sy,1);
 
 		float xp = 0;
 		float yp = 0;
@@ -285,7 +285,7 @@ public class BigImage extends Image {
 			
 		}
 		
-		GL.glScalef(1.0f/sx,1.0f/sy,0);
+		GL.glScalef(1.0f/sx,1.0f/sy,1);
 		GL.glTranslatef(-x,-y,0);
 	}
 
@@ -376,7 +376,7 @@ public class BigImage extends Image {
 		float sy = height / realHeight;
 		
 		GL.glTranslatef(x,y,0);
-		GL.glScalef(sx,sy,0);
+		GL.glScalef(sx,sy,1);
 
 		float xp = 0;
 		float yp = 0;
@@ -396,7 +396,7 @@ public class BigImage extends Image {
 			
 		}
 		
-		GL.glScalef(1.0f/sx,1.0f/sy,0);
+		GL.glScalef(1.0f/sx,1.0f/sy,1);
 		GL.glTranslatef(-x,-y,0);
 	}
 
