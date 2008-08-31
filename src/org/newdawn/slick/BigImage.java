@@ -154,8 +154,8 @@ public class BigImage extends Image {
 				return;
 			}
 			
-			xcount = ((dataWidth-1) / tileSize) + 1;
-			ycount = ((dataHeight-1) / tileSize) + 1;
+			xcount = ((realWidth-1) / tileSize) + 1;
+			ycount = ((realHeight-1) / tileSize) + 1;
 			
 			images = new Image[xcount][ycount];
 			int components = data.getDepth() / 8;
@@ -177,8 +177,8 @@ public class BigImage extends Image {
 						subBuffer.put(byteData);
 					}
 					
-					int finalX = ((x) * tileSize);
-					int finalY = ((y) * tileSize);
+					int finalX = ((x+1) * tileSize);
+					int finalY = ((y+1) * tileSize);
 					final int imageWidth = realWidth < finalX ? realWidth % tileSize : tileSize;
 					final int imageHeight = realHeight < finalY ? realHeight % tileSize : tileSize;
 					
