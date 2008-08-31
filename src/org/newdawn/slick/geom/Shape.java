@@ -21,6 +21,10 @@ public abstract class Shape implements Serializable {
     protected float maxX;
     /** The bottom most point of this shape */
     protected float maxY;
+    /** The left most point of this shape. */
+    protected float minX;
+    /** The top most point of this shape. */
+    protected float minY;
     /** Radius of a circle that can completely enclose this shape. */
     protected float boundingCircleRadius;
     /** Flag to tell whether points need to be generated */
@@ -198,6 +202,27 @@ public abstract class Shape implements Serializable {
         checkPoints();
         return maxY;
     }
+    
+    /**
+     * Get the left most point of this shape.
+     * 
+     * @return The left most point of this shape.
+     */
+    public float getMinX() {
+        checkPoints();
+        return minX;
+    }
+    
+    /**
+     * Get the top most point of this shape.
+     * 
+     * @return The top most point of this shape.
+     */
+    public float getMinY() {
+        checkPoints();
+        return minY;
+    }
+    
     /**
      * Get the radius of a circle that can completely enclose this shape.
      * 
@@ -581,11 +606,15 @@ public abstract class Shape implements Serializable {
             findCenter();
             calculateRadius();
             
-            maxX = 0;
-            maxY = 0;
+            maxX = points[0];
+            maxY = points[1];
+            minX = points[0];
+            minY = points[1];
             for (int i=0;i<points.length/2;i++) {
             	maxX = Math.max(points[i*2],maxX);
             	maxY = Math.max(points[(i*2)+1],maxY);
+            	minX = Math.min(points[i*2],minX);
+            	minY = Math.min(points[(i*2)+1],minY);
             }
             
             pointsDirty = false;
