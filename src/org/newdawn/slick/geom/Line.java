@@ -339,6 +339,7 @@ public strictfp class Line extends Shape {
 	 */
 	public Shape transform(Transform transform) {
 		float[] temp = new float[4];
+		createPoints();
 		transform.transform(points, 0, temp, 0, 2);
 		
 		return new Line(temp[0],temp[1],temp[2],temp[3]);
