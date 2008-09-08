@@ -381,6 +381,14 @@ public class Input {
 	private int clickButton;
 	
 	/**
+	 * Disables support for controllers. This means the jinput JAR and native libs 
+	 * are not required.
+	 */
+	public static void disableControllers() {
+	   controllersInited = true;
+	}
+	
+	/**
 	 * Create a new input with the height of the screen
 	 * 
 	 * @param height The height of the screen
