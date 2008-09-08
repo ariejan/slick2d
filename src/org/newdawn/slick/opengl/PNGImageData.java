@@ -691,15 +691,13 @@ public class PNGImageData implements LoadableImageData {
 		// Get a pointer to the image memory
 		scratch = BufferUtils.createByteBuffer(texWidth * texHeight * perPixel);
 		decode(scratch, texWidth * perPixel, flipped);
-		
+
 		if (!hasAlpha() && forceAlpha) {
 			ByteBuffer temp = BufferUtils.createByteBuffer(texWidth * texHeight * 4);
 			for (int x=0;x<texWidth;x++) {
-				for (int yIndex=0;yIndex<texHeight;yIndex++) {
-					int y = yIndex;
-					
-					int srcOffset = (x*3)+(y*texHeight*3);
-					int dstOffset = (x*4)+(y*texHeight*4);
+				for (int y=0;y<texHeight;y++) {
+					int srcOffset = (y*3)+(x*texHeight*3);
+					int dstOffset = (y*4)+(x*texHeight*4);
 					
 					temp.put(dstOffset, scratch.get(srcOffset));
 					temp.put(dstOffset+1, scratch.get(srcOffset+1));
@@ -708,21 +706,25 @@ public class PNGImageData implements LoadableImageData {
 				}
 			}
 			
-			if (transparent != null) {
-		        for (int i=0;i<texWidth*texHeight*4;i+=4) {
-		        	boolean match = true;
-		        	for (int c=0;c<3;c++) {
-		        		if (temp.get(i+c) != transparent[c]) {
-		        			match = false;
-		        		}
-		        	}
-		  
-		        	if (match) {
-		        		temp.put(i+3, (byte) 0);
-		           	}
-		        }
-		    }
+			colorType = COLOR_TRUEALPHA;
+			bitDepth = 32;
+			scratch = temp;
 		}
+			
+		if (transparent != null) {
+	        for (int i=0;i<texWidth*texHeight*4;i+=4) {
+	        	boolean match = true;
+	        	for (int c=0;c<3;c++) {
+	        		if (scratch.get(i+c) != transparent[c]) {
+	        			match = false;
+	        		}
+	        	}
+	  
+	        	if (match) {
+	        		scratch.put(i+3, (byte) 0);
+	           	}
+	        }
+	    }
 		
 		scratch.position(0);
 		
