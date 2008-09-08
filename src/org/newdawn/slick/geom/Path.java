@@ -97,6 +97,16 @@ public class Path extends Shape {
 	 * @param segments The number of segments to use for the new curve
 	 */
 	public void curveTo(float x, float y, float cx1, float cy1, float cx2, float cy2, int segments) {
+		// special case for zero movement
+		if ((cx == x) && (cy == y)) {
+			if (hole != null) {
+				hole.add(new float[] {cx,cy});
+			} else {
+				localPoints.add(new float[] {cx,cy});
+			}
+			return;
+		}
+		
 		Curve curve = new Curve(new Vector2f(cx,cy),new Vector2f(cx1,cy1),new Vector2f(cx2,cy2),new Vector2f(x,y));
 		float step = 1.0f / segments;
 		
