@@ -125,6 +125,9 @@ public class TGAImageData implements LoadableImageData {
 		width = flipEndian(dis.readShort());
 		height = flipEndian(dis.readShort());
 		pixelDepth = (short) dis.read();
+		if (pixelDepth == 32) {
+			forceAlpha = false;
+		}
 		
 		texWidth = get2Fold(width);
 		texHeight = get2Fold(height);
