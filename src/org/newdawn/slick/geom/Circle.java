@@ -33,6 +33,7 @@ public strictfp class Circle extends Ellipse {
         this.x = centerPointX - radius;
         this.y = centerPointY - radius;
         this.radius = radius;
+        boundingCircleRadius = radius;
 	}
 	
 	/** 
@@ -119,13 +120,18 @@ public strictfp class Circle extends Ellipse {
 		return intersects(new Circle(x,y,0));
 	}
 	
-
+	/**
+	 * @see org.newdawn.slick.geom.Ellipse#findCenter()
+	 */
     protected void findCenter() {
         center = new float[2];
         center[0] = x + radius;
         center[1] = y + radius;
     }
 
+    /**
+     * @see org.newdawn.slick.geom.Ellipse#calculateRadius()
+     */
     protected void calculateRadius() {
         boundingCircleRadius = radius;
     }
