@@ -107,12 +107,18 @@ public class CursorLoader {
 			buf.put(i+3, alpha);
 		}
 		
+		IntBuffer temp = buf.asIntBuffer();
+		IntBuffer data = IntBuffer.allocate(temp.limit());
+		for (int i=0;i<temp.limit();i++) {
+			data.put(i, temp.get(i));
+		}
+		
 		try {
 			int yspot = height - y - 1;
 			if (yspot < 0) {
 				yspot = 0;
 			}
-			return new Cursor(width,height, x, yspot, 1, buf.asIntBuffer(), null);
+			return new Cursor(width,height, x, yspot, 1, data, null);
 		} catch (Throwable e) {
 			Log.info("Chances are you cursor is too small for this platform");
 			throw new LWJGLException(e);
