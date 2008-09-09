@@ -7,6 +7,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
@@ -1547,9 +1548,8 @@ public class Graphics {
 			throw new IllegalArgumentException("Byte buffer provided to get area is not big enough");
 		}
 		
-		predraw();
-		System.out.println(x+","+(screenHeight-y)+" "+width+"x"+height);
-		GL.glReadPixels(x, screenHeight - y, width, height, SGL.GL_RGBA,
+		predraw();	
+		GL.glReadPixels(x, screenHeight - y - height, width, height, SGL.GL_RGBA,
 				SGL.GL_UNSIGNED_BYTE, target);
 		postdraw();
 	}

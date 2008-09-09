@@ -1,5 +1,6 @@
 package org.newdawn.slick.opengl.pbuffer;
 
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -9,9 +10,10 @@ import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.InternalTextureLoader;
+import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -123,6 +125,7 @@ public class FBOGraphics extends Graphics {
 	 */
 	private void bind() {
 		EXTFramebufferObject.glBindFramebufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, FBO);
+		GL11.glReadBuffer(EXTFramebufferObject.GL_COLOR_ATTACHMENT0_EXT);
 	}
 
 	/**
@@ -130,6 +133,7 @@ public class FBOGraphics extends Graphics {
 	 */
 	private void unbind() {
 		EXTFramebufferObject.glBindFramebufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, 0);
+		GL11.glReadBuffer(GL11.GL_BACK); 
 	}
 	
 	/**

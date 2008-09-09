@@ -234,16 +234,35 @@ public class AppGameContainer extends GameContainer {
 			Log.error("Failed to load and apply cursor.", e);
 		}
 	}
-	
+
+    /**
+     * Get the closest greater power of 2 to the fold number
+     * 
+     * @param fold The target number
+     * @return The power of 2
+     */
+    private int get2Fold(int fold) {
+        int ret = 2;
+        while (ret < fold) {
+            ret *= 2;
+        }
+        return ret;
+    }
+    
 	/**
 	 * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.Image, int, int)
 	 */
 	public void setMouseCursor(Image image, int hotSpotX, int hotSpotY) throws SlickException {
 		try {
-			ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4);
-			image.getGraphics().getArea(0,0,image.getWidth(),image.getHeight(),buffer);
+			Image temp = new Image(get2Fold(image.getWidth()), get2Fold(image.getHeight()));
+			Graphics g = temp.getGraphics();
 			
-			Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,image.getWidth(),image.getHeight());
+			ByteBuffer buffer = BufferUtils.createByteBuffer(temp.getWidth() * temp.getHeight() * 4);
+			g.drawImage(image.getFlippedCopy(false, true), 0, 0);
+			g.flush();
+			g.getArea(0,0,temp.getWidth(),temp.getHeight(),buffer);
+			
+			Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,temp.getWidth(),temp.getHeight());
 			Mouse.setNativeCursor(cursor);
 		} catch (Exception e) {
 			Log.error("Failed to load and apply cursor.", e);
