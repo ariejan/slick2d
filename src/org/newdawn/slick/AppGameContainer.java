@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Cursor;
@@ -239,7 +240,7 @@ public class AppGameContainer extends GameContainer {
 	 */
 	public void setMouseCursor(Image image, int hotSpotX, int hotSpotY) throws SlickException {
 		try {
-			ByteBuffer buffer = ByteBuffer.allocate(image.getWidth() * image.getHeight() * 4);
+			ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4);
 			image.getGraphics().getArea(0,0,image.getWidth(),image.getHeight(),buffer);
 			
 			Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,image.getWidth(),image.getHeight());

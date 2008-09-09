@@ -1542,12 +1542,13 @@ public class Graphics {
 	 */
 	public void getArea(int x, int y, int width, int height, ByteBuffer target)
 	{
-		if (target.capacity() < width * height) 
+		if (target.capacity() < width * height * 4) 
 		{
 			throw new IllegalArgumentException("Byte buffer provided to get area is not big enough");
 		}
 		
 		predraw();
+		System.out.println(x+","+(screenHeight-y)+" "+width+"x"+height);
 		GL.glReadPixels(x, screenHeight - y, width, height, SGL.GL_RGBA,
 				SGL.GL_UNSIGNED_BYTE, target);
 		postdraw();

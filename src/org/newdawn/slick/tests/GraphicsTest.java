@@ -42,7 +42,9 @@ public class GraphicsTest extends BasicGame {
 		this.container = container;
 		
 		image = new Image("testdata/logo.tga", true);
-		container.setMouseCursor("testdata/palette_tool.png", 0, 0);
+		
+		Image temp = new Image("testdata/palette_tool.png");
+		container.setMouseCursor(temp, 0, 0);
 		
 		container.setIcons(new String[] {"testdata/icon.tga"});
 		container.setTargetFrameRate(100);
@@ -64,9 +66,9 @@ public class GraphicsTest extends BasicGame {
 	/**
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
-	public void render(GameContainer container, Graphics g) {
+	public void render(GameContainer container, Graphics g) throws SlickException {
 		g.setColor(Color.white);
-
+		
 		g.setAntiAlias(true);
 		for (int x=0;x<360;x+=10) {
 			g.drawLine(700,100,(int) (700+(Math.cos(Math.toRadians(x))*100)),
