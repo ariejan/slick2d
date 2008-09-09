@@ -489,8 +489,12 @@ public abstract class StateBasedGame implements Game, InputListener {
 	/**
 	 * @see org.newdawn.slick.InputListener#isAcceptingInput()
 	 */
-	public boolean isAcceptingInput() {
-		return true;
+	public boolean isAcceptingInput() {		
+		if (transitioning()) {
+			return false;
+		}
+
+		return currentState.isAcceptingInput();
 	}
 	
 	/**
