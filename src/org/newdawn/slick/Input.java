@@ -893,11 +893,9 @@ public class Input {
 			clickY = y;
 			clickButton = button;
 			doubleClickTimeout = System.currentTimeMillis() + doubleClickDelay;
+			fireMouseClicked(button, x, y, 1);
 		} else {
-			if (clickButton != button) {
-				fireMouseClicked(button, x, y, 1);
-				doubleClickTimeout = 0;
-			} else {
+			if (clickButton == button) {
 				if ((System.currentTimeMillis() < doubleClickTimeout)) {
 					fireMouseClicked(button, x, y, 2);
 					doubleClickTimeout = 0;
@@ -921,7 +919,6 @@ public class Input {
 
 		if (doubleClickTimeout != 0) {
 			if (System.currentTimeMillis() > doubleClickTimeout) {
-				fireMouseClicked(clickButton, clickX, clickY, 1);
 				doubleClickTimeout = 0;
 			}
 		}
