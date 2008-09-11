@@ -197,12 +197,12 @@ public class Graphics {
 			if (currentDrawingMode == MODE_ADD) {
 				GL.glEnable(SGL.GL_BLEND);
 				GL.glColorMask(true, true, true, true);
-				GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+				GL.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
 			}
 			if (currentDrawingMode == MODE_SCREEN) {
 				GL.glEnable(SGL.GL_BLEND);
 				GL.glColorMask(true, true, true, true);
-				GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
+				GL.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
 			}
 		}
 		postdraw();
