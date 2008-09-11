@@ -666,4 +666,49 @@ public class BigImage extends Image {
 			}
 		}
 	}
+
+	/**
+	 * @see org.newdawn.slick.Image#draw(float, float, float, float, float, float, float, float, org.newdawn.slick.Color)
+	 */
+	public void draw(float x, float y, float x2, float y2, float srcx,
+			float srcy, float srcx2, float srcy2, Color filter) {
+		super.draw(x, y, x2, y2, srcx, srcy, srcx2, srcy2, filter);
+	}
+
+	/**
+	 * @see org.newdawn.slick.Image#drawCentered(float, float)
+	 */
+	public void drawCentered(float x, float y) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see org.newdawn.slick.Image#drawEmbedded(float, float, float, float, float, float, float, float, org.newdawn.slick.Color)
+	 */
+	public void drawEmbedded(float x, float y, float x2, float y2, float srcx,
+			float srcy, float srcx2, float srcy2, Color filter) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see org.newdawn.slick.Image#drawEmbedded(float, float, float, float, float, float, float, float)
+	 */
+	public void drawEmbedded(float x, float y, float x2, float y2, float srcx,
+			float srcy, float srcx2, float srcy2) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see org.newdawn.slick.Image#drawFlash(float, float, float, float, org.newdawn.slick.Color)
+	 */
+	public void drawFlash(float x, float y, float width, float height, Color col) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see org.newdawn.slick.Image#drawSheared(float, float, float, float)
+	 */
+	public void drawSheared(float x, float y, float hshear, float vshear) {
+		throw new UnsupportedOperationException();
+	}
 }
