@@ -671,8 +671,16 @@ public class BigImage extends Image {
 	 * @see org.newdawn.slick.Image#draw(float, float, float, float, float, float, float, float, org.newdawn.slick.Color)
 	 */
 	public void draw(float x, float y, float x2, float y2, float srcx,
-			float srcy, float srcx2, float srcy2, Color filter) {
-		super.draw(x, y, x2, y2, srcx, srcy, srcx2, srcy2, filter);
+			float srcy, float srcx2, float srcy2, Color filter) {	
+		int srcwidth = (int) (srcx2 - srcx);
+		int srcheight = (int) (srcy2 - srcy);
+
+		Image subImage = getSubImage((int) srcx,(int) srcy,srcwidth,srcheight);
+
+		int width = (int) (x2 - x);
+		int height = (int) (y2 - y);
+
+		subImage.draw(x,y,width,height,filter);
 	}
 
 	/**
