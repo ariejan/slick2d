@@ -21,6 +21,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * This class is intended to parse TilED maps. TilED is a generic tool for tile map editing and can
@@ -367,7 +370,16 @@ public class TiledMap {
 		tilesLocation = tileSetsLocation;
 		
 		try {
-			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			factory.setValidating(false);
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			builder.setEntityResolver(new EntityResolver() {
+				public InputSource resolveEntity(String publicId,
+						String systemId) throws SAXException, IOException {					
+					return new InputSource(new ByteArrayInputStream(new byte[0]));
+				}
+			});
+			
 			Document doc = builder.parse(in);
 			Element docElement = doc.getDocumentElement();
 			
