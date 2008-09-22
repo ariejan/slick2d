@@ -379,7 +379,16 @@ public class Input {
 	private int clickY;
 	/** The clicked button */
 	private int clickButton;
+
+	/** The x position location the mouse was pressed */
+	private int pressedX = -1;
 	
+	/** The x position location the mouse was pressed */
+	private int pressedY = -1;
+	
+	/** The pixel distance the mouse can move to accept a mouse click */
+	private int mouseClickTolerance = 5;
+
 	/**
 	 * Disables support for controllers. This means the jinput JAR and native libs 
 	 * are not required.
@@ -407,7 +416,17 @@ public class Input {
 	public void setDoubleClickInterval(int delay) {
 		doubleClickDelay = delay;
 	}
-	
+
+	/**
+	 * Set the pixel distance the mouse can move to accept a mouse click. 
+	 * Default is 5.
+	 * 
+	 * @param mouseClickTolerance The number of pixels.
+	 */
+	public void setMouseClickTolerance (int mouseClickTolerance) {
+		this.mouseClickTolerance = mouseClickTolerance;
+	}
+
 	/**
 	 * Set the scaling to apply to screen coordinates
 	 * 
@@ -966,11 +985,14 @@ public class Input {
 				if (Mouse.getEventButtonState()) {
 					consumed = false;
 					mousePressed[Mouse.getEventButton()] = true;
-					
+
+					pressedX = (int) (xoffset + (Mouse.getEventX() * scaleX));
+					pressedY =  (int) (yoffset + ((height-Mouse.getEventY()) * scaleY));
+
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
-							listener.mousePressed(Mouse.getEventButton(), (int) (xoffset + (Mouse.getEventX() * scaleX)), (int) (yoffset + ((height-Mouse.getEventY()) * scaleY)));
+							listener.mousePressed(Mouse.getEventButton(), pressedX, pressedY);
 							if (consumed) {
 								break;
 							}
@@ -979,12 +1001,21 @@ public class Input {
 				} else {
 					consumed = false;
 					mousePressed[Mouse.getEventButton()] = false;
-					considerDoubleClick(Mouse.getEventButton(), (int) (xoffset + (Mouse.getEventX() * scaleX)), (int) (yoffset + ((height-Mouse.getEventY()) * scaleY)));
 					
+					int releasedX = (int) (xoffset + (Mouse.getEventX() * scaleX));
+					int releasedY = (int) (yoffset + ((height-Mouse.getEventY()) * scaleY));
+					if ((pressedX != -1) && 
+					    (pressedY != -1) &&
+						(Math.abs(pressedX - releasedX) < mouseClickTolerance) && 
+						(Math.abs(pressedY - releasedY) < mouseClickTolerance)) {
+						considerDoubleClick(Mouse.getEventButton(), releasedX, releasedY);
+						pressedX = pressedY = -1;
+					}
+
 					for (int i=0;i<listeners.size();i++) {
 						InputListener listener = (InputListener) listeners.get(i);
 						if (listener.isAcceptingInput()) {
-							listener.mouseReleased(Mouse.getEventButton(), (int) (xoffset + (Mouse.getEventX() * scaleX)), (int) (yoffset + ((height-Mouse.getEventY()) * scaleY)));
+							listener.mouseReleased(Mouse.getEventButton(), releasedX, releasedY);
 							if (consumed) {
 								break;
 							}
