@@ -29,7 +29,7 @@ public class Util {
 	static NonGeometricData getNonGeometricData(Element element) {
 		String meta = getMetaData(element);
 		
-		NonGeometricData data = new NonGeometricData(meta);
+		NonGeometricData data = new InkscapeNonGeometricData(meta, element);
 		data.addAttribute(NonGeometricData.ID, element.getAttribute("id"));
 		data.addAttribute(NonGeometricData.FILL, getStyle(element, NonGeometricData.FILL));
 		data.addAttribute(NonGeometricData.STROKE, getStyle(element, NonGeometricData.STROKE));
