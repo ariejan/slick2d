@@ -164,11 +164,12 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 
 	/**
 	 * Create and store the font
-	 * @param customChars Characters that should be also added to the cache.
+	 * 
+	 * @param customCharsArray Characters that should be also added to the cache.
 	 */
-	private void createSet( char[] customChars ) {
+	private void createSet( char[] customCharsArray ) {
 		// If there are custom chars then I expand the font texture twice		
-		if	(customChars != null && customChars.length > 0) {
+		if	(customCharsArray != null && customCharsArray.length > 0) {
 			textureWidth *= 2;
 		}
 		
@@ -185,12 +186,12 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 			int positionX = 0;
 			int positionY = 0;
 			
-			int customCharsLength = ( customChars != null ) ? customChars.length : 0; 
+			int customCharsLength = ( customCharsArray != null ) ? customCharsArray.length : 0; 
 
 			for (int i = 0; i < 256 + customCharsLength; i++) {
 				
 				// get 0-255 characters and then custom characters
-				char ch = ( i < 256 ) ? (char) i : customChars[i-256];
+				char ch = ( i < 256 ) ? (char) i : customCharsArray[i-256];
 				
 				BufferedImage fontImage = getFontImage(ch);
 
@@ -224,7 +225,7 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 				if( i < 256 ) { // standard characters
 					charArray[i] = newIntObject;
 				} else { // custom characters
-					this.customChars.put( new Character( ch ), newIntObject );
+					customChars.put( new Character( ch ), newIntObject );
 				}
 
 				fontImage = null;
