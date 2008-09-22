@@ -103,6 +103,30 @@ public class BigImage extends Image {
 	}
 
 	/**
+	 * Create a new big image by loading it from the specified image data
+	 * 
+	 * @param data The pixelData to use to create the image
+	 * @param imageBuffer The buffer containing texture data
+	 * @param filter The image filter to apply (@see #Image.FILTER_NEAREST)
+	 * @param tileSize The maximum size of the tiles to use to build the bigger image
+	 */
+	public BigImage(LoadableImageData data, ByteBuffer imageBuffer, int filter) {
+		build(data, imageBuffer, filter, getMaxSingleImageSize());
+	}
+	
+	/**
+	 * Create a new big image by loading it from the specified image data
+	 * 
+	 * @param data The pixelData to use to create the image
+	 * @param imageBuffer The buffer containing texture data
+	 * @param filter The image filter to apply (@see #Image.FILTER_NEAREST)
+	 * @param tileSize The maximum size of the tiles to use to build the bigger image
+	 */
+	public BigImage(LoadableImageData data, ByteBuffer imageBuffer, int filter, int tileSize) {
+		build(data, imageBuffer, filter, tileSize);
+	}
+
+	/**
 	 * Create a new big image by loading it from the specified reference
 	 * 
 	 * @param ref The reference to the image to load
@@ -114,105 +138,117 @@ public class BigImage extends Image {
 		try {
 			final LoadableImageData data = ImageDataFactory.getImageDataFor(ref);
 			final ByteBuffer imageBuffer = data.loadImage(ResourceLoader.getResourceAsStream(ref), false, null);
-			final int dataWidth = data.getTexWidth();
-			final int dataHeight = data.getTexHeight();
-			
-			realWidth = width = data.getWidth();
-			realHeight = height = data.getHeight();
-			
-			if ((dataWidth <= tileSize) && (dataHeight <= tileSize)) {
-				images = new Image[1][1];
-				ImageData tempData = new ImageData() {
+			build(data, imageBuffer, filter, tileSize);
+		} catch (IOException e) {
+			throw new SlickException("Failed to load: "+ref, e);
+		}
+	}
+	
+	/**
+	 * Create an big image from a image data source. 
+	 * 
+	 * @param data The pixelData to use to create the image
+	 * @param imageBuffer The buffer containing texture data
+	 * @param filter The filter to use when scaling this image
+	 * @param tileSize The maximum size of the tiles to use to build the bigger image
+	 */
+	private void build(final LoadableImageData data, final ByteBuffer imageBuffer, int filter, int tileSize) {
+		final int dataWidth = data.getTexWidth();
+		final int dataHeight = data.getTexHeight();
+		
+		realWidth = width = data.getWidth();
+		realHeight = height = data.getHeight();
+		
+		if ((dataWidth <= tileSize) && (dataHeight <= tileSize)) {
+			images = new Image[1][1];
+			ImageData tempData = new ImageData() {
+				public int getDepth() {
+					return data.getDepth();
+				}
+
+				public int getHeight() {
+					return dataHeight;
+				}
+
+				public ByteBuffer getImageBufferData() {
+					return imageBuffer;
+				}
+
+				public int getTexHeight() {
+					return dataHeight;
+				}
+
+				public int getTexWidth() {
+					return dataWidth;
+				}
+
+				public int getWidth() {
+					return dataWidth;
+				}
+			};
+			images[0][0] = new Image(tempData, filter);
+			xcount = 1;
+			ycount = 1;
+			inited = true;
+			return;
+		}
+		
+		xcount = ((realWidth-1) / tileSize) + 1;
+		ycount = ((realHeight-1) / tileSize) + 1;
+		
+		images = new Image[xcount][ycount];
+		int components = data.getDepth() / 8;
+		
+		for (int x=0;x<xcount;x++) {
+			for (int y=0;y<ycount;y++) {
+				final int xSize = tileSize;
+				final int ySize = tileSize;
+				
+				final ByteBuffer subBuffer = BufferUtils.createByteBuffer(tileSize*tileSize*components);
+				int xo = x*tileSize*components;
+
+				byte[] byteData = new byte[xSize*components];
+				for (int i=0;i<ySize;i++) {
+					int yo = (((y * tileSize) + i) * dataWidth) * components;
+					imageBuffer.position(yo+xo);
+					
+					imageBuffer.get(byteData, 0, xSize*components);
+					subBuffer.put(byteData);
+				}
+				
+				int finalX = ((x+1) * tileSize);
+				int finalY = ((y+1) * tileSize);
+				final int imageWidth = realWidth < finalX ? realWidth % tileSize : tileSize;
+				final int imageHeight = realHeight < finalY ? realHeight % tileSize : tileSize;
+				
+				subBuffer.flip();
+				ImageData imgData = new ImageData() {
 					public int getDepth() {
 						return data.getDepth();
 					}
 
 					public int getHeight() {
-						return dataHeight;
-					}
-
-					public ByteBuffer getImageBufferData() {
-						return imageBuffer;
-					}
-
-					public int getTexHeight() {
-						return dataHeight;
-					}
-
-					public int getTexWidth() {
-						return dataWidth;
+						return imageHeight;
 					}
 
 					public int getWidth() {
-						return dataWidth;
+						return imageWidth;
+					}
+					
+					public ByteBuffer getImageBufferData() {
+						return subBuffer;
+					}
+
+					public int getTexHeight() {
+						return ySize;
+					}
+
+					public int getTexWidth() {
+						return xSize;
 					}
 				};
-				images[0][0] = new Image(tempData, filter);
-				xcount = 1;
-				ycount = 1;
-				inited = true;
-				return;
+				images[x][y] = new Image(imgData, filter);
 			}
-			
-			xcount = ((realWidth-1) / tileSize) + 1;
-			ycount = ((realHeight-1) / tileSize) + 1;
-			
-			images = new Image[xcount][ycount];
-			int components = data.getDepth() / 8;
-			
-			for (int x=0;x<xcount;x++) {
-				for (int y=0;y<ycount;y++) {
-					final int xSize = tileSize;
-					final int ySize = tileSize;
-					
-					final ByteBuffer subBuffer = BufferUtils.createByteBuffer(tileSize*tileSize*components);
-					int xo = x*tileSize*components;
-	
-					byte[] byteData = new byte[xSize*components];
-					for (int i=0;i<ySize;i++) {
-						int yo = (((y * tileSize) + i) * dataWidth) * components;
-						imageBuffer.position(yo+xo);
-						
-						imageBuffer.get(byteData, 0, xSize*components);
-						subBuffer.put(byteData);
-					}
-					
-					int finalX = ((x+1) * tileSize);
-					int finalY = ((y+1) * tileSize);
-					final int imageWidth = realWidth < finalX ? realWidth % tileSize : tileSize;
-					final int imageHeight = realHeight < finalY ? realHeight % tileSize : tileSize;
-					
-					subBuffer.flip();
-					ImageData imgData = new ImageData() {
-						public int getDepth() {
-							return data.getDepth();
-						}
-	
-						public int getHeight() {
-							return imageHeight;
-						}
-
-						public int getWidth() {
-							return imageWidth;
-						}
-						
-						public ByteBuffer getImageBufferData() {
-							return subBuffer;
-						}
-	
-						public int getTexHeight() {
-							return ySize;
-						}
-	
-						public int getTexWidth() {
-							return xSize;
-						}
-					};
-					images[x][y] = new Image(imgData, filter);
-				}
-			}
-		} catch (IOException e) {
-			throw new SlickException("Failed to load: "+ref, e);
 		}
 		
 		inited = true;
