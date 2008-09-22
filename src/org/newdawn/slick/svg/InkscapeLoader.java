@@ -46,16 +46,26 @@ public class InkscapeLoader implements Loader {
 	private Diagram diagram;
 
 	static {
-		processors.add(new RectProcessor());
-		processors.add(new EllipseProcessor());
-		processors.add(new PolygonProcessor());
-		processors.add(new PathProcessor());
-		processors.add(new LineProcessor());
-		processors.add(new GroupProcessor());
-		processors.add(new DefsProcessor());
-		processors.add(new UseProcessor());
+		addElementProcessor(new RectProcessor());
+		addElementProcessor(new EllipseProcessor());
+		addElementProcessor(new PolygonProcessor());
+		addElementProcessor(new PathProcessor());
+		addElementProcessor(new LineProcessor());
+		addElementProcessor(new GroupProcessor());
+		addElementProcessor(new DefsProcessor());
+		addElementProcessor(new UseProcessor());
 	}
 
+	/**
+	 * Add an <code>ElementProcessor</code> which will be passed
+	 * each element read as the Inkscape SVG document is processed.
+	 * 
+	 * @param proc The processor to be added
+	 */
+	public static void addElementProcessor(ElementProcessor proc) {
+		processors.add(proc);
+	}
+	
 	/**
 	 * Load a SVG document into a diagram
 	 * 
