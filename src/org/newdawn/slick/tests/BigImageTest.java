@@ -64,7 +64,8 @@ public class BigImageTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#render(org.newdawn.slick.GameContainer, org.newdawn.slick.Graphics)
 	 */
 	public void render(GameContainer container, Graphics g) {
-		original.draw(x,y,new Color(1,1,1,0.4f));
+		original.draw(0,0,new Color(1,1,1,0.4f));
+		
 		image.draw(x,y);
 		imageX.draw(x+400,y);
 		imageY.draw(x,y+300);

@@ -108,7 +108,6 @@ public class BigImage extends Image {
 	 * @param data The pixelData to use to create the image
 	 * @param imageBuffer The buffer containing texture data
 	 * @param filter The image filter to apply (@see #Image.FILTER_NEAREST)
-	 * @param tileSize The maximum size of the tiles to use to build the bigger image
 	 */
 	public BigImage(LoadableImageData data, ByteBuffer imageBuffer, int filter) {
 		build(data, imageBuffer, filter, getMaxSingleImageSize());
@@ -126,6 +125,17 @@ public class BigImage extends Image {
 		build(data, imageBuffer, filter, tileSize);
 	}
 
+	/**
+	 * Get a sub tile of this big image. Useful for debugging
+	 * 
+	 * @param x The x tile index
+	 * @param y The y tile index
+	 * @return The image used for this tile
+	 */
+	public Image getTile(int x, int y) {
+		return images[x][y];
+	}
+	
 	/**
 	 * Create a new big image by loading it from the specified reference
 	 * 
@@ -201,8 +211,13 @@ public class BigImage extends Image {
 		
 		for (int x=0;x<xcount;x++) {
 			for (int y=0;y<ycount;y++) {
-				final int xSize = tileSize;
-				final int ySize = tileSize;
+				int finalX = ((x+1) * tileSize);
+				int finalY = ((y+1) * tileSize);
+				final int imageWidth = realWidth < finalX ? realWidth % tileSize : tileSize;
+				final int imageHeight = realHeight < finalY ? realHeight % tileSize : tileSize;
+				
+				final int xSize = imageWidth;
+				final int ySize = imageHeight;
 				
 				final ByteBuffer subBuffer = BufferUtils.createByteBuffer(tileSize*tileSize*components);
 				int xo = x*tileSize*components;
@@ -215,11 +230,6 @@ public class BigImage extends Image {
 					imageBuffer.get(byteData, 0, xSize*components);
 					subBuffer.put(byteData);
 				}
-				
-				int finalX = ((x+1) * tileSize);
-				int finalY = ((y+1) * tileSize);
-				final int imageWidth = realWidth < finalX ? realWidth % tileSize : tileSize;
-				final int imageHeight = realHeight < finalY ? realHeight % tileSize : tileSize;
 				
 				subBuffer.flip();
 				ImageData imgData = new ImageData() {
