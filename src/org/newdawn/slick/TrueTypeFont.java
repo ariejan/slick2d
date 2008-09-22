@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.newdawn.slick.opengl.GLUtils;
 import org.newdawn.slick.opengl.Texture;
@@ -19,6 +21,7 @@ import org.newdawn.slick.util.BufferedImageUtil;
  * @author James Chambers (Jimmy)
  * @author Jeremy Adams (elias4444)
  * @author Kevin Glass (kevglass)
+ * @author Peter Korzuszek (genail)
  */
 public class TrueTypeFont implements org.newdawn.slick.Font {
 	/** The renderer to use for all GL operations */
@@ -26,6 +29,9 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 
 	/** Array that holds necessary information about the font characters */
 	private IntObject[] charArray = new IntObject[256];
+	
+	/** Map of user defined font characters (Character <-> IntObject) */
+	private Map customChars = new HashMap();
 
 	/** Boolean flag on whether AntiAliasing is enabled or not */
 	private boolean antiAlias;
@@ -36,14 +42,14 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 	/** Font's height */
 	private int fontHeight = 0;
 
-	/** Texture used to cache the font characters */
+	/** Texture used to cache the font 0-255 characters */
 	private Texture fontTexture;
-
+	
 	/** Default font texture width */
-	private float textureWidth = 512.0f;
+	private int textureWidth = 512;
 
 	/** Default font texture height */
-	private float textureHeight = 512.0f;
+	private int textureHeight = 512;
 
 	/** A reference to Java's AWT Font that we create our font texture from */
 	private java.awt.Font font;
@@ -79,15 +85,31 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 	 *            Standard Java AWT font
 	 * @param antiAlias
 	 *            Whether or not to apply AntiAliasing to the cached font
+	 * @param additionalChars
+	 *            Characters of font that will be used in addition of first 256 (by unicode).
 	 */
-	public TrueTypeFont(java.awt.Font font, boolean antiAlias) {
+	public TrueTypeFont(java.awt.Font font, boolean antiAlias, char[] additionalChars) {
 		GLUtils.checkGLContext();
 		
 		this.font = font;
 		this.fontSize = font.getSize();
 		this.antiAlias = antiAlias;
 
-		createPlainSet();
+		createSet( additionalChars );
+	}
+	
+	/**
+	 * Constructor for the TrueTypeFont class Pass in the preloaded standard
+	 * Java TrueType font, and whether you want it to be cached with
+	 * AntiAliasing applied.
+	 * 
+	 * @param font
+	 *            Standard Java AWT font
+	 * @param antiAlias
+	 *            Whether or not to apply AntiAliasing to the cached font
+	 */
+	public TrueTypeFont(java.awt.Font font, boolean antiAlias) {
+		this( font, antiAlias, null );
 	}
 
 	/**
@@ -142,18 +164,33 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 
 	/**
 	 * Create and store the font
+	 * @param customChars Characters that should be also added to the cache.
 	 */
-	private void createPlainSet() {
+	private void createSet( char[] customChars ) {
+		
+		// If there are custom chars then I expand the font texture twice
+		textureWidth *= 2;
+		
+		// In any case this should be done in other way. Texture with size 512x512
+		// can maintain only 256 characters with resolution of 32x32. The texture
+		// size should be calculated dynamicaly by looking at character sizes. 
+		
 		try {
-			BufferedImage imgTemp = new BufferedImage(512, 512, BufferedImage.TYPE_INT_ARGB);
+			
+			BufferedImage imgTemp = new BufferedImage(textureWidth, textureHeight, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g = (Graphics2D) imgTemp.getGraphics();
 
 			int rowHeight = 0;
 			int positionX = 0;
 			int positionY = 0;
+			
+			int customCharsLength = ( customChars != null ) ? customChars.length : 0; 
 
-			for (int i = 0; i < 256; i++) {
-				char ch = (char) i;
+			for (int i = 0; i < 256 + customCharsLength; i++) {
+				
+				// get 0-255 characters and then custom characters
+				char ch = ( i < 256 ) ? (char) i : customChars[i-256];
+				
 				BufferedImage fontImage = getFontImage(ch);
 
 				IntObject newIntObject = new IntObject();
@@ -161,7 +198,7 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 				newIntObject.width = fontImage.getWidth();
 				newIntObject.height = fontImage.getHeight();
 
-				if (positionX + newIntObject.width >= 512) {
+				if (positionX + newIntObject.width >= textureWidth) {
 					positionX = 0;
 					positionY += rowHeight;
 					rowHeight = 0;
@@ -183,7 +220,11 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 
 				positionX += newIntObject.width;
 
-				charArray[i] = newIntObject;
+				if( i < 256 ) { // standard characters
+					charArray[i] = newIntObject;
+				} else { // custom characters
+					this.customChars.put( new Character( ch ), newIntObject );
+				}
 
 				fontImage = null;
 			}
@@ -195,9 +236,9 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 			System.err.println("Failed to create font.");
 			e.printStackTrace();
 		}
-
 	}
-
+	
+	
 	/**
 	 * Draw a textured quad
 	 * 
@@ -255,8 +296,12 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 			currentChar = whatchars.charAt(i);
 			if (currentChar < 256) {
 				intObject = charArray[currentChar];
-				totalwidth += intObject.width;
+			} else {
+				intObject = (IntObject)customChars.get( new Character( (char) currentChar ) );
 			}
+			
+			if( intObject != null )
+				totalwidth += intObject.width;
 		}
 		return totalwidth;
 	}
@@ -323,7 +368,11 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 			charCurrent = whatchars.charAt(i);
 			if (charCurrent < 256) {
 				intObject = charArray[charCurrent];
-
+			} else {
+				intObject = (IntObject)customChars.get( new Character( (char) charCurrent ) );
+			} 
+			
+			if( intObject != null ) {
 				if ((i >= startIndex) || (i <= endIndex)) {
 					drawQuad((x + totalwidth), y,
 							(x + totalwidth + intObject.width),
