@@ -99,11 +99,6 @@ public class Path extends Shape {
 	public void curveTo(float x, float y, float cx1, float cy1, float cx2, float cy2, int segments) {
 		// special case for zero movement
 		if ((cx == x) && (cy == y)) {
-			if (hole != null) {
-				hole.add(new float[] {cx,cy});
-			} else {
-				localPoints.add(new float[] {cx,cy});
-			}
 			return;
 		}
 		

@@ -219,35 +219,36 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 			float dy = points[3] - points[1];
 			float fang = (float) Math.toDegrees(Math.atan2(dy,dx)) + 90;
 			
-			GL.glBegin(GL11.GL_TRIANGLE_FAN);
-			bindColor(0);
-			GL.glVertex2f(points[0], points[1]);
-			for (int i=0;i<180+step;i+=step) {
-				float ang = (float) Math.toRadians(fang+i);
-				GL.glVertex2f(points[0]+((float) (Math.cos(ang) * width)), 
-							  points[1]+((float) (Math.sin(ang) * width)));
+			if ((dx != 0) || (dy != 0)) {
+				GL.glBegin(GL11.GL_TRIANGLE_FAN);
+				bindColor(0);
+				GL.glVertex2f(points[0], points[1]);
+				for (int i=0;i<180+step;i+=step) {
+					float ang = (float) Math.toRadians(fang+i);
+					GL.glVertex2f(points[0]+((float) (Math.cos(ang) * width)), 
+								  points[1]+((float) (Math.sin(ang) * width)));
+				}
+				GL.glEnd();
 			}
-			GL.glEnd();
 		}
 		
 		// end cap
 		if (lineCaps) {
-			float dx = points[2] - points[0];
-			float dy = points[3] - points[1];
-			float fang = (float) Math.toDegrees(Math.atan2(dy,dx)) + 90;
+			float dx = points[(count*2)-2] - points[(count*2)-4];
+			float dy = points[(count*2)-1] - points[(count*2)-3];
+			float fang = (float) Math.toDegrees(Math.atan2(dy,dx)) - 90;
 			
-			dx = points[(count*2)-2] - points[(count*2)-4];
-			dy = points[(count*2)-1] - points[(count*2)-3];
-			fang = (float) Math.toDegrees(Math.atan2(dy,dx)) - 90;
-			GL.glBegin(GL11.GL_TRIANGLE_FAN);
-			bindColor(count-1);
-			GL.glVertex2f(points[(count*2)-2], points[(count*2)-1]);
-			for (int i=0;i<180+step;i+=step) {
-				float ang = (float) Math.toRadians(fang+i);
-				GL.glVertex2f(points[(count*2)-2]+((float) (Math.cos(ang) * width)), 
-							  points[(count*2)-1]+((float) (Math.sin(ang) * width)));
+			if ((dx != 0) || (dy != 0)) {
+				GL.glBegin(GL11.GL_TRIANGLE_FAN);
+				bindColor(count-1);
+				GL.glVertex2f(points[(count*2)-2], points[(count*2)-1]);
+				for (int i=0;i<180+step;i+=step) {
+					float ang = (float) Math.toRadians(fang+i);
+					GL.glVertex2f(points[(count*2)-2]+((float) (Math.cos(ang) * width)), 
+								  points[(count*2)-1]+((float) (Math.sin(ang) * width)));
+				}
+				GL.glEnd();
 			}
-			GL.glEnd();
 		}
 	}
 
