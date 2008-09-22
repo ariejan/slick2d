@@ -715,7 +715,7 @@ public class PNGImageData implements LoadableImageData {
 	        for (int i=0;i<texWidth*texHeight*4;i+=4) {
 	        	boolean match = true;
 	        	for (int c=0;c<3;c++) {
-	        		if (scratch.get(i+c) != transparent[c]) {
+	        		if (toInt(scratch.get(i+c)) != transparent[c]) {
 	        			match = false;
 	        		}
 	        	}
@@ -729,6 +729,20 @@ public class PNGImageData implements LoadableImageData {
 		scratch.position(0);
 		
 		return scratch;
+	}
+	
+	/**
+	 * Safe convert byte to int
+	 *  
+	 * @param b The byte to convert
+	 * @return The converted byte
+	 */
+	private int toInt(byte b) {
+		if (b < 0) {
+			return 256+b;
+		}
+		
+		return b;
 	}
 	
     /**
