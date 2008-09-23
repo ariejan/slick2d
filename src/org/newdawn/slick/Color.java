@@ -137,7 +137,9 @@ public class Color implements Serializable {
 	}
 	
 	/**
-	 * Create a colour from an evil integer packed 0xAARRGGBB
+	 * Create a colour from an evil integer packed 0xAARRGGBB. If AA 
+	 * is specified as zero then it will be interpreted as unspecified
+	 * and hence a value of 255 will be recorded.
 	 * 
 	 * @param value The value to interpret for the colour
 	 */
@@ -148,7 +150,7 @@ public class Color implements Serializable {
 		int a = (value & 0xFF000000) >> 24;
 				
 		if (a < 0) {
-			a += 255;
+			a += 256;
 		}
 		if (a == 0) {
 			a = 255;
