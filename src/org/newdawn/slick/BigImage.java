@@ -213,8 +213,8 @@ public class BigImage extends Image {
 			for (int y=0;y<ycount;y++) {
 				int finalX = ((x+1) * tileSize);
 				int finalY = ((y+1) * tileSize);
-				final int imageWidth = realWidth < finalX ? realWidth % tileSize : tileSize;
-				final int imageHeight = realHeight < finalY ? realHeight % tileSize : tileSize;
+				final int imageWidth = tileSize; 
+				final int imageHeight = tileSize;
 				
 				final int xSize = imageWidth;
 				final int ySize = imageHeight;
