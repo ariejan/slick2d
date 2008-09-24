@@ -161,7 +161,7 @@ public class InputTest extends BasicGame {
 	 * @see org.newdawn.slick.BasicGame#mouseClicked(int, int, int, int)
 	 */
 	public void mouseClicked(int button, int x, int y, int clickCount) {
-		System.out.println("CLICKED:"+x+","+y);
+		System.out.println("CLICKED:"+x+","+y+" "+clickCount);
 	}
 	
 	/**
