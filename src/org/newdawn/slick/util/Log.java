@@ -1,9 +1,7 @@
 package org.newdawn.slick.util;
 
-import java.io.PrintStream;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.Date;
 
 /**
  * A simple central logging system
@@ -11,8 +9,6 @@ import java.util.Date;
  * @author kevin
  */
 public final class Log {
-	/** The output stream for dumping the log out on */
-	public static PrintStream out = System.out;
 	/** True if we're doing verbose logging INFO and DEBUG */
 	private static boolean verbose = true;
 	/** true if activated by the system property "org.newdawn.slick.forceVerboseLog" */
@@ -30,11 +26,24 @@ public final class Log {
 	 */
 	private static final String forceVerbosePropertyOnValue = "true";
 	
+	/** The log system plugin in use */
+	private static LogSystem logSystem = new DefaultLogSystem();
+	
 	/**
 	 * The log is a simple static utility, no construction
 	 */
 	private Log() {
 		
+	}
+	
+	/**
+	 * Set the log system that will have all of the log info 
+	 * sent to it.
+	 * 
+	 * @param system The system to use for logging.
+	 */
+	public static void setLogSystem(LogSystem system) {
+		logSystem = system;
 	}
 	
 	/**
@@ -88,8 +97,7 @@ public final class Log {
 	 * @param e The exception causing the error
 	 */
 	public static void error(String message, Throwable e) {
-		error(message);
-		error(e);
+		logSystem.error(message, e);
 	}
 
 	/**
@@ -98,8 +106,7 @@ public final class Log {
 	 * @param e The exception causing the error
 	 */
 	public static void error(Throwable e) {
-		out.println(new Date()+" ERROR:" +e.getMessage());
-		e.printStackTrace(out);
+		logSystem.error(e);
 	}
 
 	/**
@@ -108,7 +115,7 @@ public final class Log {
 	 * @param message The message describing the error
 	 */
 	public static void error(String message) {
-		out.println(new Date()+" ERROR:" +message);
+		logSystem.error(message);
 	}
 
 	/**
@@ -117,7 +124,7 @@ public final class Log {
 	 * @param message The message describing the warning
 	 */
 	public static void warn(String message) {
-		out.println(new Date()+" WARN:" +message);
+		logSystem.warn(message);
 	}
 
 	/**
@@ -127,7 +134,7 @@ public final class Log {
 	 */
 	public static void info(String message) {
 		if (verbose || forcedVerbose) {
-			out.println(new Date()+" INFO:" +message);
+			logSystem.info(message);
 		}
 	}
 
@@ -138,7 +145,7 @@ public final class Log {
 	 */
 	public static void debug(String message) {
 		if (verbose || forcedVerbose) {
-			out.println(new Date()+" DEBUG:" +message);
+			logSystem.debug(message);
 		}
 	}
 }
