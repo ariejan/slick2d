@@ -567,6 +567,24 @@ public class Image implements Renderable {
 		centerX = x;
 		centerY = y;
 	}
+
+	/**
+	 * Get the x component of the center of rotation of this image
+	 * 
+	 * @return The x component of the center of rotation 
+	 */
+	public float getCenterOfRotationX() {
+		return centerX;
+	}
+	
+	/**
+	 * Get the y component of the center of rotation of this image
+	 * 
+	 * @return The y component of the center of rotation 
+	 */
+	public float getCenterOfRotationY() {
+		return centerY;
+	}
 	
 	/**
 	 * Draw this image at a specified location and size as a silohette
