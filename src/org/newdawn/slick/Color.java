@@ -19,31 +19,31 @@ public class Color implements Serializable {
 	protected static SGL GL = Renderer.get();
 	
 	/** The fixed colour white */
-	public static final Color white = new ConstantColor(1.0f,1.0f,1.0f,1.0f);
+	public static final Color white = new Color(1.0f,1.0f,1.0f,1.0f);
 	/** The fixed colour yellow */
-	public static final Color yellow = new ConstantColor(1.0f,1.0f,0,1.0f);
+	public static final Color yellow = new Color(1.0f,1.0f,0,1.0f);
 	/** The fixed colour red */
-	public static final Color red = new ConstantColor(1.0f,0,0,1.0f);
+	public static final Color red = new Color(1.0f,0,0,1.0f);
 	/** The fixed colour blue */
-	public static final Color blue = new ConstantColor(0,0,1.0f,1.0f);
+	public static final Color blue = new Color(0,0,1.0f,1.0f);
 	/** The fixed colour green */
-	public static final Color green = new ConstantColor(0,1.0f,0,1.0f);
+	public static final Color green = new Color(0,1.0f,0,1.0f);
 	/** The fixed colour black */
-	public static final Color black = new ConstantColor(0,0,0,1.0f);
+	public static final Color black = new Color(0,0,0,1.0f);
 	/** The fixed colour gray */
-	public static final Color gray = new ConstantColor(0.5f,0.5f,0.5f,1.0f);
+	public static final Color gray = new Color(0.5f,0.5f,0.5f,1.0f);
 	/** The fixed colour cyan */
-	public static final Color cyan = new ConstantColor(0,1.0f,1.0f,1.0f);
+	public static final Color cyan = new Color(0,1.0f,1.0f,1.0f);
 	/** The fixed colour dark gray */
-	public static final Color darkGray = new ConstantColor(0.3f,0.3f,0.3f,1.0f);
+	public static final Color darkGray = new Color(0.3f,0.3f,0.3f,1.0f);
 	/** The fixed colour light gray */
-	public static final Color lightGray = new ConstantColor(0.7f,0.7f,0.7f,1.0f);
+	public static final Color lightGray = new Color(0.7f,0.7f,0.7f,1.0f);
 	/** The fixed colour dark pink */
-    public final static Color pink      = new ConstantColor(255, 175, 175, 255);
+    public final static Color pink      = new Color(255, 175, 175, 255);
 	/** The fixed colour dark orange */
-    public final static Color orange 	= new ConstantColor(255, 200, 0, 255);
+    public final static Color orange 	= new Color(255, 200, 0, 255);
 	/** The fixed colour dark magenta */
-    public final static Color magenta	= new ConstantColor(255, 0, 255, 255);
+    public final static Color magenta	= new Color(255, 0, 255, 255);
     
 	/** The red component of the colour */
 	public float r;
