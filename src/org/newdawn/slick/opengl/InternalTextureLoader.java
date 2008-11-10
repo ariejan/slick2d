@@ -71,6 +71,16 @@ public class InternalTextureLoader {
     }
     
     /**
+     * Remove a particular named image from the cache
+     * 
+     * @param name The name of the image to be cleared
+     */
+    public void clear(String name) {
+    	texturesLinear.remove(name);
+    	texturesNearest.remove(name);
+    }
+    
+    /**
      * Clear out the cached textures
      */
     public void clear() {
