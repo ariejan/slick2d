@@ -41,6 +41,10 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 	/** The list of used points */
 	private ArrayList used = new ArrayList();
 
+	/** The quad space of shapes that need to be checked against each other */
+	private ArrayList[][] quadSpace;
+	private Shape[][] quadSpaceShapes;
+	
 	/**
 	 * Create a simple test
 	 */
@@ -49,23 +53,76 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 	}
 
 	/**
+	 * So this is going to generate a quad space that holds that segments the
+	 * shapes into quads across the map. This makes it tunable and limits the number
+	 * of comparisons that need to be done for each shape
+	 * 
+	 * @param shapes The shapes to be segments
+	 * @param minx The minimum x value of the map
+	 * @param miny The mimimum y value of the map
+	 * @param maxx The maximum x value of the map
+	 * @param maxy The maximum y value of the map
+	 * @param segments The number of segments to split the map into
+	 */
+	private void generateSpace(ArrayList shapes, float minx, float miny, float maxx, float maxy, int segments) {
+		quadSpace = new ArrayList[segments][segments];
+		quadSpaceShapes = new Shape[segments][segments];
+		
+		float dx = (maxx - minx) / segments;
+		float dy = (maxy - miny) / segments;
+		
+		for (int x=0;x<segments;x++) {
+			for (int y=0;y<segments;y++) {
+				quadSpace[x][y] = new ArrayList();
+				
+				// quad for this segment
+				Polygon segmentPolygon = new Polygon();
+				segmentPolygon.addPoint(minx+(dx*x), miny+(dy*y));
+				segmentPolygon.addPoint(minx+(dx*x)+dx, miny+(dy*y));
+				segmentPolygon.addPoint(minx+(dx*x)+dx, miny+(dy*y)+dy);
+				segmentPolygon.addPoint(minx+(dx*x), miny+(dy*y)+dy);
+				
+				for (int i=0;i<shapes.size();i++) {
+					Shape shape = (Shape) shapes.get(i);
+					
+					if (collides(shape, segmentPolygon)) {
+						quadSpace[x][y].add(shape);
+					}
+				}
+				
+				quadSpaceShapes[x][y] = segmentPolygon;
+			}
+		}
+	}
+	
+	private void removeFromQuadSpace(Shape shape) {
+		int segments = quadSpace.length;
+		
+		for (int x=0;x<segments;x++) {
+			for (int y=0;y<segments;y++) {
+				quadSpace[x][y].remove(shape);
+			}
+		}
+	}
+	
+	private void addToQuadSpace(Shape shape) {
+		int segments = quadSpace.length;
+		
+		for (int x=0;x<segments;x++) {
+			for (int y=0;y<segments;y++) {
+				if (collides(shape, quadSpaceShapes[x][y])) {
+					quadSpace[x][y].add(shape);
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Perform the cut
 	 */
 	public void init() {
+		int size = 10;
 		int[][] map = new int[][] { 
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
-//				
 				{ 0, 0, 0, 0, 0, 0, 0, 3, 0, 0 },
 				{ 0, 1, 1, 1, 0, 0, 1, 1, 1, 0 },
 				{ 0, 1, 1, 0, 0, 0, 5, 1, 6, 0 },
@@ -77,8 +134,19 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
 				};
-		for (int x = 0; x < 10; x++) {
-			for (int y = 0; y < 10; y++) {
+		
+		size = 100;
+		map = new int[size][size];
+		for (int x=0;x<size;x++) {
+			for (int y=0;y<size;y++) {
+				if ((x+y) % 2 == 0) {
+					map[y][x] = 1;
+				}
+			}
+		}
+		
+		for (int x = 0; x < map[0].length; x++) {
+			for (int y = 0; y < map.length; y++) {
 				if (map[y][x] != 0) {
 					switch (map[y][x]) {
 					case 1:
@@ -88,7 +156,6 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 						p2.addPoint((x * 32) + 32, (y * 32) + 32);
 						p2.addPoint(x * 32, (y * 32) + 32);
 						original.add(p2);
-						//original.add(new Rectangle(x*32,y*32,33,33));
 						break;
 					case 2:
 						Polygon poly = new Polygon();
@@ -123,19 +190,58 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 						original.add(p4);
 						break;
 					}
-//					Polygon poly = new Polygon();
-//					poly.addPoint(x * 64, y * 32);
-//					poly.addPoint((x * 64) + 64, y * 32);
-//					poly.addPoint((x * 64) + 64, (y * 32) + 32);
-//					poly.addPoint(x * 64, (y * 32) + 32);
-					//original.add(poly);
 				}
 			}
 		}
 
-		combined = combine(original);
+		long before = System.currentTimeMillis();
+		
+		// the quad spaced method
+		generateSpace(original, 0, 0, (size+1)*32,(size+1)*32,8);
+		combined = combineQuadSpace();
+		
+		// the brute force method
+		//combined = combine(original);
+		
+		long after = System.currentTimeMillis();
+		System.out.println("Combine took: "+(after-before));
 	}
 
+	/**
+	 * Combine the shapes in the quad space
+	 *  
+	 * @return The newly combined list of shapes
+	 */
+	private ArrayList combineQuadSpace() {
+		boolean updated = true;
+		while (updated) {
+			updated = false;
+			
+			for (int x=0;x<quadSpace.length;x++) {
+				for (int y=0;y<quadSpace.length;y++) {
+					ArrayList shapes = quadSpace[x][y];
+					int before = shapes.size();
+					combine(shapes);
+					int after = shapes.size();
+					
+					updated |= before != after;
+				}
+			}
+		}
+		
+		// at this stage all the shapes that can be combined within their quads
+		// will have gone on - we may need to combine stuff on the boundary tho
+		ArrayList result = new ArrayList();
+		
+		for (int x=0;x<quadSpace.length;x++) {
+			for (int y=0;y<quadSpace.length;y++) {
+				result.addAll(quadSpace[x][y]);
+			}
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * Combine a set of shapes together
 	 * 
@@ -171,17 +277,30 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 	 */
 	private ArrayList combineImpl(ArrayList shapes) {
 		ArrayList result = new ArrayList(shapes);
-
+		if (quadSpace != null) {
+			result = shapes;
+		}
+		
 		for (int i = 0; i < shapes.size(); i++) {
 			Shape first = (Shape) shapes.get(i);
 			for (int j = i + 1; j < shapes.size(); j++) {
 				Shape second = (Shape) shapes.get(j);
 
+				if (!first.intersects(second)) {
+					continue;
+				}
+				
 				Shape[] joined = util.union(first, second);
 				if (joined.length == 1) {
-					result.remove(first);
-					result.remove(second);
-					result.add(joined[0]);
+					if (quadSpace != null) {
+						removeFromQuadSpace(first);
+						removeFromQuadSpace(second);
+						addToQuadSpace(joined[0]);
+					} else {
+						result.remove(first);
+						result.remove(second);
+						result.add(joined[0]);
+					}
 					return result;
 				}
 			}
@@ -190,6 +309,33 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 		return result;
 	}
 
+	/**
+	 * Check if two shapes collide
+	 * 
+	 * @param shape1 The first shape
+	 * @param shape2 The second shape
+	 * @return True if the shapes collide (i.e. intersection or overlap)
+	 */
+	public boolean collides(Shape shape1, Shape shape2) {
+		if (shape1.intersects(shape2)) {
+			return true;
+		}
+		for (int i=0;i<shape1.getPointCount();i++) {
+			float[] pt = shape1.getPoint(i);
+			if (shape2.contains(pt[0], pt[1])) {
+				return true;
+			}
+		}
+		for (int i=0;i<shape2.getPointCount();i++) {
+			float[] pt = shape2.getPoint(i);
+			if (shape1.contains(pt[0], pt[1])) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/**
 	 * @see BasicGame#init(GameContainer)
 	 */
@@ -217,8 +363,12 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 			g.draw(shape);
 		}
 
-		g.translate(0, 320);
 		g.setColor(Color.white);
+		if (quadSpaceShapes != null) {
+			g.draw(quadSpaceShapes[0][0]);
+		}
+		
+		g.translate(0, 320);
 
 		for (int i = 0; i < combined.size(); i++) {
 			g.setColor(Color.white);
