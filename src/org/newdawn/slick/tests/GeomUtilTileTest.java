@@ -1,6 +1,7 @@
 package org.newdawn.slick.tests;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -135,15 +136,15 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
 				};
 		
-		size = 100;
-		map = new int[size][size];
-		for (int x=0;x<size;x++) {
-			for (int y=0;y<size;y++) {
-				if ((x+y) % 2 == 0) {
-					map[y][x] = 1;
-				}
-			}
-		}
+//		size = 100;
+//		map = new int[size][size];
+//		for (int x=0;x<size;x++) {
+//			for (int y=0;y<size;y++) {
+//				if ((x+y) % 2 == 0) {
+//					map[y][x] = 1;
+//				}
+//			}
+//		}
 		
 		for (int x = 0; x < map[0].length; x++) {
 			for (int y = 0; y < map.length; y++) {
@@ -205,6 +206,7 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 		
 		long after = System.currentTimeMillis();
 		System.out.println("Combine took: "+(after-before));
+		System.out.println("Combine result: "+combined.size());
 	}
 
 	/**
@@ -231,7 +233,7 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 		
 		// at this stage all the shapes that can be combined within their quads
 		// will have gone on - we may need to combine stuff on the boundary tho
-		ArrayList result = new ArrayList();
+		HashSet result = new HashSet();
 		
 		for (int x=0;x<quadSpace.length;x++) {
 			for (int y=0;y<quadSpace.length;y++) {
@@ -239,7 +241,7 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 			}
 		}
 		
-		return result;
+		return new ArrayList(result);
 	}
 	
 	/**
