@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.lwjgl.opengl.EXTSecondaryColor;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.Texture;
@@ -150,6 +152,7 @@ public class Image implements Renderable {
 				trans[2] = (int) (transparent.b * 255);
 			}
 			texture = InternalTextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST, trans);
+			clampTexture();
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
@@ -168,6 +171,7 @@ public class Image implements Renderable {
 		
 		try {
 			texture = InternalTextureLoader.get().createTexture(width, height);
+			clampTexture();
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to create empty image "+width+"x"+height);
@@ -241,9 +245,23 @@ public class Image implements Renderable {
 		try {
 			texture = InternalTextureLoader.get().getTexture(data, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST);
 			ref = texture.toString();
+			clampTexture();
 		} catch (IOException e) {
 			Log.error(e);
 		}
+	}
+	
+	/**
+	 * Clamp the loaded texture to it's edges
+	 */
+	private void clampTexture() {
+        if (GLContext.getCapabilities().GL_EXT_texture_mirror_clamp) {
+        	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+        } else {
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
+        }
 	}
 	
 	/**
