@@ -49,7 +49,7 @@ public class ParticleIO {
 	public static ParticleSystem loadConfiguredSystem(String ref)
 			throws IOException {
 		return loadConfiguredSystem(ResourceLoader.getResourceAsStream(ref),
-				null);
+            null, null);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class ParticleIO {
 	 */
 	public static ParticleSystem loadConfiguredSystem(File ref)
 			throws IOException {
-		return loadConfiguredSystem(new FileInputStream(ref), null);
+      return loadConfiguredSystem(new FileInputStream(ref), null, null);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class ParticleIO {
 	 */
 	public static ParticleSystem loadConfiguredSystem(InputStream ref)
 			throws IOException {
-		return loadConfiguredSystem(ref, null);
+      return loadConfiguredSystem(ref, null, null);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class ParticleIO {
 	public static ParticleSystem loadConfiguredSystem(String ref,
 			ConfigurableEmitterFactory factory) throws IOException {
 		return loadConfiguredSystem(ResourceLoader.getResourceAsStream(ref),
-				factory);
+            factory, null);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class ParticleIO {
 	 */
 	public static ParticleSystem loadConfiguredSystem(File ref,
 			ConfigurableEmitterFactory factory) throws IOException {
-		return loadConfiguredSystem(new FileInputStream(ref), factory);
+      return loadConfiguredSystem(new FileInputStream(ref), factory, null);
 	}
 
 	/**
@@ -129,6 +129,24 @@ public class ParticleIO {
 	 */
 	public static ParticleSystem loadConfiguredSystem(InputStream ref,
 			ConfigurableEmitterFactory factory) throws IOException {
+            return loadConfiguredSystem(ref, factory, null);
+         }
+
+   /**
+    * Load a set of configured emitters into a single system
+    *
+    * @param ref
+    *            The stream to read the XML from
+    * @param factory
+    *            The factory used to create the emitter than will be poulated
+    *            with loaded data.
+    * @param system The particle system that will be loaded into
+    * @return A configured particle system
+    * @throws IOException
+    *             Indicates a failure to find, read or parse the XML file
+    */
+   public static ParticleSystem loadConfiguredSystem(InputStream ref,
+         ConfigurableEmitterFactory factory, ParticleSystem system) throws IOException {
 		if (factory == null) {
 			factory = new ConfigurableEmitterFactory() {
 				public ConfigurableEmitter createEmitter(String name) {
@@ -146,8 +164,10 @@ public class ParticleIO {
 				throw new IOException("Not a particle system file");
 			}
 			
-			ParticleSystem system = new ParticleSystem("org/newdawn/slick/data/particle.tga",
+         if (system == null) {
+         system = new ParticleSystem("org/newdawn/slick/data/particle.tga",
 					2000);
+         }
 			boolean additive = "true".equals(element.getAttribute("additive"));
 			if (additive) {
 				system.setBlendingMode(ParticleSystem.BLEND_ADDITIVE);
