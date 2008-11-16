@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.lwjgl.opengl.EXTSecondaryColor;
+import org.lwjgl.opengl.EXTTextureMirrorClamp;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.ImageData;
+import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureImpl;
-import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -256,8 +257,8 @@ public class Image implements Renderable {
 	 */
 	private void clampTexture() {
         if (GLContext.getCapabilities().GL_EXT_texture_mirror_clamp) {
-        	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+        	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, EXTTextureMirrorClamp.GL_MIRROR_CLAMP_TO_EDGE_EXT);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, EXTTextureMirrorClamp.GL_MIRROR_CLAMP_TO_EDGE_EXT);
         } else {
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
