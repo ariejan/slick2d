@@ -27,6 +27,8 @@ public class NeatTriangulator implements Triangulator
     private Triangle triangles[];
     /** The number of triangles found */
     private int numTriangles;
+    /** The current offset */
+    private float offset = EPSILON;
     
     /**
      * Create a new triangulator
@@ -497,7 +499,9 @@ public class NeatTriangulator implements Triangulator
     {
     	for (int i=0;i<numPoints;i++) {
     		if ((pointsX[i] == x) && (pointsY[i] == y)) {
-    			return;
+    			//return;
+    			y += offset;
+    			offset += EPSILON;
     		}
     	}
     	
