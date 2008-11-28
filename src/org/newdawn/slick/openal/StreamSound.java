@@ -1,7 +1,10 @@
 package org.newdawn.slick.openal;
 
 import java.io.IOException;
+import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.openal.AL10;
 import org.newdawn.slick.util.Log;
 
 /**
@@ -36,6 +39,8 @@ public class StreamSound extends AudioImpl {
 	 */
 	public int playAsMusic(float pitch, float gain, boolean loop) {
 		try {
+			cleanUpSource();
+			
 			player.setup(pitch, 1.0f);
 			SoundStore.get().setCurrentMusicVolume(gain);
 			player.play(loop);
@@ -47,6 +52,25 @@ public class StreamSound extends AudioImpl {
 		return SoundStore.get().getSource(0);
 	}
 
+	/**
+	 * Clean up the buffers applied to the sound source
+	 */
+	private void cleanUpSource() {
+		SoundStore store = SoundStore.get();
+		
+		AL10.alSourceStop(store.getSource(0));
+		IntBuffer buffer = BufferUtils.createIntBuffer(1);
+		int queued = AL10.alGetSourcei(store.getSource(0), AL10.AL_BUFFERS_QUEUED);
+		
+		while (queued > 0)
+		{
+			AL10.alSourceUnqueueBuffers(store.getSource(0), buffer);
+			queued--;
+		}
+		
+		AL10.alSourcei(store.getSource(0), AL10.AL_BUFFER, 0);
+	}
+	
 	/**
 	 * @see org.newdawn.slick.openal.AudioImpl#playAsSoundEffect(float, float, boolean, float, float, float)
 	 */

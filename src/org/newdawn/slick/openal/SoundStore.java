@@ -862,7 +862,7 @@ public class SoundStore {
 		if (!soundWorks) {
 			return;
 		}
-		
+
 		currentMusic = sources.get(0);
 		stopSource(0);
 		
@@ -882,7 +882,7 @@ public class SoundStore {
 		if (!soundWorks) {
 			return;
 		}
-		
+
 		currentMusic = sources.get(0);
 		this.stream = stream;
 		if (stream != null) {

@@ -41,7 +41,7 @@ public class MODSound extends AudioImpl {
 	 */
 	public int playAsMusic(float pitch, float gain, boolean loop) {
 		cleanUpSource();
-		
+
 		player.play(module, store.getSource(0), loop, SoundStore.get().isMusicOn());
 		player.setup(pitch, 1.0f);
 		store.setCurrentMusicVolume(gain);
@@ -64,6 +64,8 @@ public class MODSound extends AudioImpl {
 			AL10.alSourceUnqueueBuffers(store.getSource(0), buffer);
 			queued--;
 		}
+		
+		AL10.alSourcei(store.getSource(0), AL10.AL_BUFFER, 0);
 	}
 	
 	/**
