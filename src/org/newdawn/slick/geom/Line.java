@@ -245,13 +245,6 @@ public strictfp class Line extends Shape {
 	 * @param result The point on the line closest to the given point
 	 */
 	public void getClosestPoint(Vector2f point, Vector2f result) {
-		// Start of Line fields
-		Vector2f loc = new Vector2f();
-		Vector2f start = getStart();
-		Vector2f end = getEnd();
-		Vector2f vec = new Vector2f(getDX(), getDY());
-		// End of Line fields
-
 		loc.set(point);
 		loc.sub(start);
 
