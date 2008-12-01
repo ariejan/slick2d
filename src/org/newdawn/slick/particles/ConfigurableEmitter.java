@@ -444,6 +444,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 * Release all the particles held by this emitter
 	 */
 	public void reset() {
+	    completed = false; 
 		if (engine != null) {
 			engine.releaseAll(this);
 		}
