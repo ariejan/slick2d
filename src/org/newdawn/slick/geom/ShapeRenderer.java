@@ -174,7 +174,7 @@ public final class ShapeRenderer {
      * @param image The image to tile across the shape
      */
     public static final void textureFit(Shape shape, Image image) {
-    	textureFit(shape, image);
+    	textureFit(shape, image,1f,1f);
     }
     
     /**
