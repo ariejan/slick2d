@@ -25,6 +25,8 @@ public strictfp class Vector2f {
 	 * @param theta The angle of the vector in degrees
 	 */
 	public Vector2f(double theta) {
+		x = 1;
+		y = 0;
 		setTheta(theta);
 	}
 
@@ -34,6 +36,7 @@ public strictfp class Vector2f {
 	 * @param theta The angle to calculate the components from (in degrees)
 	 */
 	public void setTheta(double theta) {
+		System.out.println(theta);
 		// Next lines are to prevent numbers like -1.8369701E-16
 		// when working with negative numbers
 		if ((theta < -360) || (theta > 360)) {
@@ -50,10 +53,13 @@ public strictfp class Vector2f {
 			oldTheta = 360 + oldTheta;
 		}
 
-		x = x / (float) FastTrig.cos(StrictMath.toRadians(oldTheta))
-				* (float) FastTrig.cos(StrictMath.toRadians(theta));
-		y = x / (float) FastTrig.sin(StrictMath.toRadians(oldTheta))
-				* (float) FastTrig.sin(StrictMath.toRadians(theta));
+		x = -length() * (float) FastTrig.cos(StrictMath.toRadians(theta));
+		y = length() * (float) FastTrig.sin(StrictMath.toRadians(theta));
+		
+//		x = x / (float) FastTrig.cos(StrictMath.toRadians(oldTheta))
+//				* (float) FastTrig.cos(StrictMath.toRadians(theta));
+//		y = x / (float) FastTrig.sin(StrictMath.toRadians(oldTheta))
+//				* (float) FastTrig.sin(StrictMath.toRadians(theta));
 	} 
 	
 	/**
