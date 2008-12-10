@@ -21,6 +21,8 @@ public class InkscapeNonGeometricData extends NonGeometricData {
 	 */
 	public InkscapeNonGeometricData(String metaData, Element element) {
 		super(metaData);
+		
+		this.element = element;
 	}
 
 	/**
@@ -34,5 +36,14 @@ public class InkscapeNonGeometricData extends NonGeometricData {
 		
 		return result;
 	}
+
+	/**
+	 * Returns the XML element that is wrapped by this instance.
+	 *
+	 * @return The XML element for this instance
+	 */
+	public Element getElement() {
+		return element;
+	} 
 
 }
