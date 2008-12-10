@@ -44,7 +44,7 @@ public class FBOGraphics extends Graphics {
 		
 		boolean FBOEnabled = GLContext.getCapabilities().GL_EXT_framebuffer_object;
 		if (!FBOEnabled) {
-			throw new SlickException("Your OpenGL card does not support PBuffers and hence can't handle the dynamic images required for this application.");
+			throw new SlickException("Your OpenGL card does not support FBO and hence can't handle the dynamic images required for this application.");
 		}
 	
 		init();
@@ -102,7 +102,6 @@ public class FBOGraphics extends Graphics {
 			EXTFramebufferObject.glFramebufferTexture2DEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, 
 														   EXTFramebufferObject.GL_COLOR_ATTACHMENT0_EXT,
 														   GL11.GL_TEXTURE_2D, tex.getTextureID(), 0);
-			
 			
 			completeCheck();
 			unbind();
