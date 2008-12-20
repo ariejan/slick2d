@@ -429,7 +429,7 @@ public class AppGameContainer extends GameContainer {
 	 */
 	public boolean hasFocus() {
 		// hmm, not really the right thing, talk to the LWJGL guys
-		return Display.isVisible();
+		return Display.isActive();
 	}
 
 	/**
