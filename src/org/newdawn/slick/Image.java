@@ -156,7 +156,6 @@ public class Image implements Renderable {
 				trans[2] = (int) (transparent.b * 255);
 			}
 			texture = InternalTextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST, trans);
-			clampTexture();
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
@@ -175,7 +174,6 @@ public class Image implements Renderable {
 		
 		try {
 			texture = InternalTextureLoader.get().createTexture(width, height);
-			clampTexture();
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to create empty image "+width+"x"+height);
@@ -249,7 +247,6 @@ public class Image implements Renderable {
 		try {
 			texture = InternalTextureLoader.get().getTexture(data, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST);
 			ref = texture.toString();
-			clampTexture();
 		} catch (IOException e) {
 			Log.error(e);
 		}
@@ -258,7 +255,7 @@ public class Image implements Renderable {
 	/**
 	 * Clamp the loaded texture to it's edges
 	 */
-	private void clampTexture() {
+	public void clampTexture() {
         if (GLContext.getCapabilities().GL_EXT_texture_mirror_clamp) {
         	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, EXTTextureMirrorClamp.GL_MIRROR_CLAMP_TO_EDGE_EXT);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, EXTTextureMirrorClamp.GL_MIRROR_CLAMP_TO_EDGE_EXT);
