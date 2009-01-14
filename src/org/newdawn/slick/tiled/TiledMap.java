@@ -61,6 +61,11 @@ public class TiledMap {
 	protected int tileWidth;
 	/** The height of the tiles used on the map */
 	protected int tileHeight;
+	/** The padding of the tiles */
+	protected int tileSpacing = 0;
+	/** The margin of the tileset */
+	protected int tileMargin = 0;
+	
 	/** The location prefix where we can find tileset images */
 	protected String tilesLocation;
 	
@@ -520,11 +525,16 @@ public class TiledMap {
 			tileWidth = Integer.parseInt(tileWidthString);
 			tileHeight = Integer.parseInt(tileHeightString);
 			
-			int spacing = 0;
 			String sv = element.getAttribute("spacing");
 			if ((sv != null) && (!sv.equals(""))) {
-				spacing = Integer.parseInt(sv);
+				tileSpacing = Integer.parseInt(sv);
+	        }
+	         
+	        String mv = element.getAttribute("margin");
+			if ((mv != null) && (!mv.equals(""))) {
+				tileMargin = Integer.parseInt(mv);
 			}
+	          
 			NodeList list = element.getElementsByTagName("image");
 			Element imageNode = (Element) list.item(0);
 			String ref = imageNode.getAttribute("source");
@@ -538,8 +548,8 @@ public class TiledMap {
 			}
 
 			Image image = new Image(tilesLocation+"/"+ref,false,Image.FILTER_NEAREST,trans);
-	        
-			tiles = new SpriteSheet(image , tileWidth, tileHeight, spacing);
+
+			tiles = new SpriteSheet(image, tileWidth, tileHeight, tileSpacing, tileMargin); 
 			tilesAcross = tiles.getHorizontalCount();
 			tilesDown = tiles.getVerticalCount();
 

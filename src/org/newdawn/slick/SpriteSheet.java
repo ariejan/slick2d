@@ -12,6 +12,8 @@ public class SpriteSheet extends Image {
 	private int tw;
 	/** The height of a single element in pixels  */
 	private int th;
+	/** The margin of the image */
+	private int margin = 0;    
 	/** Subimages */
 	private Image[][] subImages;
 	/** The spacing between tiles */
@@ -45,20 +47,34 @@ public class SpriteSheet extends Image {
 	 * @param tw The width of the tiles on the sheet 
 	 * @param th The height of the tiles on the sheet 
 	 * @param spacing The spacing between tiles
+	 * @param margin The magrin around the tiles
 	 */
-	public SpriteSheet(Image image,int tw,int th,int spacing) {
+	public SpriteSheet(Image image,int tw,int th,int spacing,int margin) {
 		super(image);
 		
 		this.target = image;
 		this.tw = tw;
 		this.th = th;
 		this.spacing = spacing;
+		this.margin = margin; 
 
 		// call init manually since constructing from an image will have previously initialised
 		// from incorrect values 
 		initImpl();
 	}
 
+	/**
+	 * Create a new sprite sheet based on a image location
+	 * 
+	 * @param image The image to based the sheet of
+	 * @param tw The width of the tiles on the sheet 
+	 * @param th The height of the tiles on the sheet 
+	 * @param spacing The spacing between tiles
+	 */
+	public SpriteSheet(Image image,int tw,int th,int spacing) {
+		this(image,tw,th,spacing,0);
+	}
+	
 	/**
 	 * Create a new sprite sheet based on a image location
 	 * 
@@ -141,8 +157,8 @@ public class SpriteSheet extends Image {
 			return;
 		}
 		
-		int tilesAcross = ((getWidth() - tw) / (tw + spacing)) + 1;
-		int tilesDown = ((getHeight() - th) / (th + spacing)) + 1;
+		int tilesAcross = ((getWidth()-(margin*2) - tw) / (tw + spacing)) + 1;
+		int tilesDown = ((getHeight()-(margin*2) - th) / (th + spacing)) + 1; 
 		if ((getHeight() - th) % (th+spacing) != 0) {
 			tilesDown++;
 		}
@@ -192,8 +208,8 @@ public class SpriteSheet extends Image {
 		if ((y < 0) || (y >= subImages[0].length)) {
 			throw new RuntimeException("SubImage out of sheet bounds: "+x+","+y);
 		}
-		
-		return target.getSubImage(x*(tw+spacing),y*(th+spacing),tw,th);
+
+		return target.getSubImage(x*(tw+spacing) + margin, y*(th+spacing) + margin,tw,th); 
 	}
 	
 	/**
