@@ -960,4 +960,14 @@ public class SoundStore {
 	public void stopSoundEffect(int id) {
 		AL10.alSourceStop(id);
 	}
+	
+	/**
+	 * Retrieve the number of OpenAL sound sources that have been
+	 * determined at initialisation.
+	 * 
+	 * @return The number of sources available
+	 */
+	public int getSourceCount() {
+		return sourceCount;
+	}
 }
