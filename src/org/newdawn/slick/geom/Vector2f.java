@@ -322,7 +322,7 @@ public strictfp class Vector2f {
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return (int) ((x*y)*1000);
+        return 997 * ((int)x) ^ 991 * ((int)y); //large primes! 
 	}
 	
 	/**
