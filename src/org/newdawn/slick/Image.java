@@ -63,6 +63,9 @@ public class Image implements Renderable {
     /** The y coordinate of the centre of rotation */
     protected float centerY; 
     
+    /** A meaningful name provided by the user of the image to tag it */
+    protected String name;
+    
 	/**
 	 * Create a texture as a copy of another
 	 * 
@@ -263,6 +266,25 @@ public class Image implements Renderable {
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
         }
+	}
+	
+	/**
+	 * Give this image a meaningful tagging name. Can be used as user data/identifier
+	 * for the image.
+	 * 
+	 * @param name The name to assign the image
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	/**
+	 * Return a meaningful tagging name that has been assigned to this image. 
+	 * 
+	 * @return A name or null if the name hasn't been set
+	 */
+	public String getName() {
+		return name;
 	}
 	
 	/**
