@@ -65,13 +65,21 @@ public class GeomTest extends BasicGame {
 		g.setColor(Color.white);
 		g.drawString("Red indicates a collision, green indicates no collision", 50, 420);
         g.drawString("White are the targets", 50, 435);
-		
+
+        g.pushTransform();
+        g.translate(100,100);
+        g.pushTransform();
+        g.translate(-50,-50);
         g.scale(10, 10);
         g.setColor(Color.red);
         g.fillRect(0,0,5,5);
         g.setColor(Color.white);
         g.drawRect(0,0,5,5);
-        g.scale(1/10.0f, 1/10.0f);
+        g.popTransform();
+        g.setColor(Color.green);
+        g.fillRect(20,20,50,50);
+        g.popTransform();
+        
         
 //		g.setColor(Color.white);
 //		g.draw(rect);

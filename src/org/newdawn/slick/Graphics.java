@@ -5,6 +5,7 @@ import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -113,6 +114,11 @@ public class Graphics {
 	/** The current line width */
 	private float lineWidth = 1;
 
+	/** The matrix stack */
+	private ArrayList stack = new ArrayList();
+	/** The index into the stack we're using */
+	private int stackIndex;
+	
 	/**
 	 * Default constructor for sub-classes
 	 */
@@ -1704,6 +1710,46 @@ public class Graphics {
 		postdraw();
 	}
 	
+	/**
+	 * Push the current state of the transform from this graphics contexts
+	 * onto the underlying graphics stack's transform stack. An associated 
+	 * popTransform() must be performed to restore the state before the end
+	 * of the rendering loop.
+	 */
+	public void pushTransform() {
+		predraw();
+		
+		FloatBuffer buffer;
+		if (stackIndex >= stack.size()) {
+			buffer = BufferUtils.createFloatBuffer(16);
+			stack.add(buffer);
+		} else {
+			buffer = (FloatBuffer) stack.get(stackIndex);
+		}
+		
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);
+		stackIndex++;
+		
+		postdraw();
+	}
+	
+	/**
+	 * Pop a previously pushed transform from the stack to the current. This should
+	 * only be called if a transform has been previously pushed.
+	 */
+	public void popTransform() {
+		if (stackIndex == 0) {
+			throw new RuntimeException("Attempt to pop a transform that hasn't be pushed");
+		}
+		
+		predraw();
+		
+		stackIndex--;
+		FloatBuffer oldBuffer = (FloatBuffer) stack.get(stackIndex);
+		GL11.glLoadMatrix(oldBuffer);
+		
+		postdraw();
+	}
 	/**
 	 * Dispose this graphis context, this will release any underlying resourses. However
 	 * this will also invalidate it's use
