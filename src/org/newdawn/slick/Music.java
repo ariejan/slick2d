@@ -321,6 +321,10 @@ public class Music {
 	 * @param delta The amount of time in milliseconds thats passed since last update
 	 */
 	void update(int delta) {
+		if (!playing) {
+			return;
+		}
+       
 		if (fadeTime > 0) {
 			fadeTime -= delta;
 			if (fadeTime < 0) {
