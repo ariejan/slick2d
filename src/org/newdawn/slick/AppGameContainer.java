@@ -14,6 +14,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.CursorLoader;
@@ -52,6 +53,8 @@ public class AppGameContainer extends GameContainer {
 	protected boolean updateOnlyOnVisible = true;
 	/** Alpha background supported */
 	protected boolean alphaSupport = true;
+	/** The number of samples we'll attempt through hardware */
+	private int samples;
 	
 	/**
 	 * Create a new container wrapping a game
@@ -78,6 +81,28 @@ public class AppGameContainer extends GameContainer {
 		originalDisplayMode = Display.getDisplayMode();
 		
 		setDisplayMode(width,height,fullscreen);
+	}
+	
+	/**
+	 * Indicate whether we want to try to use fullscreen multisampling. This will
+	 * give antialiasing across the whole scene using a hardware feature.
+	 * 
+	 * @param samples The number of samples to attempt (2 is safe)
+	 */
+	public void setMultiSample(int samples) {
+		if (!supportsMultiSample()) {
+			return;
+		}
+		this.samples = samples;
+	}
+	
+	/**
+	 * Check if this hardware can support multi-sampling
+	 * 
+	 * @return True if the hardware supports multi-sampling
+	 */
+	public boolean supportsMultiSample() {
+		return GLContext.getCapabilities().GL_ARB_multisample;
 	}
 	
 	/**
@@ -307,6 +332,10 @@ public class AppGameContainer extends GameContainer {
 	            public Object run() {
 	        		try {
 	        			PixelFormat format = new PixelFormat(8,8,0);
+	        			if (supportsMultiSample() && (samples > 0)) {
+	        				format = new PixelFormat(8,8,0,2);
+	        			}
+	        			
 	        			if (SHARED_DRAWABLE == null) 
 	        			{
 	        				Display.create(format);
