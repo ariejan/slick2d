@@ -447,6 +447,43 @@ public class TiledMap {
 	}
 	
 	/**
+	 * Retrieve the number of tilesets available in this map
+	 * 
+	 * @return The number of tilesets available in this map
+	 */
+	public int getTileSetCount() {
+		return tileSets.size();
+	}
+	
+	/**
+	 * Get a tileset at a particular index in the list of sets for this map
+	 * 
+	 * @param index The index of the tileset. 
+	 * @return The TileSet requested
+	 */
+	public TileSet getTileSet(int index) {
+		return (TileSet) tileSets.get(index);
+	}
+	
+	/**
+	 * Get a tileset by a given global ID
+	 * 
+	 * @param gid The global ID of the tileset to retrieve
+	 * @return The tileset requested or null if no tileset matches
+	 */
+	public TileSet getTileSetByGID(int gid) {
+		for (int i=0;i<tileSets.size();i++) {
+			TileSet set = (TileSet) tileSets.get(i);
+			
+			if (set.contains(gid)) {
+				return set;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Find a tile for a given global tile id
 	 * 
 	 * @param gid The global tile id we're looking for
@@ -469,7 +506,7 @@ public class TiledMap {
 	 *
 	 * @author kevin
 	 */
-	protected class TileSet {
+	public class TileSet {
 		/** The index of the tile set */
 		public int index;
 		/** The name of the tile set */
@@ -548,19 +585,8 @@ public class TiledMap {
 			}
 
 			Image image = new Image(tilesLocation+"/"+ref,false,Image.FILTER_NEAREST,trans);
-
-			tiles = new SpriteSheet(image, tileWidth, tileHeight, tileSpacing, tileMargin); 
-			tilesAcross = tiles.getHorizontalCount();
-			tilesDown = tiles.getVerticalCount();
-
-			if (tilesAcross <= 0) {
-				tilesAcross = 1;
-			}
-			if (tilesDown <= 0) {
-				tilesDown = 1;
-			}
-
-			lastGID = (tilesAcross * tilesDown) + firstGID - 1;
+			setTileSetImage(image);
+			
 			NodeList pElements = element.getElementsByTagName("tile");
 			for (int i=0;i<pElements.getLength();i++) {
 				Element tileElement = (Element) pElements.item(i);
@@ -582,6 +608,26 @@ public class TiledMap {
 				
 				props.put(new Integer(id), tileProps);
 			}
+		}
+		
+		/**
+		 * Set the image to use for this sprite sheet image to use for this tileset
+		 * 
+		 * @param image The image to use for this tileset
+		 */
+		public void setTileSetImage(Image image) {
+			tiles = new SpriteSheet(image, tileWidth, tileHeight, tileSpacing, tileMargin); 
+			tilesAcross = tiles.getHorizontalCount();
+			tilesDown = tiles.getVerticalCount();
+
+			if (tilesAcross <= 0) {
+				tilesAcross = 1;
+			}
+			if (tilesDown <= 0) {
+				tilesDown = 1;
+			}
+
+			lastGID = (tilesAcross * tilesDown) + firstGID - 1;
 		}
 		
 		/**
