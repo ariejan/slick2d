@@ -26,10 +26,10 @@ public class Polygon extends Shape {
         this.points = new float[length];
         maxX = -Float.MIN_VALUE;
         maxY = -Float.MIN_VALUE;
-        minX = -Float.MAX_VALUE;
-        minY = -Float.MAX_VALUE;
-        x = -Float.MAX_VALUE;
-        y = -Float.MAX_VALUE;
+        minX = Float.MAX_VALUE;
+        minY = Float.MAX_VALUE;
+        x = Float.MAX_VALUE;
+        y = Float.MAX_VALUE;
         
         for(int i=0;i<length;i++) {
             this.points[i] = points[i];
