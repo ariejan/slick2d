@@ -119,8 +119,10 @@ public class Ellipse extends Shape {
     protected void createPoints() {
         ArrayList tempPoints = new ArrayList();
 
-        maxX = Float.MIN_VALUE;
-        maxY = Float.MIN_VALUE;
+        maxX = -Float.MIN_VALUE;
+        maxY = -Float.MIN_VALUE;
+        minX = Float.MAX_VALUE;
+        minY = Float.MAX_VALUE;
 
         float start = 0;
         float end = 359;
@@ -143,6 +145,12 @@ public class Ellipse extends Shape {
             }
             if(newY > maxY) {
                 maxY = newY;
+            }
+            if(newX < minX) {
+            	minX = newX;
+            }
+            if(newY < minY) {
+            	minY = newY;
             }
             
             tempPoints.add(new Float(newX));

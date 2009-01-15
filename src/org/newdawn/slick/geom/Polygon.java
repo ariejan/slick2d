@@ -24,16 +24,21 @@ public class Polygon extends Shape {
         int length = points.length;
         
         this.points = new float[length];
-        maxX = Float.MIN_VALUE;
-        maxY = Float.MIN_VALUE;
-        x = Float.MAX_VALUE;
-        y = Float.MAX_VALUE;
+        maxX = -Float.MIN_VALUE;
+        maxY = -Float.MIN_VALUE;
+        minX = -Float.MAX_VALUE;
+        minY = -Float.MAX_VALUE;
+        x = -Float.MAX_VALUE;
+        y = -Float.MAX_VALUE;
         
         for(int i=0;i<length;i++) {
             this.points[i] = points[i];
             if(i % 2 == 0) {
                 if(points[i] > maxX) {
                     maxX = points[i];
+                }
+                if(points[i] < minX) {
+                	minX = points[i];
                 }
                 if(points[i] < x) {
                     x = points[i];
@@ -42,6 +47,9 @@ public class Polygon extends Shape {
             else {
                 if(points[i] > maxY) {
                     maxY = points[i];
+                }
+                if(points[i] < minY) {
+                	minY = points[i];
                 }
                 if(points[i] < y) {
                     y = points[i];
@@ -59,8 +67,10 @@ public class Polygon extends Shape {
      */
     public Polygon(){
         points = new float[0];
-        maxX = Float.MIN_VALUE;
-        maxY = Float.MIN_VALUE;
+        maxX = -Float.MIN_VALUE;
+        maxY = -Float.MIN_VALUE;
+        minX = Float.MAX_VALUE;
+        minY = Float.MAX_VALUE;
     }
     
     /**
@@ -99,6 +109,12 @@ public class Polygon extends Shape {
         }
         if(y > maxY) {
             maxY = y;
+        }
+        if(x < minX) {
+            minX = x;
+        }
+        if(y < minY) {
+            minY = y;
         }
         findCenter();
         calculateRadius();

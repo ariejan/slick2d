@@ -155,6 +155,8 @@ public class RoundedRectangle extends Rectangle {
     protected void createPoints() {
         maxX = x + width;
         maxY = y + height;
+        minX = x;
+        minY = y;
         float useWidth = width - 1;
         float useHeight = height - 1;
         if(cornerRadius == 0) {

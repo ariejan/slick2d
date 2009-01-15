@@ -201,6 +201,8 @@ public class Rectangle extends Shape {
         
         maxX = points[2];
         maxY = points[5];
+        minX = points[0];
+        minY = points[1];
         
         findCenter();
         calculateRadius();
