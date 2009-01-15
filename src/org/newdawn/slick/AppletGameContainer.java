@@ -8,6 +8,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.InternalTextureLoader;
@@ -144,10 +145,21 @@ public class AppletGameContainer extends Applet {
 			try {
 				Display.setParent(displayParent);
 				Display.setVSyncEnabled(true);
-				Display.create();
+
+    			PixelFormat format = new PixelFormat(8,8,0);
+    			if (container.supportsMultiSample() && (container.getSamples() > 0)) {
+    				format = new PixelFormat(8,8,0,2);
+    			}
+				Display.create(format);
 				initGL();
 			} catch (LWJGLException e) {
-				e.printStackTrace();
+				Log.error(e);
+				try {
+					Display.create();
+					initGL();
+				} catch (LWJGLException x) {
+					Log.error(x);
+				}
 			}
 			displayParent.requestFocus();
 			container.runloop();

@@ -7,6 +7,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.Drawable;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.gui.GUIContext;
@@ -77,6 +78,8 @@ public abstract class GameContainer implements GUIContext {
 	protected boolean vsync;
 	/** Smoothed deltas requested */
 	protected boolean smoothDeltas;
+	/** The number of samples we'll attempt through hardware */
+	protected int samples;
 	
 	/**
 	 * Create a new game container wrapping a given game
@@ -89,6 +92,39 @@ public abstract class GameContainer implements GUIContext {
 		
 		getBuildVersion();
 		Log.checkVerboseLogSetting();
+	}
+
+	
+	/**
+	 * Indicate whether we want to try to use fullscreen multisampling. This will
+	 * give antialiasing across the whole scene using a hardware feature.
+	 * 
+	 * @param samples The number of samples to attempt (2 is safe)
+	 */
+	public void setMultiSample(int samples) {
+		if (!supportsMultiSample()) {
+			return;
+		}
+		this.samples = samples;
+	}
+	
+	/**
+	 * Check if this hardware can support multi-sampling
+	 * 
+	 * @return True if the hardware supports multi-sampling
+	 */
+	public boolean supportsMultiSample() {
+		return GLContext.getCapabilities().GL_ARB_multisample;
+	}
+	
+	/**
+	 * The number of samples we're attempting to performing using
+	 * hardware multisampling
+	 * 
+	 * @return The number of samples requested
+	 */
+	public int getSamples() {
+		return samples;
 	}
 	
 	/**
