@@ -1086,4 +1086,11 @@ public class Image implements Renderable {
 		texture.release();
 		GraphicsFactory.releaseGraphicsForImage(this);
 	}
+	
+	/**
+	 * Flush the current pixel data to force a re-read next update
+	 */
+	public void flushPixelData() {
+		pixelData = null;
+	}
 }

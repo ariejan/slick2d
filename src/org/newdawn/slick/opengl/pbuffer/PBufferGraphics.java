@@ -160,4 +160,13 @@ public class PBufferGraphics extends Graphics {
 		
 		pbuffer.destroy();
 	}
+	
+	/**
+	 * @see org.newdawn.slick.Graphics#flush()
+	 */
+	public void flush() {
+		super.flush();
+		
+		image.flushPixelData();
+	}
 }

@@ -20,7 +20,6 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class FBOGraphics extends Graphics {
-
 	/** The image we're we're sort of rendering to */
 	private Image image;
 	/** The ID of the FBO in use */
@@ -216,4 +215,14 @@ public class FBOGraphics extends Graphics {
 		EXTFramebufferObject.glDeleteFramebuffersEXT(buffer);
 		valid = false;
 	}
+
+	/**
+	 * @see org.newdawn.slick.Graphics#flush()
+	 */
+	public void flush() {
+		super.flush();
+		
+		image.flushPixelData();
+	}
+
 }
