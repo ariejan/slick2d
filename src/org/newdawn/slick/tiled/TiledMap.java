@@ -611,6 +611,42 @@ public class TiledMap {
 		}
 		
 		/**
+		 * Get the width of each tile in this set
+		 * 
+		 * @return The width of each tile in this set
+		 */
+		public int getTileWidth() {
+			return tileWidth;
+		}
+
+		/**
+		 * Get the height of each tile in this set
+		 * 
+		 * @return The height of each tile in this set
+		 */
+		public int getTileHeight() {
+			return tileHeight;
+		}
+		
+		/**
+		 * Get the spacing between tiles in this set
+		 * 
+		 * @return The spacing between tiles in this set 
+		 */
+		public int getTileSpacing() {
+			return tileSpacing;
+		}
+
+		/**
+		 * Get the margin around tiles in this set
+		 * 
+		 * @return The maring around tiles in this set
+		 */
+		public int getTileMargin() {
+			return tileMargin;
+		}
+		
+		/**
 		 * Set the image to use for this sprite sheet image to use for this tileset
 		 * 
 		 * @param image The image to use for this tileset
