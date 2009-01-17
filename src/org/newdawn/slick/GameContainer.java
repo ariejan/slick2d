@@ -7,7 +7,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.Drawable;
-import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.gui.GUIContext;
@@ -92,7 +91,7 @@ public abstract class GameContainer implements GUIContext {
 	protected GameContainer(Game game) {
 		this.game = game;
 		lastFrame = getTime();
-		
+
 		getBuildVersion();
 		Log.checkVerboseLogSetting();
 	}
@@ -105,9 +104,6 @@ public abstract class GameContainer implements GUIContext {
 	 * @param samples The number of samples to attempt (2 is safe)
 	 */
 	public void setMultiSample(int samples) {
-		if (!supportsMultiSample()) {
-			return;
-		}
 		this.samples = samples;
 	}
 	
@@ -655,8 +651,6 @@ public abstract class GameContainer implements GUIContext {
 	protected void initGL() {
 		Log.info("Starting display "+width+"x"+height);
 		GL.initDisplay(width, height);
-
-		supportsMultiSample = GLContext.getCapabilities().GL_ARB_multisample;;
 		
 		if (input == null) {
 			input = new Input(height);

@@ -14,6 +14,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.CursorLoader;
@@ -51,7 +52,7 @@ public class AppGameContainer extends GameContainer {
 	/** True if we should update the game only when the display is visible */
 	protected boolean updateOnlyOnVisible = true;
 	/** Alpha background supported */
-	protected boolean alphaSupport = true;
+	protected boolean alphaSupport = false;
 	
 	/**
 	 * Create a new container wrapping a game
@@ -151,7 +152,7 @@ public class AppGameContainer extends GameContainer {
 
 			Display.setDisplayMode(targetDisplayMode);
 			Display.setFullscreen(fullscreen);
-			
+
 			if (Display.isCreated()) {
 				initGL();
 				enterOrtho();
@@ -287,6 +288,24 @@ public class AppGameContainer extends GameContainer {
 	}
 	
 	/**
+	 * Try creating a display with the given format
+	 * 
+	 * @param format The format to attempt
+	 * @throws LWJGLException Indicates a failure to support the given format
+	 */
+	private void tryCreateDisplay(PixelFormat format) throws LWJGLException {
+		
+		if (SHARED_DRAWABLE == null) 
+		{
+			Display.create(format);
+		}
+		else
+		{
+			Display.create(format, SHARED_DRAWABLE);
+		}
+	}
+	
+	/**
 	 * Start running the game
 	 * 
 	 * @throws SlickException Indicates a failure to initialise the system
@@ -306,37 +325,28 @@ public class AppGameContainer extends GameContainer {
 			AccessController.doPrivileged(new PrivilegedAction() {
 	            public Object run() {
 	        		try {
-	        			PixelFormat format = new PixelFormat(8,8,0);
-	        			if (supportsMultiSample() && (samples > 0)) {
-	        				format = new PixelFormat(8,8,0,2);
-	        			}
+	        			System.out.println(samples);
+	        			PixelFormat format = new PixelFormat(8,8,0,samples);
 	        			
-	        			if (SHARED_DRAWABLE == null) 
-	        			{
-	        				Display.create(format);
-	        			}
-	        			else
-	        			{
-	        				Display.create(format, SHARED_DRAWABLE);
-	        			}
+	        			tryCreateDisplay(format);
+	        			supportsMultiSample = true;
 	        		} catch (Exception e) {
-	        			Log.error(e);
-	        			
-	        			alphaSupport = false;
 	        			Display.destroy();
-	        			// if we couldn't get alpha, let us know
-		        		try {
-		        			if (SHARED_DRAWABLE == null) 
-		        			{
-		        				Display.create();
-		        			}
-		        			else
-		        			{
-		        				Display.create(new PixelFormat(), SHARED_DRAWABLE);
-		        			}
-		        		} catch (Exception x) {
-		        			Log.error(x);
-		        		}
+	        			
+	        			try {
+		        			PixelFormat format = new PixelFormat(8,8,0);
+		        			
+		        			tryCreateDisplay(format);
+		        			alphaSupport = false;
+	        			} catch (Exception e2) {
+		        			Display.destroy();
+		        			// if we couldn't get alpha, let us know
+			        		try {
+			        			tryCreateDisplay(new PixelFormat());
+			        		} catch (Exception e3) {
+			        			Log.error(e3);
+			        		}
+	        			}
 	        		}
 					
 					return null;
