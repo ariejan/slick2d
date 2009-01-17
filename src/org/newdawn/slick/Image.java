@@ -6,7 +6,6 @@ import java.io.InputStream;
 import org.lwjgl.opengl.EXTSecondaryColor;
 import org.lwjgl.opengl.EXTTextureMirrorClamp;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.InternalTextureLoader;
@@ -23,6 +22,15 @@ import org.newdawn.slick.util.Log;
  * @author kevin
  */
 public class Image implements Renderable {
+	/** The top left corner identifier */
+	public static final int TOP_LEFT = 0;
+	/** The top right corner identifier */
+	public static final int TOP_RIGHT = 1;
+	/** The bottom right corner identifier */
+	public static final int BOTTOM_RIGHT = 2;
+	/** The bottom left corner identifier */
+	public static final int BOTTOM_LEFT = 3;
+	
 	/** The renderer to use for all GL operations */
 	protected static SGL GL = Renderer.get();
 	
@@ -65,6 +73,9 @@ public class Image implements Renderable {
     
     /** A meaningful name provided by the user of the image to tag it */
     protected String name;
+    
+    /** The colours for each of the corners */
+    protected Color[] corners;
     
 	/**
 	 * Create a texture as a copy of another
@@ -252,6 +263,27 @@ public class Image implements Renderable {
 		}
 	}
 	
+	/** 
+	 * Set the color of the given corner when this image is rendered. This is 
+	 * useful lots of visual effect but especially light maps
+	 * 
+	 * @param corner The corner identifier for the corner to be set
+	 * @param r The red component value to set (between 0 and 1)
+	 * @param g The green component value to set (between 0 and 1)
+	 * @param b The blue component value to set (between 0 and 1)
+	 * @param a The alpha component value to set (between 0 and 1)
+	 */
+	public void setColor(int corner, float r, float g, float b, float a) {
+		if (corners == null) {
+			corners = new Color[] {new Color(1,1,1,1f),new Color(1,1,1,1f), new Color(1,1,1,1f), new Color(1,1,1,1f)};
+		}
+		
+		corners[corner].r = r;
+		corners[corner].g = g;
+		corners[corner].b = b;
+		corners[corner].a = a;
+	}
+	
 	/**
 	 * Clamp the loaded texture to it's edges
 	 */
@@ -418,15 +450,31 @@ public class Image implements Renderable {
 	public void drawEmbedded(float x,float y,float width,float height) {
 		init();
 		
-	    GL.glTexCoord2f(textureOffsetX, textureOffsetY);
-		GL.glVertex3f(x, y, 0);
-		GL.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
-		GL.glVertex3f(x, y + height, 0);
-		GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY
-				+ textureHeight);
-		GL.glVertex3f(x + width, y + height, 0);
-		GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY);
-		GL.glVertex3f(x + width, y, 0);
+		if (corners == null) {
+		    GL.glTexCoord2f(textureOffsetX, textureOffsetY);
+			GL.glVertex3f(x, y, 0);
+			GL.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
+			GL.glVertex3f(x, y + height, 0);
+			GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY
+					+ textureHeight);
+			GL.glVertex3f(x + width, y + height, 0);
+			GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY);
+			GL.glVertex3f(x + width, y, 0);
+		} else {
+			corners[TOP_LEFT].bind();
+		    GL.glTexCoord2f(textureOffsetX, textureOffsetY);
+			GL.glVertex3f(x, y, 0);
+			corners[BOTTOM_LEFT].bind();
+			GL.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
+			GL.glVertex3f(x, y + height, 0);
+			corners[BOTTOM_RIGHT].bind();
+			GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY
+					+ textureHeight);
+			GL.glVertex3f(x + width, y + height, 0);
+			corners[TOP_RIGHT].bind();
+			GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY);
+			GL.glVertex3f(x + width, y, 0);
+		}
 	}
 
 	/**
