@@ -81,6 +81,9 @@ public abstract class GameContainer implements GUIContext {
 	/** The number of samples we'll attempt through hardware */
 	protected int samples;
 	
+	/** True if this context supports multisample */
+	protected boolean supportsMultiSample;
+	
 	/**
 	 * Create a new game container wrapping a given game
 	 * 
@@ -114,7 +117,7 @@ public abstract class GameContainer implements GUIContext {
 	 * @return True if the hardware supports multi-sampling
 	 */
 	public boolean supportsMultiSample() {
-		return GLContext.getCapabilities().GL_ARB_multisample;
+		return supportsMultiSample;
 	}
 	
 	/**
@@ -652,6 +655,8 @@ public abstract class GameContainer implements GUIContext {
 	protected void initGL() {
 		Log.info("Starting display "+width+"x"+height);
 		GL.initDisplay(width, height);
+
+		supportsMultiSample = GLContext.getCapabilities().GL_ARB_multisample;;
 		
 		if (input == null) {
 			input = new Input(height);
