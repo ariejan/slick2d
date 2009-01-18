@@ -41,7 +41,7 @@ public class InternalTextureLoader {
     /** The table of textures that have been loaded in this loader */
     private HashMap texturesNearest = new HashMap();
     /** The destination pixel format */
-    private int dstPixelFormat = GL11.GL_RGBA;
+    private int dstPixelFormat = GL11.GL_RGBA8;
     /** True if we're using deferred loading */
     private boolean deferred;
     
