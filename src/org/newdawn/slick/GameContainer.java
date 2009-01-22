@@ -620,10 +620,10 @@ public abstract class GameContainer implements GUIContext {
 			}
 			
 			GL.flush();
-			
-			if (targetFPS != -1) {
-				Display.sync(targetFPS);
-			}
+		}
+		
+		if (targetFPS != -1) {
+			Display.sync(targetFPS);
 		}
 	}
 	
