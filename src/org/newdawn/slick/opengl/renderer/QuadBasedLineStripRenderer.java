@@ -284,4 +284,12 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 		colours[(pts*4)+3] = a;
 		cpt++;
 	}
+
+	public boolean applyGLLineFixes() {
+		if (width == 1) {
+			return def.applyGLLineFixes();
+		}
+		
+		return def.applyGLLineFixes();
+	}
 }

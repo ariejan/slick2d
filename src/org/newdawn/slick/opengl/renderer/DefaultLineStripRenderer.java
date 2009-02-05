@@ -62,4 +62,11 @@ public class DefaultLineStripRenderer implements LineStripRenderer {
 	public void setLineCaps(boolean caps) {
 	}
 
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.LineStripRenderer#applyGLLineFixes()
+	 */
+	public boolean applyGLLineFixes() {
+		return true;
+	}
+
 }

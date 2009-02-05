@@ -118,7 +118,7 @@ public class Graphics {
 	private ArrayList stack = new ArrayList();
 	/** The index into the stack we're using */
 	private int stackIndex;
-	
+
 	/**
 	 * Default constructor for sub-classes
 	 */
@@ -448,36 +448,39 @@ public class Graphics {
 	public void drawLine(float x1, float y1, float x2, float y2) {
 		float lineWidth = this.lineWidth - 1;
 		
-		if (x1 == x2) {
-			if (y1 > y2) {
-				float temp = y2;
-				y2 = y1;
-				y1 = temp;
+		if (LSR.applyGLLineFixes()) {
+			if (x1 == x2) {
+				if (y1 > y2) {
+					float temp = y2;
+					y2 = y1;
+					y1 = temp;
+				}
+				float step = 1 / sy;
+				lineWidth = lineWidth / sy;
+				fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),lineWidth+step,(y2-y1)+lineWidth+step);
+				return;
+			} else if (y1 == y2) {
+				if (x1 > x2) {
+					float temp = x2;
+					x2 = x1;
+					x1 = temp;
+				}
+				float step = 1 / sx;
+				lineWidth = lineWidth / sx;
+				fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),(x2-x1)+lineWidth+step,lineWidth+step);
+				return;
 			}
-			float step = 1 / sy;
-			lineWidth = lineWidth / sy;
-			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),lineWidth+step,(y2-y1)+lineWidth+step);
-			return;
-		} else if (y1 == y2) {
-			if (x1 > x2) {
-				float temp = x2;
-				x2 = x1;
-				x1 = temp;
-			}
-			float step = 1 / sx;
-			lineWidth = lineWidth / sx;
-			fillRect(x1-(lineWidth/2.0f),y1-(lineWidth/2.0f),(x2-x1)+lineWidth+step,lineWidth+step);
-			return;
 		}
 		
 		predraw();
 		currentColor.bind();
 		TextureImpl.bindNone();
 
-		GL.glBegin(SGL.GL_LINES);
-		GL.glVertex2f(x1, y1);
-		GL.glVertex2f(x2, y2);
-		GL.glEnd();
+		LSR.start();
+		LSR.vertex(x1,y1);
+		LSR.vertex(x2,y2);
+		LSR.end();
+		
 		postdraw();
 	}
 

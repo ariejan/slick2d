@@ -8,6 +8,13 @@ package org.newdawn.slick.opengl.renderer;
  */
 public interface LineStripRenderer {
 	/** 
+	 * Check if we should apply default line fixes
+	 * 
+	 * @return True if we should apply GL fixes
+	 */
+	public abstract boolean applyGLLineFixes();
+	
+	/** 
 	 * Start the line strips 
 	 */
 	public abstract void start();
