@@ -36,7 +36,6 @@ public strictfp class Vector2f {
 	 * @param theta The angle to calculate the components from (in degrees)
 	 */
 	public void setTheta(double theta) {
-		System.out.println(theta);
 		// Next lines are to prevent numbers like -1.8369701E-16
 		// when working with negative numbers
 		if ((theta < -360) || (theta > 360)) {
@@ -53,8 +52,9 @@ public strictfp class Vector2f {
 			oldTheta = 360 + oldTheta;
 		}
 
-		x = -length() * (float) FastTrig.cos(StrictMath.toRadians(theta));
-		y = length() * (float) FastTrig.sin(StrictMath.toRadians(theta));
+		float len = length();
+		x = -len * (float) FastTrig.cos(StrictMath.toRadians(theta));
+		y = len * (float) FastTrig.sin(StrictMath.toRadians(theta));
 		
 //		x = x / (float) FastTrig.cos(StrictMath.toRadians(oldTheta))
 //				* (float) FastTrig.cos(StrictMath.toRadians(theta));
@@ -67,18 +67,25 @@ public strictfp class Vector2f {
 	 * 
 	 * @param theta
 	 *            The angle to adjust the angle by (in degrees)
+	 * @return This vector - useful for chaining operations
+	 *           
 	 */
-	public void add(double theta) {
+	public Vector2f add(double theta) {
 		setTheta(getTheta() + theta);
+		
+		return this;
 	}
 
 	/**
 	 * Adjust this vector by a given angle
 	 * 
 	 * @param theta The angle to adjust the angle by (in degrees)
+	 * @return This vector - useful for chaining operations
 	 */
-	public void sub(double theta) {
+	public Vector2f sub(double theta) {
 		setTheta(getTheta() - theta);
+		
+		return this;
 	}
 	
 	/**
@@ -208,7 +215,7 @@ public strictfp class Vector2f {
 	 * Subtract a vector from this vector
 	 * 
 	 * @param v The vector subtract
-	 * @return This vector - useful for chaning operations
+	 * @return This vector - useful for chaining operations
 	 */
 	public Vector2f sub(Vector2f v)
 	{
@@ -222,7 +229,7 @@ public strictfp class Vector2f {
 	 * Scale this vector by a value
 	 * 
 	 * @param a The value to scale this vector by
-	 * @return This vector - useful for chaning operations
+	 * @return This vector - useful for chaining operations
 	 */
 	public Vector2f scale(float a)
 	{
