@@ -14,7 +14,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.CursorLoader;
@@ -325,7 +324,6 @@ public class AppGameContainer extends GameContainer {
 			AccessController.doPrivileged(new PrivilegedAction() {
 	            public Object run() {
 	        		try {
-	        			System.out.println(samples);
 	        			PixelFormat format = new PixelFormat(8,8,0,samples);
 	        			
 	        			tryCreateDisplay(format);
