@@ -843,9 +843,28 @@ public class Image implements Renderable {
 
 		filter.bind();
 		texture.bind();
-		GL.glBegin(SGL.GL_QUADS);
-		drawEmbedded(x,y,x2,y2,srcx,srcy,srcx2,srcy2);
-		GL.glEnd();
+		
+        GL.glTranslatef(x, y, 0);
+        if (angle != 0) {
+	        GL.glTranslatef(centerX, centerY, 0.0f); 
+	        GL.glRotatef(angle, 0.0f, 0.0f, 1.0f); 
+	        GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        }
+        
+        GL.glBegin(SGL.GL_QUADS); 
+			drawEmbedded(0,0,x2-x,y2-y,srcx,srcy,srcx2,srcy2);
+        GL.glEnd(); 
+        
+        if (angle != 0) {
+	        GL.glTranslatef(centerX, centerY, 0.0f); 
+	        GL.glRotatef(-angle, 0.0f, 0.0f, 1.0f); 
+	        GL.glTranslatef(-centerX, -centerY, 0.0f); 
+        }
+        GL.glTranslatef(-x, -y, 0);
+        
+//		GL.glBegin(SGL.GL_QUADS);
+//		drawEmbedded(x,y,x2,y2,srcx,srcy,srcx2,srcy2);
+//		GL.glEnd();
 	}
 	
 	/**
