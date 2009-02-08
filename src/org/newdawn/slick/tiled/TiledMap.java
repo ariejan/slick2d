@@ -4,22 +4,17 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Properties;
-import java.util.zip.GZIPInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -34,24 +29,6 @@ import org.xml.sax.SAXException;
  * @author kevin
  */
 public class TiledMap {
-	/** The code used to decode Base64 encoding */
-	private static byte[] baseCodes = new byte[256];
-
-	/**
-	 * Static initialiser for the codes created against Base64
-	 */
-	static {
-		for (int i = 0; i < 256; i++)
-			baseCodes[i] = -1;
-		for (int i = 'A'; i <= 'Z'; i++)
-			baseCodes[i] = (byte) (i - 'A');
-		for (int i = 'a'; i <= 'z'; i++)
-			baseCodes[i] = (byte) (26 + i - 'a');
-		for (int i = '0'; i <= '9'; i++)
-			baseCodes[i] = (byte) (52 + i - '0');
-		baseCodes['+'] = 62;
-		baseCodes['/'] = 63;
-	}
 	
 	/** The width of the map */
 	protected int width;
@@ -61,10 +38,6 @@ public class TiledMap {
 	protected int tileWidth;
 	/** The height of the tiles used on the map */
 	protected int tileHeight;
-	/** The padding of the tiles */
-	protected int tileSpacing = 0;
-	/** The margin of the tileset */
-	protected int tileMargin = 0;
 	
 	/** The location prefix where we can find tileset images */
 	protected String tilesLocation;
@@ -77,6 +50,9 @@ public class TiledMap {
 	/** The list of layers defined in the map */
 	protected ArrayList layers = new ArrayList();
 
+	/** True if we want to load tilesets - including their image data */
+	private boolean loadTileSets = true;
+	
 	/**
 	 * Create a new tile map based on a given TMX file
 	 * 
@@ -84,10 +60,22 @@ public class TiledMap {
 	 * @throws SlickException Indicates a failure to load the tilemap
 	 */
 	public TiledMap(String ref) throws SlickException {
+		this(ref, true);
+	}
+
+	/**
+	 * Create a new tile map based on a given TMX file
+	 * 
+	 * @param ref The location of the tile map to load
+	 * @param loadTileSets True if we want to load tilesets - including their image data
+	 * @throws SlickException Indicates a failure to load the tilemap
+	 */
+	public TiledMap(String ref, boolean loadTileSets) throws SlickException {
+		this.loadTileSets = loadTileSets;
 		ref = ref.replace('\\','/');
 		load(ResourceLoader.getResourceAsStream(ref), ref.substring(0,ref.lastIndexOf("/")));
 	}
-
+	
 	/**
 	 * Create a new tile map based on a given TMX file
 	 * 
@@ -118,6 +106,15 @@ public class TiledMap {
 	 */
 	public TiledMap(InputStream in, String tileSetsLocation) throws SlickException {
 		load(in, tileSetsLocation);
+	}
+	
+	/**
+	 * Get the location of the tile images specified
+	 * 
+	 * @return The location of the tile images specified as a resource reference prefix
+	 */
+	public String getTilesLocation() {
+		return tilesLocation;
 	}
 	
 	/**
@@ -414,28 +411,30 @@ public class TiledMap {
 				}
 			}
 			
-			TileSet tileSet = null;
-			TileSet lastSet = null;
-			
-			NodeList setNodes = docElement.getElementsByTagName("tileset");
-			for (int i=0;i<setNodes.getLength();i++) {
-				Element current = (Element) setNodes.item(i);
+			if (loadTileSets) {
+				TileSet tileSet = null;
+				TileSet lastSet = null;
 				
-				tileSet = new TileSet(current);
-				tileSet.index = i;
-				
-				if (lastSet != null) {
-					lastSet.setLimit(tileSet.firstGID-1);
+				NodeList setNodes = docElement.getElementsByTagName("tileset");
+				for (int i=0;i<setNodes.getLength();i++) {
+					Element current = (Element) setNodes.item(i);
+					
+					tileSet = new TileSet(this, current);
+					tileSet.index = i;
+					
+					if (lastSet != null) {
+						lastSet.setLimit(tileSet.firstGID-1);
+					}
+					lastSet = tileSet;
+					
+					tileSets.add(tileSet);
 				}
-				lastSet = tileSet;
-				
-				tileSets.add(tileSet);
 			}
 			
 			NodeList layerNodes = docElement.getElementsByTagName("layer");
 			for (int i=0;i<layerNodes.getLength();i++) {
 				Element current = (Element) layerNodes.item(i);
-				Layer layer = new Layer(current);
+				Layer layer = new Layer(this, current);
 				layer.index = i;
 				
 				layers.add(layer);
@@ -489,7 +488,7 @@ public class TiledMap {
 	 * @param gid The global tile id we're looking for
 	 * @return The tileset in which that tile lives
 	 */
-	private TileSet findTileSet(int gid) {
+	public TileSet findTileSet(int gid) {
 		for (int i=0;i<tileSets.size();i++) {
 			TileSet set = (TileSet) tileSets.get(i);
 			
@@ -502,406 +501,6 @@ public class TiledMap {
 	}
 	
 	/**
-	 * A holder for tileset information
-	 *
-	 * @author kevin
-	 */
-	public class TileSet {
-		/** The index of the tile set */
-		public int index;
-		/** The name of the tile set */
-		public String name;
-		/** The first global tile id in the set */
-		public int firstGID;
-		/** The local global tile id in the set */
-		public int lastGID = Integer.MAX_VALUE;
-		/** The width of the tiles */
-		public int tileWidth;
-		/** The height of the tiles */
-		public int tileHeight;
-		/** The image containing the tiles */
-		public SpriteSheet tiles;
-		
-		/** The number of tiles across the sprite sheet */
-		public int tilesAcross;
-		/** The number of tiles down the sprite sheet */
-		public int tilesDown;
-		
-		/** The properties for each tile */
-		private HashMap props = new HashMap();
-		
-		/**
-		 * Create a tile set based on an XML definition
-		 * 
-		 * @param element The XML describing the tileset
-		 * @throws SlickException Indicates a failure to parse the tileset
-		 */
-		public TileSet(Element element) throws SlickException {
-			name = element.getAttribute("name");
-			firstGID = Integer.parseInt(element.getAttribute("firstgid"));
-			String source = element.getAttribute("source");
-			
-			if ((source != null) && (!source.equals(""))) {
-				try {
-					InputStream in = ResourceLoader.getResourceAsStream(tilesLocation + "/" + source);
-					DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-					Document doc = builder.parse(in);
-					Element docElement = doc.getDocumentElement();
-					element = docElement; //(Element) docElement.getElementsByTagName("tileset").item(0);
-				} catch (Exception e) {
-					Log.error(e);
-					throw new SlickException("Unable to load or parse sourced tileset: "+tilesLocation+"/"+source);
-				}
-			}
-            String tileWidthString = element.getAttribute("tilewidth");
-            String tileHeightString = element.getAttribute("tileheight");
-            if(tileWidthString.length() == 0 || tileHeightString.length() == 0) {
-                throw new SlickException("TiledMap requires that the map be created with tilesets that use a " +
-                        "single image.  Check the WiKi for more complete information.");
-            }
-			tileWidth = Integer.parseInt(tileWidthString);
-			tileHeight = Integer.parseInt(tileHeightString);
-			
-			String sv = element.getAttribute("spacing");
-			if ((sv != null) && (!sv.equals(""))) {
-				tileSpacing = Integer.parseInt(sv);
-	        }
-	         
-	        String mv = element.getAttribute("margin");
-			if ((mv != null) && (!mv.equals(""))) {
-				tileMargin = Integer.parseInt(mv);
-			}
-	          
-			NodeList list = element.getElementsByTagName("image");
-			Element imageNode = (Element) list.item(0);
-			String ref = imageNode.getAttribute("source");
-			
-			Color trans = null;
-			String t = imageNode.getAttribute("trans");
-			if ((t != null) && (t.length() > 0)) {
-				int c = Integer.parseInt(t, 16);
-				
-				trans = new Color(c);
-			}
-
-			Image image = new Image(tilesLocation+"/"+ref,false,Image.FILTER_NEAREST,trans);
-			setTileSetImage(image);
-			
-			NodeList pElements = element.getElementsByTagName("tile");
-			for (int i=0;i<pElements.getLength();i++) {
-				Element tileElement = (Element) pElements.item(i);
-				
-				int id = Integer.parseInt(tileElement.getAttribute("id"));
-				id += firstGID;
-				Properties tileProps = new Properties();
-				
-				Element propsElement = (Element) tileElement.getElementsByTagName("properties").item(0);
-				NodeList properties = propsElement.getElementsByTagName("property");
-				for (int p=0;p<properties.getLength();p++) {
-					Element propElement = (Element) properties.item(p);
-					
-					String name = propElement.getAttribute("name");
-					String value = propElement.getAttribute("value");
-					
-					tileProps.setProperty(name, value);
-				}
-				
-				props.put(new Integer(id), tileProps);
-			}
-		}
-		
-		/**
-		 * Get the width of each tile in this set
-		 * 
-		 * @return The width of each tile in this set
-		 */
-		public int getTileWidth() {
-			return tileWidth;
-		}
-
-		/**
-		 * Get the height of each tile in this set
-		 * 
-		 * @return The height of each tile in this set
-		 */
-		public int getTileHeight() {
-			return tileHeight;
-		}
-		
-		/**
-		 * Get the spacing between tiles in this set
-		 * 
-		 * @return The spacing between tiles in this set 
-		 */
-		public int getTileSpacing() {
-			return tileSpacing;
-		}
-
-		/**
-		 * Get the margin around tiles in this set
-		 * 
-		 * @return The maring around tiles in this set
-		 */
-		public int getTileMargin() {
-			return tileMargin;
-		}
-		
-		/**
-		 * Set the image to use for this sprite sheet image to use for this tileset
-		 * 
-		 * @param image The image to use for this tileset
-		 */
-		public void setTileSetImage(Image image) {
-			tiles = new SpriteSheet(image, tileWidth, tileHeight, tileSpacing, tileMargin); 
-			tilesAcross = tiles.getHorizontalCount();
-			tilesDown = tiles.getVerticalCount();
-
-			if (tilesAcross <= 0) {
-				tilesAcross = 1;
-			}
-			if (tilesDown <= 0) {
-				tilesDown = 1;
-			}
-
-			lastGID = (tilesAcross * tilesDown) + firstGID - 1;
-		}
-		
-		/**
-		 * Get the properties for a specific tile in this tileset
-		 * 
-		 * @param globalID The global ID of the tile whose properties should be retrieved
-		 * @return The properties for the specified tile, or null if no properties are defined
-		 */
-		public Properties getProperties(int globalID) {
-			return (Properties) props.get(new Integer(globalID));
-		}
-		
-		/**
-		 * Get the x position of a tile on this sheet
-		 * 
-	     * @param id The tileset specific ID (i.e. not the global one)
-		 * @return The index of the tile on the x-axis
-		 */
-		public int getTileX(int id) {
-			return id % tilesAcross;
-		}
-
-		/**
-		 * Get the y position of a tile on this sheet
-		 * 
-	     * @param id The tileset specific ID (i.e. not the global one)
-		 * @return The index of the tile on the y-axis
-		 */
-		public int getTileY(int id) {	
-			return id / tilesAcross;
-		}
-
-		/**
-		 * Set the limit of the tiles in this set
-		 * 
-		 * @param limit The limit of the tiles in this set
-		 */
-		public void setLimit(int limit) {
-			lastGID = limit;
-		}
-		
-		/**
-		 * Check if this tileset contains a particular tile
-		 * 
-		 * @param gid The global id to seach for
-		 * @return True if the ID is contained in this tileset
-		 */
-		public boolean contains(int gid) {
-			return (gid >= firstGID) && (gid <= lastGID);
-		}
-	}
-	
-	/**
-	 * A layer of tiles on the map
-	 *
-	 * @author kevin
-	 */
-	protected class Layer {
-		/** The index of this layer */
-		public int index;
-		/** The name of this layer - read from the XML */
-		public String name;
-		/** The tile data representing this data, index 0 = tileset, index 1 = tile id */
-		public int[][][] data;
-		/** The width of this layer */
-		public int width;
-		/** The height of this layer */
-		public int height;
-		
-		/** the properties of this layer */
-		
-		public Properties props;
-		/**
-		 * Create a new layer based on the XML definition
-		 * 
-		 * @param element The XML element describing the layer
-		 * @throws SlickException Indicates a failure to parse the XML layer
-		 */
-		public Layer(Element element) throws SlickException {
-			name = element.getAttribute("name");
-			width = Integer.parseInt(element.getAttribute("width"));
-			height = Integer.parseInt(element.getAttribute("height"));
-			data = new int[width][height][3];
-
-			// now read the layer properties
-			Element propsElement = (Element) element.getElementsByTagName("properties").item(0);
-			if (propsElement != null) {
-				NodeList properties = propsElement.getElementsByTagName("property");
-				if (properties != null) {
-					props = new Properties();
-					for (int p = 0; p < properties.getLength();p++) {
-						Element propElement = (Element) properties.item(p);
-						
-						String name = propElement.getAttribute("name");
-						String value = propElement.getAttribute("value");		
-						props.setProperty(name, value);
-					}
-				}
-			}
-
-			Element dataNode = (Element) element.getElementsByTagName("data").item(0);
-			String encoding = dataNode.getAttribute("encoding");
-			String compression = dataNode.getAttribute("compression");
-			
-			if (encoding.equals("base64") && compression.equals("gzip")) {
-				try {
-	                Node cdata = dataNode.getFirstChild();
-	                char[] enc = cdata.getNodeValue().trim().toCharArray();
-	                byte[] dec = decodeBase64(enc);
-	                GZIPInputStream is = new GZIPInputStream(new ByteArrayInputStream(dec));
-	                
-	                for (int y = 0; y < height; y++) {
-	                    for (int x = 0; x < width; x++) {
-	                        int tileId = 0;
-	                        tileId |= is.read();
-	                        tileId |= is.read() <<  8;
-	                        tileId |= is.read() << 16;
-	                        tileId |= is.read() << 24;
-
-	                        if (tileId == 0) {
-		                        data[x][y][0] = -1;
-		                        data[x][y][1] = 0;
-		                        data[x][y][2] = 0;
-	                        } else {
-		                        TileSet set = findTileSet(tileId);
-	
-		                        data[x][y][0] = set.index;
-		                        data[x][y][1] = tileId - set.firstGID;
-		                        data[x][y][2] = tileId;
-	                        }
-	                    }
-	                }
-				} catch (IOException e) {
-					Log.error(e);
-					throw new SlickException("Unable to decode base 64 block");
-				}
-			} else {
-				throw new SlickException("Unsupport tiled map type: "+encoding+","+compression+" (only gzip base64 supported)");
-			}
-		}
-		
-		/**
-		 * Get the gloal ID of the tile at the specified location in
-		 * this layer
-		 * 
-		 * @param x The x coorindate of the tile
-		 * @param y The y coorindate of the tile
-		 * @return The global ID of the tile
-		 */
-		public int getTileID(int x, int y) {
-			return data[x][y][2];
-		}
-		
-		/**
-		 * Set the global tile ID at a specified location
-		 * 
-		 * @param x The x location to set
-		 * @param y The y location to set
-		 * @param tile The tile value to set
-		 */
-		public void setTileID(int x, int y, int tile) {
-            if (tile == 0) {
-                data[x][y][0] = -1;
-                data[x][y][1] = 0;
-                data[x][y][2] = 0;
-            } else {
-	            TileSet set = findTileSet(tile);
-	            
-	            data[x][y][0] = set.index;
-	            data[x][y][1] = tile - set.firstGID;
-	            data[x][y][2] = tile;
-            }
-		}
-		
-		/**
-		 * Render a section of this layer
-		 * 
-		 * @param x
-		 *            The x location to render at
-		 * @param y
-		 *            The y location to render at
-		 * @param sx
-		 *            The x tile location to start rendering
-		 * @param sy
-		 *            The y tile location to start rendering
-		 * @param width The number of tiles across to render
-		 * @param ty The line of tiles to render
-		 * @param lineByLine
-		 *            True if we should render line by line, i.e. giving us a
-		 *            chance to render something else between lines
-		 * @param mapTileWidth the tile width specified in the map file
-		 * @param mapTileHeight the tile height specified in the map file
-		 */
-		public void render(int x,int y,int sx,int sy,int width, int ty,boolean lineByLine, int mapTileWidth, int mapTileHeight) {
-			for (int tileset=0;tileset<tileSets.size();tileset++) {
-				TileSet set = null;
-				
-				for (int tx=0;tx<width;tx++) {
-					if ((sx+tx < 0) || (sy+ty < 0)) {
-						continue;
-					}
-					if ((sx+tx >= this.width) || (sy+ty >= this.height)) {
-						continue;
-					}
-					
-					if (data[sx+tx][sy+ty][0] == tileset) {
-						if (set == null) {
-							set = (TileSet) tileSets.get(tileset);
-							set.tiles.startUse();
-						}
-						
-						int sheetX = set.getTileX(data[sx+tx][sy+ty][1]);
-						int sheetY = set.getTileY(data[sx+tx][sy+ty][1]);
-						
-						int tileOffsetY = set.tileHeight - mapTileHeight;
-						
-//						set.tiles.renderInUse(x+(tx*set.tileWidth), y+(ty*set.tileHeight), sheetX, sheetY);
-						set.tiles.renderInUse(x+(tx*mapTileWidth), y+(ty*mapTileHeight)-tileOffsetY, sheetX, sheetY);
-					}
-				}
-				
-				if (lineByLine) {
-					if (set != null) {
-						set.tiles.endUse();
-						set = null;
-					}
-					renderedLine(ty, ty+sy, index);
-				}
-				
-				if (set != null) {
-					set.tiles.endUse();
-				}
-			}
-			
-		}
-	}
-	
-	/**
 	 * Overrideable to allow other sprites to be rendered between lines of the
 	 * map
 	 * 
@@ -910,54 +509,5 @@ public class TiledMap {
 	 * @param layer The layer being rendered
 	 */
 	protected void renderedLine(int visualY, int mapY,int layer) {
-	}
-	
-	/**
-	 * Decode a Base64 string as encoded by TilED
-	 * 
-	 * @param data The string of character to decode
-	 * @return The byte array represented by character encoding
-	 */
-    private byte[] decodeBase64(char[] data) {
-		int temp = data.length;
-		for (int ix = 0; ix < data.length; ix++) {
-			if ((data[ix] > 255) || baseCodes[data[ix]] < 0) {
-				--temp; 
-			}
-		}
-
-		int len = (temp / 4) * 3;
-		if ((temp % 4) == 3)
-			len += 2;
-		if ((temp % 4) == 2)
-			len += 1;
-
-		byte[] out = new byte[len];
-
-		int shift = 0;
-		int accum = 0;
-		int index = 0;
-
-		for (int ix = 0; ix < data.length; ix++) {
-			int value = (data[ix] > 255) ? -1 : baseCodes[data[ix]];
-
-			if (value >= 0) {
-				accum <<= 6;
-				shift += 6;
-				accum |= value;
-				if (shift >= 8) {
-					shift -= 8;
-					out[index++] = (byte) ((accum >> shift) & 0xff);
-				}
-			}
-		}
-
-		if (index != out.length) {
-			throw new RuntimeException(
-					"Data length appears to be wrong (wrote " + index
-							+ " should be " + out.length + ")");
-		}
-
-		return out;
 	}
 }
