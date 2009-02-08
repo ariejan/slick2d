@@ -185,8 +185,14 @@ public class GradientFill implements ShapeFill {
 		ub /= denom;
 		
 		float u = ua;
+		if (u < 0) {
+			u = 0;
+		} 
+		if (u > 1) {
+			u = 1;
+		}
 		float v = 1 - u;
-		
+
 		// u is the proportion down the line we are
 		Color col = new Color(1,1,1,1);
 		col.r = (u * endCol.r) + (v * startCol.r);

@@ -277,7 +277,7 @@ public final class ShapeRenderer {
     		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
     		 */
 			public float[] preRenderPoint(float x, float y) {
-	            fill.colorAt(shape, x - center[0], y - center[1]).bind();
+	            fill.colorAt(shape, x, y).bind();
 	            Vector2f offset = fill.getOffsetAt(shape, x, y);
 	            
 	            return new float[] {offset.x + x,offset.y + y};
