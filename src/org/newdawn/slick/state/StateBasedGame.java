@@ -59,6 +59,15 @@ public abstract class StateBasedGame implements Game, InputListener {
 	}
 
 	/**
+	 * Get the number of states that have been added to this game
+	 * 
+	 * @return The number of states that have been added to this game
+	 */
+	public int getStateCount() {
+		return states.keySet().size();
+	}
+	
+	/**
 	 * Get the ID of the state the game is currently in
 	 * 
 	 * @return The ID of the state the game is currently in
@@ -116,7 +125,7 @@ public abstract class StateBasedGame implements Game, InputListener {
 	}
 	
 	/**
-	 * Enter a particular game state with no transition
+	 * Enter a particular game state with the transitions provided
 	 * 
 	 * @param id The ID of the state to enter
 	 * @param leave The transition to use when leaving the current state
