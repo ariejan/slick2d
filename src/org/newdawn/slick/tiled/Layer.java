@@ -108,8 +108,10 @@ public class Layer {
                         } else {
 	                        TileSet set = map.findTileSet(tileId);
 
-	                        data[x][y][0] = set.index;
-	                        data[x][y][1] = tileId - set.firstGID;
+	                        if (set != null) {
+		                        data[x][y][0] = set.index;
+		                        data[x][y][1] = tileId - set.firstGID;
+	                        }
 	                        data[x][y][2] = tileId;
                         }
                     }

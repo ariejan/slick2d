@@ -486,7 +486,7 @@ public class TiledMap {
 	 * Find a tile for a given global tile id
 	 * 
 	 * @param gid The global tile id we're looking for
-	 * @return The tileset in which that tile lives
+	 * @return The tileset in which that tile lives or null if the gid is not defined
 	 */
 	public TileSet findTileSet(int gid) {
 		for (int i=0;i<tileSets.size();i++) {
@@ -497,7 +497,7 @@ public class TiledMap {
 			}
 		}
 		
-		throw new RuntimeException("Global tile id "+gid+" not found");
+		return null;
 	}
 	
 	/**
