@@ -418,9 +418,9 @@ public class Graphics {
 			return;
 		}
 		
-		currentColor = color;
+		currentColor = new Color(color);
 		predraw();
-		color.bind();
+		currentColor.bind();
 		postdraw();
 	}
 
