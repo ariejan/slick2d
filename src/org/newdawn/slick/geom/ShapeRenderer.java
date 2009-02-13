@@ -244,7 +244,6 @@ public final class ShapeRenderer {
     		 */
 			public float[] preRenderPoint(float x, float y) {
 	            GL.glTexCoord2f(((x - minX) / maxX) * scaleX, ((y - minY) / maxY) * scaleY);
-	            GL.glTexCoord2f(x * scaleX, y * scaleY);
 	            return null;
 			}
     	});
