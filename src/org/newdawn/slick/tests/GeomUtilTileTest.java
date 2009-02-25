@@ -44,6 +44,7 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 
 	/** The quad space of shapes that need to be checked against each other */
 	private ArrayList[][] quadSpace;
+	/** The shapes present in each quad space - used to optimize generation */
 	private Shape[][] quadSpaceShapes;
 	
 	/**
@@ -96,6 +97,11 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 		}
 	}
 	
+	/**
+	 * Remove the given shape from the quad space
+	 * 
+	 * @param shape The shape to remove
+	 */
 	private void removeFromQuadSpace(Shape shape) {
 		int segments = quadSpace.length;
 		
@@ -106,6 +112,11 @@ public class GeomUtilTileTest extends BasicGame implements GeomUtilListener {
 		}
 	}
 	
+	/**
+	 * Add a particular shape to quad space
+	 * 
+	 * @param shape The shape to be added
+	 */
 	private void addToQuadSpace(Shape shape) {
 		int segments = quadSpace.length;
 		

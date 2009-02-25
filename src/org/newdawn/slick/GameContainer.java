@@ -83,6 +83,9 @@ public abstract class GameContainer implements GUIContext {
 	/** True if this context supports multisample */
 	protected boolean supportsMultiSample;
 	
+	/** True if we should render when not focused */
+	protected boolean alwaysRender;
+	
 	/**
 	 * Create a new game container wrapping a given game
 	 * 
@@ -245,12 +248,21 @@ public abstract class GameContainer implements GUIContext {
 	}
 	
 	/** 
-	 * Check if this container should render whether it has focus or not
+	 * True if this container should render when it has focus
 	 * 
-	 * @return True if this container should render whether it has focus or not
+	 * @return True if this container should render when it has focus
 	 */
-	protected boolean alwaysRender() {
-		return false;
+	public boolean getAlwaysRender () {
+		return alwaysRender;
+	}
+
+	/** 
+	 * Indicate whether we want this container to render when it has focus
+	 * 
+	 * @param alwaysRender True if this container should render when it has focus
+	 */
+	public void setAlwaysRender (boolean alwaysRender) {
+		this.alwaysRender = alwaysRender;
 	}
 	
 	/**
@@ -597,7 +609,7 @@ public abstract class GameContainer implements GUIContext {
 			game.update(this, 0);
 		}
 		
-		if (hasFocus() || alwaysRender()) {
+		if (hasFocus() || getAlwaysRender()) {
 			if (clearEachFrame) {
 				GL.glClear(SGL.GL_COLOR_BUFFER_BIT | SGL.GL_DEPTH_BUFFER_BIT);
 			} 

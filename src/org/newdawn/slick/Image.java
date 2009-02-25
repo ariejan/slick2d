@@ -102,12 +102,26 @@ public class Image implements Renderable {
 	 */
 	protected Image() {
 	}
-
+	
+    /**
+	 * Creates an image using the specified texture
+	 * 
+	 * @param texture
+	 *            The texture to use
+	 */
+	public Image(Texture texture) {
+		this.texture = texture;
+		ref = texture.toString();
+		clampTexture();
+	}
+	    
 	/**
 	 * Create an image based on a file at the specified location
 	 * 
-	 * @param ref The location of the image file to load
-	 * @throws SlickException Indicates a failure to load the image
+	 * @param ref
+	 *            The location of the image file to load
+	 * @throws SlickException
+	 *             Indicates a failure to load the image
 	 */
 	public Image(String ref) throws SlickException  {
 		this(ref, false);

@@ -90,6 +90,9 @@ public interface SGL {
 	/** OpenGL Enum - @url http://www.opengl.org/documentation */
 	public static final int GL_CLIP_PLANE3 = GL11.GL_CLIP_PLANE3;
 	
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_COMPILE_AND_EXECUTE = GL11.GL_COMPILE_AND_EXECUTE;
+	
 	/**
 	 * Flush the current state of the renderer down to GL
 	 */

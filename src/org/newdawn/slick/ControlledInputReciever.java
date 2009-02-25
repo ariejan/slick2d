@@ -1,5 +1,18 @@
 package org.newdawn.slick;
 
+/**
+ * Description of any class capable of recieving and controlling it's own
+ * reception of input
+ * 
+ * You'll shouldn't really need to implement this one for your self, use one of the sub-interfaces:
+ * 
+ * {@link InputListener}
+ * {@link MouseListener}
+ * {@link KeyListener}
+ * {@link ControllerListener}
+ * 
+ * @author kevin
+ */
 public interface ControlledInputReciever {
 
 	/**
