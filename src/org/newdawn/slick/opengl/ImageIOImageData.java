@@ -137,7 +137,9 @@ public class ImageIOImageData implements LoadableImageData {
         
         // create a raster that can be used by OpenGL as a source
         // for a texture
-        if (bufferedImage.getColorModel().hasAlpha() || forceAlpha) {
+        boolean useAlpha = bufferedImage.getColorModel().hasAlpha() || forceAlpha; 
+        
+        if (useAlpha) {
         	depth = 32;
             raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,texWidth,texHeight,4,null);
             texImage = new BufferedImage(glAlphaColorModel,raster,false,new Hashtable());
@@ -149,8 +151,13 @@ public class ImageIOImageData implements LoadableImageData {
             
         // copy the source image into the produced image
         Graphics2D g = (Graphics2D) texImage.getGraphics();
-        g.setColor(new Color(0f,0f,0f,0f));
-        g.fillRect(0,0,texWidth,texHeight);
+        
+        // only need to blank the image for mac compatibility if we're using alpha
+        if (useAlpha) {
+	        g.setColor(new Color(0f,0f,0f,0f));
+	        g.fillRect(0,0,texWidth,texHeight);
+        }
+        
         if (flipped) {
         	g.scale(1,-1);
         	g.drawImage(bufferedImage,0,-height,null);
