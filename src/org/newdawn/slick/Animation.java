@@ -498,6 +498,7 @@ public class Animation implements Renderable {
 				break;
 			}
 			if ((currentFrame == frames.size() - 1) && (!loop)) {
+	            stopped = true; 
 				break;
 			}
 			currentFrame = (currentFrame + direction) % frames.size();
