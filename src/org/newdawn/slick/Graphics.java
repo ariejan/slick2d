@@ -344,13 +344,13 @@ public class Graphics {
 	 *            The scaling factor to apply to the y axis
 	 */
 	public void scale(float sx, float sy) {
-		this.sx = sx;
-		this.sy = sy;
+		this.sx = this.sx * sx;
+		this.sy = this.sy * sy;
 		
 		checkPush();
 
 		predraw();
-		GL.glScalef(sx, sy, 0);
+		GL.glScalef(sx, sy, 1);
 		postdraw();
 	}
 
@@ -714,7 +714,9 @@ public class Graphics {
 	 *            The height of the allowed area
 	 */
 	public void setWorldClip(float x, float y, float width, float height) {
+		predraw();
 		worldClipRecord = new Rectangle(x, y, width, height);
+		
 		GL.glEnable(SGL.GL_CLIP_PLANE0);
 		worldClip.put(1).put(0).put(0).put(-x).flip();
 		GL.glClipPlane(SGL.GL_CLIP_PLANE0, worldClip);
@@ -728,17 +730,20 @@ public class Graphics {
 		GL.glEnable(SGL.GL_CLIP_PLANE3);
 		worldClip.put(0).put(-1).put(0).put(y + height).flip();
 		GL.glClipPlane(SGL.GL_CLIP_PLANE3, worldClip);
+		postdraw();
 	}
 
 	/**
 	 * Clear world clipping setup. This does not effect screen clipping
 	 */
 	public void clearWorldClip() {
+		predraw();
 		worldClipRecord = null;
 		GL.glDisable(SGL.GL_CLIP_PLANE0);
 		GL.glDisable(SGL.GL_CLIP_PLANE1);
 		GL.glDisable(SGL.GL_CLIP_PLANE2);
 		GL.glDisable(SGL.GL_CLIP_PLANE3);
+		postdraw();
 	}
 
 	/**
@@ -1731,6 +1736,15 @@ public class Graphics {
 		}
 		
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);
+		System.out.println("PUSH: ");
+		for (int i=0;i<16;i++) {
+			System.out.print(buffer.get(i)+",");
+			if (i % 4 == 3) {
+				System.out.println();
+			}
+		}
+		System.out.println("");
+		
 		stackIndex++;
 		
 		postdraw();
