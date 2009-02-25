@@ -386,4 +386,13 @@ public class MouseOverArea extends AbstractComponent {
 	public int getWidth() {
 		return (int) (area.getMaxX() - area.getX());
 	}
+	
+	/**
+	 * Check if the mouse is over this area
+	 * 
+	 * @return True if the mouse is over this area
+	 */
+	public boolean isMouseOver() {
+		return over;
+	}
 }
