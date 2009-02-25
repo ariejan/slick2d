@@ -178,37 +178,35 @@ public class Graphics {
 	 */
 	public void setDrawMode(int mode) {
 		predraw();
-		if (currentDrawingMode != mode) {
-			currentDrawingMode = mode;
-			if (currentDrawingMode == MODE_NORMAL) {
-				GL.glEnable(SGL.GL_BLEND);
-				GL.glColorMask(true, true, true, true);
-				GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE_MINUS_SRC_ALPHA);
-			}
-			if (currentDrawingMode == MODE_ALPHA_MAP) {
-				GL.glDisable(SGL.GL_BLEND);
-				GL.glColorMask(false, false, false, true);
-			}
-			if (currentDrawingMode == MODE_ALPHA_BLEND) {
-				GL.glEnable(SGL.GL_BLEND);
-				GL.glColorMask(true, true, true, false);
-				GL.glBlendFunc(GL11.GL_DST_ALPHA, GL11.GL_ONE_MINUS_DST_ALPHA);
-			}
-			if (currentDrawingMode == MODE_COLOR_MULTIPLY) {
-				GL.glEnable(SGL.GL_BLEND);
-				GL.glColorMask(true, true, true, true);
-				GL.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_COLOR);
-			}
-			if (currentDrawingMode == MODE_ADD) {
-				GL.glEnable(SGL.GL_BLEND);
-				GL.glColorMask(true, true, true, true);
-				GL.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
-			}
-			if (currentDrawingMode == MODE_SCREEN) {
-				GL.glEnable(SGL.GL_BLEND);
-				GL.glColorMask(true, true, true, true);
-				GL.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
-			}
+		currentDrawingMode = mode;
+		if (currentDrawingMode == MODE_NORMAL) {
+			GL.glEnable(SGL.GL_BLEND);
+			GL.glColorMask(true, true, true, true);
+			GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE_MINUS_SRC_ALPHA);
+		}
+		if (currentDrawingMode == MODE_ALPHA_MAP) {
+			GL.glDisable(SGL.GL_BLEND);
+			GL.glColorMask(false, false, false, true);
+		}
+		if (currentDrawingMode == MODE_ALPHA_BLEND) {
+			GL.glEnable(SGL.GL_BLEND);
+			GL.glColorMask(true, true, true, false);
+			GL.glBlendFunc(GL11.GL_DST_ALPHA, GL11.GL_ONE_MINUS_DST_ALPHA);
+		}
+		if (currentDrawingMode == MODE_COLOR_MULTIPLY) {
+			GL.glEnable(SGL.GL_BLEND);
+			GL.glColorMask(true, true, true, true);
+			GL.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_COLOR);
+		}
+		if (currentDrawingMode == MODE_ADD) {
+			GL.glEnable(SGL.GL_BLEND);
+			GL.glColorMask(true, true, true, true);
+			GL.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+		}
+		if (currentDrawingMode == MODE_SCREEN) {
+			GL.glEnable(SGL.GL_BLEND);
+			GL.glColorMask(true, true, true, true);
+			GL.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
 		}
 		postdraw();
 	}
