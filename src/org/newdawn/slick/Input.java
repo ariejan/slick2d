@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Controller;
@@ -341,7 +343,13 @@ public class Input {
 	/** True if the event has been consumed */
 	protected boolean consumed = false;
 	/** A list of listeners to be notified of input events */
-	protected ArrayList listeners = new ArrayList();
+	protected HashSet allListeners = new HashSet();
+	/** The listeners to notify of key events */
+	protected ArrayList keyListeners = new ArrayList();
+	/** The listeners to notify of mouse events */
+	protected ArrayList mouseListeners = new ArrayList();
+	/** The listener to nofiy of controller events */
+	protected ArrayList controllerListeners = new ArrayList();
 	/** The current value of the wheel */
 	private int wheel;
 	/** The height of the display */
@@ -455,17 +463,81 @@ public class Input {
 	 * @param listener The listener to be notified
 	 */
 	public void addListener(InputListener listener) {
-		if (listeners.contains(listener)) {
-			return;
-		}
-		listeners.add(listener);
+		addKeyListener(listener);
+		addMouseListener(listener);
+		addControllerListener(listener);
 	}
 
+	/**
+	 * Add a key listener to be notified of key input events
+	 * 
+	 * @param listener The listener to be notified
+	 */
+	public void addKeyListener(KeyListener listener) {
+		if (keyListeners.contains(listener)) {
+			return;
+		}
+		keyListeners.add(listener);
+		allListeners.add(listener);
+	}
+	
+	/**
+	 * Add a mouse listener to be notified of mouse input events
+	 * 
+	 * @param listener The listener to be notified
+	 */
+	public void addMouseListener(MouseListener listener) {
+		if (mouseListeners.contains(listener)) {
+			return;
+		}
+		mouseListeners.add(listener);
+		allListeners.add(listener);
+	}
+	
+	/**
+	 * Add a controller listener to be notified of controller input events
+	 * 
+	 * @param listener The listener to be notified
+	 */
+	public void addControllerListener(ControllerListener listener) {
+		if (controllerListeners.contains(listener)) {
+			return;
+		}
+		controllerListeners.add(listener);
+		allListeners.add(listener);
+	}
+	
 	/**
 	 * Remove all the listeners from this input
 	 */
 	public void removeAllListeners() {
-		listeners.clear();
+		removeAllKeyListeners();
+		removeAllMouseListeners();
+		removeAllControllerListeners();
+	}
+
+	/**
+	 * Remove all the key listeners from this input
+	 */
+	public void removeAllKeyListeners() {
+		allListeners.removeAll(keyListeners);
+		keyListeners.clear();
+	}
+
+	/**
+	 * Remove all the mouse listeners from this input
+	 */
+	public void removeAllMouseListeners() {
+		allListeners.removeAll(mouseListeners);
+		mouseListeners.clear();
+	}
+
+	/**
+	 * Remove all the controller listeners from this input
+	 */
+	public void removeAllControllerListeners() {
+		allListeners.removeAll(controllerListeners);
+		controllerListeners.clear();
 	}
 	
 	/**
@@ -475,7 +547,13 @@ public class Input {
 	 * @param listener The listener to be notified
 	 */
 	public void addPrimaryListener(InputListener listener) {
-		listeners.add(0, listener);
+		removeListener(listener);
+		
+		keyListeners.add(0, listener);
+		mouseListeners.add(0, listener);
+		controllerListeners.add(0, listener);
+		
+		allListeners.add(listener);
 	}
 	
 	/**
@@ -484,7 +562,48 @@ public class Input {
 	 * @param listener The listen to be removed
 	 */
 	public void removeListener(InputListener listener) {
-		listeners.remove(listener);
+		removeKeyListener(listener);
+		removeMouseListener(listener);
+		removeControllerListener(listener);
+	}
+
+	/**
+	 * Remove a key listener that will no longer be notified
+	 * 
+	 * @param listener The listen to be removed
+	 */
+	public void removeKeyListener(KeyListener listener) {
+		keyListeners.remove(listener);
+		
+		if (!mouseListeners.contains(listener) && !controllerListeners.contains(listener)) {
+			allListeners.remove(listener);
+		}
+	}
+
+	/**
+	 * Remove a controller listener that will no longer be notified
+	 * 
+	 * @param listener The listen to be removed
+	 */
+	public void removeControllerListener(ControllerListener listener) {
+		controllerListeners.remove(listener);
+		
+		if (!mouseListeners.contains(listener) && !keyListeners.contains(listener)) {
+			allListeners.remove(listener);
+		}
+	}
+
+	/**
+	 * Remove a mouse listener that will no longer be notified
+	 * 
+	 * @param listener The listen to be removed
+	 */
+	public void removeMouseListener(MouseListener listener) {
+		mouseListeners.remove(listener);
+		
+		if (!controllerListeners.contains(listener) && !keyListeners.contains(listener)) {
+			allListeners.remove(listener);
+		}
 	}
 	
 	/**
@@ -953,8 +1072,8 @@ public class Input {
 				nextRepeat[eventKey] = System.currentTimeMillis() + keyRepeatInitial;
 				
 				consumed = false;
-				for (int i=0;i<listeners.size();i++) {
-					InputListener listener = (InputListener) listeners.get(i);
+				for (int i=0;i<keyListeners.size();i++) {
+					KeyListener listener = (KeyListener) keyListeners.get(i);
 					
 					if (listener.isAcceptingInput()) {
 						listener.keyPressed(eventKey, Keyboard.getEventCharacter());
@@ -968,8 +1087,8 @@ public class Input {
 				nextRepeat[eventKey] = 0;
 				
 				consumed = false;
-				for (int i=0;i<listeners.size();i++) {
-					InputListener listener = (InputListener) listeners.get(i);
+				for (int i=0;i<keyListeners.size();i++) {
+					KeyListener listener = (KeyListener) keyListeners.get(i);
 					if (listener.isAcceptingInput()) {
 						listener.keyReleased(eventKey, keys[eventKey]);
 						if (consumed) {
@@ -989,8 +1108,8 @@ public class Input {
 					pressedX = (int) (xoffset + (Mouse.getEventX() * scaleX));
 					pressedY =  (int) (yoffset + ((height-Mouse.getEventY()) * scaleY));
 
-					for (int i=0;i<listeners.size();i++) {
-						InputListener listener = (InputListener) listeners.get(i);
+					for (int i=0;i<mouseListeners.size();i++) {
+						MouseListener listener = (MouseListener) mouseListeners.get(i);
 						if (listener.isAcceptingInput()) {
 							listener.mousePressed(Mouse.getEventButton(), pressedX, pressedY);
 							if (consumed) {
@@ -1012,8 +1131,8 @@ public class Input {
 						pressedX = pressedY = -1;
 					}
 
-					for (int i=0;i<listeners.size();i++) {
-						InputListener listener = (InputListener) listeners.get(i);
+					for (int i=0;i<mouseListeners.size();i++) {
+						MouseListener listener = (MouseListener) mouseListeners.get(i);
 						if (listener.isAcceptingInput()) {
 							listener.mouseReleased(Mouse.getEventButton(), releasedX, releasedY);
 							if (consumed) {
@@ -1026,8 +1145,8 @@ public class Input {
 				if (Mouse.isGrabbed()) {
 					if ((Mouse.getEventDX() != 0) || (Mouse.getEventDY() != 0)) {
 						consumed = false;
-						for (int i=0;i<listeners.size();i++) {
-							InputListener listener = (InputListener) listeners.get(i);
+						for (int i=0;i<mouseListeners.size();i++) {
+							MouseListener listener = (MouseListener) mouseListeners.get(i);
 							if (listener.isAcceptingInput()) {
 								listener.mouseMoved(0, 0, Mouse.getEventDX(), -Mouse.getEventDY());
 								if (consumed) {
@@ -1042,8 +1161,8 @@ public class Input {
 				wheel += dwheel;
 				if (dwheel != 0) {
 					consumed = false;
-					for (int i=0;i<listeners.size();i++) {
-						InputListener listener = (InputListener) listeners.get(i);
+					for (int i=0;i<mouseListeners.size();i++) {
+						MouseListener listener = (MouseListener) mouseListeners.get(i);
 						if (listener.isAcceptingInput()) {
 							listener.mouseWheelMoved(dwheel);
 							if (consumed) {
@@ -1061,8 +1180,8 @@ public class Input {
 		} else {
 			if ((lastMouseX != getMouseX()) || (lastMouseY != getMouseY())) {
 				consumed = false;
-				for (int i=0;i<listeners.size();i++) {
-					InputListener listener = (InputListener) listeners.get(i);
+				for (int i=0;i<mouseListeners.size();i++) {
+					MouseListener listener = (MouseListener) mouseListeners.get(i);
 					if (listener.isAcceptingInput()) {
 						listener.mouseMoved(lastMouseX ,  lastMouseY, getMouseX(), getMouseY());
 						if (consumed) {
@@ -1098,8 +1217,8 @@ public class Input {
 					if (System.currentTimeMillis() > nextRepeat[i]) {
 						nextRepeat[i] = System.currentTimeMillis() + keyRepeatInterval;
 						consumed = false;
-						for (int j=0;j<listeners.size();j++) {
-							InputListener listener = (InputListener) listeners.get(j);
+						for (int j=0;j<keyListeners.size();j++) {
+							KeyListener listener = (KeyListener) keyListeners.get(j);
 
 							if (listener.isAcceptingInput()) {
 								listener.keyPressed(i, keys[i]);
@@ -1113,8 +1232,10 @@ public class Input {
 			}
 		}
 
-		for (int i=0;i<listeners.size();i++) {
-			InputListener listener = (InputListener) listeners.get(i);
+		
+		Iterator all = allListeners.iterator();
+		while (all.hasNext()) {
+			ControlledInputReciever listener = (ControlledInputReciever) all.next();
 			listener.inputEnded();
 		}
 		
@@ -1131,10 +1252,6 @@ public class Input {
 	 * @param interval The interval between key repeats in ms
 	 */
 	public void enableKeyRepeat(int initial, int interval) {
-//		keyRepeat = true;
-//		keyRepeatInitial = initial;
-//		keyRepeatInterval = interval;
-		
 		Keyboard.enableRepeatEvents(true);
 	}
 	
@@ -1143,7 +1260,6 @@ public class Input {
 	 */
 	public void disableKeyRepeat() {
 		Keyboard.enableRepeatEvents(false);
-//		keyRepeat = false;
 	}
 	
 	/**
@@ -1163,8 +1279,8 @@ public class Input {
 	 */
 	private void fireControlPress(int index, int controllerIndex) {
 		consumed = false;
-		for (int i=0;i<listeners.size();i++) {
-			InputListener listener = (InputListener) listeners.get(i);
+		for (int i=0;i<controllerListeners.size();i++) {
+			ControllerListener listener = (ControllerListener) controllerListeners.get(i);
 			if (listener.isAcceptingInput()) {
 				switch (index) {
 				case LEFT:
@@ -1199,8 +1315,8 @@ public class Input {
 	 */
 	private void fireControlRelease(int index, int controllerIndex) {
 		consumed = false;
-		for (int i=0;i<listeners.size();i++) {
-			InputListener listener = (InputListener) listeners.get(i);
+		for (int i=0;i<controllerListeners.size();i++) {
+			ControllerListener listener = (ControllerListener) controllerListeners.get(i);
 			if (listener.isAcceptingInput()) {
 				switch (index) {
 				case LEFT:
@@ -1283,8 +1399,8 @@ public class Input {
 	 */
 	private void fireMouseClicked(int button, int x, int y, int clickCount) {
 		consumed = false;
-		for (int i=0;i<listeners.size();i++) {
-			InputListener listener = (InputListener) listeners.get(i);
+		for (int i=0;i<mouseListeners.size();i++) {
+			MouseListener listener = (MouseListener) mouseListeners.get(i);
 			if (listener.isAcceptingInput()) {
 				listener.mouseClicked(button, x, y, clickCount);
 				if (consumed) {
