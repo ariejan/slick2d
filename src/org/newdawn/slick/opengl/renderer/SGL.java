@@ -435,4 +435,10 @@ public interface SGL {
 	 */
 	public void glDepthFunc(int func);
 	
+	/**
+	 * Set the scaling we'll apply to any colour binds in this renderer
+	 * 
+	 * @param alphaScale The scale to apply to any colour binds
+	 */
+	public void setGlobalAlphaScale(float alphaScale);
 }

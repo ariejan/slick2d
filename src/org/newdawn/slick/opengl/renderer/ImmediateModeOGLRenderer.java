@@ -19,6 +19,8 @@ public class ImmediateModeOGLRenderer implements SGL {
 	private int height;
 	/** The current colour */
 	private float[] current = new float[] {1,1,1,1};
+	/** The global colour scale */
+	protected float alphaScale = 1;
 	
 	/**
 	 * @see org.newdawn.slick.opengl.renderer.SGL#initDisplay(int, int)
@@ -110,6 +112,8 @@ public class ImmediateModeOGLRenderer implements SGL {
 	 * @see org.newdawn.slick.opengl.renderer.SGL#glColor4f(float, float, float, float)
 	 */
 	public void glColor4f(float r, float g, float b, float a) {
+		a *= alphaScale;
+		
 		current = new float[] {r,g,b,a};
 		
 		GL11.glColor4f(r, g, b, a);
@@ -343,6 +347,13 @@ public class ImmediateModeOGLRenderer implements SGL {
 	 */
 	public void glDepthMask(boolean mask) {
 		GL11.glDepthMask(mask);
+	}
+
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#setGlobalAlphaScale(float)
+	 */
+	public void setGlobalAlphaScale(float alphaScale) {
+		this.alphaScale = alphaScale;
 	}
 
 }
