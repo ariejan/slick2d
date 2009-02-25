@@ -73,6 +73,13 @@ public class FontFileReader {
         }
     }
 
+    /**
+     * Generate a font file reader based on the contents of a byte array rather than
+     * an actual file
+     * 
+     * @param data The data to use as the font file
+     * @throws IOException Indicates a failure to process the array
+     */
     public FontFileReader(byte[] data) throws IOException {
     	file = data;
         this.fsize = this.file.length;
