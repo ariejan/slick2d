@@ -331,6 +331,7 @@ public class AngelCodeFont implements Font {
 	 */
 	public void drawString(float x, float y, String text, Color col,
 			int startIndex, int endIndex) {
+		fontImage.bind();
 		col.bind();
 
 		GL.glTranslatef(x, y, 0);
@@ -366,7 +367,6 @@ public class AngelCodeFont implements Font {
 	 * @param end The index of the last character in the string to render
 	 */
 	private void render(String text, int start, int end) {
-		fontImage.bind();
 		GL.glBegin(SGL.GL_QUADS);
 
 		int x = 0, y = 0;
