@@ -51,6 +51,8 @@ public class ImageTest extends BasicGame {
         
 		scaleMe = new Image("testdata/logo.tga", true, Image.FILTER_NEAREST);
 		gif = new Image("testdata/logo.gif");
+		gif.destroy();
+		gif = new Image("testdata/logo.gif");
 		scaled = gif.getScaledCopy(120, 120);
 		subImage = image.getSubImage(200,0,70,260);
 		rot = 0;
