@@ -244,6 +244,8 @@ public class TextureImpl implements Texture {
         if (lastBind == this) {
         	bindNone();
         }
+        
+        InternalTextureLoader.get().clear(ref);
     }
     
     /**
