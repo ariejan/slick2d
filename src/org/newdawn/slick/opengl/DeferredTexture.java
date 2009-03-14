@@ -199,6 +199,14 @@ public class DeferredTexture extends TextureImpl implements DeferredResource {
 		checkTarget();
 		target.setWidth(width);
 	}
+	
+	/**
+	 * @see org.newdawn.slick.opengl.TextureImpl#getTextureData()
+	 */
+	public byte[] getTextureData() {
+		checkTarget();
+		return target.getTextureData();
+	}
 
 	/**
 	 * @see org.newdawn.slick.loading.DeferredResource#getDescription()
