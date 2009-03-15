@@ -22,7 +22,9 @@ public class ImageDataFactory {
         } 
         if (ref.endsWith(".png")) {
         	CompositeImageData data = new CompositeImageData();
-        	data.add(new PNGImageData());
+        	if (!"false".equals(System.getProperty("org.newdawn.slick.pngloader"))) {
+        		data.add(new PNGImageData());
+        	}
         	data.add(new ImageIOImageData());
         	
         	return data;
