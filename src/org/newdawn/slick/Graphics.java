@@ -217,12 +217,17 @@ public class Graphics {
 	 * nothing will be drawn.
 	 */
 	public void clearAlphaMap() {
+		pushTransform();
+		resetTransform();
+		
 		int originalMode = currentDrawingMode;
 		setDrawMode(MODE_ALPHA_MAP);
 		setColor(new Color(0,0,0,0));
 		fillRect(0, 0, screenWidth, screenHeight);
 		setColor(currentColor);
 		setDrawMode(originalMode);
+		
+		popTransform();
 	}
 
 	/**
@@ -1734,15 +1739,6 @@ public class Graphics {
 		}
 		
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);
-		System.out.println("PUSH: ");
-		for (int i=0;i<16;i++) {
-			System.out.print(buffer.get(i)+",");
-			if (i % 4 == 3) {
-				System.out.println();
-			}
-		}
-		System.out.println("");
-		
 		stackIndex++;
 		
 		postdraw();
