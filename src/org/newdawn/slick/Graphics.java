@@ -1315,8 +1315,11 @@ public class Graphics {
 	 */
 	public void resetLineWidth() {
 		predraw();
+		
+		Renderer.getLineStripRenderer().setWidth(1.0f);
 		GL.glLineWidth(1.0f);
 		GL.glPointSize(1.0f);
+		
 		postdraw();
 	}
 
