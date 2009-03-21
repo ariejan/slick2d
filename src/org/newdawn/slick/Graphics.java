@@ -218,7 +218,7 @@ public class Graphics {
 	 */
 	public void clearAlphaMap() {
 		pushTransform();
-		resetTransform();
+		GL.glLoadIdentity();
 		
 		int originalMode = currentDrawingMode;
 		setDrawMode(MODE_ALPHA_MAP);
