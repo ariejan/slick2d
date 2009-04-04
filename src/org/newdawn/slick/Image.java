@@ -507,6 +507,8 @@ public class Image implements Renderable {
 	 * @return The x offset 
 	 */
 	public float getTextureOffsetX() {
+		init();
+		
 		return textureOffsetX;
 	}
 
@@ -516,6 +518,8 @@ public class Image implements Renderable {
 	 * @return The y offset 
 	 */
 	public float getTextureOffsetY() {
+		init();
+		
 		return textureOffsetY;
 	}
 
@@ -525,6 +529,8 @@ public class Image implements Renderable {
 	 * @return The width
 	 */
 	public float getTextureWidth() {
+		init();
+		
 		return textureWidth;
 	}
 
@@ -534,6 +540,8 @@ public class Image implements Renderable {
 	 * @return The height
 	 */
 	public float getTextureHeight() {
+		init();
+		
 		return textureHeight;
 	}
 	

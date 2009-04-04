@@ -112,10 +112,7 @@ public final class ShapeRenderer {
         TextureImpl.bindNone();
         
     	fill(shape, new PointCallback() {
-    		/**
-    		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
-    		 */
-			public float[] preRenderPoint(float x, float y) {
+			public float[] preRenderPoint(Shape shape, float x, float y) {
 				// do nothing, we're just filling the shape this time
 				return null;
 			}
@@ -142,7 +139,7 @@ public final class ShapeRenderer {
         for (int i=0;i<tris.getTriangleCount();i++) {
         	for (int p=0;p<3;p++) {
         		float[] pt = tris.getTrianglePoint(i, p);
-        		float[] np = callback.preRenderPoint(pt[0],pt[1]);
+        		float[] np = callback.preRenderPoint(shape, pt[0],pt[1]);
         		
         		if (np == null) {
         			GL.glVertex2f(pt[0],pt[1]);
@@ -186,20 +183,23 @@ public final class ShapeRenderer {
      * @param scaleX The scale to apply on the x axis for texturing
      * @param scaleY The scale to apply on the y axis for texturing
      */
-    public static final void texture(Shape shape, Image image, final float scaleX, final float scaleY) {
+    public static final void texture(Shape shape, final Image image, final float scaleX, final float scaleY) {
     	if (!validFill(shape)) {
     		return;
     	}
     	
-    	Texture t = TextureImpl.getLastBind();
+    	final Texture t = TextureImpl.getLastBind();
         image.getTexture().bind();
         
         fill(shape, new PointCallback() {
-    		/**
-    		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
-    		 */
-			public float[] preRenderPoint(float x, float y) {
-	            GL.glTexCoord2f(x * scaleX, y * scaleY);
+			public float[] preRenderPoint(Shape shape, float x, float y) {
+				float tx = x * scaleX;
+				float ty = y * scaleY;
+				
+				tx = image.getTextureOffsetX() + (image.getTextureWidth() * tx);
+				ty = image.getTextureOffsetY() + (image.getTextureHeight() * ty);
+				
+				GL.glTexCoord2f(tx, ty);
 	            return null;
 			}
     	});
@@ -223,7 +223,7 @@ public final class ShapeRenderer {
      * @param scaleX The scale to apply on the x axis for texturing
      * @param scaleY The scale to apply on the y axis for texturing
      */
-    public static final void textureFit(Shape shape, Image image, final float scaleX, final float scaleY) {
+    public static final void textureFit(Shape shape, final Image image, final float scaleX, final float scaleY) {
     	if (!validFill(shape)) {
     		return;
     	}
@@ -239,11 +239,20 @@ public final class ShapeRenderer {
         final float maxY = shape.getMaxY() - minY;
 
         fill(shape, new PointCallback() {
-    		/**
-    		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
-    		 */
-			public float[] preRenderPoint(float x, float y) {
-	            GL.glTexCoord2f(((x - minX) / maxX) * scaleX, ((y - minY) / maxY) * scaleY);
+			public float[] preRenderPoint(Shape shape, float x, float y) {
+				x -= shape.getMinX();
+				y -= shape.getMinY();
+				
+				x /= (shape.getMaxX() - shape.getMinX());
+				y /= (shape.getMaxY() - shape.getMinY());
+				
+				float tx = x * scaleX;
+				float ty = y * scaleY;
+				
+				tx = image.getTextureOffsetX() + (image.getTextureWidth() * tx);
+				ty = image.getTextureOffsetY() + (image.getTextureHeight() * ty);
+				
+				GL.glTexCoord2f(tx, ty);
 	            return null;
 			}
     	});
@@ -272,10 +281,7 @@ public final class ShapeRenderer {
 
         final float center[] = shape.getCenter();
         fill(shape, new PointCallback() {
-    		/**
-    		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
-    		 */
-			public float[] preRenderPoint(float x, float y) {
+			public float[] preRenderPoint(Shape shape, float x, float y) {
 	            fill.colorAt(shape, x, y).bind();
 	            Vector2f offset = fill.getOffsetAt(shape, x, y);
 	            
@@ -301,7 +307,7 @@ public final class ShapeRenderer {
      * @param scaleY The scale to apply on the y axis for texturing
      * @param fill The fill to apply
      */
-    public static final void texture(final Shape shape, Image image, final float scaleX, final float scaleY, final ShapeFill fill) {
+    public static final void texture(final Shape shape, final Image image, final float scaleX, final float scaleY, final ShapeFill fill) {
     	if (!validFill(shape)) {
     		return;
     	}
@@ -311,13 +317,20 @@ public final class ShapeRenderer {
         
         final float center[] = shape.getCenter();
         fill(shape, new PointCallback() {
-    		/**
-    		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
-    		 */
-			public float[] preRenderPoint(float x, float y) {
+			public float[] preRenderPoint(Shape shape, float x, float y) {
 	            fill.colorAt(shape, x - center[0], y - center[1]).bind();
 	            Vector2f offset = fill.getOffsetAt(shape, x, y);
-	            GL.glTexCoord2f(x * scaleX, y * scaleY);
+	            
+	            x += offset.x;
+	            y += offset.y;
+	            
+				float tx = x * scaleX;
+				float ty = y * scaleY;
+				
+				tx = image.getTextureOffsetX() + (image.getTextureWidth() * tx);
+				ty = image.getTextureOffsetY() + (image.getTextureHeight() * ty);
+				
+	            GL.glTexCoord2f(tx, ty);
 
 	            return new float[] {offset.x + x,offset.y + y};
 			}
@@ -344,10 +357,7 @@ public final class ShapeRenderer {
 
         final float center[] = shape.getCenter();
         fill(shape, new PointCallback() {
-    		/**
-    		 * @see org.newdawn.slick.geom.ShapeRenderer.PointCallback#preRenderPoint(float, float)
-    		 */
-			public float[] preRenderPoint(float x, float y) {
+			public float[] preRenderPoint(Shape shape, float x, float y) {
 				Vector2f tex = gen.getCoordFor(x, y);
 	            GL.glTexCoord2f(tex.x, tex.y);
 
@@ -371,10 +381,11 @@ public final class ShapeRenderer {
     	/** 
     	 * Apply feature before the call to glVertex
     	 * 
+    	 * @param shape The shape the point belongs to
     	 * @param x The x poisiton the vertex will be at
     	 * @param y The y position the vertex will be at
     	 * @return The new coordinates of null
     	 */
-    	float[] preRenderPoint(float x, float y);
+    	float[] preRenderPoint(Shape shape, float x, float y);
     }
 }

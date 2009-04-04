@@ -97,6 +97,7 @@ public abstract class Shape implements Serializable {
     		center[0] += dx;
     		x += dx;
     		maxX += dx;
+    		minX += dx;
 	        trianglesDirty = true;
     	}
     }
@@ -121,6 +122,7 @@ public abstract class Shape implements Serializable {
     		center[1] += dy;
     		y += dy;
     		maxY += dy;
+    		minY += dy;
 	        trianglesDirty = true;
     	}
     }
