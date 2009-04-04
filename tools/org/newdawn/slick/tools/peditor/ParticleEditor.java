@@ -231,6 +231,7 @@ public class ParticleEditor extends JFrame {
 		
 		game = new ParticleGame(this);
 		final CanvasGameContainer container = new CanvasGameContainer(game);
+		container.getContainer().setAlwaysRender(true);
 		container.setSize(500,600);
 		JPanel controls = new JPanel();
 		controls.setLayout(null);
