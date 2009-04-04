@@ -7,18 +7,22 @@ package org.newdawn.slick;
  * @author kevin
  */
 public abstract class BasicGame implements Game, InputListener {
+	/** The maximum number of controllers supported by the basic game */
+	private static final int MAX_CONTROLLERS = 20;
+	/** The maximum number of controller buttons supported by the basic game */
+	private static final int MAX_CONTROLLER_BUTTONS = 100;
 	/** The title of the game */
 	private String title;
 	/** The state of the left control */
-	protected boolean[] controllerLeft = new boolean[20];
+	protected boolean[] controllerLeft = new boolean[MAX_CONTROLLERS];
 	/** The state of the right control */
-	protected boolean[] controllerRight = new boolean[20];
+	protected boolean[] controllerRight = new boolean[MAX_CONTROLLERS];
 	/** The state of the up control */
-	protected boolean[] controllerUp = new boolean[20];
+	protected boolean[] controllerUp = new boolean[MAX_CONTROLLERS];
 	/** The state of the down control */
-	protected boolean[] controllerDown = new boolean[20];
+	protected boolean[] controllerDown = new boolean[MAX_CONTROLLERS];
 	/** The state of the button controlls */
-	protected boolean[][] controllerButton = new boolean[20][20];
+	protected boolean[][] controllerButton = new boolean[MAX_CONTROLLERS][MAX_CONTROLLER_BUTTONS];
 	
 	/**
 	 * Create a new basic game
