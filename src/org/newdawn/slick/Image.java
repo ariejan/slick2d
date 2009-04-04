@@ -276,6 +276,16 @@ public class Image implements Renderable {
 			Log.error(e);
 		}
 	}
+
+	/** 
+	 * Get the reference to the resource this image was loaded from, if any. Note that
+	 * this can be null in the cases where an image was programatically generated.
+	 * 
+	 * @return The reference to the resource the reference was loaded from
+	 */
+	public String getResourceReference() {
+		return ref;
+	}
 	
 	/** 
 	 * Set the color of the given corner when this image is rendered. This is 
