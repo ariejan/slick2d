@@ -25,7 +25,7 @@ public class Input {
 	public static final int ANY_CONTROLLER = -1;
 	
 	/** The maximum number of buttons on controllers */
-	private static final int MAX_BUTTONS = 30;
+	private static final int MAX_BUTTONS = 100;
 	
 	/** */
 	public static final int KEY_ESCAPE          = 0x01;
