@@ -149,6 +149,19 @@ public class InputProvider {
 	}
 
 	/**
+	 * Clear all the controls that have been configured for a given command
+	 * 
+	 * @param command The command whose controls should be unbound
+	 */
+	public void clearCommand(Command command) {
+		List controls = getControlsFor(command);
+		
+		for (int i=0;i<controls.size();i++) {
+	    	unbindCommand((Control) controls.get(i));
+	    }
+	}
+	
+	/**
 	 * Unbinds the command associated with this control
 	 * 
 	 * @param control
