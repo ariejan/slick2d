@@ -83,6 +83,8 @@
 			<include name="org/newdawn/slick/Color.class"/>
 			<include name="org/newdawn/slick/TrueTypeFont*.class"/>
 			<include name="org/newdawn/slick/util/BufferedImageUtil.class"/>
+			<include name="org/newdawn/slick/util/LogSystem.class"/>
+			<include name="org/newdawn/slick/util/DefaultLogSystem.class"/> 
 		</fileset>
 	</jar>
 	
@@ -101,6 +103,8 @@
 			<include name="org/newdawn/slick/Color.java"/>
 			<include name="org/newdawn/slick/TrueTypeFont.java"/>
 			<include name="org/newdawn/slick/util/BufferedImageUtil.java"/>
+			<include name="org/newdawn/slick/util/LogSystem.class"/>
+			<include name="org/newdawn/slick/util/DefaultLogSystem.class"/> 
 		</fileset>
 	</zip>
 	
