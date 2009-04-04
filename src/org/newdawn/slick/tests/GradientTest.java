@@ -11,6 +11,7 @@ import org.newdawn.slick.fills.GradientFill;
 import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.RoundedRectangle;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A test for gradient fill on polygons
@@ -108,6 +109,8 @@ public class GradientTest extends BasicGame {
 	 */
 	public static void main(String[] argv) {
 		try {
+			Renderer.setRenderer(Renderer.VERTEX_ARRAY_RENDERER);
+			
 			AppGameContainer container = new AppGameContainer(new GradientTest());
 			container.setDisplayMode(800,600,false);
 			container.start();

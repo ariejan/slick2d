@@ -65,13 +65,13 @@ public final class ShapeRenderer {
         float center[] = shape.getCenter();
         GL.glBegin(SGL.GL_LINE_STRIP);
         for(int i=0;i<points.length;i+=2) {
-            fill.colorAt(shape, points[i]-center[0], points[i + 1]-center[1]).bind();
+            fill.colorAt(shape, points[i], points[i + 1]).bind();
             Vector2f offset = fill.getOffsetAt(shape, points[i], points[i + 1]);
             GL.glVertex2f(points[i] + offset.x, points[i + 1] + offset.y);
         }
         
         if (shape.closed()) {
-	        fill.colorAt(shape, points[0]-center[0], points[1]-center[1]).bind();
+	        fill.colorAt(shape, points[0], points[1]).bind();
 	        Vector2f offset = fill.getOffsetAt(shape, points[0], points[1]);
 	        GL.glVertex2f(points[0] + offset.x, points[1] + offset.y);
         }

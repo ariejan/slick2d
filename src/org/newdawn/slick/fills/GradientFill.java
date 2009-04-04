@@ -157,7 +157,7 @@ public class GradientFill implements ShapeFill {
 	 * @return The colour that should be applied based on the control points of this gradient
 	 */
 	public Color colorAt(Shape shape, float x, float y) {
-		return colorAt(x,y);
+		return colorAt(x-shape.getCenterX(),y-shape.getCenterY());
 	}
 
 	/**
