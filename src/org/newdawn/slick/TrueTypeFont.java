@@ -1,6 +1,8 @@
 package org.newdawn.slick;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -182,6 +184,9 @@ public class TrueTypeFont implements org.newdawn.slick.Font {
 			BufferedImage imgTemp = new BufferedImage(textureWidth, textureHeight, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D g = (Graphics2D) imgTemp.getGraphics();
 
+			g.setColor(new Color(255,255,255,1));
+			g.fillRect(0,0,textureWidth,textureHeight);
+			
 			int rowHeight = 0;
 			int positionX = 0;
 			int positionY = 0;
