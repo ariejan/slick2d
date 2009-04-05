@@ -262,8 +262,27 @@ public class TGAImageData implements LoadableImageData {
 		// Get a pointer to the image memory
 		ByteBuffer scratch = BufferUtils.createByteBuffer(rawData.length);
 		scratch.put(rawData);
-		scratch.flip();
 		
+		int perPixel = pixelDepth / 8;
+		if (height < texHeight-1) {
+			int topOffset = (texHeight-1) * (texWidth*perPixel);
+			int bottomOffset = (height-1) * (texWidth*perPixel);
+			for (int x=0;x<texWidth*perPixel;x++) {
+				scratch.put(topOffset+x, scratch.get(x));
+				scratch.put(bottomOffset+(texWidth*perPixel)+x, scratch.get((texWidth*perPixel)+x));
+			}
+		}
+		if (width < texWidth-1) {
+			for (int y=0;y<texHeight;y++) {
+				for (int i=0;i<perPixel;i++) {
+					scratch.put(((y+1)*(texWidth*perPixel))-perPixel+i, scratch.get(y*(texWidth*perPixel)+i));
+					scratch.put((y*(texWidth*perPixel))+(width*perPixel)+i, scratch.get((y*(texWidth*perPixel))+((width-1)*perPixel)+i));
+				}
+			}
+		}
+
+		scratch.flip();
+
 		return scratch;
 	}
 

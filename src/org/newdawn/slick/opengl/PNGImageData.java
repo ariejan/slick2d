@@ -702,8 +702,10 @@ public class PNGImageData implements LoadableImageData {
 		}
 		if (width < texWidth-1) {
 			for (int y=0;y<texHeight;y++) {
-				scratch.put(((y+1)*(texWidth*perPixel))-1, scratch.get(y*(texWidth*perPixel)));
-				scratch.put((y*(texWidth*perPixel))+width+1, scratch.get((y*(texWidth*perPixel))+width-1));
+				for (int i=0;i<perPixel;i++) {
+					scratch.put(((y+1)*(texWidth*perPixel))-perPixel+i, scratch.get(y*(texWidth*perPixel)+i));
+					scratch.put((y*(texWidth*perPixel))+(width*perPixel)+i, scratch.get((y*(texWidth*perPixel))+((width-1)*perPixel)+i));
+				}
 			}
 		}
 		
