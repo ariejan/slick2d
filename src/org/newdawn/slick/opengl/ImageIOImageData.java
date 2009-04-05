@@ -165,6 +165,15 @@ public class ImageIOImageData implements LoadableImageData {
         	g.drawImage(bufferedImage,0,0,null);
         }
         
+        if (height < texHeight - 1) {
+        	g.copyArea(0, 0, width, 1, 0, texHeight-1);
+        	g.copyArea(0, height-1, width, 1, 0, 1);
+        }
+        if (width < texWidth - 1) {
+        	g.copyArea(0,0,1,height,texWidth-1,0);
+        	g.copyArea(0,0,width-1,height,1,0);
+        }
+        
         // build a byte buffer from the temporary image 
         // that be used by OpenGL to produce a texture.
         byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer()).getData(); 
