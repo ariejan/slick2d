@@ -171,7 +171,7 @@ public class ImageIOImageData implements LoadableImageData {
         }
         if (width < texWidth - 1) {
         	g.copyArea(0,0,1,height,texWidth-1,0);
-        	g.copyArea(0,0,width-1,height,1,0);
+        	g.copyArea(width-1,0,1,height,1,0);
         }
         
         // build a byte buffer from the temporary image 
