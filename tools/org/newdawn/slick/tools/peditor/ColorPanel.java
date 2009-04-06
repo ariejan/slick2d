@@ -58,7 +58,7 @@ public class ColorPanel extends ControlPanel {
 			}
 		});
 		
-		yPos+=90;
+		yPos+=70;
 		startAlpha= new ValuePanel("Starting Alpha",0,255,255,"The alpha value for particles at their birth",false);
 		addValue("startAlpha", startAlpha );
 		endAlpha= new ValuePanel("Ending Alpha",0,255,0,"The alpha value for particles at their death",false);
@@ -66,7 +66,6 @@ public class ColorPanel extends ControlPanel {
 
 		// rendering panel
 		JPanel renderingPrimitivePanel = new DefaultPanel();
-		renderingPrimitivePanel.setBorder(BorderFactory.createTitledBorder("Rendering Primitive"));
 		renderingPrimitivePanel.setLayout(new BoxLayout( renderingPrimitivePanel, BoxLayout.X_AXIS ));
 		
 		inherit = new JRadioButton("Inherit");
@@ -99,11 +98,10 @@ public class ColorPanel extends ControlPanel {
 		
 		renderingPrimitivePanel.setBounds(0,yPos+15,280,45);
 		add(renderingPrimitivePanel);
-		yPos+=45;
+		yPos+=35;
 
 		// rendering type panel
 		JPanel renderingTypePanel = new DefaultPanel();
-		renderingTypePanel.setBorder(BorderFactory.createTitledBorder("Rendering Type"));
 		renderingTypePanel.setLayout(new BoxLayout( renderingTypePanel, BoxLayout.X_AXIS ));
 		
 		oriented = new JCheckBox("Oriented Quad");
@@ -116,9 +114,9 @@ public class ColorPanel extends ControlPanel {
 		additive.setOpaque(false);
 		renderingTypePanel.add( additive );
 		
-		renderingTypePanel.setBounds(0,yPos+15,280,45);
+		renderingTypePanel.setBounds(0,yPos+15,230,45);
 		add(renderingTypePanel);
-		yPos+=45;
+		yPos+=35;
 	}
 	
 	/**
