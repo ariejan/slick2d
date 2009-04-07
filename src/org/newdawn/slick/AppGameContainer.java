@@ -311,103 +311,119 @@ public class AppGameContainer extends GameContainer {
 	 */
 	public void start() throws SlickException {
 		try {
-			if (targetDisplayMode == null) {
-				setDisplayMode(640,480,false);
-			}
-	
-			Display.setTitle(game.getTitle());
-	
-			Log.info("LWJGL Version: "+Sys.getVersion());
-			Log.info("OriginalDisplayMode: "+originalDisplayMode);
-			Log.info("TargetDisplayMode: "+targetDisplayMode);
-			
-			AccessController.doPrivileged(new PrivilegedAction() {
-	            public Object run() {
-	        		try {
-	        			PixelFormat format = new PixelFormat(8,8,0,samples);
-	        			
-	        			tryCreateDisplay(format);
-	        			supportsMultiSample = true;
-	        		} catch (Exception e) {
-	        			Display.destroy();
-	        			
-	        			try {
-		        			PixelFormat format = new PixelFormat(8,8,0);
-		        			
-		        			tryCreateDisplay(format);
-		        			alphaSupport = false;
-	        			} catch (Exception e2) {
-		        			Display.destroy();
-		        			// if we couldn't get alpha, let us know
-			        		try {
-			        			tryCreateDisplay(new PixelFormat());
-			        		} catch (Exception e3) {
-			        			Log.error(e3);
-			        		}
-	        			}
-	        		}
-					
-					return null;
-	            }});
-			
-			if (!Display.isCreated()) {
-				throw new SlickException("Failed to initialise the LWJGL display");
-			}
-			
-			initSystem();
-			enterOrtho();
-
-			try {
-				getInput().initControllers();
-			} catch (SlickException e) {
-				Log.info("Controllers not available");
-			} catch (Throwable e) {
-				Log.info("Controllers not available");
-			}
-			
-			try {
-				game.init(this);
-			} catch (SlickException e) {
-				Log.error(e);
-				running = false;
-			}
+			setup();
 			
 			getDelta();
 			while (running()) {
-				int delta = getDelta();
-				
-				if (!Display.isVisible() && updateOnlyOnVisible) {
-					try { Thread.sleep(100); } catch (Exception e) {}
-				} else {
-					try {
-						updateAndRender(delta);
-					} catch (SlickException e) {
-						Log.error(e);
-						running = false;
-						break;
-					}
-				}
-				
-				updateFPS();
-	
-				Display.update();
-				
-				if (Display.isCloseRequested()) {
-					if (game.closeRequested()) {
-						running = false;
-					}
-				}
+				gameLoop();
 			}
 		} finally {
-			AL.destroy();
-			Display.destroy();
+			destroy();
 		}
 		
 		if (forceExit) {
 			System.exit(0);
 		}
 	}
+	
+	/**
+	 * Setup the environment 
+	 * 
+	 * @throws SlickException Indicates a failure
+	 */
+	protected void setup() throws SlickException {
+		if (targetDisplayMode == null) {
+			setDisplayMode(640,480,false);
+		}
 
+		Display.setTitle(game.getTitle());
+
+		Log.info("LWJGL Version: "+Sys.getVersion());
+		Log.info("OriginalDisplayMode: "+originalDisplayMode);
+		Log.info("TargetDisplayMode: "+targetDisplayMode);
+		
+		AccessController.doPrivileged(new PrivilegedAction() {
+            public Object run() {
+        		try {
+        			PixelFormat format = new PixelFormat(8,8,0,samples);
+        			
+        			tryCreateDisplay(format);
+        			supportsMultiSample = true;
+        		} catch (Exception e) {
+        			Display.destroy();
+        			
+        			try {
+	        			PixelFormat format = new PixelFormat(8,8,0);
+	        			
+	        			tryCreateDisplay(format);
+	        			alphaSupport = false;
+        			} catch (Exception e2) {
+	        			Display.destroy();
+	        			// if we couldn't get alpha, let us know
+		        		try {
+		        			tryCreateDisplay(new PixelFormat());
+		        		} catch (Exception e3) {
+		        			Log.error(e3);
+		        		}
+        			}
+        		}
+				
+				return null;
+            }});
+		
+		if (!Display.isCreated()) {
+			throw new SlickException("Failed to initialise the LWJGL display");
+		}
+		
+		initSystem();
+		enterOrtho();
+
+		try {
+			getInput().initControllers();
+		} catch (SlickException e) {
+			Log.info("Controllers not available");
+		} catch (Throwable e) {
+			Log.info("Controllers not available");
+		}
+		
+		try {
+			game.init(this);
+		} catch (SlickException e) {
+			Log.error(e);
+			running = false;
+		}
+	}
+	
+	/**
+	 * Strategy for overloading game loop context handling
+	 * 
+	 * @throws SlickException Indicates a game failure
+	 */
+	protected void gameLoop() throws SlickException {
+		int delta = getDelta();
+		if (!Display.isVisible() && updateOnlyOnVisible) {
+			try { Thread.sleep(100); } catch (Exception e) {}
+		} else {
+			try {
+				updateAndRender(delta);
+			} catch (SlickException e) {
+				Log.error(e);
+				running = false;
+				return;
+			}
+		}
+
+		updateFPS();
+
+		Display.update();
+		
+		if (Display.isCloseRequested()) {
+			if (game.closeRequested()) {
+				running = false;
+			}
+		}
+	}
+	
 	/**
 	 * @see org.newdawn.slick.GameContainer#setUpdateOnlyWhenVisible(boolean)
 	 */
