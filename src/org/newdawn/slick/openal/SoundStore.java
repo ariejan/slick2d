@@ -572,7 +572,7 @@ public class SoundStore {
 	 */
 	public Audio getMOD(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
-			return new AudioImpl(this, 0);
+			return new NullAudio();
 		}
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
@@ -617,9 +617,9 @@ public class SoundStore {
 	 */
 	public Audio getAIF(String ref, InputStream in) throws IOException {
 		in = new BufferedInputStream(in);
-		
+
 		if (!soundWorks) {
-			return new AudioImpl(this, 0);
+			return new NullAudio();
 		}
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
@@ -692,7 +692,7 @@ public class SoundStore {
 	 */
 	public Audio getWAV(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
-			return new AudioImpl(this, 0);
+			return new NullAudio();
 		}
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
@@ -738,7 +738,11 @@ public class SoundStore {
 	 * @return The Sound read from the OGG file
 	 * @throws IOException Indicates a failure to load the OGG
 	 */
-	public StreamSound getOggStream(String ref) throws IOException {
+	public Audio getOggStream(String ref) throws IOException {
+		if (!soundWorks) {
+			return new NullAudio();
+		}
+		
 		setMOD(null);
 		setStream(null);
 		
@@ -763,7 +767,11 @@ public class SoundStore {
 	 * @return The Sound read from the OGG file
 	 * @throws IOException Indicates a failure to load the OGG
 	 */
-	public StreamSound getOggStream(URL ref) throws IOException {
+	public Audio getOggStream(URL ref) throws IOException {
+		if (!soundWorks) {
+			return new NullAudio();
+		}
+		
 		setMOD(null);
 		setStream(null);
 		
@@ -813,7 +821,7 @@ public class SoundStore {
 	 */
 	public Audio getOgg(String ref, InputStream in) throws IOException {
 		if (!soundWorks) {
-			return new AudioImpl(this, 0);
+			return new NullAudio();
 		}
 		if (!inited) {
 			throw new RuntimeException("Can't load sounds until SoundStore is init(). Use the container init() method.");
