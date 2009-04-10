@@ -7,9 +7,13 @@
   
   javadoc - generate the javadoc for Slick
 -->
-<project name="slick" default="dist" basedir=".">
+<project name="slick" default="dist" basedir="." xmlns:artifact="urn:maven-artifact-ant">
 	<taskdef name="pack200" classname="com.sun.tools.apache.ant.pack200.Pack200Task" classpath="Pack200Task.jar"/>
-	
+	<path id="maven-ant-tasks.classpath" path="maven/maven-ant-tasks-2.0.9.jar" />
+  	<typedef resource="org/apache/maven/artifact/ant/antlib.xml"
+           uri="urn:maven-artifact-ant"
+           classpathref="maven-ant-tasks.classpath" />
+
 <!--
  Initialise the build script
 -->
@@ -65,6 +69,26 @@
 	<jar update="true" destfile="lib/slick.jar" 
 		 basedir="src" includes="version"/>
 	<copy file="lib/slick.jar" toDir="applet"/>
+</target>
+
+<target name="deploy-maven" depends="build-slick">
+	<input message="Maven Username" addproperty="maven.username"/>
+	<input message="Maven Password:" addproperty="maven.password"/>
+	
+	<copy file="lib/slick.jar" toFile="maven/slick-${version.build}.jar"/>  
+	<copy file="maven/slick.pom.template" toFile="maven/slick-${version.build}.pom">
+		<filterset>
+      		<filter token="VERSION" value="${version.build}"/>
+    	</filterset>	
+	</copy>
+	
+	<artifact:install-provider artifactId="wagon-ssh" version="1.0-beta-2"/>
+	<artifact:deploy file="maven/slick-${version.build}.jar">
+   		<artifact:pom file="maven/slick-${version.build}.pom" id="slick"/>
+		<artifact:remoteRepository url="scp://bob.newdawnsoftware.com:122/home/kevin/public_html/slick/mavenrepo">
+			<authentication username="${maven.username}" password="${maven.password}" />
+		</artifact:remoteRepository>
+	</artifact:deploy>
 </target>
 
 <target name="slick-util" depends="build-slick">
@@ -543,7 +567,7 @@
 <!--
  Upload everything, i.e. create a complete update to the Slick stuff.
 -->
-<target name="upload-all" depends="upload-dist, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero, upload-scalar, upload-packer">
+<target name="upload-all" depends="upload-dist, deploy-maven, upload-test-webstarts, upload-javadoc, upload-pedigree, upload-hiero, upload-scalar, upload-packer">
 </target>
 
 <!--
