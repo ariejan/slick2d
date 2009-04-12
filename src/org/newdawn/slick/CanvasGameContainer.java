@@ -68,6 +68,10 @@ public class CanvasGameContainer extends Canvas {
 	 * Schedule an update on the EDT
 	 */
 	private void scheduleUpdate() {
+		if (!isVisible()) {
+			return;
+		}
+		
 		Thread t = new Thread() {
 			public void run() {
 				SwingUtilities.invokeLater(new Runnable() {
