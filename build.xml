@@ -212,6 +212,8 @@
 	</jar>
 	<jar update="true" destfile="lib/hiero.jar" 
 		 basedir="tools" includes="org/newdawn/slick/tools/hiero/resources/*"/>
+	<jar update="true" destfile="lib/hiero.jar" 
+		 basedir="tools" includes="org/newdawn/slick/tools/hiero/*.jpg"/>
 </target>
 
 <!-- build the scalar tool -->
