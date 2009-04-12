@@ -203,7 +203,6 @@ public class Hiero extends JFrame {
 
 		setSize(800, 600);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		Input.disableControllers();
 
