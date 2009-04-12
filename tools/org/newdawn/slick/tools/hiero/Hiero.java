@@ -21,6 +21,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -157,8 +159,17 @@ public class Hiero extends JFrame {
 			throw ex;
 		}
 		splash.close();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosed(WindowEvent e) {
+				System.exit(0);
+			}
 
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+		
 		prefs = Preferences.userNodeForPackage(Hiero.class);
 		java.awt.Color backgroundColor = EffectUtil.fromString(prefs.get("background", "000000"));
 		backgroundColorLabel.setIcon(getColorIcon(backgroundColor));
@@ -177,23 +188,10 @@ public class Hiero extends JFrame {
 		effectsListModel.addElement(new ShadowEffect());
 		new EffectPanel(colorEffect);
 
-		EventQueue.invokeLater(new Runnable() {
-			public void run () {
-				setVisible(true);
-				gamePanel.add(canvasContainer);
-				gamePanel.setVisible(false);
-				new Thread(new Runnable() {
-					public void run () {
-						try {
-							canvasContainer.start();
-						} catch (SlickException ex) {
-							ex.printStackTrace();
-							dispose();
-						}
-					}
-				}).start();
-			}
-		});
+		setVisible(true);
+		gamePanel.add(canvasContainer);
+		gamePanel.setVisible(false);
+		canvasContainer.start();
 	}
 
 	void initialize () throws SlickException {
