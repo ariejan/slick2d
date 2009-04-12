@@ -257,11 +257,7 @@ public class Hiero extends JFrame {
 				if (unicodeFont == null) return;
 
 				try {
-					EventQueue.invokeAndWait(new Runnable() {
-						public void run () {
-							sampleText = sampleTextPane.getText();
-						}
-					});
+					sampleText = sampleTextPane.getText();
 				} catch (Exception ex) {
 				}
 
