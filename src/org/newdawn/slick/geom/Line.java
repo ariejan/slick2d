@@ -145,8 +145,26 @@ public strictfp class Line extends Shape {
 		vec = new Vector2f(end);
 		vec.sub(start);
 		
-		lenSquared = vec.length();
-		lenSquared *= lenSquared;
+		lenSquared = vec.lengthSquared();
+	}
+	
+	/**
+	 * Configure the line without garbage
+	 *  
+	 * @param sx The x coordinate of the start
+	 * @param sy The y coordinate of the start
+	 * @param ex The x coordiante of the end
+	 * @param ey The y coordinate of the end
+	 */
+	public void set(float sx, float sy, float ex, float ey) {
+		super.pointsDirty = true;
+		start.set(sx, sy);
+		end.set(ex,ey);
+		
+		float dx = (ex-sx);
+		float dy = (ey-sy);
+		
+		lenSquared = (dx*dx)+(dy*dy);
 	}
 	
 	/**
