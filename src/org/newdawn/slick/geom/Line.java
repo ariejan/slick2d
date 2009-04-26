@@ -299,7 +299,7 @@ public strictfp class Line extends Shape {
 	public Vector2f intersect(Line other) {
 		return intersect(other, false);
 	}
-	
+
 	/**
 	 * Intersect this line with another
 	 * 
@@ -308,6 +308,24 @@ public strictfp class Line extends Shape {
 	 * @return The intersection point or null if the lines don't intersect
 	 */
 	public Vector2f intersect(Line other, boolean limit) {
+		Vector2f temp = new Vector2f();
+		
+		if (!intersect(other, limit, temp)) {
+			return null;
+		}
+		
+		return temp;
+	}
+	
+	/**
+	 * Intersect this line with another
+	 * 
+	 * @param other The other line we should intersect with
+	 * @param limit True if the collision is limited to the extent of the lines
+	 * @param result The resulting intersection point if any
+	 * @return True if the lines intersect
+	 */
+	public boolean intersect(Line other, boolean limit, Vector2f result) {
 		float dx1 = end.getX() - start.getX();
 		float dx2 = other.end.getX() - other.start.getX();
 		float dy1 = end.getY() - start.getY();
@@ -315,7 +333,7 @@ public strictfp class Line extends Shape {
 		float denom = (dy2 * dx1) - (dx2 * dy1);
 		
 		if (denom == 0) {
-			return null;
+			return false;
 		}
 		
 		float ua = (dx2 * (start.getY() - other.start.getY())) - (dy2 * (start.getX() - other.start.getX()));
@@ -324,7 +342,7 @@ public strictfp class Line extends Shape {
 		ub /= denom;
 		
 		if ((limit) && ((ua < 0) || (ua > 1) || (ub < 0) || (ub > 1))) {
-			return null;			
+			return false;			
 		}
 		
 		float u = ua;
@@ -332,7 +350,8 @@ public strictfp class Line extends Shape {
 		float ix = start.getX() + (u * (end.getX() - start.getX()));
 		float iy = start.getY() + (u * (end.getY() - start.getY()));
 		
-		return new Vector2f(ix,iy);
+		result.set(ix,iy);
+		return true;
 	}
 
 	/**
