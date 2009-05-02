@@ -58,12 +58,16 @@ public class AngelCodeFont implements Font {
 	private int baseDisplayListID = -1;
 	/** The eldest display list ID */
 	private int eldestDisplayListID;
+	/** The eldest display list  */
+	private DisplayList eldestDisplayList;
+	
 	/** The display list cache for rendered lines */
 	private final LinkedHashMap displayLists = new LinkedHashMap(DISPLAY_LIST_CACHE_SIZE, 1, true) {
-		protected boolean removeEldestEntry (Entry eldest) {
-			DisplayList displayList = (DisplayList)eldest.getValue();
-			if (displayList != null) eldestDisplayListID = displayList.id;
-			return size() >= DISPLAY_LIST_CACHE_SIZE;
+		protected boolean removeEldestEntry(Entry eldest) {
+			eldestDisplayList = (DisplayList)eldest.getValue();
+			eldestDisplayListID = eldestDisplayList.id;
+
+			return false;
 		}
 	};
 
@@ -342,11 +346,14 @@ public class AngelCodeFont implements Font {
 			} else {
 				// Compile a new display list.
 				displayList = new DisplayList();
+				displayList.text = text;
 				int displayListCount = displayLists.size();
-				if (displayListCount < DISPLAY_LIST_CACHE_SIZE)
+				if (displayListCount < DISPLAY_LIST_CACHE_SIZE) {
 					displayList.id = baseDisplayListID + displayListCount;
-				else
+				} else {
 					displayList.id = eldestDisplayListID;
+					displayLists.remove(eldestDisplayList.text);
+				}
 				
 				displayLists.put(text, displayList);
 
@@ -617,5 +624,7 @@ public class AngelCodeFont implements Font {
 		Short width;
 		/** The height of the line rendered */
 		Short height;
+		/** The text that the display list holds */
+		String text;
 	}
 }

@@ -120,13 +120,15 @@ public class UnicodeFont implements org.newdawn.slick.Font {
 	private int baseDisplayListID = -1;
 	/** The ID of the display list that has been around the longest time */
 	private int eldestDisplayListID;
+	/** The eldest display list  */
+	private DisplayList eldestDisplayList;
 	
 	/** The map fo the display list generated and cached - modified to allow removal of teh oldest entry */
 	private final LinkedHashMap displayLists = new LinkedHashMap(DISPLAY_LIST_CACHE_SIZE, 1, true) {
 		protected boolean removeEldestEntry (Entry eldest) {
-			DisplayList displayList = (DisplayList)eldest.getValue();
-			if (displayList != null) eldestDisplayListID = displayList.id;
-			return size() > DISPLAY_LIST_CACHE_SIZE;
+			eldestDisplayList = (DisplayList)eldest.getValue();
+			eldestDisplayListID = eldestDisplayList.id;
+			return false;
 		}
 	};
 
@@ -451,11 +453,15 @@ public class UnicodeFont implements org.newdawn.slick.Font {
 				// Compile a new display list.
 				displayList = new DisplayList();
 				displayList.text = text;
+				displayList.key = displayListKey;
+				
 				int displayListCount = displayLists.size();
-				if (displayListCount < DISPLAY_LIST_CACHE_SIZE)
+				if (displayListCount < DISPLAY_LIST_CACHE_SIZE) {
 					displayList.id = baseDisplayListID + displayListCount;
-				else
+				} else {
 					displayList.id = eldestDisplayListID;
+					displayLists.remove(eldestDisplayList.key);
+				}
 			}
 			displayLists.put(displayListKey, displayList);
 		}
@@ -924,5 +930,7 @@ public class UnicodeFont implements org.newdawn.slick.Font {
 	    short width;
 		/** The height of the rendered text in the list */
 		short height;
+		/** The key for this list */
+		String key;
 	}
 }
