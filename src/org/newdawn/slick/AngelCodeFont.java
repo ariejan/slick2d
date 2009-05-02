@@ -63,7 +63,7 @@ public class AngelCodeFont implements Font {
 		protected boolean removeEldestEntry (Entry eldest) {
 			DisplayList displayList = (DisplayList)eldest.getValue();
 			if (displayList != null) eldestDisplayListID = displayList.id;
-			return size() > DISPLAY_LIST_CACHE_SIZE;
+			return size() >= DISPLAY_LIST_CACHE_SIZE;
 		}
 	};
 
@@ -347,6 +347,7 @@ public class AngelCodeFont implements Font {
 					displayList.id = baseDisplayListID + displayListCount;
 				else
 					displayList.id = eldestDisplayListID;
+				
 				displayLists.put(text, displayList);
 
 				GL.glNewList(displayList.id, SGL.GL_COMPILE_AND_EXECUTE);
