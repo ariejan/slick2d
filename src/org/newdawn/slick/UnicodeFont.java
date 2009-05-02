@@ -126,7 +126,7 @@ public class UnicodeFont implements org.newdawn.slick.Font {
 		protected boolean removeEldestEntry (Entry eldest) {
 			DisplayList displayList = (DisplayList)eldest.getValue();
 			if (displayList != null) eldestDisplayListID = displayList.id;
-			return size() >= DISPLAY_LIST_CACHE_SIZE;
+			return size() > DISPLAY_LIST_CACHE_SIZE;
 		}
 	};
 
