@@ -166,12 +166,12 @@ public class ImageIOImageData implements LoadableImageData {
         }
         
         if (height < texHeight - 1) {
-        	g.copyArea(0, 0, width, 1, 0, texHeight-1);
-        	g.copyArea(0, height-1, width, 1, 0, 1);
+        	copyArea(texImage, 0, 0, width, 1, 0, texHeight-1);
+        	copyArea(texImage, 0, height-1, width, 1, 0, 1);
         }
         if (width < texWidth - 1) {
-        	g.copyArea(0,0,1,height,texWidth-1,0);
-        	g.copyArea(width-1,0,1,height,1,0);
+        	copyArea(texImage, 0,0,1,height,texWidth-1,0);
+        	copyArea(texImage, width-1,0,1,height,1,0);
         }
         
         // build a byte buffer from the temporary image 
@@ -209,4 +209,21 @@ public class ImageIOImageData implements LoadableImageData {
 	public ByteBuffer getImageBufferData() {
 		throw new RuntimeException("ImageIOImageData doesn't store it's image.");
 	} 
+	
+	/**
+	 * Implement of transform copy area for 1.4
+	 * 
+	 * @param image The image to copy
+ 	 * @param x The x position to copy to
+	 * @param y The y position to copy to
+	 * @param width The width of the image
+	 * @param height The height of the image
+	 * @param dx The transform on the x axis
+	 * @param dy The transform on the y axis
+	 */
+	private void copyArea(BufferedImage image, int x, int y, int width, int height, int dx, int dy) {
+		Graphics2D g = (Graphics2D) image.getGraphics();
+		
+		g.drawImage(image.getSubimage(x, y, width, height),x+dx,y+dy,null);
+	}
 }
