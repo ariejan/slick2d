@@ -702,4 +702,23 @@ public abstract class Shape implements Serializable {
     public Shape[] union(Shape other) {
     	return new GeomUtil().union(this, other);
     }
+    
+    /**
+     * Get the width of the shape
+     * 
+     * @return The width of the shape
+     */
+    public float getWidth() {
+    	return maxX - minX;
+    }
+
+    
+    /**
+     * Get the height of the shape
+     * 
+     * @return The height of the shape
+     */
+    public float getHeight() {
+    	return maxY - minY;
+    }
 }
