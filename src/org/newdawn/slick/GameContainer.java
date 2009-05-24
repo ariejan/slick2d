@@ -160,6 +160,15 @@ public abstract class GameContainer implements GUIContext {
 	}
 	
 	/**
+	 * Get the aspect ratio of the screen
+	 * 
+	 * @return The aspect ratio of the display
+	 */
+	public float getAspectRatio() {
+		return getWidth() / getHeight();
+	}
+	
+	/**
 	 * Indicate whether we want to be in fullscreen mode. Note that the current
 	 * display mode must be valid as a fullscreen mode for this to work
 	 * 
