@@ -71,11 +71,19 @@
 	<copy file="lib/slick.jar" toDir="applet"/>
 </target>
 
+<target name="build-slick-source" depends="init">   
+	<delete file="lib/slick-sources.jar"/>
+
+	<jar destfile="lib/slick-sources.jar"
+	     basedir="src" includes="org/newdawn/slick/**" excludes="org/newdawn/slick/data/*"/>
+</target> 
+
 <target name="deploy-maven" depends="build-slick">
 	<input message="Maven Username" addproperty="maven.username"/>
 	<input message="Maven Password:" addproperty="maven.password"/>
 	
 	<copy file="lib/slick.jar" toFile="maven/slick-${version.build}.jar"/>  
+	<copy file="lib/slick-sources.jar" toFile="maven/slick-${version.build}-sources.jar"/> 
 	<copy file="maven/slick.pom.template" toFile="maven/slick-${version.build}.pom">
 		<filterset>
       		<filter token="VERSION" value="${version.build}"/>
@@ -85,6 +93,7 @@
 	<artifact:install-provider artifactId="wagon-ssh" version="1.0-beta-2"/>
 	<artifact:deploy file="maven/slick-${version.build}.jar">
    		<artifact:pom file="maven/slick-${version.build}.pom" id="slick"/>
+   		<artifact:attach file="maven/slick-${version.build}-sources.jar" classifier="sources"/> 	
 		<artifact:remoteRepository url="scp://bob.newdawnsoftware.com:122/home/kevin/public_html/slick/mavenrepo">
 			<authentication username="${maven.username}" password="${maven.password}" />
 		</artifact:remoteRepository>
