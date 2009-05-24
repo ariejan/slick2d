@@ -340,8 +340,17 @@ public abstract class Shape implements Serializable {
     	
     	checkPoints();
     	
+    	Line testLine = new Line(0,0,0,0);
+    	Vector2f pt = new Vector2f(x,y);
+    	
     	for (int i=0;i<points.length;i+=2) {
-    		if ((points[i] == x) && (points[i+1] == y)) {
+    		int n = i+2;
+    		if (n >= points.length) {
+    			n = 0;
+    		}
+    		testLine.set(points[i], points[i+1], points[n], points[n+1]);
+    		
+    		if (testLine.on(pt)) {
     			return true;
     		}
     	}
