@@ -113,6 +113,10 @@ public class ImageIOImageData implements LoadableImageData {
 		}
 		
 		BufferedImage bufferedImage = ImageIO.read(fis);
+		return imageToByteBuffer(bufferedImage, flipped, forceAlpha, transparent);
+	}
+	
+	public ByteBuffer imageToByteBuffer(BufferedImage image, boolean flipped, boolean forceAlpha, int[] transparent) {
 	    ByteBuffer imageBuffer = null; 
         WritableRaster raster;
         BufferedImage texImage;
@@ -123,21 +127,21 @@ public class ImageIOImageData implements LoadableImageData {
         // find the closest power of 2 for the width and height
         // of the produced texture
 
-        while (texWidth < bufferedImage.getWidth()) {
+        while (texWidth < image.getWidth()) {
             texWidth *= 2;
         }
-        while (texHeight < bufferedImage.getHeight()) {
+        while (texHeight < image.getHeight()) {
             texHeight *= 2;
         }
         
-        this.width = bufferedImage.getWidth();
-        this.height = bufferedImage.getHeight();
+        this.width = image.getWidth();
+        this.height = image.getHeight();
         this.texHeight = texHeight;
         this.texWidth = texWidth;
         
         // create a raster that can be used by OpenGL as a source
         // for a texture
-        boolean useAlpha = bufferedImage.getColorModel().hasAlpha() || forceAlpha; 
+        boolean useAlpha = image.getColorModel().hasAlpha() || forceAlpha; 
         
         if (useAlpha) {
         	depth = 32;
@@ -160,9 +164,9 @@ public class ImageIOImageData implements LoadableImageData {
         
         if (flipped) {
         	g.scale(1,-1);
-        	g.drawImage(bufferedImage,0,-height,null);
+        	g.drawImage(image,0,-height,null);
         } else {
-        	g.drawImage(bufferedImage,0,0,null);
+        	g.drawImage(image,0,0,null);
         }
         
         if (height < texHeight - 1) {
