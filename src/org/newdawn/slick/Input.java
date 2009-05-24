@@ -329,7 +329,7 @@ public class Input {
 	/** THe state of the mouse buttons */
 	protected boolean[] mousePressed = new boolean[10];
 	/** THe state of the controller buttons */
-	private boolean[] controllerPressed = new boolean[MAX_BUTTONS];
+	private boolean[][] controllerPressed = new boolean[100][MAX_BUTTONS];
 	
 	/** The character values representing the pressed keys */
 	protected char[] keys = new char[1024];
@@ -666,14 +666,26 @@ public class Input {
 	 * @return True if the button has been pressed since last time
 	 */
 	public boolean isControlPressed(int button) {
-		if (controllerPressed[button]) {
-			controllerPressed[button] = false;
+		return isControlPressed(button, 0);
+	}
+
+	/**
+	 * Check if a controller button has been pressed since last 
+	 * time
+	 * 
+	 * @param controller The index of the controller to check
+	 * @param button The button to check for (note that this includes directional controls first)
+	 * @return True if the button has been pressed since last time
+	 */
+	public boolean isControlPressed(int button, int controller) {
+		if (controllerPressed[controller][button]) {
+			controllerPressed[controller][button] = false;
 			return true;
 		}
 		
 		return false;
 	}
-
+	
 	/**
 	 * Clear the state for isControlPressed method. This will reset all
 	 * controls to not pressed
@@ -1203,7 +1215,7 @@ public class Input {
 						controls[i][c] = false;
 						fireControlRelease(c, i);
 					} else if (!controls[i][c] && isControlDwn(c, i)) {
-						controllerPressed[c] = true;
+						controllerPressed[i][c] = true;
 						controls[i][c] = true;
 						fireControlPress(c, i);
 					}
