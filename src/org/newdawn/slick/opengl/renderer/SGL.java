@@ -444,4 +444,11 @@ public interface SGL {
 	 * @param alphaScale The scale to apply to any colour binds
 	 */
 	public void setGlobalAlphaScale(float alphaScale);
+
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 * 
+	 * @param buffer
+	 */
+	public void glLoadMatrix(FloatBuffer buffer);
 }

@@ -13,6 +13,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A geomertry test
@@ -80,30 +81,31 @@ public class GeomTest extends BasicGame {
         g.fillRect(20,20,50,50);
         g.popTransform();
         
-        
-//		g.setColor(Color.white);
-//		g.draw(rect);
-//		g.draw(circle);
-//		
-//		g.setColor(rect1.intersects(rect) ? Color.red : Color.green);
-//		g.draw(rect1);
-//		g.setColor(rect2.intersects(rect) ? Color.red : Color.green);
-//		g.draw(rect2);
-//        g.setColor(roundRect.intersects(rect) ? Color.red : Color.green);
-//        g.draw(roundRect);
-//		g.setColor(circle1.intersects(rect) ? Color.red : Color.green);
-//		g.draw(circle1);
-//		g.setColor(circle2.intersects(rect) ? Color.red : Color.green);
-//		g.draw(circle2);
-//		g.setColor(circle3.intersects(circle) ? Color.red : Color.green);
-//		g.draw(circle3);
-//		g.setColor(circle4.intersects(circle) ? Color.red : Color.green);
-//		g.draw(circle4);
-//
-//        g.draw(roundRect2);
-//		g.setColor(Color.blue);
-//		g.draw(new Circle(100,100,50));
-//		g.drawRect(50,50,100,100);
+		g.setColor(Color.white);
+		g.draw(rect);
+		g.draw(circle);
+		
+		g.setColor(rect1.intersects(rect) ? Color.red : Color.green);
+		g.draw(rect1);
+		g.setColor(rect2.intersects(rect) ? Color.red : Color.green);
+		g.draw(rect2);
+        g.setColor(roundRect.intersects(rect) ? Color.red : Color.green);
+        g.draw(roundRect);
+		g.setColor(circle1.intersects(rect) ? Color.red : Color.green);
+		g.draw(circle1);
+		g.setColor(circle2.intersects(rect) ? Color.red : Color.green);
+		g.draw(circle2);
+		g.setColor(circle3.intersects(circle) ? Color.red : Color.green);
+		g.fill(circle3);
+		g.setColor(circle4.intersects(circle) ? Color.red : Color.green);
+		g.draw(circle4);
+
+        g.fill(roundRect2);
+		g.setColor(Color.blue);
+        g.draw(roundRect2);
+		g.setColor(Color.blue);
+		g.draw(new Circle(100,100,50));
+		g.drawRect(50,50,100,100);
         
 	}
 
@@ -129,6 +131,8 @@ public class GeomTest extends BasicGame {
 	 */
 	public static void main(String[] argv) {
 		try {
+			Renderer.setRenderer(Renderer.VERTEX_ARRAY_RENDERER);
+			
 			AppGameContainer container = new AppGameContainer(new GeomTest());
 			container.setDisplayMode(800,600,false);
 			container.start();

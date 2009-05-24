@@ -356,4 +356,11 @@ public class ImmediateModeOGLRenderer implements SGL {
 		this.alphaScale = alphaScale;
 	}
 
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glLoadMatrix(java.nio.FloatBuffer)
+	 */
+	public void glLoadMatrix(FloatBuffer buffer) {
+		GL11.glLoadMatrix(buffer);
+	}
+
 }

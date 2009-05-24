@@ -1741,7 +1741,7 @@ public class Graphics {
 			buffer = (FloatBuffer) stack.get(stackIndex);
 		}
 		
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);
+		GL.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);
 		stackIndex++;
 		
 		postdraw();
@@ -1760,7 +1760,7 @@ public class Graphics {
 		
 		stackIndex--;
 		FloatBuffer oldBuffer = (FloatBuffer) stack.get(stackIndex);
-		GL11.glLoadMatrix(oldBuffer);
+		GL.glLoadMatrix(oldBuffer);
 		
 		postdraw();
 	}

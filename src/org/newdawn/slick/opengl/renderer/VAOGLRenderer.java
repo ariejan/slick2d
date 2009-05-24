@@ -69,6 +69,13 @@ public class VAOGLRenderer extends ImmediateModeOGLRenderer {
 	 * Flush the currently cached data down to the card 
 	 */
 	private void flushBuffer() {	
+		if (vertIndex == 0) {
+			return;
+		}
+		if (currentType == NONE) {
+			return;
+		}
+		
 		if (vertIndex < TOLERANCE) {
 			GL11.glBegin(currentType);
 			for (int i=0;i<vertIndex;i++) {
@@ -398,5 +405,13 @@ public class VAOGLRenderer extends ImmediateModeOGLRenderer {
 	 */
 	public float[] getCurrentColor() {
 		return color;
+	}
+	
+	/**
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glLoadMatrix(java.nio.FloatBuffer)
+	 */
+	public void glLoadMatrix(FloatBuffer buffer) {
+		flushBuffer();
+		super.glLoadMatrix(buffer);
 	}
 }
