@@ -1250,8 +1250,17 @@ public class Input {
 	 * 
 	 * @param initial The interval before key repreating starts after a key press
 	 * @param interval The interval between key repeats in ms
+	 * @deprecated
 	 */
 	public void enableKeyRepeat(int initial, int interval) {
+		Keyboard.enableRepeatEvents(true);
+	}
+
+	/**
+	 * Enable key repeat for this input context. Uses the system settings for repeat
+	 * interval configuration.
+	 */
+	public void enableKeyRepeat() {
 		Keyboard.enableRepeatEvents(true);
 	}
 	
