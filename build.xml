@@ -78,7 +78,7 @@
 	     basedir="src" includes="org/newdawn/slick/**" excludes="org/newdawn/slick/data/*"/>
 </target> 
 
-<target name="deploy-maven" depends="build-slick">
+<target name="deploy-maven" depends="build-slick, build-slick-source">
 	<input message="Maven Username" addproperty="maven.username"/>
 	<input message="Maven Password:" addproperty="maven.password"/>
 	
