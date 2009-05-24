@@ -49,6 +49,8 @@ public class TiledMap {
 	protected ArrayList tileSets = new ArrayList();
 	/** The list of layers defined in the map */
 	protected ArrayList layers = new ArrayList();
+	/** The list of object-groups defined in the map */
+    protected ArrayList objectGroups = new ArrayList();
 
 	/** True if we want to load tilesets - including their image data */
 	private boolean loadTileSets = true;
@@ -439,6 +441,17 @@ public class TiledMap {
 				
 				layers.add(layer);
 			}
+			
+			// acquire object-groups
+			NodeList objectGroupNodes = docElement.getElementsByTagName("objectgroup");
+			     
+			for (int i=0;i<objectGroupNodes.getLength();i++) {
+				Element current = (Element) objectGroupNodes.item(i);
+				ObjectGroup objectGroup = new ObjectGroup(current);
+				objectGroup.index = i;
+			        
+				objectGroups.add(objectGroup);
+			}
 		} catch (Exception e) {
 			Log.error(e);
 			throw new SlickException("Failed to parse tilemap", e);
@@ -510,4 +523,267 @@ public class TiledMap {
 	 */
 	protected void renderedLine(int visualY, int mapY,int layer) {
 	}
+	
+	/**
+	 * Returns the number of object-groups defined in the map.
+	 * @return Number of object-groups on the map
+	 */
+	public int getObjectGroupCount() {
+		return objectGroups.size();
+	}
+	
+	/**
+	 * Returns the number of objects of a specific object-group.
+	 * @param groupID The index of this object-group
+	 * @return Number of the objects in the object-group or -1, when error occurred.
+	 */
+	public int getObjectCount(int groupID) {
+		if (groupID >= 0 && groupID < objectGroups.size()) {
+			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
+			return grp.objects.size();
+		}
+		return -1;
+	}
+	
+	/**
+	 * Return the name of a specific object from a specific group.
+	 * @param groupID Index of a group
+	 * @param objectID Index of an object
+	 * @return The name of an object or null, when error occurred
+	 */
+	public String getObjectName(int groupID, int objectID) {
+		if (groupID >= 0 && groupID < objectGroups.size()) {
+			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
+			if (objectID >= 0 && objectID < grp.objects.size()) {
+				GroupObject object = (GroupObject) grp.objects.get(objectID);
+				return object.name;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Return the type of an specific object from a specific group.
+	 * @param groupID Index of a group
+	 * @param objectID Index of an object
+	 * @return The type of an object or null, when error occurred
+	 */
+	public String getObjectType(int groupID, int objectID) {
+		if (groupID >= 0 && groupID < objectGroups.size()) {
+			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
+			if (objectID >= 0 && objectID < grp.objects.size()) {
+				GroupObject object = (GroupObject) grp.objects.get(objectID);
+				return object.type;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the x-coordinate of a specific object from a specific group.
+	 * @param groupID Index of a group
+	 * @param objectID Index of an object
+	 * @return The x-coordinate of an object, or -1, when error occurred
+	 */
+	public int getObjectX(int groupID, int objectID) {
+		if (groupID >= 0 && groupID < objectGroups.size()) {
+			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
+			if (objectID >= 0 && objectID < grp.objects.size()) {
+				GroupObject object = (GroupObject) grp.objects.get(objectID);
+				return object.x;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the y-coordinate of a specific object from a specific group.
+	 * @param groupID Index of a group
+	 * @param objectID Index of an object
+	 * @return The y-coordinate of an object, or -1, when error occurred
+	 */
+	public int getObjectY(int groupID, int objectID) {
+		if (groupID >= 0 && groupID < objectGroups.size()) {
+			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
+			if (objectID >= 0 && objectID < grp.objects.size()) {
+				GroupObject object = (GroupObject) grp.objects.get(objectID);
+				return object.y;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the width of a specific object from a specific group.
+	 * @param groupID Index of a group
+	 * @param objectID Index of an object
+	 * @return The width of an object, or -1, when error occurred
+	 */
+	public int getObjectWidth(int groupID, int objectID) {
+		if (groupID >= 0 && groupID < objectGroups.size()) {
+			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
+			if (objectID >= 0 && objectID < grp.objects.size()) {
+				GroupObject object = (GroupObject) grp.objects.get(objectID);
+				return object.width;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the height of a specific object from a specific group.
+	 * @param groupID Index of a group
+	 * @param objectID Index of an object
+	 * @return The height of an object, or -1, when error occurred
+	 */
+	public int getObjectHeight(int groupID, int objectID) {
+		if (groupID >= 0 && groupID < objectGroups.size()) {
+			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
+			if (objectID >= 0 && objectID < grp.objects.size()) {
+				GroupObject object = (GroupObject) grp.objects.get(objectID);
+				return object.height;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Looks for a property with the given name and returns it's value. If no property is found,
+	 * def is returned.
+	 * @param groupID Index of a group
+	 * @param objectID Index of an object
+	 * @param propertyName Name of a property
+	 * @param def default value to return, if no property is found
+	 * @return The value of the property with the given name or def, if there is no property with that name.
+	 */
+	public String getObjectProperty(int groupID, int objectID,
+			String propertyName, String def) {
+		if (groupID >= 0 && groupID < objectGroups.size()) {
+			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
+			if (objectID >= 0 && objectID < grp.objects.size()) {
+				GroupObject object = (GroupObject) grp.objects.get(objectID);
+				return object.props.getProperty(propertyName, def);
+			}
+		}
+		return def;
+	}
+	
+	/**
+	 * A group of objects on the map (objects layer)
+	 *
+	 * @author kulpae
+	 */
+	protected class ObjectGroup {
+	  /** The index of this group */
+	  public int index;
+	  /** The name of this group - read from the XML */
+	  public String name;
+	  /** The Objects of this group*/
+	  public ArrayList objects;
+	  /** The width of this layer */
+	  public int width;
+	  /** The height of this layer */
+	  public int height;
+	  
+	  /** the properties of this group */
+	  public Properties props;
+	  
+	  /**
+	   * Create a new group based on the XML definition
+	   *
+	   * @param element The XML element describing the layer
+	   * @throws SlickException Indicates a failure to parse the XML group
+	   */
+	  public ObjectGroup(Element element) throws SlickException {
+			name = element.getAttribute("name");
+			width = Integer.parseInt(element.getAttribute("width"));
+			height = Integer.parseInt(element.getAttribute("height"));
+			objects = new ArrayList();
+
+			// now read the layer properties
+			Element propsElement = (Element) element.getElementsByTagName(
+					"properties").item(0);
+			if (propsElement != null) {
+				NodeList properties = propsElement
+						.getElementsByTagName("property");
+				if (properties != null) {
+					props = new Properties();
+					for (int p = 0; p < properties.getLength(); p++) {
+						Element propElement = (Element) properties.item(p);
+
+						String name = propElement.getAttribute("name");
+						String value = propElement.getAttribute("value");
+						props.setProperty(name, value);
+					}
+				}
+			}
+
+			NodeList objectNodes = element.getElementsByTagName("object");
+			for (int i = 0; i < objectNodes.getLength(); i++) {
+				Element objElement = (Element) objectNodes.item(i);
+				GroupObject object = new GroupObject(objElement);
+				object.index = i;
+				objects.add(object);
+			}
+		}
+	}
+	
+	/**
+	 * An object from a object-group on the map
+	 * 
+	 * @author kulpae
+	 */
+	protected class GroupObject {
+	  /** The index of this object */
+	  public int index;
+	  /** The name of this object - read from the XML */
+	  public String name;
+	  /** The type of this object - read from the XML */
+	  public String type;
+	  /** The x-coordinate of this object */
+	  public int x;
+	  /** The y-coordinate of this object */
+	  public int y;
+	  /** The width of this object */
+	  public int width;
+	  /** The height of this object */
+	  public int height;
+	
+	  /** the properties of this group */
+	  public Properties props;
+	
+	 /**
+	 * Create a new group based on the XML definition
+	 *
+	 * @param element The XML element describing the layer
+	 * @throws SlickException Indicates a failure to parse the XML group
+	 */
+	 public GroupObject(Element element) throws SlickException {
+			name = element.getAttribute("name");
+			type = element.getAttribute("type");
+			x = Integer.parseInt(element.getAttribute("x"));
+			y = Integer.parseInt(element.getAttribute("y"));
+			width = Integer.parseInt(element.getAttribute("width"));
+			height = Integer.parseInt(element.getAttribute("height"));
+
+			// now read the layer properties
+			Element propsElement = (Element) element.getElementsByTagName(
+					"properties").item(0);
+			if (propsElement != null) {
+				NodeList properties = propsElement
+						.getElementsByTagName("property");
+				if (properties != null) {
+					props = new Properties();
+					for (int p = 0; p < properties.getLength(); p++) {
+						Element propElement = (Element) properties.item(p);
+
+						String name = propElement.getAttribute("name");
+						String value = propElement.getAttribute("value");
+						props.setProperty(name, value);
+					}
+				}
+			}
+		}
+	}
+	   
 }
