@@ -38,6 +38,8 @@ public class Animation implements Renderable {
 	private boolean pingPong;
 	/** True if the animation should loop (default) */
 	private boolean loop = true;
+	/** The spriteSheet backing this animation */
+	private SpriteSheet spriteSheet = null;
 	
 	/**
 	 * Create an empty animation
@@ -155,6 +157,44 @@ public class Animation implements Renderable {
 			}
 		}
 	}
+	
+	/**
+	 * Creates a new Animation where each frame is a sub-image of <tt>SpriteSheet</tt> ss.
+	 * @param ss The <tt>SpriteSheet</tt> backing this animation
+	 * @param frames An array of coordinates of sub-image locations for each frame
+	 * @param duration The duration each frame should be displayed for
+	 */
+	public Animation(SpriteSheet ss, int[] frames, int[] duration){
+		spriteSheet = ss;
+	    int x = -1;
+	    int y = -1;
+	    
+	    for(int i = 0; i < frames.length/2; i++){
+	       x = frames[i*2];
+	       y = frames[i*2 + 1];
+	       addFrame(duration[i], x, y);
+	    }
+	}
+	
+	/**
+	 * Add animation frame to the animation.
+	 * @param duration The duration to display the frame for
+	 * @param x The x location of the frame on the <tt>SpriteSheet</tt>
+	 * @param y The y location of the frame on the <tt>spriteSheet</tt>
+	 */
+	public void addFrame(int duration, int x, int y){
+	   if (duration == 0) {
+	      Log.error("Invalid duration: "+duration);
+	      throw new RuntimeException("Invalid duration: "+duration);
+	   }
+	 
+	    if (frames.isEmpty()) {
+	      nextChange = (int) (duration / speed);
+	   }
+	   
+	   frames.add(new Frame(duration, x, y));
+	   currentFrame = 0;      
+	} 
 	
 	/**
 	 * Indicate if this animation should automatically update based on the
@@ -340,6 +380,31 @@ public class Animation implements Renderable {
 		frame.image.draw(x,y,width,height, col);
 	}
 
+	/**
+	 * Render the appropriate frame when the spriteSheet backing this Animation is in use.
+	 * @param x The x position to draw the animation at
+	 * @param y The y position to draw the animation at
+	 */
+	public void renderInUse(int x, int y){
+	   if (frames.size() == 0) {
+	      return;
+	   }
+	   
+	   if (autoUpdate) {
+	      long now = getTime();
+	      long delta = now - lastUpdate;
+	      if (firstUpdate) {
+	         delta = 0;
+	         firstUpdate = false;
+	      }
+	      lastUpdate = now;
+	      nextFrame(delta);
+	   }
+	   
+	   Frame frame = (Frame) frames.get(currentFrame);
+	   spriteSheet.renderInUse(x, y, frame.x, frame.y);
+	} 
+	
 	/**
 	 * Get the width of the current frame
 	 * 
@@ -599,7 +664,11 @@ public class Animation implements Renderable {
 		/** The image to display for this frame */
 		public Image image;
 		/** The duration to display the image fro */
-		public int duration;
+		public int duration; 
+		/** The x location of this frame on a SpriteSheet*/
+		public int x = -1;
+		/** The y location of this frame on a SpriteSheet*/
+		public int y = -1; 
 	
 		/**
 		 * Create a new animation frame
@@ -611,5 +680,18 @@ public class Animation implements Renderable {
 			this.image = image;
 			this.duration = duration;
 		}
+		
+		/**
+		 * Creates a new animation frame with the frames image location on a sprite sheet
+		 * @param duration The duration in millisecond to display the image for
+		 * @param x the x location of the frame on the <tt>SpriteSheet</tt>
+		 * @param y the y location of the frame on the <tt>SpriteSheet</tt>
+		 */
+		public Frame(int duration, int x, int y) {
+			this.image = spriteSheet.getSubImage(x, y);
+			this.duration = duration;
+			this.x = x;
+			this.y = y;
+		} 
 	}
 }
