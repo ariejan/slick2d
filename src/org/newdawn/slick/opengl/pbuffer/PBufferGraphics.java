@@ -55,7 +55,7 @@ public class PBufferGraphics extends Graphics {
 	 */
 	private void init() throws SlickException {
 		try {
-			Texture tex = InternalTextureLoader.get().createTexture(image.getWidth(), image.getHeight());
+			Texture tex = InternalTextureLoader.get().createTexture(image.getWidth(), image.getHeight(), image.getFilter());
 			
 			final RenderTexture rt = new RenderTexture(false, true, false, false, RenderTexture.RENDER_TEXTURE_2D, 0);
 			pbuffer = new Pbuffer(screenWidth, screenHeight, new PixelFormat(8, 0, 0), rt, null);

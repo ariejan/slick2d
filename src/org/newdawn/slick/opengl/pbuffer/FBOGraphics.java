@@ -93,7 +93,7 @@ public class FBOGraphics extends Graphics {
 		// for some reason FBOs won't work on textures unless you've absolutely just
 		// created them.
 		try {
-			Texture tex = InternalTextureLoader.get().createTexture(image.getWidth(), image.getHeight());
+			Texture tex = InternalTextureLoader.get().createTexture(image.getWidth(), image.getHeight(), image.getFilter());
 			
 			EXTFramebufferObject.glBindFramebufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, FBO);
 			EXTFramebufferObject.glFramebufferTexture2DEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, 

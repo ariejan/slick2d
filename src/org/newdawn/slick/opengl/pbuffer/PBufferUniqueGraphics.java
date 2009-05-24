@@ -51,7 +51,7 @@ public class PBufferUniqueGraphics extends Graphics {
 	 */
 	private void init() throws SlickException {
 		try {
-			Texture tex = InternalTextureLoader.get().createTexture(image.getWidth(), image.getHeight());
+			Texture tex = InternalTextureLoader.get().createTexture(image.getWidth(), image.getHeight(), image.getFilter());
 
 			pbuffer = new Pbuffer(screenWidth, screenHeight, new PixelFormat(8, 0, 0), null, null);
 			// Initialise state of the pbuffer context.

@@ -76,6 +76,8 @@ public class Image implements Renderable {
     
     /** The colours for each of the corners */
     protected Color[] corners;
+    /** The OpenGL max filter */
+    private int filter;
     
 	/**
 	 * Create a texture as a copy of another
@@ -266,17 +268,27 @@ public class Image implements Renderable {
 	 * Create an image from a image data source. Note that this method uses 
 	 * 
 	 * @param data The pixelData to use to create the image
-	 * @param filter The filter to use when scaling this image
+	 * @param f The filter to use when scaling this image
 	 */
-	public Image(ImageData data, int filter) {
+	public Image(ImageData data, int f) {
 		try {
-			texture = InternalTextureLoader.get().getTexture(data, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST);
+			this.filter = f == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST;
+			texture = InternalTextureLoader.get().getTexture(data, this.filter);
 			ref = texture.toString();
 		} catch (IOException e) {
 			Log.error(e);
 		}
 	}
 
+	/** 
+	 * Get the OpenGL image filter in use
+	 * 
+	 * @return The filter for magnification
+	 */
+	public int getFilter() {
+		return filter;
+	}
+	
 	/** 
 	 * Get the reference to the resource this image was loaded from, if any. Note that
 	 * this can be null in the cases where an image was programatically generated.

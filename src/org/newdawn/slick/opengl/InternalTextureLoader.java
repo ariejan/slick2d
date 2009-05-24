@@ -314,7 +314,7 @@ public class InternalTextureLoader {
         
         return texture; 
     } 
-    
+
     /**
      * Create an empty texture
      * 
@@ -324,9 +324,21 @@ public class InternalTextureLoader {
      * @throws IOException Indicates a failure to create the texture on the graphics hardware
      */
     public Texture createTexture(final int width, final int height) throws IOException {
+    	return createTexture(width, height, GL11.GL_NEAREST);
+    }
+    
+    /**
+     * Create an empty texture
+     * 
+     * @param width The width of the new texture
+     * @param height The height of the new texture
+     * @return The created empty texture
+     * @throws IOException Indicates a failure to create the texture on the graphics hardware
+     */
+    public Texture createTexture(final int width, final int height, final int filter) throws IOException {
     	ImageData ds = new EmptyImageData(width, height);
     	
-    	return getTexture(ds, GL11.GL_NEAREST);
+    	return getTexture(ds, filter);
     }
     
     /**
