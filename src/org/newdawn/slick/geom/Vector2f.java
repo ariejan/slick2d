@@ -53,7 +53,7 @@ public strictfp class Vector2f {
 		}
 
 		float len = length();
-		x = -len * (float) FastTrig.cos(StrictMath.toRadians(theta));
+		x = len * (float) FastTrig.cos(StrictMath.toRadians(theta));
 		y = len * (float) FastTrig.sin(StrictMath.toRadians(theta));
 		
 //		x = x / (float) FastTrig.cos(StrictMath.toRadians(oldTheta))
