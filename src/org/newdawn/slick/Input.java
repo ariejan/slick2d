@@ -713,7 +713,9 @@ public class Input {
 	 * controls to not pressed
 	 */
 	public void clearControlPressedRecord() {
-		Arrays.fill(controllerPressed, false);
+		for (int i=0;i<controllers.size();i++) {
+			Arrays.fill(controllerPressed[i], false);
+		}
 	}
 	
 	/**
