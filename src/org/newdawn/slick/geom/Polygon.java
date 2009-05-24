@@ -1,6 +1,7 @@
 package org.newdawn.slick.geom;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A polygon implementation meeting the <code>Shape</code> contract. 
@@ -183,5 +184,17 @@ public class Polygon extends Shape {
 	 */
 	public void setClosed(boolean closed) {
 		this.closed = closed;
+	}
+	
+	/**
+	 * Provide a copy of this polygon
+	 * 
+	 * @return A copy of this polygon
+	 */
+	public Polygon copy() {
+		float[] copyPoints = new float[points.length];
+		System.arraycopy(points, 0, copyPoints, 0, copyPoints.length);
+		
+		return new Polygon(copyPoints);
 	}
 }
