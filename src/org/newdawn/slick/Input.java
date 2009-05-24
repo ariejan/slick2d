@@ -346,8 +346,12 @@ public class Input {
 	protected HashSet allListeners = new HashSet();
 	/** The listeners to notify of key events */
 	protected ArrayList keyListeners = new ArrayList();
+	/** The listener to add */
+	protected ArrayList keyListenersToAdd = new ArrayList();
 	/** The listeners to notify of mouse events */
 	protected ArrayList mouseListeners = new ArrayList();
+	/** The listener to add */
+	protected ArrayList mouseListenersToAdd = new ArrayList();
 	/** The listener to nofiy of controller events */
 	protected ArrayList controllerListeners = new ArrayList();
 	/** The current value of the wheel */
@@ -474,11 +478,29 @@ public class Input {
 	 * @param listener The listener to be notified
 	 */
 	public void addKeyListener(KeyListener listener) {
+		keyListenersToAdd.add(listener);
+	}
+	
+	/**
+	 * Add a key listener to be notified of key input events
+	 * 
+	 * @param listener The listener to be notified
+	 */
+	private void addKeyListenerImpl(KeyListener listener) {
 		if (keyListeners.contains(listener)) {
 			return;
 		}
 		keyListeners.add(listener);
 		allListeners.add(listener);
+	}
+
+	/**
+	 * Add a mouse listener to be notified of mouse input events
+	 * 
+	 * @param listener The listener to be notified
+	 */
+	public void addMouseListener(MouseListener listener) {
+		mouseListenersToAdd.add(listener);
 	}
 	
 	/**
@@ -486,7 +508,7 @@ public class Input {
 	 * 
 	 * @param listener The listener to be notified
 	 */
-	public void addMouseListener(MouseListener listener) {
+	private void addMouseListenerImpl(MouseListener listener) {
 		if (mouseListeners.contains(listener)) {
 			return;
 		}
@@ -1067,6 +1089,16 @@ public class Input {
 			return;
 		}
 
+		// add any listeners requested since last time
+		for (int i=0;i<keyListenersToAdd.size();i++) {
+			addKeyListenerImpl((KeyListener) keyListenersToAdd.get(i));
+		}
+		keyListenersToAdd.clear();
+		for (int i=0;i<mouseListenersToAdd.size();i++) {
+			addMouseListenerImpl((MouseListener) mouseListenersToAdd.get(i));
+		}
+		mouseListenersToAdd.clear();
+		
 		if (doubleClickTimeout != 0) {
 			if (System.currentTimeMillis() > doubleClickTimeout) {
 				doubleClickTimeout = 0;
