@@ -119,18 +119,18 @@ public class GeomUtil {
 		int buttCount = 0;
 		for (int i=0;i<target.getPointCount();i++) {
 			if (other.contains(target.getPoint(i)[0], target.getPoint(i)[1])) {
-				if (!other.includes(target.getPoint(i)[0], target.getPoint(i)[1])) {
+				if (!other.hasVertex(target.getPoint(i)[0], target.getPoint(i)[1])) {
 					touches = true;
 					break;
 				}
 			}
-			if (other.includes(target.getPoint(i)[0], target.getPoint(i)[1])) {
+			if (other.hasVertex(target.getPoint(i)[0], target.getPoint(i)[1])) {
 				buttCount++;
 			} 
 		}
 		for (int i=0;i<other.getPointCount();i++) {
 			if (target.contains(other.getPoint(i)[0], other.getPoint(i)[1])) {
-				if (!target.includes(other.getPoint(i)[0], other.getPoint(i)[1])) {
+				if (!target.hasVertex(other.getPoint(i)[0], other.getPoint(i)[1])) {
 					touches = true;
 					break;
 				}
@@ -189,7 +189,7 @@ public class GeomUtil {
 		} else {
 			for (int i=0;i<target.getPointCount();i++) {
 				if (!other.contains(target.getPoint(i)[0], target.getPoint(i)[1])) {
-					if (!other.includes(target.getPoint(i)[0], target.getPoint(i)[1])) {
+					if (!other.hasVertex(target.getPoint(i)[0], target.getPoint(i)[1])) {
 						Shape shape = combineSingle(target, other, false, i);
 						return new Shape[] {shape};
 					}
@@ -224,7 +224,7 @@ public class GeomUtil {
 		float px = current.getPoint(point)[0];
 		float py = current.getPoint(point)[1];
 		
-		while (!poly.includes(px, py) || (first) || (current != target)) {
+		while (!poly.hasVertex(px, py) || (first) || (current != target)) {
 			first = false;
 			loop++;
 			if (loop > MAX_POINTS) {
@@ -253,7 +253,7 @@ public class GeomUtil {
 					listener.pointIntersected(px,py);
 				}
 				
-				if (other.includes(px, py)) {
+				if (other.hasVertex(px, py)) {
 					point = other.indexOf(pt.x,pt.y);
 					dir = 1;
 					px = pt.x;
