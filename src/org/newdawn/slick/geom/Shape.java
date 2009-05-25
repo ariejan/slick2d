@@ -511,19 +511,20 @@ public abstract class Shape implements Serializable {
      * @param y The y coordinate to check
      * @return True if the cordinates supplied are a vertex of this polygon
      */
-    public boolean hasVertex(float x, float y) {
+    public boolean hasVertex(float x, float y) {    	
+    	if (points.length == 0) {
+			return false;
+		}
+
         checkPoints();
 
-        boolean result = false;
-        
         for (int i=0;i<points.length;i+=2) {
             if(points[i] == x && points[i + 1] == y) {
-                result = true;
-                break;
+            	return true;
             }
         }
         
-        return result;
+        return false;
     }
 
     /**
