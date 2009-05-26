@@ -77,7 +77,7 @@ public class Image implements Renderable {
     /** The colours for each of the corners */
     protected Color[] corners;
     /** The OpenGL max filter */
-    private int filter;
+    private int filter = SGL.GL_LINEAR;
     
 	/**
 	 * Create a texture as a copy of another
@@ -168,11 +168,13 @@ public class Image implements Renderable {
 	 * 
 	 * @param ref The location of the image file to load
 	 * @param flipped True if the image should be flipped on the y-axis on load
-	 * @param filter The filtering method to use when scaling this image
+	 * @param f The filtering method to use when scaling this image
 	 * @param transparent The color to treat as transparent
 	 * @throws SlickException Indicates a failure to load the image
 	 */
-	public Image(String ref, boolean flipped, int filter, Color transparent) throws SlickException {
+	public Image(String ref, boolean flipped, int f, Color transparent) throws SlickException {
+		this.filter = f == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST;
+		
 		try {
 			this.ref = ref;
 			int[] trans = null;
@@ -368,11 +370,13 @@ public class Image implements Renderable {
 	 * @param in The input stream to read the image from
 	 * @param ref The name that should be assigned to the image
 	 * @param flipped True if the image should be flipped on the y-axis  on load
-	 * @param filter The filter to use when scaling this image
+	 * @param f The filter to use when scaling this image
 	 * @param transparent The color to treat as transparent
 	 * @throws SlickException Indicates a failure to load the image
 	 */
-	private void load(InputStream in, String ref, boolean flipped, int filter, Color transparent) throws SlickException {
+	private void load(InputStream in, String ref, boolean flipped, int f, Color transparent) throws SlickException {
+		this.filter = f == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST;
+		
 		try {
 			this.ref = ref;
 			int[] trans = null;
