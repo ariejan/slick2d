@@ -184,7 +184,7 @@ public class Image implements Renderable {
 				trans[1] = (int) (transparent.g * 255);
 				trans[2] = (int) (transparent.b * 255);
 			}
-			texture = InternalTextureLoader.get().getTexture(ref, flipped, filter == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST, trans);
+			texture = InternalTextureLoader.get().getTexture(ref, flipped, filter, trans);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to load image from: "+ref, e);
