@@ -90,7 +90,7 @@ public class Polygon extends Shape {
      * @param y The y coordinate of the point
      */
     public void addPoint(float x, float y) {
-    	if (includes(x,y) && (!allowDups)) {
+    	if (hasVertex(x,y) && (!allowDups)) {
     		return;
     	}
     	

@@ -513,18 +513,18 @@ public abstract class Shape implements Serializable {
      */
     public boolean hasVertex(float x, float y) {    	
     	if (points.length == 0) {
-			return false;
-		}
-
-        checkPoints();
-
-        for (int i=0;i<points.length;i+=2) {
-            if(points[i] == x && points[i + 1] == y) {
-            	return true;
-            }
-        }
-        
-        return false;
+    		return false;
+    	}
+    	
+    	checkPoints();
+    	
+    	for (int i=0;i<points.length;i+=2) {
+    		if ((points[i] == x) && (points[i+1] == y)) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
     }
 
     /**
