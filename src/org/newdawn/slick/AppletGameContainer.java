@@ -344,9 +344,17 @@ public class AppletGameContainer extends Applet {
          Mouse.setGrabbed(grabbed);
       }
 
+	  /**
+	   * @see org.newdawn.slick.GameContainer#isMouseGrabbed()
+	   */
+      public boolean isMouseGrabbed() {
+    	  return Mouse.isGrabbed();
+	  }
+      
       /**
-       * @see org.newdawn.slick.GameContainer#setMouseCursor(java.lang.String, int, int)
-       */
+		 * @see org.newdawn.slick.GameContainer#setMouseCursor(java.lang.String,
+		 *      int, int)
+		 */
       public void setMouseCursor(String ref, int hotSpotX, int hotSpotY) throws SlickException {
          try {
             Cursor cursor = CursorLoader.get().getCursor(ref, hotSpotX, hotSpotY);

@@ -453,6 +453,13 @@ public class AppGameContainer extends GameContainer {
 	}
 
 	/**
+	 * @see org.newdawn.slick.GameContainer#isMouseGrabbed()
+	 */
+	public boolean isMouseGrabbed() {
+		return Mouse.isGrabbed();
+	}
+	
+	/**
 	 * @see org.newdawn.slick.GameContainer#hasFocus()
 	 */
 	public boolean hasFocus() {

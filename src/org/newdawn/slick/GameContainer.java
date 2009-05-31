@@ -524,6 +524,14 @@ public abstract class GameContainer implements GUIContext {
 	public abstract void setMouseGrabbed(boolean grabbed);
 	
 	/**
+	 * Check if the mouse cursor is current grabbed. This will cause it not
+	 * to be seen.
+	 * 
+	 * @return True if the mouse is currently grabbed
+	 */
+	public abstract boolean isMouseGrabbed();
+	
+	/**
 	 * Retrieve the time taken to render the last frame, i.e. the change in time - delta.
 	 * 
 	 * @return The time taken to render the last frame
