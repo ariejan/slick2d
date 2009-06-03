@@ -238,7 +238,9 @@ public strictfp class Line extends Shape {
 	 * @return True if the point is on this line
 	 */
 	public boolean on(Vector2f point) {
-		return distanceSquared(point) == 0;
+		getClosestPoint(point, closest);
+		
+		return point.equals(closest);
 	}
 	
 	/** 
