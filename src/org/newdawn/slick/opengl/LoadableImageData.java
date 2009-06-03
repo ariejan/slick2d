@@ -10,8 +10,14 @@ import java.nio.ByteBuffer;
  * @author kevin
  */
 public interface LoadableImageData extends ImageData {
-
-
+	/**
+	 * Configure the edging that can be used to make texture edges
+	 * loop more cleanly
+	 * 
+	 * @param edging True if we should edge
+	 */
+	public void configureEdging(boolean edging);
+	
 	/**
 	 * Load a image from the specified stream
 	 * 

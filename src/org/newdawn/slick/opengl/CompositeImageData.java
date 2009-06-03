@@ -139,4 +139,13 @@ public class CompositeImageData implements LoadableImageData  {
 		return picked.getWidth();
 	}
 
+	/**
+	 * @see org.newdawn.slick.opengl.LoadableImageData#configureEdging(boolean)
+	 */
+	public void configureEdging(boolean edging) {
+		for (int i=0;i<sources.size();i++) {
+			((LoadableImageData) sources.get(i)).configureEdging(edging);
+		}
+	}
+
 }

@@ -54,6 +54,8 @@ public class ImageIOImageData implements LoadableImageData {
     private int texWidth;
     /** The height of the texture that should be created for the image */
     private int texHeight;
+    /** True if we should edge */
+    private boolean edging = true;
     
     /**
      * @see org.newdawn.slick.opengl.ImageData#getDepth()
@@ -169,13 +171,15 @@ public class ImageIOImageData implements LoadableImageData {
         	g.drawImage(image,0,0,null);
         }
         
-        if (height < texHeight - 1) {
-        	copyArea(texImage, 0, 0, width, 1, 0, texHeight-1);
-        	copyArea(texImage, 0, height-1, width, 1, 0, 1);
-        }
-        if (width < texWidth - 1) {
-        	copyArea(texImage, 0,0,1,height,texWidth-1,0);
-        	copyArea(texImage, width-1,0,1,height,1,0);
+        if (edging) {
+	        if (height < texHeight - 1) {
+	        	copyArea(texImage, 0, 0, width, 1, 0, texHeight-1);
+	        	copyArea(texImage, 0, height-1, width, 1, 0, 1);
+	        }
+	        if (width < texWidth - 1) {
+	        	copyArea(texImage, 0,0,1,height,texWidth-1,0);
+	        	copyArea(texImage, width-1,0,1,height,1,0);
+	        }
         }
         
         // build a byte buffer from the temporary image 
@@ -229,5 +233,12 @@ public class ImageIOImageData implements LoadableImageData {
 		Graphics2D g = (Graphics2D) image.getGraphics();
 		
 		g.drawImage(image.getSubimage(x, y, width, height),x+dx,y+dy,null);
+	}
+
+	/**
+	 * @see org.newdawn.slick.opengl.LoadableImageData#configureEdging(boolean)
+	 */
+	public void configureEdging(boolean edging) {
+		this.edging = edging;
 	}
 }

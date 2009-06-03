@@ -49,11 +49,8 @@ public class CursorLoader {
 	public Cursor getCursor(String ref,int x,int y) throws IOException, LWJGLException {
 		LoadableImageData imageData = null;
 		
-		if (ref.endsWith(".tga")) {
-			imageData = new TGAImageData();
-		} else {
-			imageData = new ImageIOImageData();
-		}
+		imageData = ImageDataFactory.getImageDataFor(ref);
+		imageData.configureEdging(false);
 		
 		ByteBuffer buf = imageData.loadImage(ResourceLoader.getResourceAsStream(ref), true, true, null);
 		for (int i=0;i<buf.limit();i+=4) {

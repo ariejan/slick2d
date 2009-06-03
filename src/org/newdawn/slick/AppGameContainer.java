@@ -262,7 +262,7 @@ public class AppGameContainer extends GameContainer {
 			g.flush();
 			g.getArea(0,0,temp.getWidth(),temp.getHeight(),buffer);
 			
-			Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,temp.getWidth(),temp.getHeight());
+			Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,temp.getWidth(),image.getHeight());
 			Mouse.setNativeCursor(cursor);
 		} catch (Exception e) {
 			Log.error("Failed to load and apply cursor.", e);

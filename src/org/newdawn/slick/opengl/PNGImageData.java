@@ -777,5 +777,11 @@ public class PNGImageData implements LoadableImageData {
         }
         return ret;
     }
+    
+	/**
+	 * @see org.newdawn.slick.opengl.LoadableImageData#configureEdging(boolean)
+	 */
+	public void configureEdging(boolean edging) {
+	}
 }
 

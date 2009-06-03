@@ -305,5 +305,11 @@ public class TGAImageData implements LoadableImageData {
 	 */
 	public ByteBuffer getImageBufferData() {
 		throw new RuntimeException("TGAImageData doesn't store it's image.");
-	} 
+	}
+	
+	/**
+	 * @see org.newdawn.slick.opengl.LoadableImageData#configureEdging(boolean)
+	 */
+	public void configureEdging(boolean edging) {
+	}
 }
