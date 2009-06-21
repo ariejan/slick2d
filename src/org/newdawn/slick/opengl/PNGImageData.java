@@ -695,10 +695,10 @@ public class PNGImageData implements LoadableImageData {
 		if (height < texHeight-1) {
 			int topOffset = (texHeight-1) * (texWidth*perPixel);
 			int bottomOffset = (height-1) * (texWidth*perPixel);
-			for (int x=0;x<texWidth*perPixel;x++) {
+			for (int x=0;x<texWidth;x++) {
 				for (int i=0;i<perPixel;i++) {
 					scratch.put(topOffset+x+i, scratch.get(x+i));
-					scratch.put(bottomOffset+(texWidth*perPixel)+x+i, scratch.get((texWidth*perPixel)+x+i));
+					scratch.put(bottomOffset+(texWidth*perPixel)+x+i, scratch.get(bottomOffset+x+i));
 				}
 			}
 		}
