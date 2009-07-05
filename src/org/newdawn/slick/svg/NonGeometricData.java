@@ -99,6 +99,9 @@ public class NonGeometricData {
 			if ("none".equals(props.getProperty(STROKE))) {
 				return;
 			}
+			if ("".equals(props.getProperty(STROKE))) {
+				return;
+			}
 			value = morphColor(value);
 		}
 		
