@@ -488,7 +488,7 @@ public class ParticleSystem {
 			{
 				ParticlePool pool= (ParticlePool)it.next();
 				for (int i=0;i<pool.particles.length;i++) {
-					if (pool.particles[i].inUse()) {
+					if (pool.particles[i].life > 0) {
 						pool.particles[i].update(delta);
 						pCount++;
 					}
