@@ -223,8 +223,10 @@ public class AngelCodeFont implements Font {
 						// ignore
 					} else if (line.startsWith("char")) {
 						CharDef def = parseChar(line);
-						maxChar = Math.max(maxChar, def.id);
-						charDefs.add(def);
+						if (def != null) {
+							maxChar = Math.max(maxChar, def.id);
+							charDefs.add(def);
+						}
 					}
 					if (line.startsWith("kernings c")) {
 						// ignore
@@ -286,6 +288,9 @@ public class AngelCodeFont implements Font {
 		tokens.nextToken(); // char
 		tokens.nextToken(); // id
 		def.id = Short.parseShort(tokens.nextToken()); // id value
+		if (def.id < 0) {
+			return null;
+		}
 		if (def.id > MAX_CHAR) {
 			throw new SlickException("Invalid character '" + def.id
 				+ "': AngelCodeFont does not support characters above " + MAX_CHAR);
