@@ -648,6 +648,30 @@ public class TiledMap {
 	}
 	
 	/**
+	 * Retrieve the image source property for a given object
+	 * 
+	 * @param groupID Index of a group
+	 * @param objectID Index of an object
+	 * @return The image source reference or null if one isn't defined
+	 */
+	public String getObjectImage(int groupID, int objectID) {
+		if (groupID >= 0 && groupID < objectGroups.size()) {
+			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
+			if (objectID >= 0 && objectID < grp.objects.size()) {
+				GroupObject object = (GroupObject) grp.objects.get(objectID);
+				
+				if (object == null) {
+					return null;
+				}
+				
+				return object.image;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
 	 * Looks for a property with the given name and returns it's value. If no property is found,
 	 * def is returned.
 	 * @param groupID Index of a group
@@ -662,6 +686,14 @@ public class TiledMap {
 			ObjectGroup grp = (ObjectGroup) objectGroups.get(groupID);
 			if (objectID >= 0 && objectID < grp.objects.size()) {
 				GroupObject object = (GroupObject) grp.objects.get(objectID);
+				
+				if (object == null) {
+					return def;
+				}
+				if (object.props == null) {
+					return def;
+				}
+				
 				return object.props.getProperty(propertyName, def);
 			}
 		}
@@ -748,7 +780,9 @@ public class TiledMap {
 	  public int width;
 	  /** The height of this object */
 	  public int height;
-	
+	  /** The image source */
+	  private String image;
+	  
 	  /** the properties of this group */
 	  public Properties props;
 	
@@ -766,6 +800,12 @@ public class TiledMap {
 			width = Integer.parseInt(element.getAttribute("width"));
 			height = Integer.parseInt(element.getAttribute("height"));
 
+			Element imageElement = (Element) element.getElementsByTagName(
+					"image").item(0);
+			if (imageElement != null) {
+				image = imageElement.getAttribute("source");
+			}
+			
 			// now read the layer properties
 			Element propsElement = (Element) element.getElementsByTagName(
 					"properties").item(0);
