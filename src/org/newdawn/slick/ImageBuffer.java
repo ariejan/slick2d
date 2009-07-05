@@ -47,6 +47,15 @@ public class ImageBuffer implements ImageData {
 	}
 
 	/**
+	 * Retrieve the raw data stored within the image buffer
+	 * 
+	 * @return The raw data in RGBA packed format from within the image buffer
+	 */
+	public byte[] getRGBA() {
+		return rawData;
+	}
+	
+	/**
 	 * @see org.newdawn.slick.opengl.ImageData#getDepth()
 	 */
 	public int getDepth() {
