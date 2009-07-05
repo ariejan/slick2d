@@ -657,7 +657,7 @@ public class Image implements Renderable {
 	 */
     public void draw(float x,float y,float width,float height,Color filter) { 
     	if (alpha != 1) {
-    		if (filter != null) {
+    		if (filter == null) {
     			filter = Color.white;
     		}
     		
@@ -918,7 +918,7 @@ public class Image implements Renderable {
 		init();
 
     	if (alpha != 1) {
-    		if (filter != null) {
+    		if (filter == null) {
     			filter = Color.white;
     		}
     		
