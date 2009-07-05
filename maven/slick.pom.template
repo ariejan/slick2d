@@ -1,6 +1,130 @@
 <project>
 <modelVersion>4.0.0</modelVersion>
-<groupId>slick</groupId>
-<artifactId>slick</artifactId>
-<version>@VERSION@</version>
+   
+    <groupId>slick</groupId>
+    <artifactId>slick</artifactId>
+    <version>@VERSION@</version>
+    <name>Slick - 2D Game Library based on LWJGL</name>
+    <url>http://slick.cokeandcode.com</url>
+
+    <properties>
+        <lwjgl.version>2.1.0</lwjgl.version>
+        <phys2D.version>060408</phys2D.version>
+        <platform>win32</platform>
+    </properties>
+
+     <dependencies>
+
+        <dependency>
+            <groupId>phys2d</groupId>
+            <artifactId>phys2d</artifactId>
+            <version>${phys2D.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-jinput</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-native</artifactId>
+            <version>${lwjgl.version}</version>
+            <classifier>${platform}</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.jnlp</groupId>
+            <artifactId>jnlp</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ibxm</groupId>
+            <artifactId>ibxm</artifactId>
+            <version>unknown</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jcraft</groupId>
+            <artifactId>jogg</artifactId>
+            <version>0.0.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jcraft</groupId>
+            <artifactId>jorbis</artifactId>
+            <version>0.0.15</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+
+        <sourceDirectory>src</sourceDirectory>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <groupId>org.lwjgl</groupId>
+                            <artifactId>lwjgl-native</artifactId>
+                            <version>${lwjgl.version}</version>
+                            <type>jar</type>
+                            <classifier>${platform}</classifier>
+                            <outputDirectory>${project.build.directory}/natives</outputDirectory>
+                            <overWrite>true</overWrite>
+                        </artifactItem>
+                    </artifactItems>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+        </plugins>
+
+    </build>
+
+    <repositories>
+
+        <repository>
+            <id>b2s-repo</id>
+            <url>http://b2s-repo.googlecode.com/svn/trunk/mvn-repo</url>
+        </repository>
+
+        <repository>
+            <id>freehep</id>
+            <url>http://java.freehep.org/maven2</url>
+        </repository>
+
+    </repositories> 
 </project>
