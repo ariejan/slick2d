@@ -25,6 +25,8 @@ public class GradientFill implements ShapeFill {
 	private Color startCol;
 	/** The ending colour of the gradient */
 	private Color endCol;
+	/** True if the graident is defined in shape coordinates */
+	private boolean local = false;
 	
 	/**
 	 * Create a gradient fill
@@ -38,9 +40,25 @@ public class GradientFill implements ShapeFill {
 	 */
 	public GradientFill(float sx, float sy, Color startCol, float ex, float ey, Color endCol) 
 	{
-		this(new Vector2f(sx,sy), startCol, new Vector2f(ex,ey), endCol);
+		this(sx,sy,startCol,ex,ey,endCol,false);
 	}
 
+	/**
+	 * Create a gradient fill
+	 * 
+	 * @param sx The x coordinate of the starting control point
+	 * @param sy The y coordinate of the starting control point
+	 * @param startCol The colour to apply at the starting control point
+	 * @param ex The x coordinate of the ending control point
+	 * @param ey The y coordinate of the ending control point
+	 * @param endCol The colour to apply at the ending control point
+	 * @param local True if the gradient is defined in local shape coordinates
+	 */
+	public GradientFill(float sx, float sy, Color startCol, float ex, float ey, Color endCol, boolean local) 
+	{
+		this(new Vector2f(sx,sy), startCol, new Vector2f(ex,ey), endCol, local);
+	}
+	
 	/**
 	 * Create a gradient fill
 	 * 
@@ -48,12 +66,23 @@ public class GradientFill implements ShapeFill {
 	 * @param startCol The colour to apply at the starting control point
 	 * @param end The position of the ending control point
 	 * @param endCol The colour to apply at the ending control point
+	 * @param local True if the gradient is defined in local shape coordinates
 	 */
-	public GradientFill(Vector2f start, Color startCol, Vector2f end, Color endCol) {
+	public GradientFill(Vector2f start, Color startCol, Vector2f end, Color endCol, boolean local) {
 		this.start = new Vector2f(start);
 		this.end = new Vector2f(end);
 		this.startCol = new Color(startCol);
 		this.endCol = new Color(endCol);
+		this.local = local;
+	}
+	
+	/**
+	 * Indicate if the gradient is defined in shape local coordinates
+	 * 
+	 * @param local True if the gradient is defined in shape local coordinates
+ 	 */
+	public void setLocal(boolean local) {
+		this.local = local;
 	}
 	
 	/**
@@ -157,7 +186,11 @@ public class GradientFill implements ShapeFill {
 	 * @return The colour that should be applied based on the control points of this gradient
 	 */
 	public Color colorAt(Shape shape, float x, float y) {
-		return colorAt(x-shape.getCenterX(),y-shape.getCenterY());
+		if (local) {
+			return colorAt(x-shape.getCenterX(),y-shape.getCenterY());
+		} else {
+			return colorAt(x,y);
+		}
 	}
 
 	/**
@@ -183,7 +216,6 @@ public class GradientFill implements ShapeFill {
 		ua /= denom;
 		float ub = (dx1 * (start.getY() - y)) - (dy1 * (start.getX() - x));
 		ub /= denom;
-		
 		float u = ua;
 		if (u < 0) {
 			u = 0;
