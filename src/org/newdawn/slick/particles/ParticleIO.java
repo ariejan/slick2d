@@ -36,6 +36,22 @@ import org.w3c.dom.NodeList;
  * @author kevin
  */
 public class ParticleIO {
+
+	/**
+	 * Load a set of configured emitters into a single system
+	 * 
+	 * @param ref
+	 *            The reference to the XML file (file or classpath)
+	 * @param mask
+	 * @return A configured particle system
+	 * @throws IOException
+	 *             Indicates a failure to find, read or parse the XML file
+	 */
+	public static ParticleSystem loadConfiguredSystem(String ref, Color mask)
+			throws IOException {
+		return loadConfiguredSystem(ResourceLoader.getResourceAsStream(ref),
+            null, null, mask);
+	}
 	
 	/**
 	 * Load a set of configured emitters into a single system
@@ -49,7 +65,7 @@ public class ParticleIO {
 	public static ParticleSystem loadConfiguredSystem(String ref)
 			throws IOException {
 		return loadConfiguredSystem(ResourceLoader.getResourceAsStream(ref),
-            null, null);
+            null, null, null);
 	}
 
 	/**
@@ -63,9 +79,24 @@ public class ParticleIO {
 	 */
 	public static ParticleSystem loadConfiguredSystem(File ref)
 			throws IOException {
-      return loadConfiguredSystem(new FileInputStream(ref), null, null);
+      return loadConfiguredSystem(new FileInputStream(ref), null, null, null);
 	}
 
+	/**
+	 * Load a set of configured emitters into a single system
+	 * 
+	 * @param ref
+	 *            The stream to read the XML from
+	 * @param mask The mask used to make the particle image transparent
+	 * @return A configured particle system
+	 * @throws IOException
+	 *             Indicates a failure to find, read or parse the XML file
+	 */
+	public static ParticleSystem loadConfiguredSystem(InputStream ref, Color mask)
+			throws IOException {
+      return loadConfiguredSystem(ref, null, null, mask);
+	}
+	
 	/**
 	 * Load a set of configured emitters into a single system
 	 * 
@@ -77,7 +108,7 @@ public class ParticleIO {
 	 */
 	public static ParticleSystem loadConfiguredSystem(InputStream ref)
 			throws IOException {
-      return loadConfiguredSystem(ref, null, null);
+      return loadConfiguredSystem(ref, null, null, null);
 	}
 
 	/**
@@ -95,7 +126,7 @@ public class ParticleIO {
 	public static ParticleSystem loadConfiguredSystem(String ref,
 			ConfigurableEmitterFactory factory) throws IOException {
 		return loadConfiguredSystem(ResourceLoader.getResourceAsStream(ref),
-            factory, null);
+            factory, null, null);
 	}
 
 	/**
@@ -112,7 +143,7 @@ public class ParticleIO {
 	 */
 	public static ParticleSystem loadConfiguredSystem(File ref,
 			ConfigurableEmitterFactory factory) throws IOException {
-      return loadConfiguredSystem(new FileInputStream(ref), factory, null);
+      return loadConfiguredSystem(new FileInputStream(ref), factory, null, null);
 	}
 
 	/**
@@ -129,7 +160,7 @@ public class ParticleIO {
 	 */
 	public static ParticleSystem loadConfiguredSystem(InputStream ref,
 			ConfigurableEmitterFactory factory) throws IOException {
-            return loadConfiguredSystem(ref, factory, null);
+            return loadConfiguredSystem(ref, factory, null, null);
          }
 
    /**
@@ -141,12 +172,13 @@ public class ParticleIO {
     *            The factory used to create the emitter than will be poulated
     *            with loaded data.
     * @param system The particle system that will be loaded into
+    * @param mask The mask used to make the image background transparent
     * @return A configured particle system
     * @throws IOException
     *             Indicates a failure to find, read or parse the XML file
     */
    public static ParticleSystem loadConfiguredSystem(InputStream ref,
-         ConfigurableEmitterFactory factory, ParticleSystem system) throws IOException {
+         ConfigurableEmitterFactory factory, ParticleSystem system, Color mask) throws IOException {
 		if (factory == null) {
 			factory = new ConfigurableEmitterFactory() {
 				public ConfigurableEmitter createEmitter(String name) {
@@ -166,7 +198,7 @@ public class ParticleIO {
 			
          if (system == null) {
          system = new ParticleSystem("org/newdawn/slick/data/particle.tga",
-					2000);
+					2000, mask);
          }
 			boolean additive = "true".equals(element.getAttribute("additive"));
 			if (additive) {

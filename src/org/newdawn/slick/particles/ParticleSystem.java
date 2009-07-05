@@ -126,7 +126,9 @@ public class ParticleSystem {
 	private boolean visible = true;
 	/** The name of the default image */
 	private String defaultImageName;
-
+	/** The mask used to make the particle image background transparent if any */
+	private Color mask;
+	
 	/**
 	 * Create a new particle system
 	 * 
@@ -207,7 +209,7 @@ public class ParticleSystem {
 	public boolean usePoints() {
 		return usePoints;
 	}
-	
+
 	/**
 	 * Create a new particle system
 	 * 
@@ -215,8 +217,20 @@ public class ParticleSystem {
 	 * @param maxParticles The number of particles available in the system
 	 */
 	public ParticleSystem(String defaultSpriteRef, int maxParticles) {
-		this.maxParticlesPerEmitter= maxParticles;
+		this(defaultSpriteRef, maxParticles, null);
+	}
 	
+	/**
+	 * Create a new particle system
+	 * 
+	 * @param defaultSpriteRef The sprite to render for each particle
+	 * @param maxParticles The number of particles available in the system
+	 * @param mask The mask used to make the sprite image transparent
+	 */
+	public ParticleSystem(String defaultSpriteRef, int maxParticles, Color mask) {
+		this.maxParticlesPerEmitter= maxParticles;
+		this.mask = mask;
+		
 		setDefaultImageName(defaultSpriteRef);
 		dummy = createParticle(this);
 	}
@@ -444,7 +458,11 @@ public class ParticleSystem {
 		AccessController.doPrivileged(new PrivilegedAction() {
             public Object run() {
         		try {
-        			sprite = new Image(defaultImageName);
+        			if (mask != null) {
+        				sprite = new Image(defaultImageName, mask);
+        			} else {
+        				sprite = new Image(defaultImageName);
+        			}
         		} catch (SlickException e) {
         			Log.error(e);
         			defaultImageName = null;
