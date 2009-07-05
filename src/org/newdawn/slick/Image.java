@@ -57,6 +57,8 @@ public class Image implements Renderable {
 	protected float textureOffsetY;
     /** Angle to rotate the image to. */
 	protected float angle;
+	/** The alpha to draw the image at */
+	protected float alpha = 1.0f;
 	/** The name given for the image */
 	protected String ref;
 	/** True if this image's state has been initialised */
@@ -654,6 +656,14 @@ public class Image implements Renderable {
 	 * @param filter The color to filter with while drawing
 	 */
     public void draw(float x,float y,float width,float height,Color filter) { 
+    	if (alpha != 1) {
+    		if (filter != null) {
+    			filter = Color.white;
+    		}
+    		
+    		filter = new Color(filter);
+    		filter.a *= alpha;
+    	}
         if (filter != null) { 
             filter.bind(); 
         } 
@@ -798,6 +808,24 @@ public class Image implements Renderable {
     } 
     
     /**
+     * Get the alpha value to use when rendering this image
+     * 
+     * @return The alpha value to use when rendering this image
+     */
+    public float getAlpha() {
+    	return alpha;
+    }
+    
+    /**
+     * Set the alpha value to use when rendering this image
+     * 
+     * @param alpha The alpha value to use when rendering this image
+     */
+    public void setAlpha(float alpha) {
+    	this.alpha = alpha;
+    }
+    
+    /**
      * Add the angle provided to the current rotation.  The angle will be normalized to 
      * be 0 <= angle < 360.  The image will be rotated around its center.
      *  
@@ -889,6 +917,14 @@ public class Image implements Renderable {
 	public void draw(float x, float y, float x2, float y2, float srcx, float srcy, float srcx2, float srcy2, Color filter) {
 		init();
 
+    	if (alpha != 1) {
+    		if (filter != null) {
+    			filter = Color.white;
+    		}
+    		
+    		filter = new Color(filter);
+    		filter.a *= alpha;
+    	}
 		filter.bind();
 		texture.bind();
 		
