@@ -77,6 +77,15 @@ public class GradientFill implements ShapeFill {
 	}
 	
 	/**
+	 * Get an inverted copy of the gradient
+	 * 
+	 * @return The copy with the colours inverted
+	 */
+	public GradientFill getInvertedCopy() {
+		return new GradientFill(start, endCol, end, startCol, local);
+	}
+	
+	/**
 	 * Indicate if the gradient is defined in shape local coordinates
 	 * 
 	 * @param local True if the gradient is defined in shape local coordinates
