@@ -129,7 +129,7 @@ public class SpriteSheet extends Image {
 		this.target = this;
 		this.tw = tw;
 		this.th = th;
-		this.spacing = 0;
+		this.spacing = spacing;
 	}
 	
 	/**
