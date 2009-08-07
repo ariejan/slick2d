@@ -131,13 +131,13 @@ public class Animation implements Renderable {
 	 * Create a new animation based on a selection of sprites from a sheet
 	 * 
 	 * @param frames The sprite sheet containing the frames
-	 * @param duration The duration each frame should be displayed for
 	 * @param x1 The x coordinate of the first sprite from the sheet to appear in the animation
 	 * @param y1 The y coordinate of the first sprite from the sheet to appear in the animation
 	 * @param x2 The x coordinate of the last sprite from the sheet to appear in the animation
 	 * @param y2 The y coordinate of the last sprite from the sheet to appear in the animation
 	 * @param horizontalScan True if the sprites are arranged in hoizontal scan lines. Otherwise 
 	 * vertical is assumed
+	 * @param duration The duration each frame should be displayed for
 	 * @param autoUpdate True if this animation should automatically update based on the render times
 	 */
 	public Animation(SpriteSheet frames, int x1, int y1, int x2, int y2, boolean horizontalScan, int duration, boolean autoUpdate) {
