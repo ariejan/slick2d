@@ -279,16 +279,14 @@ public class Animation implements Renderable {
 	 * Restart the animation from the beginning
 	 */
 	public void restart() {
-		if (!stopped) {
-			return;
-		}
-		
 		if (frames.size() == 0) {
 			return;
 		}
 		stopped = false;
 		currentFrame = 0;
 		nextChange = (int) (((Frame) frames.get(0)).duration / speed);
+		firstUpdate = true;
+		lastUpdate = 0;
 	}
 	
 	/**
