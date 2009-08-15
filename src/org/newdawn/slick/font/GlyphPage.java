@@ -84,7 +84,7 @@ public class GlyphPage {
 	private int pageX;
 	/** The y position of the page */
 	private int pageY;
-	/** The height of each row on the page */
+	/** The height of the last row on the page */
 	private int rowHeight;
 	/** True if the glyphs are ordered */
 	private boolean orderAscending;
