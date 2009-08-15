@@ -2,6 +2,8 @@ package org.newdawn.slick;
 
 import java.io.InputStream;
 
+import org.newdawn.slick.opengl.Texture;
+
 /**
  * A sheet of sprites that can be drawn individually
  * 
@@ -271,5 +273,12 @@ public class SpriteSheet extends Image {
 			return;
 		}
 		target.startUse();
+	}
+	
+	/**
+	 * @see org.newdawn.slick.Image#setTexture(org.newdawn.slick.opengl.Texture)
+	 */
+	public void setTexture(Texture texture) {
+		target.setTexture(texture);
 	}
 }
