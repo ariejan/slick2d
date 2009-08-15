@@ -279,6 +279,10 @@ public class SpriteSheet extends Image {
 	 * @see org.newdawn.slick.Image#setTexture(org.newdawn.slick.opengl.Texture)
 	 */
 	public void setTexture(Texture texture) {
+		if (target == this) {
+			super.setTexture(texture);
+			return;
+		}
 		target.setTexture(texture);
 	}
 }
