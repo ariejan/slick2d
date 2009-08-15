@@ -72,22 +72,17 @@ public class CanvasGameContainer extends Canvas {
 			return;
 		}
 		
-		Thread t = new Thread() {
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							container.gameLoop();
-						} catch (SlickException e) {
-							e.printStackTrace();
-						}
-						container.checkDimensions();
-						scheduleUpdate();
-					}
-				});
+				try {
+					container.gameLoop();
+				} catch (SlickException e) {
+					e.printStackTrace();
+				}
+				container.checkDimensions();
+				scheduleUpdate();
 			}
-		};
-		t.start();
+		});
 	}
 	/**
 	 * Dispose the container and any resources it holds
