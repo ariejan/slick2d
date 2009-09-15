@@ -24,6 +24,8 @@ import org.newdawn.slick.util.BufferedImageUtil;
  * @author Jeremy Adams (elias4444)
  * @author Kevin Glass (kevglass)
  * @author Peter Korzuszek (genail)
+ * 
+ * @deprecated Use {@link UnicodeFont} instead
  */
 public class TrueTypeFont implements org.newdawn.slick.Font {
 	/** The renderer to use for all GL operations */
