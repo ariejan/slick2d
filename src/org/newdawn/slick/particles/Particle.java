@@ -80,6 +80,17 @@ public class Particle {
 	public float getY() {
 		return y;
 	}
+	
+	/**
+	 * Move this particle a fixed amount
+	 * 
+	 * @param x The amount to move the particle on the horizontal axis
+	 * @param y The amount to move the particle on the vertical axis
+	 */
+	public void move(int x, int y) {
+		this.x += x;
+		this.y += y;
+	}
 
 	/**
 	 * Get the size of this particle

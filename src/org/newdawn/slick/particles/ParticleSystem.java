@@ -586,7 +586,29 @@ public class ParticleSystem {
 		}
 	}
 	
-
+	/**
+	 * Move all the particles owned by the specified emitter
+	 * 
+	 * @param emitter The emitter owning the particles that should be released
+	 * @param x The amount on the x axis to move the particles
+	 * @param y The amount on the y axis to move the particles
+	 */
+	public void moveAll(ParticleEmitter emitter, int x, int y) {
+		if( !particlesByEmitter.isEmpty() )
+		{
+			Iterator it= particlesByEmitter.values().iterator();
+			while( it.hasNext())
+			{
+				ParticlePool pool= (ParticlePool)it.next();
+				for (int i=0;i<pool.particles.length;i++) {
+					if (pool.particles[i].inUse()) {
+						pool.particles[i].move(x, y);
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Create a duplicate of this system. This would have been nicer as a different interface
 	 * but may cause to much API change headache. Maybe next full version release it should be
