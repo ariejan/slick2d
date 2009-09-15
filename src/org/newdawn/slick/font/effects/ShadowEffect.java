@@ -32,9 +32,9 @@ public class ShadowEffect implements ConfigurableEffect {
 	/** The transparency factor of the shadow */
 	private float opacity = 0.6f;
 	/** The distance on the x axis of the shadow from the text */
-	private int xDistance = 2;
+	private float xDistance = 2;
 	/** The distance on the y axis of the shadow from the text */
-	private int yDistance = 2;
+	private float yDistance = 2;
 	/** The size of the kernel used to blur the shadow */
 	private int blurKernelSize = 0;
 	/** The number of passes applied to create the blur */
@@ -132,7 +132,7 @@ public class ShadowEffect implements ConfigurableEffect {
 	 * 
 	 * @return The distance on the X axis the shadow will be from the text
 	 */
-	public int getXDistance() {
+	public float getXDistance() {
 		return xDistance;
 	}
 
@@ -142,7 +142,7 @@ public class ShadowEffect implements ConfigurableEffect {
 	 * 
 	 * @param distance The offset on the x axis
 	 */
-	public void setXDistance(int distance) {
+	public void setXDistance(float distance) {
 		xDistance = distance;
 	}
 
@@ -152,7 +152,7 @@ public class ShadowEffect implements ConfigurableEffect {
 	 * 
 	 * @return The distance on the Y axis the shadow will be from the text
 	 */
-	public int getYDistance() {
+	public float getYDistance() {
 		return yDistance;
 	}
 
@@ -162,7 +162,7 @@ public class ShadowEffect implements ConfigurableEffect {
 	 * 
 	 * @param distance The offset on the y axis
 	 */
-	public void setYDistance (int distance) {
+	public void setYDistance (float distance) {
 		yDistance = distance;
 	}
 
@@ -234,9 +234,9 @@ public class ShadowEffect implements ConfigurableEffect {
 		List values = new ArrayList();
 		values.add(EffectUtil.colorValue("Color", color));
 		values.add(EffectUtil.floatValue("Opacity", opacity, 0, 1, "This setting sets the translucency of the shadow."));
-		values.add(EffectUtil.intValue("X distance", xDistance, "This setting is the amount of pixels to offset the shadow on the"
+		values.add(EffectUtil.floatValue("X distance", xDistance, Float.MIN_VALUE, Float.MAX_VALUE, "This setting is the amount of pixels to offset the shadow on the"
 			+ " x axis. The glyphs will need padding so the shadow doesn't get clipped."));
-		values.add(EffectUtil.intValue("Y distance", yDistance, "This setting is the amount of pixels to offset the shadow on the"
+		values.add(EffectUtil.floatValue("Y distance", yDistance, Float.MIN_VALUE, Float.MAX_VALUE, "This setting is the amount of pixels to offset the shadow on the"
 			+ " y axis. The glyphs will need padding so the shadow doesn't get clipped."));
 
 		List options = new ArrayList();
@@ -263,9 +263,9 @@ public class ShadowEffect implements ConfigurableEffect {
 			} else if (value.getName().equals("Opacity")) {
 				opacity = ((Float)value.getObject()).floatValue();
 			} else if (value.getName().equals("X distance")) {
-				xDistance = ((Integer)value.getObject()).intValue();
+				xDistance = ((Integer)value.getObject()).floatValue();
 			} else if (value.getName().equals("Y distance")) {
-				yDistance = ((Integer)value.getObject()).intValue();
+				yDistance = ((Integer)value.getObject()).floatValue();
 			} else if (value.getName().equals("Blur kernel size")) {
 				blurKernelSize = Integer.parseInt((String)value.getObject());
 			} else if (value.getName().equals("Blur passes")) {
