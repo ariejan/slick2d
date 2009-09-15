@@ -300,6 +300,17 @@ public class TiledMap {
 	}
 
 	/**
+	 * Render a single layer from the map
+	 * 
+	 * @param x The x location to render at 
+	 * @param y The y location to render at
+	 * @param layer The layer to render
+	 */
+	public void render(int x, int y, int layer) {
+		render(x, y, 0, 0, getWidth(), getHeight(), layer, false);
+	}
+	
+	/**
 	 * Render a section of the tile map
 	 * 
 	 * @param x The x location to render at
