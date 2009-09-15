@@ -44,6 +44,42 @@ public class OutlineWobbleEffect extends OutlineEffect {
 	}
 
 	/**
+	 * Gets the detail of the wobble effect.
+	 * 
+	 * @return The detail of the wobble effect
+	 */
+	public float getDetail() {
+		return detail;
+	}
+
+	/**
+	 * Sets the detail of the wobble effect.
+	 * 
+	 * @param detail The detail of the wobble effect
+	 */
+	public void setDetail(float detail) {
+		this.detail = detail;
+	}
+
+	/**
+	 * Gets the amplitude of the wobble effect.
+	 * 
+	 * @return The amplitude of the wobble effect
+	 */
+	public float getAmplitude() {
+		return amplitude;
+	}
+
+	/**
+	 * Sets the amplitude of the wobble effect.
+	 * 
+	 * @param amplitude The detail of the wobble effect
+	 */
+	public void setAmplitude(float amplitude) {
+		this.amplitude = amplitude;
+	}
+
+	/**
 	 * Create a new effect that generates a wobbly line around the text
 	 * 
 	 * @param width The width of the line

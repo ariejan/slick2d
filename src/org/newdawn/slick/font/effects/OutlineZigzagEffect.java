@@ -44,6 +44,42 @@ public class OutlineZigzagEffect extends OutlineEffect {
 	}
 
 	/**
+	 * Gets the wavelength of the wobble effect.
+	 * 
+	 * @return The wavelength of the wobble effect
+	 */
+	public float getWavelength() {
+		return wavelength;
+	}
+
+	/**
+	 * Sets the wavelength of the wobble effect.
+	 * 
+	 * @param wavelength The wavelength of the wobble effect
+	 */
+	public void setWavelength(float wavelength) {
+		this.wavelength = wavelength;
+	}
+
+	/**
+	 * Gets the amplitude of the wobble effect.
+	 * 
+	 * @return The amplitude of the wobble effect
+	 */
+	public float getAmplitude() {
+		return amplitude;
+	}
+
+	/**
+	 * Sets the amplitude of the wobble effect.
+	 * 
+	 * @param amplitude The detail of the wobble effect
+	 */
+	public void setAmplitude(float amplitude) {
+		this.amplitude = amplitude;
+	}
+	
+	/**
 	 * Create a new effect to generate a zigzagging line around the text
 	 * 
 	 * @param width The width of the line
