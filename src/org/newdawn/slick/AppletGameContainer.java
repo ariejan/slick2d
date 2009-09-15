@@ -13,16 +13,13 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.ByteBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
-import org.newdawn.slick.Game;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.openal.SoundStore;
 import org.newdawn.slick.opengl.CursorLoader;
 import org.newdawn.slick.opengl.ImageData;
@@ -365,6 +362,40 @@ public class AppletGameContainer extends Applet {
       }
 
       /**
+       * Get the closest greater power of 2 to the fold number
+       * 
+       * @param fold The target number
+       * @return The power of 2
+       */
+      private int get2Fold(int fold) {
+          int ret = 2;
+          while (ret < fold) {
+              ret *= 2;
+          }
+          return ret;
+      }
+      
+      /**
+       * {@inheritDoc}
+       */
+      public void setMouseCursor(Image image, int hotSpotX, int hotSpotY) throws SlickException {
+          try {
+             Image temp = new Image(get2Fold(image.getWidth()), get2Fold(image.getHeight()));
+             Graphics g = temp.getGraphics();
+             
+             ByteBuffer buffer = BufferUtils.createByteBuffer(temp.getWidth() * temp.getHeight() * 4);
+             g.drawImage(image.getFlippedCopy(false, true), 0, 0);
+             g.flush();
+             g.getArea(0,0,temp.getWidth(),temp.getHeight(),buffer);
+             
+             Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,temp.getWidth(),temp.getHeight());
+             Mouse.setNativeCursor(cursor);
+          } catch (Exception e) {
+             Log.error("Failed to load and apply cursor.", e);
+          }
+       }
+      
+      /**
        * @see org.newdawn.slick.GameContainer#setIcons(java.lang.String[])
        */
       public void setIcons(String[] refs) throws SlickException {
@@ -398,26 +429,6 @@ public class AppletGameContainer extends Applet {
        * @see org.newdawn.slick.GameContainer#setDefaultMouseCursor()
        */
       public void setDefaultMouseCursor() {
-      }
-
-      /**
-       *
-       * @see org.newdawn.slick.GameContainer#setMouseCursor(org.newdawn.slick.Image,
-       *      int, int)
-       *
-       */
-
-      public void setMouseCursor(Image image, int hotSpotX, int hotSpotY)
-            throws SlickException {
-         try {
-            ByteBuffer buffer = ByteBuffer.allocate(image.getWidth() * image.getHeight() * 4);
-            image.getGraphics().getArea(0,0,image.getWidth(),image.getHeight(),buffer);
-            
-            Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,image.getWidth(),image.getHeight());
-            Mouse.setNativeCursor(cursor);
-         } catch (Exception e) {
-            Log.error("Failed to load and apply cursor.", e);
-         }
       }
 
       public boolean isFullscreen() {
