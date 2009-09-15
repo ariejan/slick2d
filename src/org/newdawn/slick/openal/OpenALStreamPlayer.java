@@ -296,7 +296,22 @@ public class OpenALStreamPlayer {
 					return false;
 				}
 			}
-			
+
+			AL10.alSourceStop(source);
+			removeBuffers();
+			AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_FALSE);
+			AL10.alSourcef(source, AL10.AL_PITCH, pitch);
+			AL10.alSourcef(source, AL10.AL_GAIN, gain);
+
+			remainingBufferCount = BUFFER_COUNT;
+
+			for (int i = 0; i < BUFFER_COUNT; i++) {
+				stream(bufferNames.get(i));
+			}
+
+			AL10.alSourceQueueBuffers(source, bufferNames);
+			AL10.alSourcePlay(source);
+
 			return true;
 		} catch (IOException e) {
 			Log.error(e);
