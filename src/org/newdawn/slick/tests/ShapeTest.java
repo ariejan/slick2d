@@ -15,6 +15,7 @@ import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A geomertry test
@@ -38,6 +39,8 @@ public class ShapeTest extends BasicGame {
     private boolean keys[];
     /** since no modifiers, use this for shifted characters */
     private char lastChar[];
+    /** The polgon randomly generated */
+    private Polygon randomShape = new Polygon();
     
     /**
      * Create a new test of graphics context rendering
@@ -45,7 +48,23 @@ public class ShapeTest extends BasicGame {
     public ShapeTest() {
         super("Geom Test");
     }
-    
+	
+	public void createPoly(float x, float y) {
+		int size = 20;
+		int change = 10;
+
+		randomShape = new Polygon();
+		// generate random polygon
+		randomShape.addPoint(0 + (int)(Math.random() * change), 0 + (int)(Math.random() * change));
+		randomShape.addPoint(size - (int)(Math.random() * change), 0 + (int)(Math.random() * change));
+		randomShape.addPoint(size - (int)(Math.random() * change), size - (int)(Math.random() * change));
+		randomShape.addPoint(0 + (int)(Math.random() * change), size - (int)(Math.random() * change));
+	
+		// center polygon
+		randomShape.setCenterX(x);
+		randomShape.setCenterY(y);
+	}
+	
     /**
      * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
      */
@@ -64,6 +83,7 @@ public class ShapeTest extends BasicGame {
         
         keys = new boolean[256];
         lastChar = new char[256];
+        createPoly(200,200);
     }
 
     /**
@@ -75,7 +95,12 @@ public class ShapeTest extends BasicGame {
         for(int i=0;i<shapes.size();i++) {
             g.fill((Shape)shapes.get(i));
         }
-
+        g.fill(randomShape);
+        g.setColor(Color.black);
+        g.setAntiAlias(true);
+        g.draw(randomShape);
+        g.setAntiAlias(false);
+        
         g.setColor(Color.white);
         g.drawString("keys", 10, 300);
         g.drawString("wasd - move rectangle", 10, 315);
@@ -94,6 +119,8 @@ public class ShapeTest extends BasicGame {
      * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
      */
     public void update(GameContainer container, int delta) {
+        
+        createPoly(200,200);
         if(keys[Input.KEY_ESCAPE]) {
             System.exit(0);
         }
@@ -253,6 +280,7 @@ public class ShapeTest extends BasicGame {
      */
     public static void main(String[] argv) {
         try {
+        	Renderer.setRenderer(Renderer.VERTEX_ARRAY_RENDERER);
             AppGameContainer container = new AppGameContainer(new ShapeTest());
             container.setDisplayMode(800,600,false);
             container.start();
