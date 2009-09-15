@@ -1,5 +1,6 @@
 package org.newdawn.slick;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import org.lwjgl.LWJGLException;
@@ -11,6 +12,7 @@ import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.PixelFormat;
 import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.openal.SoundStore;
+import org.newdawn.slick.opengl.CursorLoader;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
@@ -491,6 +493,33 @@ public abstract class GameContainer implements GUIContext {
 	 * @throws SlickException Indicates a failure to load the cursor image or create the hardware cursor
 	 */
 	public abstract void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY) throws SlickException;
+	
+	/**
+	 * Get a cursor based on a image reference on the classpath. The image 
+	 * is assumed to be a set/strip of cursor animation frames running from top to 
+	 * bottom.
+	 * 
+	 * @param ref The reference to the image to be loaded
+	 * @param x The x-coordinate of the cursor hotspot (left -> right)
+	 * @param y The y-coordinate of the cursor hotspot (bottom -> top)
+	 * @param width The x width of the cursor
+	 * @param height The y height of the cursor
+	 * @param cursorDelays image delays between changing frames in animation
+	 * 					
+	 * @throws SlickException Indicates a failure to load the image or a failure to create the hardware cursor
+	 */
+	public void setAnimatedMouseCursor(String ref, int x, int y, int width, int height, int[] cursorDelays) throws SlickException
+	{
+		try {
+			Cursor cursor;
+			cursor = CursorLoader.get().getAnimatedCursor(ref, x, y, width, height, cursorDelays);
+			setMouseCursor(cursor, x, y);
+		} catch (IOException e) {
+			throw new SlickException("Failed to set mouse cursor", e);
+		} catch (LWJGLException e) {
+			throw new SlickException("Failed to set mouse cursor", e);
+		}
+	}
 	
 	/**
 	 * Set the default mouse cursor - i.e. the original cursor before any native 
