@@ -360,7 +360,7 @@ public abstract class StateBasedGame implements Game, InputListener {
 			return;
 		}
 		
-		currentState.controllerDownPressed(controller);
+		currentState.controllerDownReleased(controller);
 	}
 
 	/**
