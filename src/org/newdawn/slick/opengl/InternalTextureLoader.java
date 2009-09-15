@@ -209,6 +209,7 @@ public class InternalTextureLoader {
         if (transparent != null) {
         	resName += ":"+transparent[0]+":"+transparent[1]+":"+transparent[2];
         }
+        resName += ":"+flipped;
         
     	SoftReference ref = (SoftReference) hash.get(resName);
     	if (ref != null) {
