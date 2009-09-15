@@ -1194,7 +1194,12 @@ public class Image implements Renderable {
 		int xo = (int) (textureOffsetX * texture.getTextureWidth());
 		int yo = (int) (textureOffsetY * texture.getTextureHeight());
 		
-		x = xo + x;
+		if (textureWidth < 0) {
+			x = xo - x;
+		} else {
+			x = xo + x;
+		} 
+		
 		if (textureHeight < 0) {
 			y = yo - y;
 		} else {
