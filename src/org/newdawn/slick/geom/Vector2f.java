@@ -20,6 +20,16 @@ public strictfp class Vector2f {
 	}
 
 	/**
+	 * Create a vector based on the contents of a coordinate array
+	 * 
+	 * @param coords The coordinates array, index 0 = x, index 1 = y
+	 */
+	public Vector2f(float[] coords) {
+		x = coords[0];
+		y = coords[1];
+	}
+	
+	/**
 	 * Create a new vector based on an angle
 	 * 
 	 * @param theta The angle of the vector in degrees
