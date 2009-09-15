@@ -216,8 +216,8 @@ public class BigImage extends Image {
 				final int imageWidth = tileSize; 
 				final int imageHeight = tileSize;
 				
-				final int xSize = imageWidth;
-				final int ySize = imageHeight;
+				final int xSize = Math.min(dataWidth, imageWidth);
+				final int ySize = Math.min(dataHeight, imageHeight);
 				
 				final ByteBuffer subBuffer = BufferUtils.createByteBuffer(tileSize*tileSize*components);
 				int xo = x*tileSize*components;
