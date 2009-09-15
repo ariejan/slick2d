@@ -101,6 +101,18 @@ public abstract class GameContainer implements GUIContext {
 		Log.checkVerboseLogSetting();
 	}
 
+	/**
+	 * Set the default font that will be intialised in the graphics held in this container
+	 * 
+	 * @param font The font to use as default
+	 */
+	public void setDefaultFont(Font font) {
+		if (font != null) {
+			this.defaultFont = font;
+		} else {
+			Log.warn("Please provide a non null font");
+		}
+	}
 	
 	/**
 	 * Indicate whether we want to try to use fullscreen multisampling. This will
