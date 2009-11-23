@@ -7,7 +7,7 @@ package org.newdawn.slick.geom;
  * 
  * @author Kevin Glass
  */
-public strictfp class Line extends Shape {
+public class Line extends Shape {
 	/** The start point of the line */
 	private Vector2f start;
 	/** The end point of the line */
@@ -183,6 +183,20 @@ public strictfp class Line extends Shape {
 	 */
 	public float getDY() {
 		return end.getY() - start.getY();
+	}
+
+	/**
+	 * @see org.newdawn.slick.geom.Shape#getX()
+	 */
+	public float getX() {
+		return getX1();
+	}
+
+	/**
+	 * @see org.newdawn.slick.geom.Shape#getY()
+	 */
+	public float getY() {
+		return getY1();
 	}
 	
 	/**
