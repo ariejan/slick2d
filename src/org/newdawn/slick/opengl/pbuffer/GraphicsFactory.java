@@ -19,11 +19,11 @@ public class GraphicsFactory {
 	/** The graphics list of graphics contexts created */
 	private static HashMap graphics = new HashMap();
 	/** True if pbuffers are supported */
-	private static boolean pbuffer;
+	private static boolean pbuffer = true;
 	/** True if pbuffer render to texture are supported */
-	private static boolean pbufferRT;
+	private static boolean pbufferRT = true;
 	/** True if fbo are supported */
-	private static boolean fbo;
+	private static boolean fbo = true;
 	/** True if we've initialised */
 	private static boolean init = false;
 	
@@ -36,7 +36,9 @@ public class GraphicsFactory {
 	private static void init() throws SlickException {
 		init = true;
 		
-		fbo = GLContext.getCapabilities().GL_EXT_framebuffer_object;
+		if (fbo) {
+			fbo = GLContext.getCapabilities().GL_EXT_framebuffer_object;
+		}
 		pbuffer = (Pbuffer.getCapabilities() & Pbuffer.PBUFFER_SUPPORTED) != 0;
 		pbufferRT = (Pbuffer.getCapabilities() & Pbuffer.RENDER_TEXTURE_SUPPORTED) != 0;
 		
