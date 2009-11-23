@@ -29,6 +29,18 @@ import org.xml.sax.SAXException;
  * @author kevin
  */
 public class TiledMap {
+	/** Indicates if we're running on a headless system */
+	private static boolean headless;
+	
+	/**
+	 * Indicate if we're running on a headless system where we'd just like to load
+	 * the data model.
+	 * 
+	 * @param h True if we're running on a headless system
+	 */
+	private static void setHeadless(boolean h) {
+		headless = h;
+	}
 	
 	/** The width of the map */
 	protected int width;
@@ -432,7 +444,7 @@ public class TiledMap {
 				for (int i=0;i<setNodes.getLength();i++) {
 					Element current = (Element) setNodes.item(i);
 					
-					tileSet = new TileSet(this, current);
+					tileSet = new TileSet(this, current, !headless);
 					tileSet.index = i;
 					
 					if (lastSet != null) {
