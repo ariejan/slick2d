@@ -567,8 +567,13 @@ public class Animation implements Renderable {
 			currentFrame = (currentFrame + direction) % frames.size();
 			
 			if (pingPong) {
-				if ((currentFrame == 0) || (currentFrame == frames.size()-1)) {
-					direction = -direction;
+				if (currentFrame <= 0) {
+					currentFrame = 0;
+					direction = 1;
+				}
+				if (currentFrame >= frames.size()-1) {
+					currentFrame = frames.size()-1;
+					direction = -1;
 				}
 			}
 			int realDuration = (int) (((Frame) frames.get(currentFrame)).duration / speed);
