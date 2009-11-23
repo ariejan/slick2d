@@ -81,7 +81,7 @@ public class PolygonProcessor implements ElementProcessor {
 	 */
 	public void process(Loader loader, Element element, Diagram diagram, Transform t) throws ParsingException {
 		Transform transform = Util.getTransform(element);
-		transform = new Transform(transform, t);
+		transform = new Transform(t, transform); 
 		
 		String points = element.getAttribute("points");
 		if (element.getNodeName().equals("path")) {

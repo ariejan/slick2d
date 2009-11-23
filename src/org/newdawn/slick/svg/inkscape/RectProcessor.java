@@ -22,7 +22,7 @@ public class RectProcessor implements ElementProcessor {
 	 */
 	public void process(Loader loader, Element element, Diagram diagram, Transform t) throws ParsingException {
 		Transform transform = Util.getTransform(element);
-		transform = new Transform(transform, t);
+	    transform = new Transform(t, transform); 
 		
 		float width = Float.parseFloat(element.getAttribute("width"));
 		float height = Float.parseFloat(element.getAttribute("height"));
