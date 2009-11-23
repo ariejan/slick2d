@@ -214,4 +214,12 @@ public class DeferredTexture extends TextureImpl implements DeferredResource {
 	public String getDescription() {
 		return resourceName;
 	}
+	
+    /**
+	 * @see org.newdawn.slick.opengl.Texture#hasAlpha()
+	 */
+    public boolean hasAlpha() {
+		checkTarget();
+		return target.hasAlpha();
+    }
 }
