@@ -1735,13 +1735,15 @@ public class Graphics {
 		
 		FloatBuffer buffer;
 		if (stackIndex >= stack.size()) {
-			buffer = BufferUtils.createFloatBuffer(16);
+			buffer = BufferUtils.createFloatBuffer(18);
 			stack.add(buffer);
 		} else {
 			buffer = (FloatBuffer) stack.get(stackIndex);
 		}
 		
 		GL.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);
+		buffer.put(16, sx);
+		buffer.put(17, sy);
 		stackIndex++;
 		
 		postdraw();
@@ -1761,6 +1763,8 @@ public class Graphics {
 		stackIndex--;
 		FloatBuffer oldBuffer = (FloatBuffer) stack.get(stackIndex);
 		GL.glLoadMatrix(oldBuffer);
+		sx = oldBuffer.get(16);
+		sy = oldBuffer.get(17);
 		
 		postdraw();
 	}
