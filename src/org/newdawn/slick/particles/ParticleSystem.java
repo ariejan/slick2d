@@ -593,18 +593,11 @@ public class ParticleSystem {
 	 * @param x The amount on the x axis to move the particles
 	 * @param y The amount on the y axis to move the particles
 	 */
-	public void moveAll(ParticleEmitter emitter, int x, int y) {
-		if( !particlesByEmitter.isEmpty() )
-		{
-			Iterator it= particlesByEmitter.values().iterator();
-			while( it.hasNext())
-			{
-				ParticlePool pool= (ParticlePool)it.next();
-				for (int i=0;i<pool.particles.length;i++) {
-					if (pool.particles[i].inUse()) {
-						pool.particles[i].move(x, y);
-					}
-				}
+	public void moveAll(ParticleEmitter emitter, float x, float y) {
+		ParticlePool pool = (ParticlePool) particlesByEmitter.get(emitter);
+		for (int i=0;i<pool.particles.length;i++) {
+			if (pool.particles[i].inUse()) {
+				pool.particles[i].move(x, y);
 			}
 		}
 	}

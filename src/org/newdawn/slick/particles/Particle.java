@@ -87,7 +87,7 @@ public class Particle {
 	 * @param x The amount to move the particle on the horizontal axis
 	 * @param y The amount to move the particle on the vertical axis
 	 */
-	public void move(int x, int y) {
+	public void move(float x, float y) {
 		this.x += x;
 		this.y += y;
 	}
