@@ -57,9 +57,10 @@ public class TileSet {
 	 * 
 	 * @param element The XML describing the tileset
 	 * @param map The map this tileset was loaded from (gives context to paths)
+	 * @param loadImage True if the images should be loaded, false if we're running somewhere images can't be loaded
 	 * @throws SlickException Indicates a failure to parse the tileset
 	 */
-	public TileSet(TiledMap map, Element element) throws SlickException {
+	public TileSet(TiledMap map, Element element, boolean loadImage) throws SlickException {
 		this.map = map;
 		name = element.getAttribute("name");
 		firstGID = Integer.parseInt(element.getAttribute("firstgid"));
@@ -108,8 +109,10 @@ public class TileSet {
 			trans = new Color(c);
 		}
 
-		Image image = new Image(map.getTilesLocation()+"/"+ref,false,Image.FILTER_NEAREST,trans);
-		setTileSetImage(image);
+		if (loadImage) {
+			Image image = new Image(map.getTilesLocation()+"/"+ref,false,Image.FILTER_NEAREST,trans);
+			setTileSetImage(image);
+		}
 		
 		NodeList pElements = element.getElementsByTagName("tile");
 		for (int i=0;i<pElements.getLength();i++) {
