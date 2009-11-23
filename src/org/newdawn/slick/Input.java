@@ -753,7 +753,25 @@ public class Input {
 	public boolean isKeyDown(int code) {
 		return Keyboard.isKeyDown(code);
 	}
-	
+
+	/**
+	 * Get the absolute x position of the mouse cursor within the container
+	 * 
+	 * @return The absolute x position of the mouse cursor
+	 */
+	public int getAbsoluteMouseX() {
+		return Mouse.getX();
+	}
+
+	/**
+	 * Get the absolute y position of the mouse cursor within the container
+	 * 
+	 * @return The absolute y position of the mouse cursor
+	 */
+	public int getAbsoluteMouseY() {
+		return height - Mouse.getY();
+	}
+	   
 	/**
 	 * Get the x position of the mouse cursor
 	 * 
