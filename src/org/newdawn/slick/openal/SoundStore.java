@@ -22,6 +22,7 @@ import org.newdawn.slick.util.ResourceLoader;
  * Responsible for holding and playing the sounds used in the game.
  * 
  * @author Kevin Glass
+ * @author Rockstar setVolume cleanup 
  */
 public class SoundStore {
 	
@@ -179,7 +180,7 @@ public class SoundStore {
 		
 		if (soundWorks) {
 			lastCurrentMusicVolume = volume;
-			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, volume); 
+			AL10.alSourcef(sources.get(0), AL10.AL_GAIN, lastCurrentMusicVolume * musicVolume); 
 		}
 	}
 	
@@ -746,18 +747,14 @@ public class SoundStore {
 		setMOD(null);
 		setStream(null);
 		
-		if (soundWorks) {
-			if (currentMusic != -1) {
-				AL10.alSourceStop(sources.get(0));
-			}
-			
-			getMusicSource();
-			currentMusic = sources.get(0);
-			
-			return new StreamSound(new OpenALStreamPlayer(currentMusic, ref));
+		if (currentMusic != -1) {
+			AL10.alSourceStop(sources.get(0));
 		}
 		
-		return new StreamSound(new OpenALStreamPlayer(0, ref));
+		getMusicSource();
+		currentMusic = sources.get(0);
+		
+		return new StreamSound(new OpenALStreamPlayer(currentMusic, ref));
 	}
 
 	/**
@@ -775,18 +772,14 @@ public class SoundStore {
 		setMOD(null);
 		setStream(null);
 		
-		if (soundWorks) {
-			if (currentMusic != -1) {
-				AL10.alSourceStop(sources.get(0));
-			}
-			
-			getMusicSource();
-			currentMusic = sources.get(0);
-			
-			return new StreamSound(new OpenALStreamPlayer(currentMusic, ref));
+		if (currentMusic != -1) {
+			AL10.alSourceStop(sources.get(0));
 		}
 		
-		return new StreamSound(new OpenALStreamPlayer(0, ref));
+		getMusicSource();
+		currentMusic = sources.get(0);
+		
+		return new StreamSound(new OpenALStreamPlayer(currentMusic, ref));
 	}
 	
 	/**

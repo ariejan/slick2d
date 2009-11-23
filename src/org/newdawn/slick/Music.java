@@ -30,9 +30,11 @@ public class Music {
 		if (currentMusic != null) {
 			SoundStore.get().poll(delta);
 			if (!SoundStore.get().isMusicPlaying()) {
-				Music oldMusic = currentMusic;
-				currentMusic = null;
-				oldMusic.fireMusicEnded();
+				if (!currentMusic.positioning) {
+					Music oldMusic = currentMusic;
+					currentMusic = null;
+					oldMusic.fireMusicEnded();
+				}
 			} else {
 				currentMusic.update(delta);
 			}
@@ -57,6 +59,8 @@ public class Music {
 	private int fadeDuration;
 	/** True if music should be stopped after fading in/out */
 	private boolean stopAfterFade;
+	/** True if the music is being repositioned and it is therefore normal that it's not playing */
+	private boolean positioning; 
 	
 	/**
 	 * Create and load a piece of music (either OGG or MOD/XM)
@@ -186,14 +190,14 @@ public class Music {
 	 * Loop the music
 	 */
 	public void loop() {
-		loop(1.0f, volume * SoundStore.get().getMusicVolume());
+		loop(1.0f, 1.0f); 
 	}
 	
 	/**
 	 * Play the music
 	 */
 	public void play() {
-		play(1.0f, volume * SoundStore.get().getMusicVolume());
+		play(1.0f, 1.0f); 
 	}
 
 	/**
@@ -348,7 +352,17 @@ public class Music {
 	 * @return True if the seek was successful
 	 */
 	public boolean setPosition (float position) {
-		return sound.setPosition(position);
+		if (playing) {
+			positioning = true;
+			playing = false;
+			boolean result = sound.setPosition(position);
+			playing = true;
+			positioning = false;
+
+			return result;
+		} else {
+			return false;
+		}
 	}
 
 	/**

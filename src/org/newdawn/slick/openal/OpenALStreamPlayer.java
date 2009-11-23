@@ -18,6 +18,7 @@ import org.newdawn.slick.util.ResourceLoader;
  * 
  * @author Kevin Glass
  * @author Nathan Sweet <misc@n4te.com>
+ * @author Rockstar play and setPosition cleanup 
  */
 public class OpenALStreamPlayer {
 	/** The number of buffers to maintain */
@@ -49,8 +50,6 @@ public class OpenALStreamPlayer {
 	private URL url;
 	/** The pitch of the music */
 	private float pitch;
-	/** The gain of the music */
-	private float gain;
 	/** Position in seconds of the previously played buffers */
 	private float positionOffset;
 	
@@ -141,29 +140,17 @@ public class OpenALStreamPlayer {
 
 		AL10.alSourceStop(source);
 		removeBuffers();
-	    AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_FALSE);
-		AL10.alSourcef(source, AL10.AL_PITCH, pitch);
-		AL10.alSourcef(source, AL10.AL_GAIN, gain); 
 		
-		remainingBufferCount = BUFFER_COUNT;
-	
-		for (int i=0;i<BUFFER_COUNT;i++) {
-	        stream(bufferNames.get(i));
-		}
-		
-        AL10.alSourceQueueBuffers(source, bufferNames);
-		AL10.alSourcePlay(source);
+		startPlayback();
 	}
 	
 	/**
 	 * Setup the playback properties
 	 * 
 	 * @param pitch The pitch to play back at
-	 * @param gain The volume to play back at
 	 */
-	public void setup(float pitch, float gain) {
+	public void setup(float pitch) {
 		this.pitch = pitch;
-		this.gain = gain;
 	}
 	
 	/**
@@ -297,26 +284,30 @@ public class OpenALStreamPlayer {
 				}
 			}
 
-			AL10.alSourceStop(source);
-			removeBuffers();
-			AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_FALSE);
-			AL10.alSourcef(source, AL10.AL_PITCH, pitch);
-			AL10.alSourcef(source, AL10.AL_GAIN, gain);
-
-			remainingBufferCount = BUFFER_COUNT;
-
-			for (int i = 0; i < BUFFER_COUNT; i++) {
-				stream(bufferNames.get(i));
-			}
-
-			AL10.alSourceQueueBuffers(source, bufferNames);
-			AL10.alSourcePlay(source);
+			startPlayback(); 
 
 			return true;
 		} catch (IOException e) {
 			Log.error(e);
 			return false;
 		}
+	}
+
+	/**
+	 * Starts the streaming.
+	 */
+	private void startPlayback() {
+		AL10.alSourcei(source, AL10.AL_LOOPING, AL10.AL_FALSE);
+		AL10.alSourcef(source, AL10.AL_PITCH, pitch);
+
+		remainingBufferCount = BUFFER_COUNT;
+
+		for (int i = 0; i < BUFFER_COUNT; i++) {
+			stream(bufferNames.get(i));
+		}
+
+		AL10.alSourceQueueBuffers(source, bufferNames);
+		AL10.alSourcePlay(source);
 	}
 
 	/**

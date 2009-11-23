@@ -13,6 +13,7 @@ import org.newdawn.slick.util.Log;
  *
  * @author kevin
  * @author Nathan Sweet <misc@n4te.com>
+ * @author Rockstar playAsMusic cleanup 
  */
 public class StreamSound extends AudioImpl {
 	/** The player we're going to ask to stream data */
@@ -41,8 +42,7 @@ public class StreamSound extends AudioImpl {
 		try {
 			cleanUpSource();
 			
-			player.setup(pitch, 1.0f);
-			SoundStore.get().setCurrentMusicVolume(gain);
+			player.setup(pitch);
 			player.play(loop);
 			SoundStore.get().setStream(player);
 		} catch (IOException e) {
