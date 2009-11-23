@@ -48,6 +48,15 @@ public class GraphicsFactory {
 	}
 	
 	/**
+	 * Force FBO use on or off
+	 * 
+	 * @param useFBO True if we should try and use FBO for offscreen images
+	 */
+	public static void setUseFBO(boolean useFBO) {
+		fbo = useFBO;
+	}
+	
+	/**
 	 * Check if we're using FBO for dynamic textures
 	 * 
 	 * @return True if we're using FBOs
