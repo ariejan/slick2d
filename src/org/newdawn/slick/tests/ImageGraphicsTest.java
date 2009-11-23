@@ -69,7 +69,8 @@ public class ImageGraphicsTest extends BasicGame {
 		} else if (GraphicsFactory.usingPBuffer()) {
 			using = "Pbuffer (Pixel Buffers)";
 		}
-
+		
+		System.out.println(preloaded.getColor(50,50));
 	}
 	
 	/**
@@ -154,6 +155,8 @@ public class ImageGraphicsTest extends BasicGame {
 	 */
 	public static void main(String[] argv) {
 		try {
+			GraphicsFactory.setUseFBO(false);
+			
 			AppGameContainer container = new AppGameContainer(new ImageGraphicsTest());
 			container.setDisplayMode(800,600,false);
 			container.start();
