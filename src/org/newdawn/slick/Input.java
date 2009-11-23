@@ -462,6 +462,14 @@ public class Input {
 	}
 	
 	/**
+	 * Reset the transformation being applied to the input to the default
+	 */
+	public void resetInputTransform() {
+	    setOffset(0, 0);
+	    setScale(1, 1);
+	}
+	
+	/**
 	 * Add a listener to be notified of input events
 	 * 
 	 * @param listener The listener to be notified
