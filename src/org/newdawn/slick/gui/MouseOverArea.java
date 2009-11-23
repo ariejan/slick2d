@@ -179,18 +179,34 @@ public class MouseOverArea extends AbstractComponent {
 	/**
 	 * Moves the component.
 	 * 
-	 * @param x
-	 *            X coordinate
-	 * @param y
-	 *            Y coordinate
+	 * @param x X coordinate
+	 * @param y Y coordinate
 	 */
-	public void setLocation(int x, int y) {
+	public void setLocation(float x, float y) {
 		if (area != null) {
 			area.setX(x);
 			area.setY(y);
 		}
 	}
 
+	/**
+	 * Set the x coordinate of this area
+	 * 
+	 * @param x The new x coordinate of this area
+	 */
+	public void setX(float x) {
+		area.setX(x);
+	}
+	
+	/**
+	 * Set the y coordinate of this area
+	 * 
+	 * @param y The new y coordinate of this area
+	 */
+	public void setY(float y) {
+		area.setY(y);
+	}
+	
 	/**
 	 * Returns the position in the X coordinate
 	 * 
@@ -394,5 +410,15 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public boolean isMouseOver() {
 		return over;
+	}
+
+	/**
+	 * Set the location of this area
+	 * 
+	 * @param x The x coordinate of this area
+	 * @param y The y coordiante of this area
+	 */
+	public void setLocation(int x, int y) {
+		setLocation((float) x,(float) y);
 	}
 }
