@@ -189,4 +189,22 @@ public class NonGeometricData {
 			throw new RuntimeException("Attribute "+attribute+" is not specified as a float:"+getAttribute(attribute));			
 		}
 	}
+
+	/**
+	 * True if the shape is meant to be filled
+	 * 
+	 * @return True if the shape is meant to be filled
+	 */
+	public boolean isFilled() {
+		return isColor(NonGeometricData.FILL);
+	}
+	
+	/**
+	 * True if the shape is meant to be outlined
+	 * 
+	 * @return True if the shape is meant to be outlined
+	 */
+	public boolean isStroked() {
+		return isColor(NonGeometricData.STROKE) && (getAsFloat(NonGeometricData.STROKE_WIDTH) > 0);
+	}
 }
