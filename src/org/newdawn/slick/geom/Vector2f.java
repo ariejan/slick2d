@@ -257,6 +257,10 @@ public strictfp class Vector2f {
 	public Vector2f normalise() {
 		float l = length();
 		
+		if (l == 0) {
+			return this;
+		}
+		
 		x /= l;
 		y /= l;
 		return this;
