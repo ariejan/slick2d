@@ -801,6 +801,21 @@ public class Input {
 	}
 	
 	/**
+	 * Check if any mouse button is down
+	 * 
+	 * @return True if any mouse button is down
+	 */
+	private boolean anyMouseDown() {
+		for (int i=0;i<3;i++) {
+			if (Mouse.isButtonDown(i)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Get a count of the number of controlles available
 	 * 
 	 * @return The number of controllers available
@@ -1220,7 +1235,12 @@ public class Input {
 						for (int i=0;i<mouseListeners.size();i++) {
 							MouseListener listener = (MouseListener) mouseListeners.get(i);
 							if (listener.isAcceptingInput()) {
-								listener.mouseMoved(0, 0, Mouse.getEventDX(), -Mouse.getEventDY());
+								if (anyMouseDown()) {
+									listener.mouseDragged(0, 0, Mouse.getEventDX(), -Mouse.getEventDY());	
+								} else {
+									listener.mouseMoved(0, 0, Mouse.getEventDX(), -Mouse.getEventDY());
+								}
+								
 								if (consumed) {
 									break;
 								}
@@ -1255,7 +1275,11 @@ public class Input {
 				for (int i=0;i<mouseListeners.size();i++) {
 					MouseListener listener = (MouseListener) mouseListeners.get(i);
 					if (listener.isAcceptingInput()) {
-						listener.mouseMoved(lastMouseX ,  lastMouseY, getMouseX(), getMouseY());
+						if (anyMouseDown()) {
+							listener.mouseDragged(lastMouseX ,  lastMouseY, getMouseX(), getMouseY());
+						} else {
+							listener.mouseMoved(lastMouseX ,  lastMouseY, getMouseX(), getMouseY());	
+						}
 						if (consumed) {
 							break;
 						}
