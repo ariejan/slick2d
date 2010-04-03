@@ -81,6 +81,11 @@ public class Image implements Renderable {
     /** The OpenGL max filter */
     private int filter = SGL.GL_LINEAR;
     
+    /** True if the image should be flipped vertically */
+    private boolean flipped;
+    /** The transparent colour set if any */
+    private Color transparent;
+    
 	/**
 	 * Create a texture as a copy of another
 	 * 
@@ -176,6 +181,8 @@ public class Image implements Renderable {
 	 */
 	public Image(String ref, boolean flipped, int f, Color transparent) throws SlickException {
 		this.filter = f == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST;
+		this.transparent = transparent;
+		this.flipped = flipped;
 		
 		try {
 			this.ref = ref;
@@ -193,6 +200,30 @@ public class Image implements Renderable {
 		}
 	}
 	
+	/**
+	 * Set the image filtering to be used. This will cause the image
+	 * to be reloaded. 
+	 * 
+	 * @param f The filtering mode to use
+	 * @throws SlickException Indicates a failure to revalidate the image source
+	 */
+	public void setFilter(int f) throws SlickException {
+		this.filter = f == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST;
+		
+		try {
+			int[] trans = null;
+			if (transparent != null) {
+				trans = new int[3];
+				trans[0] = (int) (transparent.r * 255);
+				trans[1] = (int) (transparent.g * 255);
+				trans[2] = (int) (transparent.b * 255);
+			}
+			texture = InternalTextureLoader.get().getTexture(ref, flipped, filter, trans);
+		} catch (IOException e) {
+			Log.error(e);
+			throw new SlickException("Failed to load image from: "+ref, e);
+		}
+	}
 	/**
 	 * Create an empty image
 	 * 
