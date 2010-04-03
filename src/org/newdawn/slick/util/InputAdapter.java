@@ -142,4 +142,8 @@ public class InputAdapter implements InputListener {
 	public void mouseClicked(int button, int x, int y, int clickCount) {
 	}
 
+	@Override
+	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
+	}
+
 }
