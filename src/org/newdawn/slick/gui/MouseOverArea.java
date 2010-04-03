@@ -325,6 +325,8 @@ public class MouseOverArea extends AbstractComponent {
 					notifyListeners();
 					mouseUp = false;
 				}
+				
+				return;
 			} else {
 				mouseUp = true;
 				if (state != MOUSE_OVER) {
@@ -367,6 +369,13 @@ public class MouseOverArea extends AbstractComponent {
 	 */
 	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
 		over = area.contains(newx, newy);
+	}
+	
+	/**
+	 * @see org.newdawn.slick.util.InputAdapter#mouseDragged(int, int, int, int)
+	 */
+	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
+		mouseMoved(oldx, oldy, newx, newy);
 	}
 
 	/**
