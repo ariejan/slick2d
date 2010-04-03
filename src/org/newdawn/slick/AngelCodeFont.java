@@ -345,7 +345,7 @@ public class AngelCodeFont implements Font {
 
 		GL.glTranslatef(x, y, 0);
 		if (displayListCaching && startIndex == 0 && endIndex == text.length() - 1) {
-			DisplayList displayList = (DisplayList)displayLists.get(text+""+startIndex+""+endIndex);
+			DisplayList displayList = (DisplayList)displayLists.get(text);
 			if (displayList != null) {
 				GL.glCallList(displayList.id);
 			} else {
@@ -360,7 +360,7 @@ public class AngelCodeFont implements Font {
 					displayLists.remove(eldestDisplayList.text);
 				}
 				
-				displayLists.put(text+""+startIndex+""+endIndex, displayList);
+				displayLists.put(text, displayList);
 
 				GL.glNewList(displayList.id, SGL.GL_COMPILE_AND_EXECUTE);
 				render(text, startIndex, endIndex);
