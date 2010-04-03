@@ -659,6 +659,26 @@ public class Animation implements Renderable {
 	}
 	
 	/**
+	 * Create a copy of this animation. Note that the frames
+	 * are not duplicated but shared with the original
+	 * 
+	 * @return A copy of this animation
+	 */
+	public Animation copy() {
+		Animation copy = new Animation();
+		
+		copy.spriteSheet = spriteSheet;
+		copy.frames = frames;
+		copy.autoUpdate = autoUpdate;
+		copy.direction = direction;
+		copy.loop = loop;
+		copy.pingPong = pingPong;
+		copy.speed = speed;
+		
+		return copy;
+	}
+	
+	/**
 	 * A single frame within the animation
 	 *
 	 * @author kevin
