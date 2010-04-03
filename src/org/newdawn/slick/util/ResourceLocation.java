@@ -23,7 +23,7 @@ public interface ResourceLocation {
 	 * Get a resource as a URL
 	 * 
 	 * @param ref The reference to the resource to retrieve
-	 * @return A stream from which the resource can be read
+	 * @return A URL from which the resource can be read
 	 */
 	public URL getResource(String ref);
 }

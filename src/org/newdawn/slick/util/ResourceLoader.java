@@ -73,10 +73,30 @@ public class ResourceLoader {
 	}
 	
 	/**
+	 * Check if a resource is available from any given resource loader
+	 * 
+	 * @param ref A reference to the resource that should be checked
+	 * @return True if the resource can be located
+	 */
+	public static boolean resourceExists(String ref) {
+		URL url = null;
+		
+		for (int i=0;i<locations.size();i++) {
+			ResourceLocation location = (ResourceLocation) locations.get(i);
+			url = location.getResource(ref);
+			if (url != null) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Get a resource as a URL
 	 * 
 	 * @param ref The reference to the resource to retrieve
-	 * @return A stream from which the resource can be read
+	 * @return A URL from which the resource can be read
 	 */
 	public static URL getResource(String ref) {
 
