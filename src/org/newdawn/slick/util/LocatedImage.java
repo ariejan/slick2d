@@ -31,6 +31,7 @@ public class LocatedImage {
 	 * @param y The y location at which the image should be drawn
 	 */
 	public LocatedImage(Image image, int x, int y) {
+		this.image = image;
 		this.x = x;
 		this.y = y;
 		this.width = image.getWidth();
