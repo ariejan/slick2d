@@ -65,9 +65,9 @@ public class GradientTest extends BasicGame {
 		poly.addPoint(620,450);
 		poly.addPoint(500,450);
 		
-		gradient = new GradientFill(0,-75,Color.red,0,75,Color.yellow);
-		gradient2 = new GradientFill(0,-75,Color.blue,0,75,Color.white);
-		gradient4 = new GradientFill(-50,-40,Color.green,50,40,Color.cyan);
+		gradient = new GradientFill(0,-75,Color.red,0,75,Color.yellow,true);
+		gradient2 = new GradientFill(0,-75,Color.blue,0,75,Color.white,true);
+		gradient4 = new GradientFill(-50,-40,Color.green,50,40,Color.cyan,true);
 	}
 
 	/**
