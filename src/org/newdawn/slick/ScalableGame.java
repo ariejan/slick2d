@@ -30,6 +30,8 @@ public class ScalableGame implements Game {
 	private int targetWidth;
 	/** The target height */
 	private int targetHeight;
+	/** The game container wrapped */
+	private GameContainer container;
 	
 	/** 
 	 * Create a new scalable game wrapper
@@ -61,8 +63,21 @@ public class ScalableGame implements Game {
 	 * @see org.newdawn.slick.BasicGame#init(org.newdawn.slick.GameContainer)
 	 */
 	public void init(GameContainer container) throws SlickException {
+		this.container = container;
+		
+		recalculateScale();
+		held.init(container);
+	}
+	
+	/**
+	 * Recalculate the scale of the game
+	 * 
+	 * @throws SlickException Indicates a failure to reinit the game
+	 */
+	public void recalculateScale() throws SlickException {
 		targetWidth = container.getWidth();
 		targetHeight = container.getHeight();
+		
 		if (maintainAspect) {
 			boolean normalIsWide = (normalWidth / normalHeight > 1.6 ? true : false);
 			boolean containerIsWide = ((float) targetWidth / (float) targetHeight > 1.6 ? true : false);
@@ -106,14 +121,17 @@ public class ScalableGame implements Game {
 		container.getInput().setOffset(-xoffset / (targetWidth / normalWidth), 
 									   -yoffset / (targetHeight / normalHeight));
 		
-		
-		held.init(container);
 	}
 
 	/**
 	 * @see org.newdawn.slick.BasicGame#update(org.newdawn.slick.GameContainer, int)
 	 */
 	public void update(GameContainer container, int delta) throws SlickException {
+		if ((targetHeight != container.getHeight()) ||
+		    (targetWidth != container.getWidth())) {
+			recalculateScale();
+		}
+		
 		held.update(container, delta);
 	}
 
