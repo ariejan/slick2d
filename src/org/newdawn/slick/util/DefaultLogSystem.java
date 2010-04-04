@@ -68,4 +68,16 @@ public class DefaultLogSystem implements LogSystem {
 	public void debug(String message) {
 		out.println(new Date()+" DEBUG:" +message);
 	}
+
+	/**
+	 * Log a warning with an exception that caused it
+	 * 
+	 * @param message The message describing the warning
+	 * @param e The cause of the warning
+	 */
+	@Override
+	public void warn(String message, Throwable e) {
+		warn(message);
+		e.printStackTrace(out);
+	}
 }

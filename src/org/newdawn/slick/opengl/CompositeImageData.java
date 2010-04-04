@@ -63,7 +63,7 @@ public class CompositeImageData implements LoadableImageData  {
 				picked = data;
 				break;
 			} catch (Exception e) {
-				Log.warn(sources.get(i).getClass()+" failed to read the data");
+				Log.warn(sources.get(i).getClass()+" failed to read the data", e);
 				exception.addException(e);
 			}
 		}

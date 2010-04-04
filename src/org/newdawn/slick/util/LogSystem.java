@@ -37,6 +37,14 @@ public interface LogSystem {
 	public void warn(String message);
 
 	/**
+	 * Log a warning
+	 * 
+	 * @param message The message describing the warning
+	 * @param e The cause of the warning
+	 */
+	public void warn(String message, Throwable e);
+	
+	/**
 	 * Log an information message
 	 * 
 	 * @param message The message describing the infomation

@@ -126,6 +126,16 @@ public final class Log {
 	public static void warn(String message) {
 		logSystem.warn(message);
 	}
+	
+	/**
+	 * Log a warning
+	 * 
+	 * @param message The message describing the warning
+	 * @param e The issue causing the warning
+	 */
+	public static void warn(String message, Throwable e) {
+		logSystem.warn(message, e);
+	}
 
 	/**
 	 * Log an information message
