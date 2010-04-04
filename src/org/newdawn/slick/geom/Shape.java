@@ -484,8 +484,8 @@ public abstract class Shape implements Serializable {
         float thatPoints[] = shape.getPoints(); // (x1, y1)  and (x2, y2)
         int length = points.length;
         int thatLength = thatPoints.length;
-        float unknownA;
-        float unknownB;
+        double unknownA;
+        double unknownB;
         
         if (!closed()) {
         	length -= 2;
@@ -514,11 +514,11 @@ public abstract class Shape implements Serializable {
             		jNext = 0;
             	}
 
-                unknownA = (((points[iNext] - points[i]) * (thatPoints[j + 1] - points[i + 1])) - 
+                unknownA = (((points[iNext] - points[i]) * (double) (thatPoints[j + 1] - points[i + 1])) - 
                         ((points[iNext+1] - points[i + 1]) * (thatPoints[j] - points[i]))) / 
                         (((points[iNext+1] - points[i + 1]) * (thatPoints[jNext] - thatPoints[j])) - 
                                 ((points[iNext] - points[i]) * (thatPoints[jNext+1] - thatPoints[j + 1])));
-                unknownB = (((thatPoints[jNext] - thatPoints[j]) * (thatPoints[j + 1] - points[i + 1])) - 
+                unknownB = (((thatPoints[jNext] - thatPoints[j]) * (double) (thatPoints[j + 1] - points[i + 1])) - 
                         ((thatPoints[jNext+1] - thatPoints[j + 1]) * (thatPoints[j] - points[i]))) / 
                         (((points[iNext+1] - points[i + 1]) * (thatPoints[jNext] - thatPoints[j])) - 
                                 ((points[iNext] - points[i]) * (thatPoints[jNext+1] - thatPoints[j + 1])));
