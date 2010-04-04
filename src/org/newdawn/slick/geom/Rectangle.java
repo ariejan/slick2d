@@ -263,6 +263,7 @@ public class Rectangle extends Shape {
         transform.transform(points, 0, result, 0, points.length / 2);
         resultPolygon.points = result;
         resultPolygon.findCenter();
+        resultPolygon.checkPoints();
 
         return resultPolygon;
     }
