@@ -746,6 +746,8 @@ public abstract class GameContainer implements GUIContext {
 	 */
 	protected void initSystem() throws SlickException {
 		initGL();
+		setMusicVolume(1.0f);
+		setSoundVolume(1.0f);
 		
 		graphics = new Graphics(width, height);
 		defaultFont = graphics.getFont();
