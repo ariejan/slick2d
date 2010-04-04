@@ -333,10 +333,22 @@ public strictfp class Vector2f {
 	 * @return The distance to the other point
 	 */
 	public float distance(Vector2f other) {
+		return (float) Math.sqrt(distanceSquared(other));
+	}
+	
+	/**
+	 * Get the distance from this point to another, squared. This
+	 * can sometimes be used in place of distance and avoids the 
+	 * additional sqrt.
+	 * 
+	 * @param other The other point we're measuring to 
+	 * @return The distance to the other point squared
+	 */
+	public float distanceSquared(Vector2f other) {
 		float dx = other.getX() - getX();
 		float dy = other.getY() - getY();
 		
-		return (float) Math.sqrt((dx*dx)+(dy*dy));
+		return (float) (dx*dx)+(dy*dy);
 	}
 	
 	/**
