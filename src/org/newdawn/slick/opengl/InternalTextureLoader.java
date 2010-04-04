@@ -233,6 +233,7 @@ public class InternalTextureLoader {
                          filter, 
                          filter, flipped, transparent);
         
+        tex.setCacheName(resName);
         hash.put(resName, new SoftReference(tex));
         
         return tex;

@@ -57,6 +57,8 @@ public class TextureImpl implements Texture {
     private boolean alpha;
     /** The reference this texture was loaded from */
     private String ref;
+    /** The name the texture has in the cache */
+    private String cacheName;
     
     /**
      * For subclasses to utilise
@@ -76,6 +78,15 @@ public class TextureImpl implements Texture {
         this.ref = ref;
         this.textureID = textureID;
         lastBind = this;
+    }
+    
+    /**
+     * Set the name this texture is stored against in the cache
+     * 
+     * @param cacheName The name the texture is stored against in the cache
+     */
+    public void setCacheName(String cacheName) {
+    	this.cacheName = cacheName;
     }
     
     /**
@@ -245,7 +256,11 @@ public class TextureImpl implements Texture {
         	bindNone();
         }
         
-        InternalTextureLoader.get().clear(ref);
+        if (cacheName != null) {
+        	InternalTextureLoader.get().clear(cacheName);
+        } else {
+        	InternalTextureLoader.get().clear(ref);
+        }
     }
     
     /**
