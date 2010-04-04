@@ -139,8 +139,15 @@ public class Line extends Shape {
 	 */
 	public void set(Vector2f start, Vector2f end) {
 		super.pointsDirty = true;
-		this.start = start.copy();
-		this.end = end.copy();
+		if (this.start == null) {
+			this.start = new Vector2f();
+		}
+		this.start.set(start);
+		
+		if (this.end == null) {
+			this.end = new Vector2f();
+		}
+		this.end.set(end);;
 		
 		vec = new Vector2f(end);
 		vec.sub(start);
