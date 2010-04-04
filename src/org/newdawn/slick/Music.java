@@ -61,6 +61,8 @@ public class Music {
 	private boolean stopAfterFade;
 	/** True if the music is being repositioned and it is therefore normal that it's not playing */
 	private boolean positioning; 
+	/** The position that was requested */
+	private float requiredPosition = -1;
 	
 	/**
 	 * Create and load a piece of music (either OGG or MOD/XM)
@@ -238,9 +240,12 @@ public class Music {
 		if (volume > 1.0f)
 			volume = 1.0f;
 
-		setVolume(volume);
 		sound.playAsMusic(pitch, volume, loop);
 		playing = true;
+		setVolume(volume);
+		if (requiredPosition != -1) {
+			setPosition(requiredPosition);
+		}
 	}
 	
 	/**
@@ -351,8 +356,10 @@ public class Music {
 	 * @param position Position in seconds.
 	 * @return True if the seek was successful
 	 */
-	public boolean setPosition (float position) {
+	public boolean setPosition(float position) {
 		if (playing) {
+			requiredPosition = -1;
+			
 			positioning = true;
 			playing = false;
 			boolean result = sound.setPosition(position);
@@ -361,6 +368,7 @@ public class Music {
 
 			return result;
 		} else {
+			requiredPosition = position;
 			return false;
 		}
 	}
