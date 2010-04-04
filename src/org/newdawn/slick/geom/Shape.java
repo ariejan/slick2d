@@ -137,6 +137,16 @@ public abstract class Shape implements Serializable {
     }
     
     /**
+     * Set the location of this shape
+     * 
+     * @param loc The new location of the shape
+     */
+    public void setLocation(Vector2f loc) {
+    	setX(loc.x);
+    	setY(loc.y);
+    }
+    
+    /**
      * Get the x center of this shape.
      * 
      * @return The x center of this shape.
