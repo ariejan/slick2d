@@ -1,5 +1,6 @@
 package org.newdawn.slick.tests;
 
+import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -8,11 +9,11 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Ellipse;
-import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.RoundedRectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
+import org.newdawn.slick.opengl.renderer.Renderer;
 
 /**
  * A geomertry test
@@ -128,38 +129,15 @@ public class GeomTest extends BasicGame {
 	 * 
 	 * @param argv The arguments passed to the test
 	 */
-//	public static void main(String[] argv) {
-//		try {
-//			Renderer.setRenderer(Renderer.VERTEX_ARRAY_RENDERER);
-//			
-//			AppGameContainer container = new AppGameContainer(new GeomTest());
-//			container.setDisplayMode(800,600,false);
-//			container.start();
-//		} catch (SlickException e) {
-//			e.printStackTrace();
-//		}
-//	}
-	
-	public static void main(String[] args) {
-
-//        float height = 99999999999999999999999999999999999f; // smaller than Float.MAX_VALUE
-        float height = Float.MAX_VALUE;
-        System.out.println(height);
-        float[] points1 = {
-                 0, 0,
-                 height, 0,
-                 height, height,
-                 0, height
-        };
-        Polygon p1 = new Polygon(points1);
-       
-        float[] points2 = {
-                10, -20,
-                40, -20,
-                30, 10
-        };
-        Polygon p2 = new Polygon(points2);
-       
-        System.out.println(p1.intersects(p2));
-    }
+	public static void main(String[] argv) {
+		try {
+			Renderer.setRenderer(Renderer.VERTEX_ARRAY_RENDERER);
+			
+			AppGameContainer container = new AppGameContainer(new GeomTest());
+			container.setDisplayMode(800,600,false);
+			container.start();
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+	}
 }
