@@ -62,7 +62,6 @@ public class TileSet {
 	 */
 	public TileSet(TiledMap map, Element element, boolean loadImage) throws SlickException {
 		this.map = map;
-		name = element.getAttribute("name");
 		firstGID = Integer.parseInt(element.getAttribute("firstgid"));
 		String source = element.getAttribute("source");
 		
@@ -73,6 +72,7 @@ public class TileSet {
 				Document doc = builder.parse(in);
 				Element docElement = doc.getDocumentElement();
 				element = docElement; //(Element) docElement.getElementsByTagName("tileset").item(0);
+				name = element.getAttribute("name");
 			} catch (Exception e) {
 				Log.error(e);
 				throw new SlickException("Unable to load or parse sourced tileset: "+this.map.tilesLocation+"/"+source);
