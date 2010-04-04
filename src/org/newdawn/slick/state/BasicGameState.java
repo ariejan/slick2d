@@ -12,6 +12,13 @@ import org.newdawn.slick.SlickException;
  */
 public abstract class BasicGameState implements GameState {
 	/**
+	 * @see org.newdawn.slick.ControlledInputReciever#inputStarted()
+	 */
+	public void inputStarted() {
+		
+	}
+	
+	/**
 	 * @see org.newdawn.slick.InputListener#isAcceptingInput()
 	 */
 	public boolean isAcceptingInput() {

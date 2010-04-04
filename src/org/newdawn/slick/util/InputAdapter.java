@@ -146,4 +146,10 @@ public class InputAdapter implements InputListener {
 	public void mouseDragged(int oldx, int oldy, int newx, int newy) {
 	}
 
+	/**
+	 * @see org.newdawn.slick.ControlledInputReciever#inputStarted()
+	 */
+	public void inputStarted() {
+		
+	}
 }

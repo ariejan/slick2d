@@ -1149,6 +1149,12 @@ public class Input {
 		}
 		
 		this.height = height;
+
+		Iterator allStarts = allListeners.iterator();
+		while (allStarts.hasNext()) {
+			ControlledInputReciever listener = (ControlledInputReciever) allStarts.next();
+			listener.inputStarted();
+		}
 		
 		while (Keyboard.next()) {
 			if (Keyboard.getEventKeyState()) {

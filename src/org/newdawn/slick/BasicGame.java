@@ -195,4 +195,11 @@ public abstract class BasicGame implements Game, InputListener {
 	public void inputEnded() {
 		
 	}
+	
+	/**
+	 * @see org.newdawn.slick.ControlledInputReciever#inputStarted()
+	 */
+	public void inputStarted() {
+		
+	}
 }

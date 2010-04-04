@@ -33,5 +33,10 @@ public interface ControlledInputReciever {
 	 * Notification that all input events have been sent for this frame
 	 */
 	public abstract void inputEnded();
+	
+	/**
+	 * Notification that input is about to be processed
+	 */
+	public abstract void inputStarted();
 
 }
