@@ -320,6 +320,28 @@ public abstract class Shape implements Serializable {
     }
 
     /**
+     * Check if the shape passed is entirely contained within 
+     * this shape.
+     * 
+     * @param other The other shape to test against this one
+     * @return True if the other shape supplied is entirely contained
+     * within this one.
+     */
+    public boolean contains(Shape other) {
+    	if (other.intersects(this)) {
+    		return false;
+    	}
+    	
+    	for (int i=0;i<other.getPointCount();i++) {
+    		float[] pt = other.getPoint(i);
+    		if (!contains(pt[0], pt[1])) {
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    }
+    /**
      * Get the normal of the line between two points
      * 
      * @param start The start point
