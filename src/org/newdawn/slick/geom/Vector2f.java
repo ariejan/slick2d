@@ -185,7 +185,16 @@ public strictfp class Vector2f {
 		
 		return this;
 	}
-
+	
+	/**
+	 * A vector perpendicular to this vector.
+	 *
+	 * @return a vector perpendicular to this vector
+	 */
+	public Vector2f getPerpendicular() {
+	   return new Vector2f(-y, x);
+	}
+	
 	/**
 	 * Set the values in this vector
 	 * 
