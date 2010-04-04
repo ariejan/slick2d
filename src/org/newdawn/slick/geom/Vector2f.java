@@ -177,7 +177,7 @@ public strictfp class Vector2f {
 	 * 
 	 * @param x The x component to set
 	 * @param y The y component to set
-	 * @return This vector - useful for chaning operations
+	 * @return This vector - useful for chaining operations
 	 */
 	public Vector2f set(float x, float y) { 
 		this.x = x; 
@@ -186,6 +186,16 @@ public strictfp class Vector2f {
 		return this;
 	}
 
+	/**
+	 * Set the values in this vector
+	 * 
+	 * @param pt The pair of values to set into the vector
+	 * @return This vector - useful for chaining operations
+	 */
+	public Vector2f set(float[] pt) {
+		return set(pt[0], pt[1]);
+	}
+	
 	/**
 	 * Negate this vector 
 	 * 
