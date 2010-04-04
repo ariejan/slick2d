@@ -263,9 +263,9 @@ public class ShadowEffect implements ConfigurableEffect {
 			} else if (value.getName().equals("Opacity")) {
 				opacity = ((Float)value.getObject()).floatValue();
 			} else if (value.getName().equals("X distance")) {
-				xDistance = ((Integer)value.getObject()).floatValue();
+				xDistance = ((Float)value.getObject()).floatValue();
 			} else if (value.getName().equals("Y distance")) {
-				yDistance = ((Integer)value.getObject()).floatValue();
+				yDistance = ((Float)value.getObject()).floatValue();
 			} else if (value.getName().equals("Blur kernel size")) {
 				blurKernelSize = Integer.parseInt((String)value.getObject());
 			} else if (value.getName().equals("Blur passes")) {
