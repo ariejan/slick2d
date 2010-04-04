@@ -40,7 +40,7 @@ public class ImageIOWriter implements ImageWriter {
 		ByteBuffer out = ByteBuffer.allocate(len);
 		Color c;
 
-		for (int y = image.getHeight()-1; y >= 0; y--) {
+		for (int y = 0; y < image.getHeight(); y++) {
 			for (int x = 0; x < image.getWidth(); x++) {
 				c = image.getColor(x, y);
 
@@ -88,6 +88,7 @@ public class ImageIOWriter implements ImageWriter {
 		// finally create the buffered image based on the data from the texture
 		// and spit it through to ImageIO
 		BufferedImage img = new BufferedImage(cm, raster, false, null);
+		
 		ImageIO.write(img, format, output);
 	}
 }
