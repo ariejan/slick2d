@@ -749,6 +749,8 @@ public class Image implements Renderable {
 	 * @return The x component of the center of rotation 
 	 */
 	public float getCenterOfRotationX() {
+		init();
+		
 		return centerX;
 	}
 	
@@ -758,6 +760,8 @@ public class Image implements Renderable {
 	 * @return The y component of the center of rotation 
 	 */
 	public float getCenterOfRotationY() {
+		init();
+		
 		return centerY;
 	}
 	
