@@ -43,10 +43,10 @@ public class Rectangle extends Shape {
 		if (yp <= getY()) {
 			return false;
 		}
-		if (xp >= maxX) {
+		if (xp >= maxX+1) {
 			return false;
 		}
-		if (yp >= maxY) {
+		if (yp >= maxY+1) {
 			return false;
 		}
 		
