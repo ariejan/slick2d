@@ -75,7 +75,6 @@ public class DefaultLogSystem implements LogSystem {
 	 * @param message The message describing the warning
 	 * @param e The cause of the warning
 	 */
-	@Override
 	public void warn(String message, Throwable e) {
 		warn(message);
 		e.printStackTrace(out);
