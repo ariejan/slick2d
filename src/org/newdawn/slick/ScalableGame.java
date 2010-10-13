@@ -153,7 +153,7 @@ public class ScalableGame implements Game {
 		SlickCallable.enterSafeBlock();
 		g.setClip(xoffset, yoffset, targetWidth, targetHeight);
 		GL.glTranslatef(xoffset, yoffset, 0);
-		GL.glScalef(targetWidth / normalWidth, targetHeight / normalHeight,0);
+		g.scale(targetWidth / normalWidth, targetHeight / normalHeight);
 		GL.glPushMatrix();
 		held.render(container, g);
 		GL.glPopMatrix();
