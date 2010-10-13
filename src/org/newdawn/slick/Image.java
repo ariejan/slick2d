@@ -224,6 +224,7 @@ public class Image implements Renderable {
 			throw new SlickException("Failed to load image from: "+ref, e);
 		}
 	}
+	
 	/**
 	 * Create an empty image
 	 * 
@@ -232,10 +233,22 @@ public class Image implements Renderable {
 	 * @throws SlickException Indicates a failure to create the underlying resource
 	 */
 	public Image(int width, int height) throws SlickException {
+		this(width, height, FILTER_NEAREST);
+	}
+	
+	/**
+	 * Create an empty image
+	 * 
+	 * @param width The width of the image
+	 * @param height The height of the image
+	 * @param filter The filter to apply to scaling the new image
+	 * @throws SlickException Indicates a failure to create the underlying resource
+	 */
+	public Image(int width, int height, int filter) throws SlickException {
 		ref = super.toString();
 		
 		try {
-			texture = InternalTextureLoader.get().createTexture(width, height);
+			texture = InternalTextureLoader.get().createTexture(width, height, filter);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to create empty image "+width+"x"+height);
