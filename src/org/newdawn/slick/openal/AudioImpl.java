@@ -62,6 +62,7 @@ public class AudioImpl implements Audio {
 	public void stop() {
 		if (index != -1) {
 			store.stopSource(index);
+			index = -1;
 		}
 	}
 	
