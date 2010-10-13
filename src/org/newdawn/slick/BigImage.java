@@ -224,7 +224,7 @@ public class BigImage extends Image {
 
 				byte[] byteData = new byte[xSize*components];
 				for (int i=0;i<ySize;i++) {
-					int yo = (((y * tileSize) + i) * dataWidth) * components;
+					int yo = (((y * (imageWidth < tileSize ? imageWidth : tileSize)) + i) * dataWidth) * components;
 					imageBuffer.position(yo+xo);
 					
 					imageBuffer.get(byteData, 0, xSize*components);
