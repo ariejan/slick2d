@@ -1235,7 +1235,7 @@ public class Input {
 					}
 				}
 			} else {
-				if (Mouse.isGrabbed()) {
+				if (Mouse.isGrabbed() && displayActive) {
 					if ((Mouse.getEventDX() != 0) || (Mouse.getEventDY() != 0)) {
 						consumed = false;
 						for (int i=0;i<mouseListeners.size();i++) {
@@ -1272,7 +1272,7 @@ public class Input {
 			}
 		}
 		
-		if (!displayActive) {
+		if (!displayActive || Mouse.isGrabbed()) {
 			lastMouseX = getMouseX();
 			lastMouseY = getMouseY();
 		} else {
