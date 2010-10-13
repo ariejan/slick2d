@@ -124,9 +124,9 @@ public class ImageBuffer implements ImageData {
 			rawData[ofs + 2] = (byte) b;
 			rawData[ofs + 3] = (byte) a;
 		} else {
-			rawData[ofs] = (byte) r;
+			rawData[ofs] = (byte) b;
 			rawData[ofs + 1] = (byte) g;
-			rawData[ofs + 2] = (byte) b;
+			rawData[ofs + 2] = (byte) r;
 			rawData[ofs + 3] = (byte) a;
 		}
 	}
