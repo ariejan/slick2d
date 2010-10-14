@@ -516,7 +516,7 @@ public class UnicodeFont implements org.newdawn.slick.Font {
 				image.drawEmbedded(bounds.x + extraX, bounds.y + extraY, image.getWidth(), image.getHeight());
 			}
 
-			if (glyphIndex > 0) extraX += paddingRight + paddingLeft + paddingAdvanceX;
+			if (glyphIndex >= 0) extraX += paddingRight + paddingLeft + paddingAdvanceX;
 			maxWidth = Math.max(maxWidth, bounds.x + extraX + bounds.width);
 			totalHeight = Math.max(totalHeight, ascent + bounds.y + bounds.height);
 
