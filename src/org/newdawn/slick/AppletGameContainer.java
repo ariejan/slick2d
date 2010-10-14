@@ -356,8 +356,9 @@ public class AppletGameContainer extends Applet {
          try {
             Cursor cursor = CursorLoader.get().getCursor(ref, hotSpotX, hotSpotY);
             Mouse.setNativeCursor(cursor);
-         } catch (Exception e) {
+         } catch (Throwable e) {
             Log.error("Failed to load and apply cursor.", e);
+			throw new SlickException("Failed to set mouse cursor", e);
          }
       }
 
@@ -390,8 +391,9 @@ public class AppletGameContainer extends Applet {
              
              Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,temp.getWidth(),temp.getHeight());
              Mouse.setNativeCursor(cursor);
-          } catch (Exception e) {
+          } catch (Throwable e) {
              Log.error("Failed to load and apply cursor.", e);
+ 			 throw new SlickException("Failed to set mouse cursor", e);
           }
        }
       
@@ -409,8 +411,9 @@ public class AppletGameContainer extends Applet {
          try {
             Cursor cursor = CursorLoader.get().getCursor(data, hotSpotX, hotSpotY);
             Mouse.setNativeCursor(cursor);
-         } catch (Exception e) {
+         } catch (Throwable e) {
             Log.error("Failed to load and apply cursor.", e);
+			throw new SlickException("Failed to set mouse cursor", e);
          }
       }
 
@@ -420,8 +423,9 @@ public class AppletGameContainer extends Applet {
       public void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY) throws SlickException {
          try {
             Mouse.setNativeCursor(cursor);
-         } catch (Exception e) {
+         } catch (Throwable e) {
             Log.error("Failed to load and apply cursor.", e);
+			throw new SlickException("Failed to set mouse cursor", e);
          }
       }
 

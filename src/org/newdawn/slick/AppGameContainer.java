@@ -207,8 +207,9 @@ public class AppGameContainer extends GameContainer {
 		try {
 			Cursor cursor = CursorLoader.get().getCursor(ref, hotSpotX, hotSpotY);
 			Mouse.setNativeCursor(cursor);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Log.error("Failed to load and apply cursor.", e);
+			throw new SlickException("Failed to set mouse cursor", e);
 		}
 	}
 	
@@ -219,8 +220,9 @@ public class AppGameContainer extends GameContainer {
 		try {
 			Cursor cursor = CursorLoader.get().getCursor(data, hotSpotX, hotSpotY);
 			Mouse.setNativeCursor(cursor);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Log.error("Failed to load and apply cursor.", e);
+			throw new SlickException("Failed to set mouse cursor", e);
 		}
 	}
 	
@@ -230,8 +232,9 @@ public class AppGameContainer extends GameContainer {
 	public void setMouseCursor(Cursor cursor, int hotSpotX, int hotSpotY) throws SlickException {
 		try {
 			Mouse.setNativeCursor(cursor);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Log.error("Failed to load and apply cursor.", e);
+			throw new SlickException("Failed to set mouse cursor", e);
 		}
 	}
 
@@ -264,8 +267,9 @@ public class AppGameContainer extends GameContainer {
 			
 			Cursor cursor = CursorLoader.get().getCursor(buffer, hotSpotX, hotSpotY,temp.getWidth(),image.getHeight());
 			Mouse.setNativeCursor(cursor);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Log.error("Failed to load and apply cursor.", e);
+			throw new SlickException("Failed to set mouse cursor", e);
 		}
 	}
 	
