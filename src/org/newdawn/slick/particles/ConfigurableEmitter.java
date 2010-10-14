@@ -129,6 +129,12 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	protected boolean wrapUp = false;
 	/** True if the system has completed due to a wrap up */
 	protected boolean completed = false;
+	/** True if we need to adjust particles for movement */
+	protected boolean adjust;
+	/** The amount to adjust on the x axis */
+	protected float adjustx;
+	/** The amount to adjust on the y axis */
+	protected float adjusty;
 	
 	/**
 	 * Create a new emitter configurable externally
@@ -212,10 +218,29 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 *            The y coodinate of that this emitter should spawn at
 	 */
 	public void setPosition(float x, float y) {
-		this.x = x;
-		this.y = y;
+		setPosition(x,y,true);
 	}
 
+	/**
+	 * Set the position of this particle source
+	 * 
+	 * @param x
+	 *            The x coodinate of that this emitter should spawn at
+	 * @param y
+	 *            The y coodinate of that this emitter should spawn at
+	 * @param moveParticles
+	 * 		      True if particles should be moved with the emitter
+	 */
+	public void setPosition(float x, float y, boolean moveParticles) {
+		if (!moveParticles) {
+			adjust = true;
+			adjustx += this.x - x;
+			adjusty += this.y - y;
+		}
+		this.x = x;
+		this.y = y;		
+	}
+	
 	/**
 	 * Get the base x coordiante for spawning particles
 	 * 
@@ -255,6 +280,13 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	public void update(ParticleSystem system, int delta) {
 		this.engine = system;
 
+		if (!adjust) {
+			adjustx = 0;
+			adjusty = 0;
+		} else {
+			adjust = false;
+		}
+		
 		if (updateImage) {
 			updateImage = false;
 			try {
@@ -342,6 +374,10 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 */
 	public void updateParticle(Particle particle, int delta) {
 		particleCount++;
+		
+		// adjust the particles if required
+		particle.x += adjustx;
+		particle.y += adjusty;
 
 		particle.adjustVelocity(windFactor.getValue(0) * 0.00005f * delta, gravityFactor
 				.getValue(0) * 0.00005f * delta);
