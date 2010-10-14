@@ -232,10 +232,10 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 * 		      True if particles should be moved with the emitter
 	 */
 	public void setPosition(float x, float y, boolean moveParticles) {
-		if (!moveParticles) {
+		if (moveParticles) {
 			adjust = true;
-			adjustx += this.x - x;
-			adjusty += this.y - y;
+			adjustx -= this.x - x;
+			adjusty -= this.y - y;
 		}
 		this.x = x;
 		this.y = y;		

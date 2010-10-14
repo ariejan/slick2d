@@ -90,6 +90,14 @@ public class PedigreeTest extends BasicGame {
 		}
 	}
 
+	public void mousePressed(int button, int x, int y) {
+		super.mousePressed(button, x, y);
+		
+		for (int i=0;i<fire.getEmitterCount();i++) {
+			((ConfigurableEmitter) fire.getEmitter(i)).setPosition(x - 400, y - 300, true);
+		}
+	}
+
 	/**
 	 * Entry point to our test
 	 * 
