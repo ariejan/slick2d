@@ -36,6 +36,9 @@ public class ParticleSystem {
 	/** The default number of particles in the system */
 	private static final int DEFAULT_PARTICLES = 100;
 
+	/** List of emitters to be removed */
+	private ArrayList removeMe = new ArrayList();
+	
 	/**
 	 * Set the path from which images should be loaded
 	 * 
@@ -327,7 +330,7 @@ public class ParticleSystem {
 	 */
 	public void removeEmitter(ParticleEmitter emitter) {
 		emitters.remove(emitter);
-		particlesByEmitter.remove( emitter );
+		particlesByEmitter.remove(emitter);
 	}
 	
 	/**
@@ -482,7 +485,8 @@ public class ParticleSystem {
 			loadSystemParticleImage();
 		}
 		
-		ArrayList removeMe = new ArrayList();
+		removeMe.clear();
+		ArrayList emitters = new ArrayList(this.emitters);
 		for (int i=0;i<emitters.size();i++) {
 			ParticleEmitter emitter = (ParticleEmitter) emitters.get(i);
 			if (emitter.isEnabled()) {
