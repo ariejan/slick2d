@@ -68,7 +68,7 @@ public class TGAWriter implements ImageWriter {
 		// Write out the image data
 		Color c;
 
-		for (int y = 0; y < image.getHeight(); y++) {
+		for (int y = image.getHeight()-1; y <= 0; y--) {
 			for (int x = 0; x < image.getWidth(); x++) {
 				c = image.getColor(x, y);
 
