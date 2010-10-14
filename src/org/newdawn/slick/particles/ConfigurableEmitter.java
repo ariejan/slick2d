@@ -52,17 +52,17 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	/** The spread of the particles */
 	public RandomValue spread = new RandomValue(360);
 	/** The angular offset */
-	public Value angularOffset = new SimpleValue(0);
+	public SimpleValue angularOffset = new SimpleValue(0);
 	/** The initial distance of the particles */
 	public Range initialDistance = new Range(0, 0);
 	/** The speed particles fly out */
 	public Range speed = new Range(50, 50);
 	/** The growth factor on the particles */
-	public Value growthFactor = new SimpleValue(0);
+	public SimpleValue growthFactor = new SimpleValue(0);
 	/** The factor of gravity to apply */
-	public Value gravityFactor = new SimpleValue(0);
+	public SimpleValue gravityFactor = new SimpleValue(0);
 	/** The factor of wind to apply */
-	public Value windFactor = new SimpleValue(0);
+	public SimpleValue windFactor = new SimpleValue(0);
 	/** The length of the effect */
 	public Range length = new Range(1000, 1000);
 	/**
@@ -72,9 +72,9 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	 */
 	public ArrayList colors = new ArrayList();
 	/** The starting alpha value */
-	public Value startAlpha = new SimpleValue(255);
+	public SimpleValue startAlpha = new SimpleValue(255);
 	/** The ending alpha value */
-	public Value endAlpha = new SimpleValue(0);
+	public SimpleValue endAlpha = new SimpleValue(0);
 
 	/** Whiskas - Interpolated value for alpha */
 	public LinearInterpolator alpha;
