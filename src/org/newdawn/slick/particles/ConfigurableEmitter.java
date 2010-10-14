@@ -126,9 +126,9 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	private int leftToEmit;
 
 	/** True if we're wrapping up */
-	private boolean wrapUp = false;
+	protected boolean wrapUp = false;
 	/** True if the system has completed due to a wrap up */
-	private boolean completed = false;
+	protected boolean completed = false;
 	
 	/**
 	 * Create a new emitter configurable externally
@@ -869,6 +869,7 @@ public class ConfigurableEmitter implements ParticleEmitter {
 	}
 
 	public void resetState() {
+		wrapUp = false;
 		replay();
 	}
 }
