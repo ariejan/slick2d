@@ -213,18 +213,18 @@ public class BigImage extends Image {
 			for (int y=0;y<ycount;y++) {
 				int finalX = ((x+1) * tileSize);
 				int finalY = ((y+1) * tileSize);
-				final int imageWidth = tileSize; 
-				final int imageHeight = tileSize;
+				final int imageWidth = Math.min((realWidth - (x*tileSize)), tileSize); 
+				final int imageHeight = Math.min((realHeight - (y*tileSize)), tileSize);
 				
-				final int xSize = Math.min(dataWidth, imageWidth);
-				final int ySize = Math.min(dataHeight, imageHeight);
+				final int xSize = tileSize;
+				final int ySize = tileSize;
 				
 				final ByteBuffer subBuffer = BufferUtils.createByteBuffer(tileSize*tileSize*components);
 				int xo = x*tileSize*components;
 
 				byte[] byteData = new byte[xSize*components];
 				for (int i=0;i<ySize;i++) {
-					int yo = (((y * (imageWidth < tileSize ? imageWidth : tileSize)) + i) * dataWidth) * components;
+					int yo = (((y * tileSize) + i) * dataWidth) * components;
 					imageBuffer.position(yo+xo);
 					
 					imageBuffer.get(byteData, 0, xSize*components);
