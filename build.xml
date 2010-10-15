@@ -304,6 +304,29 @@
 <!--
  Build and package the complete Slick distribution and demo game
 -->
+<target name="dist-nightly" depends="build-slick, build-examples, javadoc">
+	<zip destfile="${dist}/slick.zip">
+	    <fileset dir="." includes="applet/applet.html"/>
+	    <fileset dir="." includes="applet/jinput.jar"/>
+	    <fileset dir="." includes="applet/lwjgl.jar"/>
+	    <fileset dir="." includes="applet/lwjgl_applet.jar"/>
+	    <fileset dir="." includes="applet/lwjgl_util_applet.jar"/>
+	    <fileset dir="." includes="applet/natives.jar"/>
+	    <fileset dir="." includes="javadoc/**"/>
+	    <fileset dir="." includes="src/org/newdawn/slick/**"/>
+	    <fileset dir="." includes="tools/**"/>
+	    <fileset dir="." includes="lib/**"/>
+	    <fileset dir="." includes="testdata/**"/>
+	    <fileset dir="." includes="scripts/**"/>
+	    <fileset dir="." includes="readme.txt"/>
+	    <fileset dir="." includes="build.xml"/>
+	    <fileset dir="." includes="lwjgl.dll"/>
+	    <fileset dir="." includes="OpenAL32.dll"/>
+	    <fileset dir="." includes="jinput-dx8.dll"/>
+	    <fileset dir="." includes="jinput-raw.dll"/>
+	</zip>
+</target>
+
 <target name="dist" depends="build-slick, build-examples, javadoc, build-test-webstarts">
 	<zip destfile="${dist}/slick.zip">
 	    <fileset dir="." includes="applet/applet.html"/>
