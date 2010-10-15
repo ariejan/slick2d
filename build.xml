@@ -324,6 +324,7 @@
 	    <fileset dir="." includes="OpenAL32.dll"/>
 	    <fileset dir="." includes="jinput-dx8.dll"/>
 	    <fileset dir="." includes="jinput-raw.dll"/>
+	    <fileset dir="." includes="Pack200Task.jar"/>
 	</zip>
 </target>
 
@@ -347,6 +348,7 @@
 	    <fileset dir="." includes="OpenAL32.dll"/>
 	    <fileset dir="." includes="jinput-dx8.dll"/>
 	    <fileset dir="." includes="jinput-raw.dll"/>
+	    <fileset dir="." includes="Pack200Task.jar"/>
 	</zip>
 </target>
 	
