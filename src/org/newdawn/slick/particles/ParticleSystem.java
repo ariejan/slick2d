@@ -499,7 +499,7 @@ public class ParticleSystem {
 				}
 			}
 		}
-		emitters.removeAll(removeMe);
+		this.emitters.removeAll(removeMe);
 		
 		pCount = 0;
 		
