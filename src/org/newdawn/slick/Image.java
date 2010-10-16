@@ -209,20 +209,10 @@ public class Image implements Renderable {
 	 */
 	public void setFilter(int f) throws SlickException {
 		this.filter = f == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST;
-		
-		try {
-			int[] trans = null;
-			if (transparent != null) {
-				trans = new int[3];
-				trans[0] = (int) (transparent.r * 255);
-				trans[1] = (int) (transparent.g * 255);
-				trans[2] = (int) (transparent.b * 255);
-			}
-			texture = InternalTextureLoader.get().getTexture(ref, flipped, filter, trans);
-		} catch (IOException e) {
-			Log.error(e);
-			throw new SlickException("Failed to load image from: "+ref, e);
-		}
+
+		texture.bind();
+        GL11.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filter); 
+        GL11.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter); 
 	}
 	
 	/**
