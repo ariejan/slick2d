@@ -231,14 +231,15 @@ public class Image implements Renderable {
 	 * 
 	 * @param width The width of the image
 	 * @param height The height of the image
-	 * @param filter The filter to apply to scaling the new image
+	 * @param f The filter to apply to scaling the new image
 	 * @throws SlickException Indicates a failure to create the underlying resource
 	 */
-	public Image(int width, int height, int filter) throws SlickException {
+	public Image(int width, int height, int f) throws SlickException {
 		ref = super.toString();
+		this.filter = f == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST;
 		
 		try {
-			texture = InternalTextureLoader.get().createTexture(width, height, filter);
+			texture = InternalTextureLoader.get().createTexture(width, height, this.filter);
 		} catch (IOException e) {
 			Log.error(e);
 			throw new SlickException("Failed to create empty image "+width+"x"+height);
