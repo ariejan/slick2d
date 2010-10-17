@@ -103,7 +103,22 @@ public class Layer {
 						new ByteArrayInputStream(dec));
 
 				byte[] buf = new byte[height * width * 4];
-				gz.read(buf);
+				int bytesRead;
+				int offset = 0;
+				int remaining = height * width * 4;
+
+				do {
+					bytesRead = gz.read(buf, offset, remaining);
+
+					if (bytesRead == 0) {
+						throw new RuntimeException("Read 0 bytes from tiled map data stream");
+					}
+
+					if (bytesRead != -1) {
+						offset += bytesRead;
+						remaining -= bytesRead;
+					}
+				} while (bytesRead!=-1 && remaining>0); 
 
 				ByteArrayInputStream is = new ByteArrayInputStream(buf);
 
