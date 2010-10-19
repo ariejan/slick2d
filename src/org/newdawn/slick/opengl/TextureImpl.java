@@ -5,8 +5,8 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
-import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 
 /**
  * A texture to be bound within JOGL. This object is responsible for 
@@ -307,4 +307,13 @@ public class TextureImpl implements Texture {
     	
     	return data;
     }
+
+    /**
+     * @see org.newdawn.slick.opengl.Texture#setTextureFilter(int)
+     */
+	public void setTextureFilter(int textureFilter) {
+		bind();
+        GL.glTexParameteri(target, SGL.GL_TEXTURE_MIN_FILTER, textureFilter); 
+        GL.glTexParameteri(target, SGL.GL_TEXTURE_MAG_FILTER, textureFilter); 
+	}
 }

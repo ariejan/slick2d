@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import org.newdawn.slick.loading.DeferredResource;
 import org.newdawn.slick.loading.LoadingList;
+import org.newdawn.slick.opengl.renderer.SGL;
 
 /**
  * A texture proxy that can be used to load a texture at a later date while still
@@ -222,4 +223,12 @@ public class DeferredTexture extends TextureImpl implements DeferredResource {
 		checkTarget();
 		return target.hasAlpha();
     }
+    
+    /**
+     * @see org.newdawn.slick.opengl.Texture#setTextureFilter(int)
+     */
+	public void setTextureFilter(int textureFilter) {
+		checkTarget();
+		target.setTextureFilter(textureFilter);
+	}
 }

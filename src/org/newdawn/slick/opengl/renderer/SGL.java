@@ -28,6 +28,10 @@ public interface SGL {
 	/** OpenGL Enum - @url http://www.opengl.org/documentation */
 	public static final int GL_NEAREST = GL11.GL_NEAREST;
 	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_TEXTURE_MIN_FILTER = GL11.GL_TEXTURE_MIN_FILTER;
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_TEXTURE_MAG_FILTER = GL11.GL_TEXTURE_MAG_FILTER;
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
 	public static final int GL_POINT_SMOOTH = GL11.GL_POINT_SMOOTH;
 	/** OpenGL Enum - @url http://www.opengl.org/documentation */
 	public static final int GL_POLYGON_SMOOTH = GL11.GL_POLYGON_SMOOTH;

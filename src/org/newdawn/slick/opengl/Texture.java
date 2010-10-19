@@ -86,5 +86,12 @@ public interface Texture {
 	 * @return The texture data from the card for this texture
 	 */
 	public byte[] getTextureData();
+	
+	/**
+	 * Apply a given texture filter to the texture
+	 * 
+	 * @param textureFilter The texture filter to apply (GL_LINEAR, GL_NEAREST, etc..)
+	 */
+	public void setTextureFilter(int textureFilter);
 
 }
