@@ -119,14 +119,14 @@ public class ImageBuffer implements ImageData {
 		int ofs = ((x + (y * texWidth)) * 4);
 		
 		if (ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN) {
-			rawData[ofs] = (byte) r;
-			rawData[ofs + 1] = (byte) g;
-			rawData[ofs + 2] = (byte) b;
-			rawData[ofs + 3] = (byte) a;
-		} else {
 			rawData[ofs] = (byte) b;
 			rawData[ofs + 1] = (byte) g;
 			rawData[ofs + 2] = (byte) r;
+			rawData[ofs + 3] = (byte) a;
+		} else {
+			rawData[ofs] = (byte) r;
+			rawData[ofs + 1] = (byte) g;
+			rawData[ofs + 2] = (byte) b;
 			rawData[ofs + 3] = (byte) a;
 		}
 	}
