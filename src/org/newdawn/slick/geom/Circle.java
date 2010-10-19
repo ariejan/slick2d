@@ -168,7 +168,6 @@ public strictfp class Circle extends Ellipse {
 		for (int i=0;i<4;i++) {
 			float dis = lines[i].distanceSquared(pos);
 			if (dis < r2) {
-				System.out.println(lines[i]);
 				return true;
 			}
 		}
