@@ -201,13 +201,12 @@ public class Image implements Renderable {
 	}
 	
 	/**
-	 * Set the image filtering to be used. This will cause the image
-	 * to be reloaded. 
+	 * Set the image filtering to be used. Note that this will also affect any
+	 * image that was derived from this one (i.e. sub-images etc)
 	 * 
 	 * @param f The filtering mode to use
-	 * @throws SlickException Indicates a failure to revalidate the image source
 	 */
-	public void setFilter(int f) throws SlickException {
+	public void setFilter(int f) {
 		this.filter = f == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST;
 
 		texture.bind();
