@@ -200,6 +200,7 @@ public class LightTest extends BasicGame {
 		// move the display to nicely position the tilemap
 		g.translate(64,50);
 		
+		tiles.startUse();
 		// cycle round every tile in the map
 		for (int y=0;y<HEIGHT;y++) {
 			for (int x=0;x<WIDTH;x++) {
@@ -227,9 +228,10 @@ public class LightTest extends BasicGame {
 							
 				// draw the image with it's newly declared vertex colours
 				// to the display
-				image.draw(x*32,y*32);
+				image.drawEmbedded(x*32,y*32,32,32);
 			}
 		}
+		tiles.endUse();
 	}
 	
 	/**
