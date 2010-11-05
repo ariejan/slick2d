@@ -165,7 +165,7 @@ public class BMFontUtil {
 			BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 			Graphics g = bufferedImage.getGraphics();
 			g.drawImage(image, 0, 0, null);
-			AffineTransform tx = AffineTransform.getScaleInstance(1, -1);
+			AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
 			tx.translate(0, -image.getHeight(null));
 			AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
 			bufferedImage = op.filter(bufferedImage, null);
