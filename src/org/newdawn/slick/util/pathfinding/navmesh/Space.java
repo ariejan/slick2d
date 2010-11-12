@@ -176,7 +176,7 @@ public class Space {
 	 * @author kevin
 	 */
 	public class Link {
-		/** The x coodinate of the joining point */
+		/** The x coordinate of the joining point */
 		private float px;
 		/** The y coordinate of the joining point */
 		private float py;
