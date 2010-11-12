@@ -34,7 +34,7 @@ public class NavMeshBuilder implements PathFindingContext {
 		while (mergeSpaces(spaces)) {}
 		linkSpaces(spaces);
 		
-		return new NavMesh();
+		return new NavMesh(spaces);
 	}
 	
 	/**

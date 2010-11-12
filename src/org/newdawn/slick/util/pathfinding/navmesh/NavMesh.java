@@ -23,6 +23,34 @@ public class NavMesh {
 	}
 	
 	/**
+	 * Create a new mesh with a set of spaces
+	 * 
+	 * @param spaces The spaces included in the mesh
+	 */
+	public NavMesh(ArrayList spaces) {
+		this.spaces.addAll(spaces);
+	}
+	
+	/**
+	 * Get the number of spaces that are in the mesh
+	 * 
+	 * @return The spaces in the mesh
+	 */
+	public int getSpaceCount() {
+		return spaces.size();
+	}
+	
+	/**
+	 * Get the space at a given index
+	 * 
+	 * @param index The index of the space to retrieve
+	 * @return The space at the given index
+	 */
+	public Space getSpace(int index) {
+		return (Space) spaces.get(index);
+	}
+	
+	/**
 	 * Add a single space to the mesh
 	 * 
 	 * @param space The space to be added
