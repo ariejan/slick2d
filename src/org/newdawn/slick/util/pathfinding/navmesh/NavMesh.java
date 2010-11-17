@@ -90,7 +90,6 @@ public class NavMesh {
 		Space source = findSpace(sx,sy);
 		Space target = findSpace(tx,ty);
 		
-		System.out.println(source+","+target);
 		if ((source == null) || (target == null)) {
 			return null;
 		}
