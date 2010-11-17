@@ -39,7 +39,7 @@ public class Space {
 		this.width = width;
 		this.height = height;
 	}
-
+	
 	/**
 	 * Get the width of the space
 	 * 
@@ -116,6 +116,20 @@ public class Space {
 	}
 	
 	/**
+	 * Check whether two locations are within tolerance distance. This is
+	 * used when finding aligned edges to remove float rounding errors
+	 * 
+	 * @param a The first value
+	 * @param b The second value
+	 * @return True if the edges are close enough (tm)
+	 */
+	private boolean inTolerance(float a, float b) {
+		float tolerance = 0.5f;
+		
+		return Math.abs(a-b) < tolerance;
+	}
+	
+	/**
 	 * Check if this space has an edge that is joined with another
 	 * 
 	 * @param other The other space to check against
@@ -123,7 +137,7 @@ public class Space {
 	 */
 	public boolean hasJoinedEdge(Space other) {
 		// aligned vertical edges
-		if ((x == other.x+other.width) || (x+width == other.x)) {
+		if (inTolerance(x,other.x+other.width) || inTolerance(x+width,other.x)) {
 			if ((y >= other.y) && (y <= other.y + other.height)) {
 				return true;
 			}
@@ -132,7 +146,7 @@ public class Space {
 			}
 		}
 		// aligned horizontal edges
-		if ((y == other.y+other.height) || (y+height == other.y)) {
+		if (inTolerance(y, other.y+other.height) || inTolerance(y+height, other.y)) {
 			if ((x >= other.x) && (x <= other.x + other.width)) {
 				return true;
 			}
