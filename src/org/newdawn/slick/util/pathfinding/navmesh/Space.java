@@ -227,6 +227,7 @@ public class Space {
 		if (cost > this.cost) {
 			return;
 		}
+		this.cost = cost;
 		
 		for (int i=0;i<getLinkCount();i++) {
 			Link link = getLink(i);
