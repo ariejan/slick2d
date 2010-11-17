@@ -1,5 +1,6 @@
 package org.newdawn.slick.util.pathfinding.navmesh;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -19,6 +20,8 @@ public class Space {
 	
 	/** A map from spaces to the links that connect them to this space */
 	private HashMap links = new HashMap();
+	/** A list of the links from this space to others */
+	private ArrayList linksList = new ArrayList();
 	
 	/**
 	 * Create a new space 
@@ -89,7 +92,9 @@ public class Space {
 			float bottom = Math.min(y+height, other.y+other.height);
 			float linky = top + ((bottom-top)/2);
 			
-			links.put(other, new Link(linkx, linky, other));
+			Link link = new Link(linkx, linky, other);
+			links.put(other,link);
+			linksList.add(link);
 		}
 		// aligned horizontal edges
 		if ((y == other.y+other.height) || (y+height == other.y)) {
@@ -102,7 +107,9 @@ public class Space {
 			float right = Math.min(x+width, other.x+other.width);
 			float linkx = left + ((right-left)/2);
 			
-			links.put(other, new Link(linkx, linky, other));
+			Link link = new Link(linkx, linky, other);
+			links.put(other, link);
+			linksList.add(link);
 		}		
 	}
 	
@@ -178,29 +185,21 @@ public class Space {
 	}
 	
 	/**
-	 * A link between this space and another
+	 * Get the number of links
 	 * 
-	 * @author kevin
+	 * @return The number of links from the space to others
 	 */
-	public class Link {
-		/** The x coordinate of the joining point */
-		private float px;
-		/** The y coordinate of the joining point */
-		private float py;
-		/** The target space we'd be linking to */
-		private Space target;
-		
-		/**
-		 * Create a new link
-		 * 
-		 * @param px The x coordinate of the linking point
-		 * @param py The y coordinate of the linking point
-		 * @param target The target space we're linking to
-		 */
-		public Link(float px, float py, Space target) {
-			this.px = px;
-			this.py = py;
-			this.target = target;
-		}
+	public int getLinkCount() {
+		return linksList.size();
+	}
+	
+	/**
+	 * Get the link from this space to another at a particular index
+	 * 
+	 * @param index The index of the link to retrieve
+	 * @return The link from this space to another
+	 */
+	public Space getLink(int index) {
+		return (Space) linksList.get(index);
 	}
 }
