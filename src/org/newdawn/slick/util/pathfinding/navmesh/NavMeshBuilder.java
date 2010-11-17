@@ -33,7 +33,7 @@ public class NavMeshBuilder implements PathFindingContext {
 		ArrayList spaces = new ArrayList();
 		subsection(map, space, spaces);
 		
-		//while (mergeSpaces(spaces)) {}
+		while (mergeSpaces(spaces)) {}
 		linkSpaces(spaces);
 		
 		return new NavMesh(spaces);
@@ -94,10 +94,10 @@ public class NavMeshBuilder implements PathFindingContext {
 	 * @return True if there are no blockages in the space
 	 */
 	public boolean clear(TileBasedMap map, Space space) {
-		for (int x=0;x<(int) (space.getWidth())*10;x++) {
-			for (int y=0;y<(int) (space.getHeight())*10;y++) {
-				sx = (int) (space.getX()+(x*0.1f)+0.5f);
-				sy = (int) (space.getY()+(y*0.1f)+0.5f);
+		for (int x=0;x<(int) (space.getWidth()+1)*10;x++) {
+			for (int y=0;y<(int) (space.getHeight()+1)*10;y++) {
+				sx = (int) (space.getX()+(x*0.1f));
+				sy = (int) (space.getY()+(y*0.1f));
 				
 				if (map.blocked(this, sx, sy)) {
 					return false;
@@ -122,7 +122,6 @@ public class NavMeshBuilder implements PathFindingContext {
 			float height2 = space.getHeight()/2;
 			
 			if ((width2 < smallestSpace) && (height2 < smallestSpace)) {
-				System.out.println("Space");
 				return;
 			}
 			

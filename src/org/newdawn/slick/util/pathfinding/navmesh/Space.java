@@ -145,7 +145,14 @@ public class Space {
 		float minx = Math.min(x, other.x);
 		float miny = Math.min(y, other.y);
 		
-		return new Space(minx, miny, width+other.width, height+other.height);
+		float newwidth = width+other.width;
+		float newheight = height+other.height;
+		if (x == other.x) {
+			newwidth = width;
+		} else {
+			newheight = height;
+		}
+		return new Space(minx, miny, newwidth, newheight);
 	}
 	
 	/**
