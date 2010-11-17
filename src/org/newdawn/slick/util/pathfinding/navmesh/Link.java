@@ -27,6 +27,20 @@ public class Link {
 	}
 	
 	/**
+	 * Get the distance squared from this link to the given position
+	 * 
+	 * @param tx The x coordinate of the target location
+	 * @param ty The y coordinate of the target location
+	 * @return The distance squared from this link to the target
+	 */
+	public float distance2(float tx, float ty) {
+		float dx = tx - px;
+		float dy = ty - py;
+		
+		return ((dx*dx) + (dy*dy));
+	}
+	
+	/**
 	 * Get the x coordinate of the link
 	 * 
 	 * @return The x coordinate of the link

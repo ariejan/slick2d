@@ -22,6 +22,8 @@ public class Space {
 	private HashMap links = new HashMap();
 	/** A list of the links from this space to others */
 	private ArrayList linksList = new ArrayList();
+	/** The cost to get to this node */
+	private float cost;
 	
 	/**
 	 * Create a new space 
@@ -201,5 +203,78 @@ public class Space {
 	 */
 	public Link getLink(int index) {
 		return (Link) linksList.get(index);
+	}
+	
+	/**
+	 * Check if this space contains a given point
+	 * 
+	 * @param xp The x coordinate to check
+	 * @param yp The y coordinate to check
+	 * @return True if this space container the coordinate given
+	 */
+	public boolean contains(float xp, float yp) {
+		return (xp >= x) && (xp < x+width) && (yp >= y) && (yp < y+height);
+	}
+	
+	/**
+	 * Fill the spaces based on the cost from a given starting point
+	 * 
+	 * @param sx The x coordinate of the starting point
+	 * @param sy The y coordinate of the starting point
+	 * @param cost The cost up to this point
+	 */
+	public void fill(float sx, float sy, float cost) {
+		if (cost > this.cost) {
+			return;
+		}
+		
+		for (int i=0;i<getLinkCount();i++) {
+			Link link = getLink(i);
+			float nextCost = cost + link.distance2(sx,sy);
+			link.getTarget().fill(link.getX(), link.getY(), nextCost);
+		}
+	}
+	
+	/**
+	 * Clear the costing values across the whole map
+	 */
+	public void clearCost() {
+		cost = Float.MAX_VALUE;
+	}
+
+	/**
+	 * Get the cost to get to this node at the moment
+	 * 
+	 * @return The cost to get to this node
+	 */
+	public float getCost() {
+		return cost;
+	}
+
+	/**
+	 * Pick the lowest cost route from this space to another on the path
+	 *  
+	 * @param target The target space we're looking for
+	 * @param path The path to add the steps to
+	 * @return True if the path was found
+	 */
+	public boolean pickLowestCost(Space target, NavPath path) {
+		if (target == this) {
+			return true;
+		}
+		if (links.size() == 0) {
+			return false;
+		}
+
+		Link bestLink = getLink(0);		
+		for (int i=1;i<getLinkCount();i++) {
+			Link link = getLink(i);
+			if (link.getTarget().getCost() < bestLink.getTarget().getCost()) {
+				bestLink = link;
+			}
+		}
+		
+		path.push(bestLink);
+		return true;
 	}
 }
