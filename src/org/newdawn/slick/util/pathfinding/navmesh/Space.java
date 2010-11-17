@@ -199,7 +199,7 @@ public class Space {
 	 * @param index The index of the link to retrieve
 	 * @return The link from this space to another
 	 */
-	public Space getLink(int index) {
-		return (Space) linksList.get(index);
+	public Link getLink(int index) {
+		return (Link) linksList.get(index);
 	}
 }
