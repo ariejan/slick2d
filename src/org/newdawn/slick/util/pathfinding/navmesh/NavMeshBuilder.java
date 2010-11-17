@@ -17,6 +17,8 @@ public class NavMeshBuilder implements PathFindingContext {
 	private int sx;
 	/** The current y position we've searching */
 	private int sy;
+	/** The smallest space allowed */
+	private float smallestSpace = 0.25f;
 	
 	/**
 	 * Build a navigation mesh based on a tile map
@@ -31,7 +33,7 @@ public class NavMeshBuilder implements PathFindingContext {
 		ArrayList spaces = new ArrayList();
 		subsection(map, space, spaces);
 		
-		while (mergeSpaces(spaces)) {}
+		//while (mergeSpaces(spaces)) {}
 		linkSpaces(spaces);
 		
 		return new NavMesh(spaces);
@@ -87,15 +89,15 @@ public class NavMeshBuilder implements PathFindingContext {
 	/**
 	 * Check if a particular space is clear of blockages
 	 * 
-	 * @param map The map the spaces are being built fromt
+	 * @param map The map the spaces are being built from
 	 * @param space The space to check
 	 * @return True if there are no blockages in the space
 	 */
-	private boolean clear(TileBasedMap map, Space space) {
-		for (int x=0;x<(int) space.getWidth();x++) {
-			for (int y=0;y<(int) space.getHeight();y++) {
-				sx = (int) (space.getX()+x);
-				sy = (int) (space.getY()+y);
+	public boolean clear(TileBasedMap map, Space space) {
+		for (int x=0;x<(int) (space.getWidth())*10;x++) {
+			for (int y=0;y<(int) (space.getHeight())*10;y++) {
+				sx = (int) (space.getX()+(x*0.1f)+0.5f);
+				sy = (int) (space.getY()+(y*0.1f)+0.5f);
 				
 				if (map.blocked(this, sx, sy)) {
 					return false;
@@ -119,7 +121,8 @@ public class NavMeshBuilder implements PathFindingContext {
 			float width2 = space.getWidth()/2;
 			float height2 = space.getHeight()/2;
 			
-			if ((width2 <= 1) && (height2 <= 1)) {
+			if ((width2 < smallestSpace) && (height2 < smallestSpace)) {
+				System.out.println("Space");
 				return;
 			}
 			
