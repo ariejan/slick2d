@@ -84,7 +84,7 @@ public class Space {
 	 */
 	public void link(Space other) {
 		// aligned vertical edges
-		if ((x == other.x+other.width) || (x+width == other.x)) {
+		if (inTolerance(x,other.x+other.width) || inTolerance(x+width, other.x)) {
 			float linkx = x;
 			if (x+width == other.x) {
 				linkx = x+width;
@@ -99,7 +99,7 @@ public class Space {
 			linksList.add(link);
 		}
 		// aligned horizontal edges
-		if ((y == other.y+other.height) || (y+height == other.y)) {
+		if (inTolerance(y, other.y+other.height) || inTolerance(y+height, other.y)) {
 			float linky = y;
 			if (y+height == other.y) {
 				linky = y+height;
@@ -124,7 +124,7 @@ public class Space {
 	 * @return True if the edges are close enough (tm)
 	 */
 	private boolean inTolerance(float a, float b) {
-		float tolerance = 0.5f;
+		float tolerance = 0.3f;
 		
 		return Math.abs(a-b) < tolerance;
 	}
@@ -233,20 +233,25 @@ public class Space {
 	/**
 	 * Fill the spaces based on the cost from a given starting point
 	 * 
+	 * @param target The target space we're heading for
 	 * @param sx The x coordinate of the starting point
 	 * @param sy The y coordinate of the starting point
 	 * @param cost The cost up to this point
 	 */
-	public void fill(float sx, float sy, float cost) {
-		if (cost > this.cost) {
+	public void fill(Space target, float sx, float sy, float cost) {
+		if (cost >= this.cost) {
 			return;
 		}
 		this.cost = cost;
+		if (target == this) {
+			return;
+		}
 		
 		for (int i=0;i<getLinkCount();i++) {
 			Link link = getLink(i);
-			float nextCost = cost + link.distance2(sx,sy);
-			link.getTarget().fill(link.getX(), link.getY(), nextCost);
+			float extraCost = link.distance2(sx,sy);
+			float nextCost = cost + extraCost;
+			link.getTarget().fill(target, link.getX(), link.getY(), nextCost);
 		}
 	}
 	
@@ -281,15 +286,24 @@ public class Space {
 			return false;
 		}
 
-		Link bestLink = getLink(0);		
-		for (int i=1;i<getLinkCount();i++) {
+		Link bestLink = null;	
+		for (int i=0;i<getLinkCount();i++) {
 			Link link = getLink(i);
-			if (link.getTarget().getCost() < bestLink.getTarget().getCost()) {
+			if ((bestLink == null) || (link.getTarget().getCost() < bestLink.getTarget().getCost())) {
 				bestLink = link;
 			}
 		}
 		
 		path.push(bestLink);
-		return true;
+		return bestLink.getTarget().pickLowestCost(target, path);
+	}
+	
+	/**
+	 * Get the string representation of this instance
+	 * 
+	 * @return The string representation of this instance
+	 */
+	public String toString() {
+		return "[Space "+x+","+y+" "+width+","+height+"]";
 	}
 }

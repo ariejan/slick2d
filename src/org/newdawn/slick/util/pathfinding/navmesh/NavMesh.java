@@ -90,6 +90,7 @@ public class NavMesh {
 		Space source = findSpace(sx,sy);
 		Space target = findSpace(tx,ty);
 		
+		System.out.println(source+","+target);
 		if ((source == null) || (target == null)) {
 			return null;
 		}
@@ -97,15 +98,18 @@ public class NavMesh {
 		for (int i=0;i<spaces.size();i++) {
 			((Space) spaces.get(i)).clearCost();
 		}
-		target.fill(tx, ty, 0);
-		
+		target.fill(source,tx, ty, 0);
+		if (target.getCost() == Float.MAX_VALUE) {
+			return null;
+		}
 		if (source.getCost() == Float.MAX_VALUE) {
 			return null;
 		}
 		
 		NavPath path = new NavPath();
-		path.push(new Link(tx, ty, null));
-		if (target.pickLowestCost(source, path)) {
+		path.push(new Link(sx, sy, null));
+		if (source.pickLowestCost(target, path)) {
+			path.push(new Link(tx, ty, null));
 			return path;
 		}
 		
