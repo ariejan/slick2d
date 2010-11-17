@@ -18,7 +18,7 @@ public class NavMeshBuilder implements PathFindingContext {
 	/** The current y position we've searching */
 	private int sy;
 	/** The smallest space allowed */
-	private float smallestSpace = 0.25f;
+	private float smallestSpace = 0.2f;
 	
 	/**
 	 * Build a navigation mesh based on a tile map
@@ -33,7 +33,7 @@ public class NavMeshBuilder implements PathFindingContext {
 		ArrayList spaces = new ArrayList();
 		subsection(map, space, spaces);
 		
-		//while (mergeSpaces(spaces)) {}
+		while (mergeSpaces(spaces)) {}
 		linkSpaces(spaces);
 		
 		return new NavMesh(spaces);
@@ -94,14 +94,33 @@ public class NavMeshBuilder implements PathFindingContext {
 	 * @return True if there are no blockages in the space
 	 */
 	public boolean clear(TileBasedMap map, Space space) {
-		for (int x=0;x<(int) (space.getWidth())*10;x++) {
-			for (int y=0;y<(int) (space.getHeight())*10;y++) {
-				sx = (int) (space.getX()+(x*0.1f));
-				sy = (int) (space.getY()+(y*0.1f));
+		float x = 0;
+		boolean donex = false;
+		
+		while (x <= space.getWidth()) {
+			float y = 0;
+			boolean doney = false;
+			
+			while (y <= space.getHeight()) {
+				sx = (int) (space.getX()+x);
+				sy = (int) (space.getY()+y);
 				
 				if (map.blocked(this, sx, sy)) {
 					return false;
 				}
+				
+				y += 0.1f;
+				if ((y > space.getHeight()) && (!doney)) {
+					y = space.getHeight();
+					doney = true;
+				}
+			}
+			
+			
+			x += 0.1f;
+			if ((x > space.getWidth()) && (!donex)) {
+				x = space.getWidth();
+				donex = true;
 			}
 		}
 		
