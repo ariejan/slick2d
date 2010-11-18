@@ -124,9 +124,7 @@ public class Space {
 	 * @return True if the edges are close enough (tm)
 	 */
 	private boolean inTolerance(float a, float b) {
-		float tolerance = 0.3f;
-		
-		return Math.abs(a-b) < tolerance;
+		return a == b;
 	}
 	
 	/**
@@ -144,6 +142,12 @@ public class Space {
 			if ((y+height >= other.y) && (y+height <= other.y + other.height)) {
 				return true;
 			}
+			if ((other.y >= y) && (other.y <= y + height)) {
+				return true;
+			}
+			if ((other.y+other.height >= y) && (other.y+other.height <= y + height)) {
+				return true;
+			}
 		}
 		// aligned horizontal edges
 		if (inTolerance(y, other.y+other.height) || inTolerance(y+height, other.y)) {
@@ -151,6 +155,12 @@ public class Space {
 				return true;
 			}
 			if ((x+width >= other.x) && (x+width <= other.x + other.width)) {
+				return true;
+			}
+			if ((other.x >= x) && (other.x <= x + width)) {
+				return true;
+			}
+			if ((other.x+other.width >= x) && (other.x+other.width <= x + width)) {
 				return true;
 			}
 		}
