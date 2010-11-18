@@ -93,10 +93,6 @@ public class NavMesh {
 		if ((source == null) || (target == null)) {
 			return null;
 		}
-		System.out.println(source+","+target);
-		System.out.println(source.hasJoinedEdge(target));
-		System.out.println((source.getX()+source.getWidth())+"?="+target.getX());
-		System.out.println((source.getY()+source.getHeight())+"?="+target.getY());
 		
 		for (int i=0;i<spaces.size();i++) {
 			((Space) spaces.get(i)).clearCost();
