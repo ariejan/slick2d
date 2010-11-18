@@ -19,6 +19,8 @@ public class NavMeshBuilder implements PathFindingContext {
 	private int sy;
 	/** The smallest space allowed */
 	private float smallestSpace = 0.2f;
+	/** True if we're working tile based */
+	private boolean tileBased;
 	
 	/**
 	 * Build a navigation mesh based on a tile map
@@ -28,10 +30,35 @@ public class NavMeshBuilder implements PathFindingContext {
 	 * @return The newly created navigation mesh 
 	 */
 	public NavMesh build(TileBasedMap map) {
-		Space space = new Space(0,0,map.getWidthInTiles(),map.getHeightInTiles());
+		return build(map, true);
+	}
 	
+	/**
+	 * Build a navigation mesh based on a tile map
+	 * 
+	 * @param map The map to build the navigation mesh from
+	 * @param tileBased True if we'll use the tiles for the mesh initially 
+	 * rather than quad spacing
+	 * @return The newly created navigation mesh 
+	 */
+	public NavMesh build(TileBasedMap map, boolean tileBased) {
+		this.tileBased = tileBased;
+		
 		ArrayList spaces = new ArrayList();
-		subsection(map, space, spaces);
+		
+		if (tileBased) {
+			for (int x=0;x<map.getWidthInTiles();x++) {
+				for (int y=0;y<map.getHeightInTiles();y++) {
+					if (!map.blocked(this, x, y)) {
+						spaces.add(new Space(x,y,1,1));
+					}
+				}
+			}
+		} else {
+			Space space = new Space(0,0,map.getWidthInTiles(),map.getHeightInTiles());
+		
+			subsection(map, space, spaces);
+		}
 		
 		while (mergeSpaces(spaces)) {}
 		linkSpaces(spaces);
@@ -94,14 +121,18 @@ public class NavMeshBuilder implements PathFindingContext {
 	 * @return True if there are no blockages in the space
 	 */
 	public boolean clear(TileBasedMap map, Space space) {
+		if (tileBased) {
+			return true;
+		}
+		
 		float x = 0;
 		boolean donex = false;
 		
-		while (x <= space.getWidth()) {
+		while (x < space.getWidth()) {
 			float y = 0;
 			boolean doney = false;
 			
-			while (y <= space.getHeight()) {
+			while (y < space.getHeight()) {
 				sx = (int) (space.getX()+x);
 				sy = (int) (space.getY()+y);
 				
