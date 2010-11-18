@@ -63,4 +63,13 @@ public class NavPath {
 	public String toString() {
 		return "[Path length="+length()+"]";
 	}
+
+	/**
+	 * Remove a step in the path
+	 * 
+	 * @param i
+	 */
+	public void remove(int i) {
+		links.remove(i);
+	}
 }

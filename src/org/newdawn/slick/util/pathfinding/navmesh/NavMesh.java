@@ -109,9 +109,65 @@ public class NavMesh {
 		path.push(new Link(sx, sy, null));
 		if (source.pickLowestCost(target, path)) {
 			path.push(new Link(tx, ty, null));
+			optimize(path);
 			return path;
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Check if a particular path is clear
+	 * 
+	 * @param x1 The x coordinate of the starting point
+	 * @param y1 The y coordinate of the starting point
+	 * @param x2 The x coordinate of the ending point
+	 * @param y2 The y coordinate of the ending point
+	 * @param step The size of the step between points
+	 * @return True if there are no blockages along the path
+	 */
+	private boolean isClear(float x1, float y1, float x2, float y2, float step) {
+		float dx = (x2 - x1);
+		float dy = (y2 - y1);
+		float len = (float) Math.sqrt((dx*dx)+(dy*dy));
+		dx *= step;
+		dx /= len;
+		dy *= step;
+		dy /= len;
+		int steps = (int) (len / step);
+		
+		for (int i=0;i<steps;i++) {
+			float x = x1 + (dx*i);
+			float y = y1 + (dy*i);
+			
+			if (findSpace(x,y) == null) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Optimize a path by removing segments that arn't required
+	 * to reach the end point
+	 * 
+	 * @param path The path to optimize. Redundant segments will be removed
+	 */
+	private void optimize(NavPath path) {
+		int pt = 0;
+		
+		while (pt < path.length()-2) {
+			float sx = path.getX(pt);
+			float sy = path.getY(pt);
+			float nx = path.getX(pt+2);
+			float ny = path.getY(pt+2);
+			
+			if (isClear(sx,sy,nx,ny,0.5f)) {
+				path.remove(pt+1);
+			} else {
+				pt++;
+			}
+		}
 	}
 }
