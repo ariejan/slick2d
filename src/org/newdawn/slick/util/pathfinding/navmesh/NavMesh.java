@@ -84,9 +84,10 @@ public class NavMesh {
 	 * @param sy The y coordinate of the source location 
 	 * @param tx The x coordinate of the target location
 	 * @param ty The y coordinate of the target location
+	 * @param optimize True if paths should be optimized
 	 * @return The path between the two spaces
 	 */
-	public NavPath findPath(float sx, float sy, float tx, float ty) {
+	public NavPath findPath(float sx, float sy, float tx, float ty, boolean optimize) {
 		Space source = findSpace(sx,sy);
 		Space target = findSpace(tx,ty);
 		
@@ -109,7 +110,9 @@ public class NavMesh {
 		path.push(new Link(sx, sy, null));
 		if (source.pickLowestCost(target, path)) {
 			path.push(new Link(tx, ty, null));
-			optimize(path);
+			if (optimize) {
+				optimize(path);
+			}
 			return path;
 		}
 		

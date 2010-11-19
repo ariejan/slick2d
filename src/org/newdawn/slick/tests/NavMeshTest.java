@@ -181,7 +181,7 @@ public class NavMeshTest extends BasicGame implements PathFindingContext {
 			ey = my;
 		}
 
-		path = navMesh.findPath(sx,sy,ex,ey);
+		path = navMesh.findPath(sx,sy,ex,ey,true);
 	}
 
 	/**
