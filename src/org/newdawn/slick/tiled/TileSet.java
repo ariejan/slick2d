@@ -57,11 +57,12 @@ public class TileSet {
 	 * 
 	 * @param element The XML describing the tileset
 	 * @param map The map this tileset was loaded from (gives context to paths)
-	 * @param loadImage True if the images should be loaded, false if we're running somewhere images can't be loaded
+	 * @param loadImage True if we should load the image (useful in headless mode)
 	 * @throws SlickException Indicates a failure to parse the tileset
 	 */
 	public TileSet(TiledMap map, Element element, boolean loadImage) throws SlickException {
 		this.map = map;
+		name = element.getAttribute("name");
 		firstGID = Integer.parseInt(element.getAttribute("firstgid"));
 		String source = element.getAttribute("source");
 		
@@ -72,7 +73,6 @@ public class TileSet {
 				Document doc = builder.parse(in);
 				Element docElement = doc.getDocumentElement();
 				element = docElement; //(Element) docElement.getElementsByTagName("tileset").item(0);
-				name = element.getAttribute("name");
 			} catch (Exception e) {
 				Log.error(e);
 				throw new SlickException("Unable to load or parse sourced tileset: "+this.map.tilesLocation+"/"+source);
