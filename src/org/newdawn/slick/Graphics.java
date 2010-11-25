@@ -277,7 +277,9 @@ public class Graphics {
 	}
 
 	/**
-	 * Set the background colour of the graphics context
+	 * Set the background colour of the graphics context. This colour
+	 * is used when clearing the context. Note that calling this method
+	 * alone does not cause the context to be cleared.
 	 * 
 	 * @param color
 	 *            The background color of the graphics context
