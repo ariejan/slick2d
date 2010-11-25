@@ -650,17 +650,18 @@ public abstract class Shape implements Serializable {
             findCenter();
             calculateRadius();
             
-            maxX = points[0];
-            maxY = points[1];
-            minX = points[0];
-            minY = points[1];
-            for (int i=0;i<points.length/2;i++) {
-            	maxX = Math.max(points[i*2],maxX);
-            	maxY = Math.max(points[(i*2)+1],maxY);
-            	minX = Math.min(points[i*2],minX);
-            	minY = Math.min(points[(i*2)+1],minY);
+            if (points.length > 0) {
+	            maxX = points[0];
+	            maxY = points[1];
+	            minX = points[0];
+	            minY = points[1];
+	            for (int i=0;i<points.length/2;i++) {
+	            	maxX = Math.max(points[i*2],maxX);
+	            	maxY = Math.max(points[(i*2)+1],maxY);
+	            	minX = Math.min(points[i*2],minX);
+	            	minY = Math.min(points[(i*2)+1],minY);
+	            }
             }
-            
             pointsDirty = false;
             trianglesDirty = true;
         }
