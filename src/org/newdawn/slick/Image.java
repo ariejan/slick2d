@@ -1053,6 +1053,52 @@ public class Image implements Renderable {
 	}
 	
 	/**
+	 * Draw the image in a warper rectangle. The effects this can 
+	 * have are many and varied, might be interesting though.
+	 * 
+	 * @param x1 The top left corner x coordinate
+	 * @param y1 The top left corner y coordinate
+	 * @param x2 The top right corner x coordinate
+	 * @param y2 The top right corner y coordinate
+	 * @param x3 The bottom right corner x coordinate
+	 * @param y3 The bottom right corner y coordinate
+	 * @param x4 The bottom left corner x coordinate
+	 * @param y4 The bottom left corner y coordinate
+	 */
+	public void drawWarped(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+        Color.white.bind();
+        texture.bind();
+
+        GL.glTranslatef(x1, y1, 0);
+        if (angle != 0) {
+            GL.glTranslatef(centerX, centerY, 0.0f);
+            GL.glRotatef(angle, 0.0f, 0.0f, 1.0f);
+            GL.glTranslatef(-centerX, -centerY, 0.0f);
+        }
+
+        GL.glBegin(SGL.GL_QUADS);
+        init();
+
+        GL.glTexCoord2f(textureOffsetX, textureOffsetY);
+        GL.glVertex3f(0, 0, 0);
+        GL.glTexCoord2f(textureOffsetX, textureOffsetY + textureHeight);
+        GL.glVertex3f(x2 - x1, y2 - y1, 0);
+        GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY
+                + textureHeight);
+        GL.glVertex3f(x3 - x1, y3 - y1, 0);
+        GL.glTexCoord2f(textureOffsetX + textureWidth, textureOffsetY);
+        GL.glVertex3f(x4 - x1, y4 - y1, 0);
+        GL.glEnd();
+
+        if (angle != 0) {
+            GL.glTranslatef(centerX, centerY, 0.0f);
+            GL.glRotatef(-angle, 0.0f, 0.0f, 1.0f);
+            GL.glTranslatef(-centerX, -centerY, 0.0f);
+        }
+        GL.glTranslatef(-x1, -y1, 0);
+    }
+	
+	/**
 	 * Get the width of this image
 	 * 
 	 * @return The width of this image
