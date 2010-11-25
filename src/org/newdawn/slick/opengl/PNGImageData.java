@@ -721,7 +721,11 @@ public class PNGImageData implements LoadableImageData {
 					temp.put(dstOffset, scratch.get(srcOffset));
 					temp.put(dstOffset+1, scratch.get(srcOffset+1));
 					temp.put(dstOffset+2, scratch.get(srcOffset+2));
-					temp.put(dstOffset+3, (byte) 255);
+					if ((x < getHeight()) && (y < getWidth())) {
+						temp.put(dstOffset+3, (byte) 255);
+					} else {
+						temp.put(dstOffset+3, (byte) 0);
+					}
 				}
 			}
 			
