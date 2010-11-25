@@ -1127,11 +1127,21 @@ public class Input {
 	 */
 	public void poll(int width, int height) {
 		if (paused) {
+			clearControlPressedRecord();
+			clearKeyPressedRecord();
+			clearMousePressedRecord();
+			
 			while (Keyboard.next()) {}
 			while (Mouse.next()) {}
 			return;
 		}
 
+		if (!Display.isActive()) {
+			clearControlPressedRecord();
+			clearKeyPressedRecord();
+			clearMousePressedRecord();
+		}
+		
 		// add any listeners requested since last time
 		for (int i=0;i<keyListenersToAdd.size();i++) {
 			addKeyListenerImpl((KeyListener) keyListenersToAdd.get(i));
