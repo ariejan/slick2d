@@ -122,6 +122,10 @@ public class TGAImageData implements LoadableImageData {
 		short xOffset = flipEndian(dis.readShort());
 		short yOffset = flipEndian(dis.readShort());
 		
+		if (imageType != 2) {
+			throw new IOException("Slick only supports uncompressed RGB(A) TGA images");
+		}
+		
 		width = flipEndian(dis.readShort());
 		height = flipEndian(dis.readShort());
 		pixelDepth = (short) dis.read();
