@@ -18,6 +18,8 @@ public class Color implements Serializable {
 	/** The renderer to use for all GL operations */
 	protected static SGL GL = Renderer.get();
 	
+	/** The fixed color transparent */
+    public static final Color transparent = new Color(0.0f,0.0f,0.0f,0.0f);
 	/** The fixed colour white */
 	public static final Color white = new Color(1.0f,1.0f,1.0f,1.0f);
 	/** The fixed colour yellow */
