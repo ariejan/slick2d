@@ -8,7 +8,7 @@ package org.newdawn.slick.opengl.renderer;
  */
 public class DefaultLineStripRenderer implements LineStripRenderer {
 	/** The access to OpenGL */
-	private static SGL GL = Renderer.get();
+	private SGL GL = Renderer.get();
 	
 	/**
 	 * @see org.newdawn.slick.opengl.renderer.LineStripRenderer#end()
