@@ -1,7 +1,5 @@
 package org.newdawn.slick.opengl.renderer;
 
-import org.lwjgl.opengl.GL11;
-
 /**
  * A line strip renderer that uses quads to generate lines
  * 
@@ -147,7 +145,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 		float lastx2 = 0;
 		float lasty2 = 0;
 
-		GL.glBegin(GL11.GL_QUADS);
+		GL.glBegin(SGL.GL_QUADS);
 		for (int i=0;i<count+1;i++) {
 			int current = i;
 			int next = i+1;
@@ -220,7 +218,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 			float fang = (float) Math.toDegrees(Math.atan2(dy,dx)) + 90;
 			
 			if ((dx != 0) || (dy != 0)) {
-				GL.glBegin(GL11.GL_TRIANGLE_FAN);
+				GL.glBegin(SGL.GL_TRIANGLE_FAN);
 				bindColor(0);
 				GL.glVertex2f(points[0], points[1]);
 				for (int i=0;i<180+step;i+=step) {
@@ -239,7 +237,7 @@ public class QuadBasedLineStripRenderer implements LineStripRenderer {
 			float fang = (float) Math.toDegrees(Math.atan2(dy,dx)) - 90;
 			
 			if ((dx != 0) || (dy != 0)) {
-				GL.glBegin(GL11.GL_TRIANGLE_FAN);
+				GL.glBegin(SGL.GL_TRIANGLE_FAN);
 				bindColor(count-1);
 				GL.glVertex2f(points[(count*2)-2], points[(count*2)-1]);
 				for (int i=0;i<180+step;i+=step) {
