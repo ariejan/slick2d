@@ -96,6 +96,11 @@ public interface SGL {
 	
 	/** OpenGL Enum - @url http://www.opengl.org/documentation */
 	public static final int GL_COMPILE_AND_EXECUTE = GL11.GL_COMPILE_AND_EXECUTE;
+
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_RGBA8 = GL11.GL_RGBA;
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_RGBA16 = GL11.GL_RGBA16;
 	
 	/**
 	 * Flush the current state of the renderer down to GL
@@ -455,4 +460,23 @@ public interface SGL {
 	 * @param buffer
 	 */
 	public void glLoadMatrix(FloatBuffer buffer);
+
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 * 
+	 * @param ids
+	 */
+	public void glGenTextures(IntBuffer ids);
+
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 */
+	public void glGetError();
+
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 */
+	public void glTexImage2D(int target, int i, int dstPixelFormat,
+			int get2Fold, int get2Fold2, int j, int srcPixelFormat,
+			int glUnsignedByte, ByteBuffer textureBuffer);
 }

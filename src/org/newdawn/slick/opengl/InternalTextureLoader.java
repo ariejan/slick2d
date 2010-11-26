@@ -12,7 +12,8 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.renderer.Renderer;
+import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
@@ -24,6 +25,8 @@ import org.newdawn.slick.util.ResourceLoader;
  * @author kevin
  */
 public class InternalTextureLoader {
+	/** The renderer to use for all GL operations */
+	protected static SGL GL = Renderer.get();
 	/** The standard texture loaded used everywhere */
 	private static final InternalTextureLoader loader = new InternalTextureLoader();
 	
@@ -41,7 +44,7 @@ public class InternalTextureLoader {
     /** The table of textures that have been loaded in this loader */
     private HashMap texturesNearest = new HashMap();
     /** The destination pixel format */
-    private int dstPixelFormat = GL11.GL_RGBA8;
+    private int dstPixelFormat = SGL.GL_RGBA8;
     /** True if we're using deferred loading */
     private boolean deferred;
     
@@ -92,7 +95,7 @@ public class InternalTextureLoader {
      * Tell the loader to produce 16 bit textures
      */
     public void set16BitMode() {
-    	dstPixelFormat = GL11.GL_RGBA16;
+    	dstPixelFormat = SGL.GL_RGBA16;
     }
     
     /**
@@ -103,7 +106,7 @@ public class InternalTextureLoader {
     public static int createTextureID() 
     { 
        IntBuffer tmp = createIntBuffer(1); 
-       GL11.glGenTextures(tmp); 
+       GL.glGenTextures(tmp); 
        return tmp.get(0);
     } 
     
@@ -201,7 +204,7 @@ public class InternalTextureLoader {
 	    }
     	
     	HashMap hash = texturesLinear;
-        if (filter == GL11.GL_NEAREST) {
+        if (filter == SGL.GL_NEAREST) {
         	hash = texturesNearest;
         }
         
@@ -223,13 +226,13 @@ public class InternalTextureLoader {
         
         // horrible test until I can find something more suitable
         try {
-        	GL11.glGetError();
+        	GL.glGetError();
         } catch (NullPointerException e) {
         	throw new RuntimeException("Image based resources must be loaded as part of init() or the game loop. They cannot be loaded before initialisation.");
         }
         
         TextureImpl tex = getTexture(in, resourceName,
-                         GL11.GL_TEXTURE_2D, 
+                         SGL.GL_TEXTURE_2D, 
                          filter, 
                          filter, flipped, transparent);
         
@@ -263,7 +266,7 @@ public class InternalTextureLoader {
         TextureImpl texture = new TextureImpl(resourceName, target, textureID); 
         
         // bind this texture 
-        GL11.glBindTexture(target, textureID); 
+        GL.glBindTexture(target, textureID); 
  
         ByteBuffer textureBuffer;
         int width;
@@ -287,31 +290,31 @@ public class InternalTextureLoader {
         texHeight = texture.getTextureHeight();
 
         IntBuffer temp = BufferUtils.createIntBuffer(16);
-        GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE, temp);
+        GL.glGetInteger(SGL.GL_MAX_TEXTURE_SIZE, temp);
         int max = temp.get(0);
         if ((texWidth > max) || (texHeight > max)) {
         	throw new IOException("Attempt to allocate a texture to big for the current hardware");
         }
         
-        int srcPixelFormat = hasAlpha ? GL11.GL_RGBA : GL11.GL_RGB;
+        int srcPixelFormat = hasAlpha ? SGL.GL_RGBA : SGL.GL_RGB;
         int componentCount = hasAlpha ? 4 : 3;
         
         texture.setWidth(width);
         texture.setHeight(height);
         texture.setAlpha(hasAlpha);
         
-        GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, minFilter); 
-        GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter); 
+        GL.glTexParameteri(target, GL.GL_TEXTURE_MIN_FILTER, minFilter); 
+        GL.glTexParameteri(target, GL.GL_TEXTURE_MAG_FILTER, magFilter); 
         
         // produce a texture from the byte buffer
-        GL11.glTexImage2D(target, 
+        GL.glTexImage2D(target, 
                       0, 
                       dstPixelFormat, 
                       get2Fold(width), 
                       get2Fold(height), 
                       0, 
                       srcPixelFormat, 
-                      GL11.GL_UNSIGNED_BYTE, 
+                      SGL.GL_UNSIGNED_BYTE, 
                       textureBuffer); 
         
         return texture; 
@@ -326,7 +329,7 @@ public class InternalTextureLoader {
      * @throws IOException Indicates a failure to create the texture on the graphics hardware
      */
     public Texture createTexture(final int width, final int height) throws IOException {
-    	return createTexture(width, height, GL11.GL_NEAREST);
+    	return createTexture(width, height, SGL.GL_NEAREST);
     }
     
     /**
@@ -353,7 +356,7 @@ public class InternalTextureLoader {
      */
     public Texture getTexture(ImageData dataSource, int filter) throws IOException
     { 
-    	int target = GL11.GL_TEXTURE_2D;
+    	int target = SGL.GL_TEXTURE_2D;
     	
         // create the texture ID for this texture 
         int textureID = createTextureID(); 
@@ -364,7 +367,7 @@ public class InternalTextureLoader {
         boolean flipped = false;
         
         // bind this texture 
-        GL11.glBindTexture(target, textureID); 
+        GL.glBindTexture(target, textureID); 
  
         ByteBuffer textureBuffer;
         int width;
@@ -385,7 +388,7 @@ public class InternalTextureLoader {
         texWidth = texture.getTextureWidth();
         texHeight = texture.getTextureHeight();
         
-        int srcPixelFormat = hasAlpha ? GL11.GL_RGBA : GL11.GL_RGB;
+        int srcPixelFormat = hasAlpha ? SGL.GL_RGBA : SGL.GL_RGB;
         int componentCount = hasAlpha ? 4 : 3;
         
         texture.setWidth(width);
@@ -393,24 +396,24 @@ public class InternalTextureLoader {
         texture.setAlpha(hasAlpha);
         
         IntBuffer temp = BufferUtils.createIntBuffer(16);
-        GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE, temp);
+        GL.glGetInteger(SGL.GL_MAX_TEXTURE_SIZE, temp);
         int max = temp.get(0);
         if ((texWidth > max) || (texHeight > max)) {
         	throw new IOException("Attempt to allocate a texture to big for the current hardware");
         }
         
-        GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, minFilter); 
-        GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter); 
+        GL.glTexParameteri(target, SGL.GL_TEXTURE_MIN_FILTER, minFilter); 
+        GL.glTexParameteri(target, SGL.GL_TEXTURE_MAG_FILTER, magFilter); 
         
         // produce a texture from the byte buffer
-        GL11.glTexImage2D(target, 
+        GL.glTexImage2D(target, 
                       0, 
                       dstPixelFormat, 
                       get2Fold(width), 
                       get2Fold(height), 
                       0, 
                       srcPixelFormat, 
-                      GL11.GL_UNSIGNED_BYTE, 
+                      SGL.GL_UNSIGNED_BYTE, 
                       textureBuffer); 
         
         return texture; 

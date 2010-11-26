@@ -363,4 +363,18 @@ public class ImmediateModeOGLRenderer implements SGL {
 		GL11.glLoadMatrix(buffer);
 	}
 
+	public void glGenTextures(IntBuffer ids) {
+		GL11.glGenTextures(ids);
+	}
+
+	public void glGetError() {
+		GL11.glGetError();
+	}
+
+	public void glTexImage2D(int target, int i, int dstPixelFormat,
+			int width, int height, int j, int srcPixelFormat,
+			int glUnsignedByte, ByteBuffer textureBuffer) {
+		GL11.glTexImage2D(target, i, dstPixelFormat, width, height, j, srcPixelFormat,glUnsignedByte,textureBuffer);						  
+	}
+
 }
