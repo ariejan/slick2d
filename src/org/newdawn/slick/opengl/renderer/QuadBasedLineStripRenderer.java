@@ -7,7 +7,7 @@ package org.newdawn.slick.opengl.renderer;
  */
 public class QuadBasedLineStripRenderer implements LineStripRenderer {
 	/** The renderer used to interact with GL */
-	private static SGL GL = Renderer.get();
+	private SGL GL = Renderer.get();
 	
 	/** Maximum number of points allowed in a single strip */
 	public static int MAX_POINTS = 10000;
