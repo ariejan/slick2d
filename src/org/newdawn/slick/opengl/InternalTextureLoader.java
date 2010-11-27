@@ -15,7 +15,6 @@ import java.util.Iterator;
 import org.lwjgl.BufferUtils;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
-import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
@@ -228,15 +227,22 @@ public class InternalTextureLoader {
         }
         resName += ":"+flipped;
         
-    	SoftReference ref = (SoftReference) hash.get(resName);
-    	if (ref != null) {
-	    	TextureImpl tex = (TextureImpl) ref.get();
-	        if (tex != null) {
-	        	return tex;
-	        } else {
-	        	hash.remove(resName);
-	        }
-    	}
+        if (holdTextureData) {
+        	TextureImpl tex = (TextureImpl)  hash.get(resName);
+        	if (tex != null) {
+        		return tex;
+        	}
+        } else {
+	    	SoftReference ref = (SoftReference) hash.get(resName);
+	    	if (ref != null) {
+		    	TextureImpl tex = (TextureImpl) ref.get();
+		        if (tex != null) {
+		        	return tex;
+		        } else {
+		        	hash.remove(resName);
+		        }
+	    	}
+        }
         
         // horrible test until I can find something more suitable
         try {
@@ -251,7 +257,11 @@ public class InternalTextureLoader {
                          filter, flipped, transparent);
         
         tex.setCacheName(resName);
-        hash.put(resName, new SoftReference(tex));
+        if (holdTextureData) {
+        	hash.put(resName, tex);
+        } else {
+        	hash.put(resName, new SoftReference(tex));
+        }
         
         return tex;
     }
@@ -476,11 +486,11 @@ public class InternalTextureLoader {
     public void reload() {
     	Iterator texs = texturesLinear.values().iterator();
     	while (texs.hasNext()) {
-    		((TextureImpl) ((SoftReference) texs.next()).get()).reload();
+    		((TextureImpl) texs.next()).reload();
     	}
     	texs = texturesNearest.values().iterator();
     	while (texs.hasNext()) {
-    		((TextureImpl) ((SoftReference) texs.next()).get()).reload();
+    		((TextureImpl) texs.next()).reload();
     	}
     }
 
