@@ -15,6 +15,7 @@ import java.util.Iterator;
 import org.lwjgl.BufferUtils;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
@@ -419,7 +420,7 @@ public class InternalTextureLoader {
         if ((texWidth > max) || (texHeight > max)) {
         	throw new IOException("Attempt to allocate a texture to big for the current hardware");
         }
-        
+
         if (holdTextureData) {
         	texture.setTextureData(srcPixelFormat, componentCount, minFilter, magFilter, textureBuffer);
         }

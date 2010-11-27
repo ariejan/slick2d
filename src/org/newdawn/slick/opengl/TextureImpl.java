@@ -7,6 +7,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.util.Log;
 
 /**
  * A texture to be bound within JOGL. This object is responsible for 
@@ -369,6 +370,7 @@ public class TextureImpl implements Texture {
 		 * @return The new texture ID assigned to this texture
 		 */
 		public int reload() {
+			Log.error("Reloading texture: "+ref);
 			return InternalTextureLoader.get().reload(TextureImpl.this, srcPixelFormat, componentCount, minFilter, magFilter, textureBuffer);
 		}
 	}
