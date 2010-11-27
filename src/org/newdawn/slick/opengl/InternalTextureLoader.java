@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.lwjgl.BufferUtils;
 import org.newdawn.slick.opengl.renderer.Renderer;
@@ -47,11 +48,23 @@ public class InternalTextureLoader {
     private int dstPixelFormat = SGL.GL_RGBA8;
     /** True if we're using deferred loading */
     private boolean deferred;
+    /** True if we should hold texture data */
+    private boolean holdTextureData;
     
     /** 
      * Create a new texture loader based on the game panel
      */
     private InternalTextureLoader() {
+    }
+    
+    /**
+     * Indicate where texture data should be held for reinitialising at a future
+     * point.
+     * 
+     * @param holdTextureData True if we should hold texture data
+     */
+    public void setHoldTextureData(boolean holdTextureData) {
+    	this.holdTextureData = holdTextureData;
     }
     
     /**
@@ -262,13 +275,16 @@ public class InternalTextureLoader {
                               int minFilter, boolean flipped, int[] transparent) throws IOException 
     { 
         // create the texture ID for this texture 
+        ByteBuffer textureBuffer;
+        
+        LoadableImageData imageData = ImageDataFactory.getImageDataFor(resourceName);
+    	textureBuffer = imageData.loadImage(new BufferedInputStream(in), flipped, transparent);
+
         int textureID = createTextureID(); 
         TextureImpl texture = new TextureImpl(resourceName, target, textureID); 
-        
         // bind this texture 
         GL.glBindTexture(target, textureID); 
  
-        ByteBuffer textureBuffer;
         int width;
         int height;
         int texWidth;
@@ -276,9 +292,6 @@ public class InternalTextureLoader {
         
         boolean hasAlpha;
         
-        LoadableImageData imageData = ImageDataFactory.getImageDataFor(resourceName);
-    	textureBuffer = imageData.loadImage(new BufferedInputStream(in), flipped, transparent);
-    	
     	width = imageData.getWidth();
     	height = imageData.getHeight();
     	hasAlpha = imageData.getDepth() == 32;
@@ -302,6 +315,10 @@ public class InternalTextureLoader {
         texture.setWidth(width);
         texture.setHeight(height);
         texture.setAlpha(hasAlpha);
+
+        if (holdTextureData) {
+        	texture.setTextureData(srcPixelFormat, componentCount, minFilter, magFilter, textureBuffer);
+        }
         
         GL.glTexParameteri(target, GL.GL_TEXTURE_MIN_FILTER, minFilter); 
         GL.glTexParameteri(target, GL.GL_TEXTURE_MAG_FILTER, magFilter); 
@@ -357,6 +374,9 @@ public class InternalTextureLoader {
     public Texture getTexture(ImageData dataSource, int filter) throws IOException
     { 
     	int target = SGL.GL_TEXTURE_2D;
+
+        ByteBuffer textureBuffer;
+    	textureBuffer = dataSource.getImageBufferData();
     	
         // create the texture ID for this texture 
         int textureID = createTextureID(); 
@@ -368,15 +388,13 @@ public class InternalTextureLoader {
         
         // bind this texture 
         GL.glBindTexture(target, textureID); 
- 
-        ByteBuffer textureBuffer;
+    	
         int width;
         int height;
         int texWidth;
         int texHeight;
         
         boolean hasAlpha;
-    	textureBuffer = dataSource.getImageBufferData();
     	
     	width = dataSource.getWidth();
     	height = dataSource.getHeight();
@@ -400,6 +418,10 @@ public class InternalTextureLoader {
         int max = temp.get(0);
         if ((texWidth > max) || (texHeight > max)) {
         	throw new IOException("Attempt to allocate a texture to big for the current hardware");
+        }
+        
+        if (holdTextureData) {
+        	texture.setTextureData(srcPixelFormat, componentCount, minFilter, magFilter, textureBuffer);
         }
         
         GL.glTexParameteri(target, SGL.GL_TEXTURE_MIN_FILTER, minFilter); 
@@ -446,4 +468,18 @@ public class InternalTextureLoader {
 
       return temp.asIntBuffer();
     }    
+    
+    /**
+     * Reload all the textures loaded in this loader
+     */
+    public void reload() {
+    	Iterator texs = texturesLinear.values().iterator();
+    	while (texs.hasNext()) {
+    		((TextureImpl) texs.next()).reload();
+    	}
+    	texs = texturesNearest.values().iterator();
+    	while (texs.hasNext()) {
+    		((TextureImpl) texs.next()).reload();
+    	}
+    }
 }

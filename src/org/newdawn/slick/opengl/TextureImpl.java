@@ -60,6 +60,9 @@ public class TextureImpl implements Texture {
     /** The name the texture has in the cache */
     private String cacheName;
     
+    /** Data used to reload this texture */
+    private ReloadData reloadData;
+    
     /**
      * For subclasses to utilise
      */
@@ -315,5 +318,58 @@ public class TextureImpl implements Texture {
 		bind();
         GL.glTexParameteri(target, SGL.GL_TEXTURE_MIN_FILTER, textureFilter); 
         GL.glTexParameteri(target, SGL.GL_TEXTURE_MAG_FILTER, textureFilter); 
+	}
+
+	/**
+	 * Set the texture data that this texture can be reloaded from
+	 * 
+	 * @param srcPixelFormat The pixel format
+	 * @param componentCount The component count
+	 * @param minFilter The OpenGL minification filter
+	 * @param magFilter The OpenGL magnification filter
+	 * @param textureBuffer The texture buffer containing the data for the texture
+	 */
+	public void setTextureData(int srcPixelFormat, int componentCount,
+			int minFilter, int magFilter, ByteBuffer textureBuffer) {
+		reloadData = new ReloadData();
+		reloadData.srcPixelFormat = srcPixelFormat;
+		reloadData.componentCount = componentCount;
+		reloadData.minFilter = minFilter;
+		reloadData.magFilter = magFilter;
+		reloadData.textureBuffer = textureBuffer;
+	}
+	
+	/**
+	 * Reload this texture
+	 */
+	public void reload() {
+		if (reloadData != null) {
+			textureID = reloadData.reload();
+		}
+	}
+	
+	/** 
+	 * Reload this texture from it's original source data
+	 */
+	private class ReloadData {
+		/** The src pixel format */
+		private int srcPixelFormat;
+		/** The component count */
+		private int componentCount;
+		/** The OpenGL minification filter */
+		private int minFilter;
+		/** The OpenGL magnification filter */
+		private int magFilter;
+		/** The texture buffer of pixel data */
+		private ByteBuffer textureBuffer;
+		
+		/**
+		 * Reload this texture
+		 * 
+		 * @return The new texture ID assigned to this texture
+		 */
+		public int reload() {
+			return 0;
+		}
 	}
 }
