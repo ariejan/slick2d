@@ -475,11 +475,11 @@ public class InternalTextureLoader {
     public void reload() {
     	Iterator texs = texturesLinear.values().iterator();
     	while (texs.hasNext()) {
-    		((TextureImpl) texs.next()).reload();
+    		((TextureImpl) ((SoftReference) texs.next()).get()).reload();
     	}
     	texs = texturesNearest.values().iterator();
     	while (texs.hasNext()) {
-    		((TextureImpl) texs.next()).reload();
+    		((TextureImpl) ((SoftReference) texs.next()).get()).reload();
     	}
     }
 }
