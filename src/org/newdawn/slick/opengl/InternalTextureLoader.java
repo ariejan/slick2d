@@ -482,4 +482,38 @@ public class InternalTextureLoader {
     		((TextureImpl) ((SoftReference) texs.next()).get()).reload();
     	}
     }
+
+    /**
+     * Reload a given texture blob
+     * 
+     * @param texture The texture being reloaded
+     * @param srcPixelFormat The source pixel format
+     * @param componentCount The component count
+     * @param minFilter The minification filter
+     * @param magFilter The magnification filter 
+     * @param textureBuffer The pixel data 
+     * @return The ID of the newly created texture
+     */
+	public int reload(TextureImpl texture, int srcPixelFormat, int componentCount,
+			int minFilter, int magFilter, ByteBuffer textureBuffer) {
+    	int target = SGL.GL_TEXTURE_2D;
+        int textureID = createTextureID(); 
+        GL.glBindTexture(target, textureID); 
+        
+        GL.glTexParameteri(target, SGL.GL_TEXTURE_MIN_FILTER, minFilter); 
+        GL.glTexParameteri(target, SGL.GL_TEXTURE_MAG_FILTER, magFilter); 
+        
+        // produce a texture from the byte buffer
+        GL.glTexImage2D(target, 
+                      0, 
+                      dstPixelFormat, 
+                      texture.getTextureWidth(), 
+                      texture.getTextureHeight(), 
+                      0, 
+                      srcPixelFormat, 
+                      SGL.GL_UNSIGNED_BYTE, 
+                      textureBuffer); 
+        
+        return textureID; 
+	}
 }

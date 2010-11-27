@@ -369,7 +369,7 @@ public class TextureImpl implements Texture {
 		 * @return The new texture ID assigned to this texture
 		 */
 		public int reload() {
-			return 0;
+			return InternalTextureLoader.get().reload(TextureImpl.this, srcPixelFormat, componentCount, minFilter, magFilter, textureBuffer);
 		}
 	}
 }
