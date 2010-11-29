@@ -16,7 +16,7 @@ public class Color implements Serializable {
 	private static final long serialVersionUID = 1393939L;
 	
 	/** The renderer to use for all GL operations */
-	protected static SGL GL = Renderer.get();
+	protected SGL GL = Renderer.get();
 	
 	/** The fixed color transparent */
     public static final Color transparent = new Color(0.0f,0.0f,0.0f,0.0f);
