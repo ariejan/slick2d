@@ -3,10 +3,6 @@ package org.newdawn.slick;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.lwjgl.opengl.EXTSecondaryColor;
-import org.lwjgl.opengl.EXTTextureMirrorClamp;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.opengl.ImageData;
 import org.newdawn.slick.opengl.InternalTextureLoader;
 import org.newdawn.slick.opengl.Texture;
@@ -210,8 +206,8 @@ public class Image implements Renderable {
 		this.filter = f == FILTER_LINEAR ? SGL.GL_LINEAR : SGL.GL_NEAREST;
 
 		texture.bind();
-        GL11.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, filter); 
-        GL11.glTexParameteri(SGL.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, filter); 
+		GL.glTexParameteri(SGL.GL_TEXTURE_2D, SGL.GL_TEXTURE_MIN_FILTER, filter); 
+        GL.glTexParameteri(SGL.GL_TEXTURE_2D, SGL.GL_TEXTURE_MAG_FILTER, filter); 
 	}
 	
 	/**
@@ -362,12 +358,12 @@ public class Image implements Renderable {
 	 * Clamp the loaded texture to it's edges
 	 */
 	public void clampTexture() {
-        if (GLContext.getCapabilities().GL_EXT_texture_mirror_clamp) {
-        	GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, EXTTextureMirrorClamp.GL_MIRROR_CLAMP_TO_EDGE_EXT);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, EXTTextureMirrorClamp.GL_MIRROR_CLAMP_TO_EDGE_EXT);
+        if (GL.canTextureMirrorClamp()) {
+        	GL.glTexParameteri(SGL.GL_TEXTURE_2D, SGL.GL_TEXTURE_WRAP_S, SGL.GL_MIRROR_CLAMP_TO_EDGE_EXT);
+        	GL.glTexParameteri(SGL.GL_TEXTURE_2D, SGL.GL_TEXTURE_WRAP_T, SGL.GL_MIRROR_CLAMP_TO_EDGE_EXT);
         } else {
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
-            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
+        	GL.glTexParameteri(SGL.GL_TEXTURE_2D, SGL.GL_TEXTURE_WRAP_S, SGL.GL_CLAMP);
+        	GL.glTexParameteri(SGL.GL_TEXTURE_2D, SGL.GL_TEXTURE_WRAP_T, SGL.GL_CLAMP);
         }
 	}
 	
@@ -783,9 +779,9 @@ public class Image implements Renderable {
 		col.bind();
 		texture.bind();
 
-		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
-			GL.glEnable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
-			EXTSecondaryColor.glSecondaryColor3ubEXT((byte)(col.r * 255), 
+		if (GL.canSecondaryColor()) {
+			GL.glEnable(SGL.GL_COLOR_SUM_EXT);
+			GL.glSecondaryColor3ubEXT((byte)(col.r * 255), 
 													 (byte)(col.g * 255), 
 													 (byte)(col.b * 255));
 		}
@@ -810,8 +806,8 @@ public class Image implements Renderable {
         }
         GL.glTranslatef(-x, -y, 0);
         
-		if (GLContext.getCapabilities().GL_EXT_secondary_color) {
-			GL.glDisable(EXTSecondaryColor.GL_COLOR_SUM_EXT);
+		if (GL.canSecondaryColor()) {
+			GL.glDisable(SGL.GL_COLOR_SUM_EXT);
 		}
 	}
 
