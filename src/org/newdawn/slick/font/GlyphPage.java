@@ -15,8 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -211,7 +209,7 @@ public class GlyphPage {
 			raster.getDataElements(0, y, width, 1, row);
 			scratchIntBuffer.put(row);
 		}
-		GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, pageX, pageY, width, height, GL12.GL_BGRA, GL11.GL_UNSIGNED_BYTE,
+		GL.glTexSubImage2D(SGL.GL_TEXTURE_2D, 0, pageX, pageY, width, height, SGL.GL_BGRA, SGL.GL_UNSIGNED_BYTE,
 			scratchByteBuffer);
 		scratchIntBuffer.clear();
 

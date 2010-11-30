@@ -8,7 +8,6 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.ShapeRenderer;
@@ -191,22 +190,22 @@ public class Graphics {
 		if (currentDrawingMode == MODE_ALPHA_BLEND) {
 			GL.glEnable(SGL.GL_BLEND);
 			GL.glColorMask(true, true, true, false);
-			GL.glBlendFunc(GL11.GL_DST_ALPHA, GL11.GL_ONE_MINUS_DST_ALPHA);
+			GL.glBlendFunc(SGL.GL_DST_ALPHA, SGL.GL_ONE_MINUS_DST_ALPHA);
 		}
 		if (currentDrawingMode == MODE_COLOR_MULTIPLY) {
 			GL.glEnable(SGL.GL_BLEND);
 			GL.glColorMask(true, true, true, true);
-			GL.glBlendFunc(GL11.GL_ONE_MINUS_SRC_COLOR, GL11.GL_SRC_COLOR);
+			GL.glBlendFunc(SGL.GL_ONE_MINUS_SRC_COLOR, SGL.GL_SRC_COLOR);
 		}
 		if (currentDrawingMode == MODE_ADD) {
 			GL.glEnable(SGL.GL_BLEND);
 			GL.glColorMask(true, true, true, true);
-			GL.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
+			GL.glBlendFunc(SGL.GL_ONE, SGL.GL_ONE);
 		}
 		if (currentDrawingMode == MODE_SCREEN) {
 			GL.glEnable(SGL.GL_BLEND);
 			GL.glColorMask(true, true, true, true);
-			GL.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
+			GL.glBlendFunc(SGL.GL_ONE, SGL.GL_ONE_MINUS_SRC_COLOR);
 		}
 		postdraw();
 	}
@@ -1743,7 +1742,7 @@ public class Graphics {
 			buffer = (FloatBuffer) stack.get(stackIndex);
 		}
 		
-		GL.glGetFloat(GL11.GL_MODELVIEW_MATRIX, buffer);
+		GL.glGetFloat(SGL.GL_MODELVIEW_MATRIX, buffer);
 		buffer.put(16, sx);
 		buffer.put(17, sy);
 		stackIndex++;

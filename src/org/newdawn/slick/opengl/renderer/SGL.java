@@ -8,6 +8,7 @@ import java.nio.IntBuffer;
 import org.lwjgl.opengl.EXTSecondaryColor;
 import org.lwjgl.opengl.EXTTextureMirrorClamp;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 /**
  * The description of the OpenGL functions used Slick. Any other rendering method will
@@ -103,7 +104,8 @@ public interface SGL {
 	public static final int GL_RGBA8 = GL11.GL_RGBA;
 	/** OpenGL Enum - @url http://www.opengl.org/documentation */
 	public static final int GL_RGBA16 = GL11.GL_RGBA16;
-
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_BGRA = GL12.GL_BGRA;
 	/** OpenGL Enum - @url http://www.opengl.org/documentation */
 	public static final int GL_MIRROR_CLAMP_TO_EDGE_EXT = EXTTextureMirrorClamp.GL_MIRROR_CLAMP_TO_EDGE_EXT;
 
@@ -117,6 +119,23 @@ public interface SGL {
 
 	/** OpenGL Enum - @url http://www.opengl.org/documentation */
 	public static final int GL_COLOR_SUM_EXT = EXTSecondaryColor.GL_COLOR_SUM_EXT;
+
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_ALWAYS = GL11.GL_ALWAYS;
+
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_DEPTH_TEST = GL11.GL_DEPTH_TEST;
+
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_NOTEQUAL = GL11.GL_NOTEQUAL;
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_EQUAL = GL11.GL_EQUAL;
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_SRC_COLOR = GL11.GL_SRC_COLOR;
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_ONE_MINUS_SRC_COLOR = GL11.GL_ONE_MINUS_SRC_COLOR;
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_MODELVIEW_MATRIX = GL11.GL_MODELVIEW_MATRIX;
 	
 	/**
 	 * Flush the current state of the renderer down to GL
@@ -495,6 +514,13 @@ public interface SGL {
 	public void glTexImage2D(int target, int i, int dstPixelFormat,
 			int get2Fold, int get2Fold2, int j, int srcPixelFormat,
 			int glUnsignedByte, ByteBuffer textureBuffer);
+
+	/**
+	 * OpenGL Method - @url http://www.opengl.org/documentation/
+	 */
+	public void glTexSubImage2D(int glTexture2d, int i, int pageX, int pageY,
+			int width, int height, int glBgra, int glUnsignedByte,
+			ByteBuffer scratchByteBuffer);
 
 	/**
 	 * Check if the mirror clamp extension is available

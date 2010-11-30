@@ -391,6 +391,12 @@ public class ImmediateModeOGLRenderer implements SGL {
 		GL11.glTexImage2D(target, i, dstPixelFormat, width, height, j, srcPixelFormat,glUnsignedByte,textureBuffer);						  
 	}
 
+	public void glTexSubImage2D(int glTexture2d, int i, int pageX, int pageY,
+			int width, int height, int glBgra, int glUnsignedByte,
+			ByteBuffer scratchByteBuffer) {
+		GL11.glTexSubImage2D(glTexture2d, i, pageX, pageY, width, height, glBgra, glUnsignedByte, scratchByteBuffer);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.newdawn.slick.opengl.renderer.SGL#canTextureMirrorClamp()
@@ -414,5 +420,4 @@ public class ImmediateModeOGLRenderer implements SGL {
 	public void glSecondaryColor3ubEXT(byte b, byte c, byte d) {
 		EXTSecondaryColor.glSecondaryColor3ubEXT(b,c,d);
 	}
-
 }

@@ -1,6 +1,5 @@
 package org.newdawn.slick.util;
 
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
 
@@ -20,9 +19,9 @@ public class MaskUtil {
 	public static void defineMask() {
 		GL.glDepthMask(true);
 		GL.glClearDepth(1);
-		GL.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-		GL.glDepthFunc(GL11.GL_ALWAYS);
-		GL.glEnable(GL11.GL_DEPTH_TEST);
+		GL.glClear(SGL.GL_DEPTH_BUFFER_BIT);
+		GL.glDepthFunc(SGL.GL_ALWAYS);
+		GL.glEnable(SGL.GL_DEPTH_TEST);
 		GL.glDepthMask(true);
 		GL.glColorMask(false, false, false, false);
 	}
@@ -39,25 +38,25 @@ public class MaskUtil {
 	 * Start drawing only on the masked area
 	 */
 	public static void drawOnMask() {
-		GL.glDepthFunc(GL11.GL_EQUAL);
+		GL.glDepthFunc(SGL.GL_EQUAL);
 	}
 
 	/**
 	 * Start drawing only off the masked area
 	 */
 	public static void drawOffMask() {
-		GL.glDepthFunc(GL11.GL_NOTEQUAL);
+		GL.glDepthFunc(SGL.GL_NOTEQUAL);
 	}
 	
 	/**
 	 * Reset the masked area - should be done after you've finished rendering
 	 */
 	public static void resetMask() {
-		GL11.glDepthMask(true);
-		GL11.glClearDepth(0);
-		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glDepthMask(false);
+		GL.glDepthMask(true);
+		GL.glClearDepth(0);
+		GL.glClear(SGL.GL_DEPTH_BUFFER_BIT);
+		GL.glDepthMask(false);
 		
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL.glDisable(SGL.GL_DEPTH_TEST);
 	}
 }
