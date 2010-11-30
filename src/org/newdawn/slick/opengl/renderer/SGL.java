@@ -5,6 +5,8 @@ import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.opengl.EXTSecondaryColor;
+import org.lwjgl.opengl.EXTTextureMirrorClamp;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -101,6 +103,20 @@ public interface SGL {
 	public static final int GL_RGBA8 = GL11.GL_RGBA;
 	/** OpenGL Enum - @url http://www.opengl.org/documentation */
 	public static final int GL_RGBA16 = GL11.GL_RGBA16;
+
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_MIRROR_CLAMP_TO_EDGE_EXT = EXTTextureMirrorClamp.GL_MIRROR_CLAMP_TO_EDGE_EXT;
+
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_TEXTURE_WRAP_S = GL11.GL_TEXTURE_WRAP_S;
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_TEXTURE_WRAP_T = GL11.GL_TEXTURE_WRAP_T;
+
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_CLAMP = GL11.GL_CLAMP;
+
+	/** OpenGL Enum - @url http://www.opengl.org/documentation */
+	public static final int GL_COLOR_SUM_EXT = EXTSecondaryColor.GL_COLOR_SUM_EXT;
 	
 	/**
 	 * Flush the current state of the renderer down to GL
@@ -479,4 +495,15 @@ public interface SGL {
 	public void glTexImage2D(int target, int i, int dstPixelFormat,
 			int get2Fold, int get2Fold2, int j, int srcPixelFormat,
 			int glUnsignedByte, ByteBuffer textureBuffer);
+
+	/**
+	 * Check if the mirror clamp extension is available
+	 * 
+	 * @return True if the mirro clamp extension is available
+	 */
+	public boolean canTextureMirrorClamp();
+
+	public boolean canSecondaryColor();
+
+	public void glSecondaryColor3ubEXT(byte b, byte c, byte d);
 }

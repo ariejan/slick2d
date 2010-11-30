@@ -5,7 +5,9 @@ import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.opengl.EXTSecondaryColor;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
 
 /**
  * The default OpenGL renderer, uses immediate mode for everything
@@ -363,18 +365,54 @@ public class ImmediateModeOGLRenderer implements SGL {
 		GL11.glLoadMatrix(buffer);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glGenTextures(java.nio.IntBuffer)
+	 */
 	public void glGenTextures(IntBuffer ids) {
 		GL11.glGenTextures(ids);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glGetError()
+	 */
 	public void glGetError() {
 		GL11.glGetError();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glTexImage2D(int, int, int, int, int, int, int, int, java.nio.ByteBuffer)
+	 */
 	public void glTexImage2D(int target, int i, int dstPixelFormat,
 			int width, int height, int j, int srcPixelFormat,
 			int glUnsignedByte, ByteBuffer textureBuffer) {
 		GL11.glTexImage2D(target, i, dstPixelFormat, width, height, j, srcPixelFormat,glUnsignedByte,textureBuffer);						  
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.newdawn.slick.opengl.renderer.SGL#canTextureMirrorClamp()
+	 */
+	public boolean canTextureMirrorClamp() {
+		return GLContext.getCapabilities().GL_EXT_texture_mirror_clamp;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.newdawn.slick.opengl.renderer.SGL#canSecondaryColor()
+	 */
+	public boolean canSecondaryColor() {
+		return GLContext.getCapabilities().GL_EXT_secondary_color;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.newdawn.slick.opengl.renderer.SGL#glSecondaryColor3ubEXT(byte, byte, byte)
+	 */
+	public void glSecondaryColor3ubEXT(byte b, byte c, byte d) {
+		EXTSecondaryColor.glSecondaryColor3ubEXT(b,c,d);
 	}
 
 }
