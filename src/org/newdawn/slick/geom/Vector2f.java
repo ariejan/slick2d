@@ -1,5 +1,7 @@
 package org.newdawn.slick.geom;
 
+import java.io.Serializable;
+
 import org.newdawn.slick.util.FastTrig;
 
 /**
@@ -7,7 +9,10 @@ import org.newdawn.slick.util.FastTrig;
  * 
  * @author Kevin Glass
  */
-public strictfp class Vector2f {
+public strictfp class Vector2f implements Serializable {
+	/** The version ID for this class  */
+	private static final long serialVersionUID = 1339934L;
+	
 	/** The x component of this vector */
 	public float x;
 	/** The y component of this vector */

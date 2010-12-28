@@ -26,6 +26,7 @@
  */
 package org.newdawn.slick.geom;
 
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -293,7 +294,7 @@ public class MannTriangulator implements Triangulator {
 	 *
 	 * @author Matthias Mann
 	 */
-	private static class Point {
+	private static class Point implements Serializable {
 		/** The location of the point */
 		protected Vector2f pt;
 		/** The previous point in the contour */
@@ -461,7 +462,7 @@ public class MannTriangulator implements Triangulator {
 	 *
 	 * @author kevin
 	 */
-	protected class PointBag {
+	protected class PointBag implements Serializable {
 		/** The first point in the bag - head of the list */
 		protected Point first;
 		/** The next bag in the list of bags */

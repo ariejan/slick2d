@@ -1,11 +1,13 @@
 package org.newdawn.slick.geom;
 
+import java.io.Serializable;
+
 /**
  * A collection of triangles
  *
  * @author kevin
  */
-public interface Triangulator {
+public interface Triangulator extends Serializable {
 
 	/**
 	 * Get a count of the number of triangles produced
