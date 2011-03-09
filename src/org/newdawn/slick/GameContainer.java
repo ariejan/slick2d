@@ -674,6 +674,7 @@ public abstract class GameContainer implements GUIContext {
 			
 			GL.glLoadIdentity();
 			
+			graphics.resetTransform();
 			graphics.resetFont();
 			graphics.resetLineWidth();
 			graphics.setAntiAlias(false);
