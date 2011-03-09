@@ -184,7 +184,7 @@ public class AppletGameContainer extends Applet {
       private void createDisplay() throws Exception {
          try {
             // create display with alpha
-            Display.create(new PixelFormat(8,8,0));
+            Display.create(new PixelFormat(8,8,GameContainer.stencil ? 8 : 0));
             alphaSupport = true;
          } catch (Exception e) {
             // if we couldn't get alpha, let us know

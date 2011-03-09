@@ -87,6 +87,8 @@ public abstract class GameContainer implements GUIContext {
 	
 	/** True if we should render when not focused */
 	protected boolean alwaysRender;
+	/** True if we require stencil bits */
+	protected static boolean stencil;
 	
 	/**
 	 * Create a new game container wrapping a given game
@@ -101,6 +103,10 @@ public abstract class GameContainer implements GUIContext {
 		Log.checkVerboseLogSetting();
 	}
 
+	public static void enableStencil() {
+		stencil = true;
+	}
+	
 	/**
 	 * Set the default font that will be intialised in the graphics held in this container
 	 * 

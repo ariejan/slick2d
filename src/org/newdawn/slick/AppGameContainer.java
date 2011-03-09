@@ -297,7 +297,6 @@ public class AppGameContainer extends GameContainer {
 	 * @throws LWJGLException Indicates a failure to support the given format
 	 */
 	private void tryCreateDisplay(PixelFormat format) throws LWJGLException {
-		
 		if (SHARED_DRAWABLE == null) 
 		{
 			Display.create(format);
@@ -349,7 +348,7 @@ public class AppGameContainer extends GameContainer {
 		AccessController.doPrivileged(new PrivilegedAction() {
             public Object run() {
         		try {
-        			PixelFormat format = new PixelFormat(8,8,0,samples);
+        			PixelFormat format = new PixelFormat(8,8,stencil ? 8 : 0,samples);
         			
         			tryCreateDisplay(format);
         			supportsMultiSample = true;
@@ -357,7 +356,7 @@ public class AppGameContainer extends GameContainer {
         			Display.destroy();
         			
         			try {
-	        			PixelFormat format = new PixelFormat(8,8,0);
+	        			PixelFormat format = new PixelFormat(8,8,stencil ? 8 : 0);
 	        			
 	        			tryCreateDisplay(format);
 	        			alphaSupport = false;
