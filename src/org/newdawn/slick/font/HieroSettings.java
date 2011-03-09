@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -61,8 +62,18 @@ public class HieroSettings {
 	 * @throws SlickException if the file could not be read.
 	 */
 	public HieroSettings(String hieroFileRef) throws SlickException {
+		this(ResourceLoader.getResourceAsStream(hieroFileRef));
+	}
+	
+	/**
+	 * Create a new set of configuration from a file
+	 * 
+	 * @param in The stream from which to read the settings from
+	 * @throws SlickException if the file could not be read.
+	 */
+	public HieroSettings(InputStream in) throws SlickException {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceLoader.getResourceAsStream(hieroFileRef)));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 			while (true) {
 				String line = reader.readLine();
 				if (line == null) break;
@@ -116,7 +127,7 @@ public class HieroSettings {
 			}
 			reader.close();
 		} catch (Exception ex) {
-			throw new SlickException("Unable to load Hiero font file: " + hieroFileRef, ex);
+			throw new SlickException("Unable to load Hiero font file", ex);
 		}
 	}
 
