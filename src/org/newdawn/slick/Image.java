@@ -353,6 +353,25 @@ public class Image implements Renderable {
 		corners[corner].b = b;
 		corners[corner].a = a;
 	}
+
+	/** 
+	 * Set the color of the given corner when this image is rendered. This is 
+	 * useful lots of visual effect but especially light maps
+	 * 
+	 * @param corner The corner identifier for the corner to be set
+	 * @param r The red component value to set (between 0 and 1)
+	 * @param g The green component value to set (between 0 and 1)
+	 * @param b The blue component value to set (between 0 and 1)
+	 */
+	public void setColor(int corner, float r, float g, float b) {
+		if (corners == null) {
+			corners = new Color[] {new Color(1,1,1,1f),new Color(1,1,1,1f), new Color(1,1,1,1f), new Color(1,1,1,1f)};
+		}
+		
+		corners[corner].r = r;
+		corners[corner].g = g;
+		corners[corner].b = b;
+	}
 	
 	/**
 	 * Clamp the loaded texture to it's edges
