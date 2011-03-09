@@ -30,7 +30,7 @@ public abstract class Shape implements Serializable {
     /** Flag to tell whether points need to be generated */
     protected boolean pointsDirty;
     /** The triangles that define the shape */
-    protected Triangulator tris;
+    protected transient Triangulator tris;
     /** True if the triangles need updating */
     protected boolean trianglesDirty;
     
@@ -593,7 +593,7 @@ public abstract class Shape implements Serializable {
      * Calculate the triangles that can fill this shape
      */
     protected void calculateTriangles() {
-    	if (!trianglesDirty) {
+    	if ((!trianglesDirty) && (tris != null)) {
     		return;
     	}
     	if (points.length >= 6) {
