@@ -58,7 +58,8 @@ public class FadeInTransition implements Transition {
 	public void postRender(StateBasedGame game, GameContainer container, Graphics g) {
 		Color old = g.getColor();
 		g.setColor(color);
-		g.fillRect(0, 0, container.getWidth(), container.getHeight());
+		
+		g.fillRect(0, 0, container.getWidth()*2, container.getHeight()*2);
 		g.setColor(old);
 	}
 	
