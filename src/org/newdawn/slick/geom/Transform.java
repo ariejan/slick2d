@@ -91,18 +91,21 @@ public class Transform {
      */   
     public void transform(float source[], int sourceOffset, float destination[], int destOffset, int numberOfPoints) {   
         //TODO performance can be improved by removing the safety to the destination array   
-        float result[] = new float[numberOfPoints * 2];   
+        float result[] = source == destination ? new float[numberOfPoints * 2] : destination;
            
         for(int i=0;i<numberOfPoints * 2;i+=2) {   
             for(int j=0;j<6;j+=3) {   
                 result[i + (j / 3)] = source[i + sourceOffset] * matrixPosition[j] + source[i + sourceOffset + 1] * matrixPosition[j + 1] + 1 * matrixPosition[j + 2];   
             }   
         }   
-        //for safety of the destination, the results are copied after the entire operation.   
-        for(int i=0;i<numberOfPoints * 2;i+=2) {   
-            destination[i + destOffset] = result[i];   
-            destination[i + destOffset + 1] = result[i + 1];   
-        }   
+        
+        if (source == destination) {
+	        //for safety of the destination, the results are copied after the entire operation.   
+	        for(int i=0;i<numberOfPoints * 2;i+=2) {   
+	            destination[i + destOffset] = result[i];   
+	            destination[i + destOffset + 1] = result[i + 1];   
+	        }   
+        }
     }   
        
     /**   
