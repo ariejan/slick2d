@@ -333,6 +333,35 @@ public class Image implements Renderable {
 		return ref;
 	}
 	
+	/**
+	 * Set the filter to apply when drawing this image
+	 * 
+	 * @param r The red component of the filter colour
+	 * @param g The green component of the filter colour
+	 * @param b The blue component of the filter colour
+	 * @param a The alpha component of the filter colour
+	 */
+	public void setImageColor(float r, float g, float b, float a) {
+		setColor(TOP_LEFT, r, g, b, a);
+		setColor(TOP_RIGHT, r, g, b, a);
+		setColor(BOTTOM_LEFT, r, g, b, a);
+		setColor(BOTTOM_RIGHT, r, g, b, a);
+	}
+	
+	/**
+	 * Set the filter to apply when drawing this image
+	 * 
+	 * @param r The red component of the filter colour
+	 * @param g The green component of the filter colour
+	 * @param b The blue component of the filter colour
+	 */
+	public void setImageColor(float r, float g, float b) {
+		setColor(TOP_LEFT, r, g, b);
+		setColor(TOP_RIGHT, r, g, b);
+		setColor(BOTTOM_LEFT, r, g, b);
+		setColor(BOTTOM_RIGHT, r, g, b);
+	}
+	
 	/** 
 	 * Set the color of the given corner when this image is rendered. This is 
 	 * useful lots of visual effect but especially light maps
