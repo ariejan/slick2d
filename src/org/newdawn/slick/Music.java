@@ -1,5 +1,6 @@
 package org.newdawn.slick;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -82,6 +83,33 @@ public class Music {
 	 */
 	public Music(URL ref) throws SlickException {
 		this(ref, false);
+	}
+
+	/**
+	 * Create and load a piece of music (either OGG or MOD/XM)
+	 * @param in The stream to read the music from 
+	 * @param ref  The symbolic name of this music 
+	 * @throws SlickException Indicates a failure to read the music from the stream
+	 */
+	public Music(InputStream in, String ref) throws SlickException {
+		SoundStore.get().init();
+		
+		try {
+			if (ref.toLowerCase().endsWith(".ogg")) {
+				sound = SoundStore.get().getOgg(in);
+			} else if (ref.toLowerCase().endsWith(".wav")) {
+				sound = SoundStore.get().getWAV(in);
+			} else if (ref.toLowerCase().endsWith(".xm") || ref.toLowerCase().endsWith(".mod")) {
+				sound = SoundStore.get().getMOD(in);
+			} else if (ref.toLowerCase().endsWith(".aif") || ref.toLowerCase().endsWith(".aiff")) {
+				sound = SoundStore.get().getAIF(in);
+			} else {
+				throw new SlickException("Only .xm, .mod, .ogg, and .aif/f are currently supported.");
+			}
+		} catch (Exception e) {
+			Log.error(e);
+			throw new SlickException("Failed to load music: "+ref);
+		}
 	}
 	
 	/**
