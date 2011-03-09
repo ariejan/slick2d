@@ -120,7 +120,16 @@ public strictfp class Circle extends Ellipse {
     { 
         return (x - getX()) * (x - getX()) + (y - getY()) * (y - getY()) < getRadius() * getRadius(); 
     }
-	
+    
+    /**
+     * Check if circle contains the line 
+     * @param line Line to check against 
+     * @return True if line inside circle 
+     */ 
+    private boolean contains(Line line) { 
+         return contains(line.getX1(), line.getY1()) && contains(line.getX2(), line.getY2()); 
+    }
+    
 	/**
 	 * @see org.newdawn.slick.geom.Ellipse#findCenter()
 	 */
@@ -175,5 +184,40 @@ public strictfp class Circle extends Ellipse {
 		
 		return false;
 	}
+	
+	/** 
+     * Check if circle touches a line. 
+     * @param other The line to check against 
+     * @return True if they touch 
+     */ 
+    private boolean intersects(Line other) { 
+        // put it nicely into vectors 
+        Vector2f lineSegmentStart = new Vector2f(other.getX1(), other.getY1()); 
+        Vector2f lineSegmentEnd = new Vector2f(other.getX2(), other.getY2()); 
+        Vector2f circleCenter = new Vector2f(getCenterX(), getCenterY()); 
 
+        // calculate point on line closest to the circle center and then 
+        // compare radius to distance to the point for intersection result 
+        Vector2f closest; 
+        Vector2f segv = lineSegmentEnd.copy().sub(lineSegmentStart); 
+        Vector2f ptv = circleCenter.copy().sub(lineSegmentStart); 
+        float segvLength = segv.length(); 
+        float projvl = ptv.dot(segv) / segvLength; 
+        if (projvl < 0) 
+        { 
+            closest = lineSegmentStart; 
+        } 
+        else if (projvl > segvLength) 
+        { 
+            closest = lineSegmentEnd; 
+        } 
+        else 
+        { 
+            Vector2f projv = segv.copy().scale(projvl / segvLength); 
+            closest = lineSegmentStart.copy().add(projv); 
+        } 
+        boolean intersects = circleCenter.copy().sub(closest).lengthSquared() <= getRadius()*getRadius(); 
+        
+        return intersects; 
+    } 
 }

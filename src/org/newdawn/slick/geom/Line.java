@@ -467,4 +467,16 @@ public class Line extends Shape {
 	public boolean closed() {
 		return false;
 	}
+	
+	/**
+	 * @see org.newdawn.slick.geom.Shape#intersects(org.newdawn.slick.geom.Shape)
+	 */
+	public boolean intersects(Shape shape) 
+    { 
+        if (shape instanceof Circle) 
+        { 
+            return shape.intersects(this); 
+        } 
+        return super.intersects(shape); 
+    }
 }
