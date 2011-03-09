@@ -116,9 +116,10 @@ public strictfp class Circle extends Ellipse {
 	 * @param y The y coorindate of the point to check
 	 * @return True if the point is contained by this circle
 	 */
-	public boolean contains(float x, float y) {
-		return intersects(new Circle(x,y,0));
-	}
+    public boolean contains(float x, float y) 
+    { 
+        return (x - getX()) * (x - getX()) + (y - getY()) * (y - getY()) < getRadius() * getRadius(); 
+    }
 	
 	/**
 	 * @see org.newdawn.slick.geom.Ellipse#findCenter()
