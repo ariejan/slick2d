@@ -692,7 +692,30 @@ public class Image implements Renderable {
 	 * @param vshear The amount to shear the right points by vertically
 	 */
     public void drawSheared(float x,float y, float hshear, float vshear) { 
-        Color.white.bind();
+    	this.drawSheared(x, y, hshear, vshear, Color.white);
+    }
+	/**
+	 * Draw this image at a specified location and size
+	 * 
+	 * @param x The x location to draw the image at
+	 * @param y The y location to draw the image at
+	 * @param hshear The amount to shear the bottom points by horizontally
+	 * @param vshear The amount to shear the right points by vertically
+	 * @param filter The colour filter to apply
+	 */
+    public void drawSheared(float x,float y, float hshear, float vshear, Color filter) { 
+    	if (alpha != 1) {
+    		if (filter == null) {
+    			filter = Color.white;
+    		}
+    		
+    		filter = new Color(filter);
+    		filter.a *= alpha;
+    	}
+        if (filter != null) { 
+            filter.bind(); 
+        } 
+        
         texture.bind(); 
         
         GL.glTranslatef(x, y, 0);
