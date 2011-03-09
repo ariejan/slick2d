@@ -1,6 +1,8 @@
 package org.newdawn.slick;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.newdawn.slick.opengl.Texture;
 
@@ -22,6 +24,19 @@ public class SpriteSheet extends Image {
 	private int spacing;
 	/** The target image for this sheet */
 	private Image target;
+
+	/**
+	 * Create a new sprite sheet based on a image location
+	 * 
+	 * @param ref The URL to the image to use
+	 * @param tw The width of the tiles on the sheet 
+	 * @param th The height of the tiles on the sheet 
+	 * @throws SlickException Indicates a failure to read image data
+	 * @throws IOException Indicates the URL could not be opened
+	 */
+	public SpriteSheet(URL ref,int tw,int th) throws SlickException, IOException {
+		this(new Image(ref.openStream(), ref.toString(), false), tw, th);
+	}
 	
 	/**
 	 * Create a new sprite sheet based on a image location
