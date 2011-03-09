@@ -411,6 +411,10 @@ public class ParticleSystem {
 			// get emitter
 			ParticleEmitter emitter = (ParticleEmitter) emitters.get(emitterIdx);
 			
+			if (!emitter.isEnabled()) {
+				continue;
+			}
+			
 			// check for additive override and enable when set
 			if (emitter.useAdditive()) {
 				GL.glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE);
@@ -505,14 +509,17 @@ public class ParticleSystem {
 		
 		if (!particlesByEmitter.isEmpty())
 		{
-			Iterator it= particlesByEmitter.values().iterator();
+			Iterator it= particlesByEmitter.keySet().iterator();
 			while (it.hasNext())
 			{
-				ParticlePool pool= (ParticlePool)it.next();
-				for (int i=0;i<pool.particles.length;i++) {
-					if (pool.particles[i].life > 0) {
-						pool.particles[i].update(delta);
-						pCount++;
+				ParticleEmitter emitter = (ParticleEmitter) it.next();
+				if (emitter.isEnabled()) {
+					ParticlePool pool = (ParticlePool) particlesByEmitter.get(emitter);
+					for (int i=0;i<pool.particles.length;i++) {
+						if (pool.particles[i].life > 0) {
+							pool.particles[i].update(delta);
+							pCount++;
+						}
 					}
 				}
 			}
