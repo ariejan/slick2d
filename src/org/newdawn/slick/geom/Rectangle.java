@@ -43,10 +43,10 @@ public class Rectangle extends Shape {
 		if (yp <= getY()) {
 			return false;
 		}
-		if (xp >= maxX+1) {
+		if (xp >= maxX) {
 			return false;
 		}
-		if (yp >= maxY+1) {
+		if (yp >= maxY) {
 			return false;
 		}
 		
@@ -182,9 +182,8 @@ public class Rectangle extends Shape {
 	}
 
 	protected void createPoints() {
-		// -1 so that the dimensions include the left and top lines of the rectangle
-        float useWidth = width - 1;
-        float useHeight = height - 1;
+        float useWidth = width ;
+        float useHeight = height;
         points = new float[8];
         
         points[0] = x;
