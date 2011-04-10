@@ -223,10 +223,6 @@ public class Animation implements Renderable {
 	 * @return True if the animation has stopped
 	 */
 	public boolean isStopped() {
-		if (pingPong) {
-			return false;
-		}
-		
 		return stopped;
 	}
 
