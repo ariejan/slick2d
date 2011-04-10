@@ -564,7 +564,7 @@ public class Animation implements Renderable {
 				stopped = true;
 				break;
 			}
-			if ((currentFrame == frames.size() - 1) && (!loop)) {
+			if ((currentFrame == frames.size() - 1) && (!loop) && (!pingPong)) {
 	            stopped = true; 
 				break;
 			}
@@ -573,9 +573,13 @@ public class Animation implements Renderable {
 			if (pingPong) {
 				if (currentFrame <= 0) {
 					currentFrame = 0;
-					direction = 1;
+					direction = 1;   
+					if (!loop) {            
+                        stopped = true;            
+                        break;     
+                    }       
 				}
-				if (currentFrame >= frames.size()-1) {
+				else if (currentFrame >= frames.size()-1) {
 					currentFrame = frames.size()-1;
 					direction = -1;
 				}
