@@ -75,6 +75,7 @@ public class PNGImageData implements LoadableImageData {
 	public ByteBuffer loadImage(InputStream fis, boolean flipped, boolean forceAlpha, int[] transparent) throws IOException {
 		if (transparent != null) {
 			forceAlpha = true;
+			throw new IOException("Transparent color not support in custom PNG Decoder");
 		}
 		
 		PNGDecoder decoder = new PNGDecoder(fis);
