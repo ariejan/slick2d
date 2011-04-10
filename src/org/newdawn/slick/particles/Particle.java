@@ -33,7 +33,7 @@ public class Particle {
 	/** The current size in pixels of the particle */
 	protected float size = 10;
 	/** The colour of the particle */
-	protected Color color = new Color(1f, 1f, 1f, 1f);
+	protected Color color = Color.white;
 	/** The life left in the particle */
 	protected float life;
 	/** The original life of this particle */
@@ -316,10 +316,14 @@ public class Particle {
 	 *            The alpha component of the color
 	 */
 	public void setColor(float r, float g, float b, float a) {
-		color.r = r;
-		color.g = g;
-		color.b = b;
-		color.a = a;
+		if (color == Color.white) {
+			color = new Color(r,g,b,a);
+		} else {
+			color.r = r;
+			color.g = g;
+			color.b = b;
+			color.a = a;
+		}
 	}
 
 	/**
@@ -399,6 +403,9 @@ public class Particle {
 	 *            The amount to adjust the alpha component by
 	 */
 	public void adjustColor(float r, float g, float b, float a) {
+		if (color == Color.white) {
+			color = new Color(1,1,1,1f);
+		} 
 		color.r += r;
 		color.g += g;
 		color.b += b;
@@ -418,6 +425,10 @@ public class Particle {
 	 *            The amount to adjust the alpha component by
 	 */
 	public void adjustColor(int r, int g, int b, int a) {
+		if (color == Color.white) {
+			color = new Color(1,1,1,1f);
+		} 
+		
 		color.r += (r / 255.0f);
 		color.g += (g / 255.0f);
 		color.b += (b / 255.0f);
