@@ -639,7 +639,7 @@ public abstract class GameContainer implements GUIContext {
 		}
 		
 		input.poll(width, height);
-		
+	
 		Music.poll(delta);
 		if (!paused) {
 			storedDelta += delta;
@@ -652,9 +652,9 @@ public abstract class GameContainer implements GUIContext {
 							game.update(this, (int) maximumLogicInterval);
 						}
 						
-						int remainder = (int) (delta % maximumLogicInterval);
+						int remainder = (int) (storedDelta % maximumLogicInterval);
 						if (remainder > minimumLogicInterval) {
-							game.update(this, (int) (delta % maximumLogicInterval));
+							game.update(this, (int) (remainder % maximumLogicInterval));
 							storedDelta = 0;
 						} else {
 							storedDelta = remainder;
