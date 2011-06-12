@@ -57,6 +57,7 @@ public class Point extends Shape
      */
     protected void findCenter() 
     { 
+    	center = new float[2];
         center[0] = points[0]; 
         center[1] = points[1]; 
     } 
