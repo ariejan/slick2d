@@ -489,6 +489,20 @@ public class TiledMap {
 	}
 	
 	/**
+	 * Save parser for strings to ints
+	 * 
+	 * @param value The string to parse
+	 * @return The integer to parse or zero if the string isn't an int
+	 */
+	private int parseInt(String value) {
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			return 0;
+		}
+	}
+	
+	/**
 	 * Load a TilED map
 	 * 
 	 * @param in The input stream from which to load the map
@@ -521,10 +535,10 @@ public class TiledMap {
 				throw new SlickException("Only orthogonal maps supported, found: "+orient);
 			}*/
 			
-			width = Integer.parseInt(docElement.getAttribute("width"));
-			height = Integer.parseInt(docElement.getAttribute("height"));
-			tileWidth = Integer.parseInt(docElement.getAttribute("tilewidth"));
-			tileHeight = Integer.parseInt(docElement.getAttribute("tileheight"));
+			width = parseInt(docElement.getAttribute("width"));
+			height = parseInt(docElement.getAttribute("height"));
+			tileWidth = parseInt(docElement.getAttribute("tilewidth"));
+			tileHeight = parseInt(docElement.getAttribute("tileheight"));
 			
 			// now read the map properties
 			Element propsElement = (Element) docElement.getElementsByTagName("properties").item(0);
