@@ -116,7 +116,10 @@ public class ImmediateModeOGLRenderer implements SGL {
 	public void glColor4f(float r, float g, float b, float a) {
 		a *= alphaScale;
 		
-		current = new float[] {r,g,b,a};
+		current[0] = r;
+		current[1] = g;
+		current[2] = b;
+		current[3] = a;
 		
 		GL11.glColor4f(r, g, b, a);
 	}
